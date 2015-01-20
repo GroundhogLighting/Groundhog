@@ -1,0 +1,39 @@
+# @markup html
+# @title About Groundhog
+# @author German Molina
+
+
+<h1>What is Groundhog?</h1>
+
+<p align="justify">Groundhog is a SketchUp extension that intends to simplify the creation of geometry, workplanes, 
+views and simulations made in Radiance. Its development started during Germán Molina´s M.Sc. thesis (Molina, 2014), under
+the advice of Sergio Vera Ph.D and Waldo Bustamante Ph.D. The tesis was focused on performing integrated lighting and 
+thermal simulations of spaces with complex fenestration systems using <a href="http://www.radiance-online.org">Radiance</a>
+and <a href="http://apps1.eere.energy.gov/buildings/energyplus/"> EnergyPlus</a>. When starting that thesis, and when trying 
+to learn Radiance, we found it hard to create geometry, add workplanes and assign materials, especially for big scenes. Also, 
+since our intention was to perform these simulations for spaces with Complex Fenestration Systems (CFS), we wanted a “geometry 
+generator” that could not only export all polygons, but also know what polygon was a window, which one as an “illum” and which
+one was a workplane, and export them in a distribution that was comfortable to work with later. Accordingly, Groundhog is focused
+on exporting models for implementing methods such as the <a href="http://www.radiance-online.org/learning/tutorials/Tutorial-ThreePhaseMethod.pdf">
+Three-phase</a> and the <a href="http://www.radiance-online.org/learning/tutorials/fivephasetutorialfiles/Tutorial-FivePhaseMethod_v2.pdf">
+Five-phase</a> methods.</p> However, it also exports models for ray-tracing and rendering, allowing using your own materials
+from a library.
+
+<p>That said, Groundhog intends to simplify scene creation, and modeling. It, for now, allows: </p>
+
+<li>Working with thick walls.
+<li>Exporting complex polygons as one polygon (window openings are not a problem).
+<li>Assigning materials from a library of auto-contained Radiance Material files.
+<li>Materials not existing in the library will be “guessed” by defining a plastic material with no specularity or roughness, with the same color. If the material is transparent, a colored glass material will be assigned.
+<li>Adding workplanes, which will be exported as a set of sensors that can be used by rcontrib and rtrace programs.
+<li>Adding Illums.
+<li>Grouping windows in order to make more efficient lighting simulations.
+<li>Exporting by layers, separating (or not) the windows from the rest of the geometry.
+<li>Export views from Scenes saved within SketchUp.
+<li>Every exported file comes with a CIE clear sky with the sun located according to the sun direction in the model.</li>
+
+<p align="justify">On the other hand, Groundhog intends to use SketchUp capabilities as much as possible, like its material libraries, scenes (saved views), geolocation, time and date, layers, solar position. Accordingly, "workplanes" and "illums" are just another surface that is labeled, so the user can move them, create them, name them and delete them easily.</p>
+
+<h2>Origin of the name</h2>
+<p align="justify">Even though there are many words that are related to this plugin (sun, solar, shading, windows, simulation, energy, names of people, sun in different languages, etc.), Groundhog was named after the "Groundhog Day" tradition.</p>
+<p align="justify">The Groundhog Day tradition has nothing to do with my country, Chile, but I heard about it during an internship in Canada, and I found it to be an interesting name.</p>

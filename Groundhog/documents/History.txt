@@ -1,0 +1,48 @@
+# @markup markdown
+# @title Groundhog History
+# @author German Molina
+
+# Groundhog 0.5
+
+- The “show/hide” tools were moved from the Groundhog Toolbar to the View menu.
+- The “Show Window Groups” tool was algo moved to the View Menu.
+- It is now possible to export a model without saving it as well as saving it in a different directory.
+- The “Add Workplane” tool was downgraded to a simple script. It is more comfortable since the user no longer has to write down the height of the Worplane. The Workplanes may be moved just as any other face.
+- Added the “Label as workplane” Context Menu. The faces have to be horizontal.
+- Window Groups and Workplanes require a name. This name will be used for exporting them.
+- Components may now be exported. Even Nested components (components within components) seem to be working OK. Groups are trickier.
+
+
+
+# Groundhog 0.4
+
+- Groundhog seem to be working O.K. on SketchUp 2014
+- Materials can be supported by *.mat file stored on a directory... if not, they are guessed.
+- Exporting groups and one-level components is supported (components within components do not really work... needed?)
+- Wrapped "Make Window" and "Add Workplane" operations into one "Undo"... better and more comfortable.
+
+
+# Groundhog 0.3
+
+- Materials started to be supported, as well as SketchUp Components (non of them is ready yet).
+- Although windows can still be grouped, the groups can´t be seen, since "materials" (i.e. colors) mean something now. We need to solve this.
+- The project was completely reorganized, introducing classes… Then, it was published.
+
+# Groundhog 0.2
+
+- Change of paradigm. Groundhog intends to export well, for now. In the future we might simulate within SketchUp.
+- Grouping of windows option was added, as well as showing them in different colors.
+- "Winfo" and "SimFile" files do not exist any more. 
+- Groundhog is now an extension, that can be turned on or off inside SketchUp.
+
+# Groundhog 0.1
+
+- Project started as part of Germán Molina´s MSc. thesis, under the advice of Sergio Vera 
+Ph.D and Waldo Bustamante, Ph.D, at the school of Engineering of Pontificia Universidad Catolica de Chile.
+- Exports into Radiance and 3phase method formats.
+- Calculations have to be done from a "Window Information File" and a "Simulation File", using perl scripts outside SketchUp.
+- Materials are not supported at all. The program exports a list of assigned modifiers, and they have to be filled by the user.
+- Sensor location is done over the workplane... the location is shown by drawing two lines forming an X.
+- Sensor location involves ray-casting... which is very inefficient. 
+- Materials are treated separated from CFS.
+- Grouping windows was not yet supported.
