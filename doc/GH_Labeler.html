@@ -31,7 +31,7 @@
     <div id="header">
       <div id="menu">
   
-    <a href="_index.html">Index (G)</a> &raquo;
+    <a href="doc_index.html">Index (G)</a> &raquo;
     
     
     <span class="title">GH_Labeler</span>
@@ -2028,6 +2028,7 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
+273
 274
 275
 276
@@ -2039,11 +2040,10 @@ If there is more than one face selected, the names will be numbered.</p>
 282
 283
 284
-285
-286</pre>
+285</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Labeler.rb', line 274</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Labeler.rb', line 273</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_nothing'>to_nothing</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_faces'>faces</span><span class='op'>=</span><span class='const'>GH_Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_faces'>get_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
@@ -2262,14 +2262,13 @@ If there is more than one face selected, the names will be numbered.</p>
 264
 265
 266
-267
-268</pre>
+267</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'Groundhog/GH_Labeler.rb', line 253</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_workplane'>to_workplane</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_faces'>faces</span><span class='op'>=</span><span class='const'>GH_Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_horizontal_faces'>get_horizontal_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_faces'>faces</span><span class='op'>=</span><span class='const'>GH_Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_faces'>get_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 
 	<span class='kw'>if</span> <span class='id identifier rubyid_faces'>faces</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span><span class='op'>&gt;=</span><span class='int'>1</span> <span class='kw'>then</span>
 		<span class='id identifier rubyid_faces'>faces</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
@@ -2279,7 +2278,6 @@ If there is more than one face selected, the names will be numbered.</p>
 			<span class='id identifier rubyid_i'>i</span><span class='period'>.</span><span class='id identifier rubyid_back_material'>back_material</span><span class='op'>=</span><span class='lbracket'>[</span><span class='float'>1.0</span><span class='comma'>,</span><span class='float'>0.0</span><span class='comma'>,</span><span class='float'>0.0</span><span class='rbracket'>]</span>
 			<span class='id identifier rubyid_i'>i</span><span class='period'>.</span><span class='id identifier rubyid_back_material'>back_material</span><span class='period'>.</span><span class='id identifier rubyid_alpha'>alpha</span><span class='op'>=</span><span class='float'>0.2</span>
 		<span class='kw'>end</span>
-		<span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_set_name'>set_name</span><span class='lparen'>(</span><span class='id identifier rubyid_faces'>faces</span><span class='rparen'>)</span>
 	<span class='kw'>else</span>
 		<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No faces selected</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 	<span class='kw'>end</span>	
@@ -2474,7 +2472,7 @@ If there is more than one face selected, the names will be numbered.</p>
 </div>
 
     <div id="footer">
-  Generated on Sat Jun 28 11:02:43 2014 by
+  Generated on Thu Apr 24 19:26:42 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.2 (ruby-2.0.0).
 </div>

@@ -31,7 +31,7 @@
     <div id="header">
       <div id="menu">
   
-    <a href="_index.html">Index (G)</a> &raquo;
+    <a href="doc_index.html">Index (G)</a> &raquo;
     
     
     <span class="title">GH_Exporter</span>
@@ -144,6 +144,31 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Recursively connects the interior and the exterior loops of a face.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public deprecated">
+  <span class="summary_signature">
+    
+      <a href="#close_face_array-class_method" title="close_face_array (class method)">+ (Array&lt;lines&gt;) <strong>close_face_array</strong>(lines, p, w, selection) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  <span class="deprecated note title">deprecated</span>
+  
+
+  
+    <span class="summary_desc"><strong>Deprecated.</strong> <div class='inline'>
+<p>because we are actually using #close_face, and closing the surface within
+#get_rad_string</p>
 </div></span>
   
 </li>
@@ -729,57 +754,57 @@ does not.</p>
       <pre class="lines">
 
 
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210
-211
-212
-213
-214</pre>
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 167</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 233</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_close_face'>close_face</span><span class='lparen'>(</span><span class='id identifier rubyid_lines'>lines</span><span class='comma'>,</span> <span class='id identifier rubyid_p'>p</span><span class='comma'>,</span> <span class='id identifier rubyid_w'>w</span><span class='comma'>,</span> <span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
 
@@ -835,6 +860,288 @@ does not.</p>
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="close_face_array-class_method">
+  
+    + (<tt>Array&lt;lines&gt;</tt>) <strong>close_face_array</strong>(lines, p, w, selection) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <div class="note deprecated"><strong>Deprecated.</strong> <div class='inline'>
+<p>because we are actually using #close_face, and closing the surface within
+#get_rad_string</p>
+</div></div>
+
+<p>Recursively connects the interior loops of each face on an array to the
+exterior loop of themselves.</p>
+
+<p>This allow efficient exporting by exporting only One Radiance polygon for
+each SketchUp face.</p>
+
+<p>This method exists because SketchUp allows interior loops, but Radiance
+does not.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Close all faces</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='id identifier rubyid_lines'>lines</span><span class='op'>=</span><span class='id identifier rubyid_close_face_array'>close_face_array</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='int'>1</span><span class='comma'>,</span><span class='int'>4</span><span class='comma'>,</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>lines</span>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Should be empty</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>p</span>
+      
+      
+        <span class='type'>(<tt>Int</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Should be different from w. It really does not matter what the input is
+(see source code)</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>w</span>
+      
+      
+        <span class='type'>(<tt>Int</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Should be different from p. It really does not matter what the input is
+(see source code)</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>selection</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;faces&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Array of faces to close.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;lines&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Added lines that will have to be deleted lately. Although it is not needed.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Version:</p>
+<ul class="version">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>1.0</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 164</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_close_face_array'>close_face_array</span><span class='lparen'>(</span><span class='id identifier rubyid_lines'>lines</span><span class='comma'>,</span> <span class='id identifier rubyid_p'>p</span><span class='comma'>,</span> <span class='id identifier rubyid_w'>w</span><span class='comma'>,</span> <span class='id identifier rubyid_selection'>selection</span><span class='rparen'>)</span>
+	
+	<span class='id identifier rubyid_entities'>entities</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span>
+
+	<span class='id identifier rubyid_new_selection'>new_selection</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
+
+	<span class='kw'>if</span> <span class='id identifier rubyid_p'>p</span><span class='op'>==</span><span class='int'>0</span> <span class='kw'>or</span> <span class='id identifier rubyid_p'>p</span><span class='op'>==</span><span class='id identifier rubyid_w'>w</span> <span class='kw'>then</span>
+	<span class='comment'>#p, here, was added because this function sometimes entered to an infinite loop... so when 
+</span>	<span class='comment'>#nothing changes between one close_face implementation and the next one, we stop it.
+</span>		<span class='kw'>return</span> <span class='id identifier rubyid_lines'>lines</span> <span class='comment'>#I know there is no need to return anything.
+</span>	<span class='kw'>else</span>
+		<span class='id identifier rubyid_w'>w</span><span class='op'>=</span><span class='int'>0</span> <span class='comment'>#this will count the number of interior loops
+</span>		<span class='id identifier rubyid_selection'>selection</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span> <span class='comment'>#for all entities
+</span>			<span class='id identifier rubyid_loops'>loops</span><span class='op'>=</span><span class='id identifier rubyid_i'>i</span><span class='period'>.</span><span class='id identifier rubyid_loops'>loops</span> <span class='comment'>#get the loops
+</span>			<span class='kw'>if</span> <span class='id identifier rubyid_loops'>loops</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>&gt;</span> <span class='int'>1</span> <span class='kw'>then</span> <span class='comment'>#it means it has interior loops
+</span>				<span class='comment'>#we add this loop to the new selection, so it will be checked on the next iteration.
+</span>				<span class='id identifier rubyid_new_selection'>new_selection</span><span class='op'>=</span><span class='id identifier rubyid_new_selection'>new_selection</span><span class='op'>+</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> 
+		
+				<span class='id identifier rubyid_out_vert'>out_vert</span><span class='op'>=</span><span class='id identifier rubyid_i'>i</span><span class='period'>.</span><span class='id identifier rubyid_outer_loop'>outer_loop</span><span class='period'>.</span><span class='id identifier rubyid_vertices'>vertices</span> <span class='comment'>#and identify the outer loop
+</span>				<span class='id identifier rubyid_min_dist'>min_dist</span><span class='op'>=</span><span class='int'>1000000</span> <span class='comment'>#just to declare the variable with a big number
+</span>				<span class='id identifier rubyid_pt_o'>pt_o</span><span class='op'>=</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Point3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='int'>0</span><span class='comma'>,</span><span class='int'>0</span><span class='rparen'>)</span> <span class='comment'>#Declare the outer and inner points.
+</span>				<span class='id identifier rubyid_pt_e'>pt_e</span><span class='op'>=</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Point3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='int'>0</span><span class='comma'>,</span><span class='int'>0</span><span class='rparen'>)</span> 
+				<span class='id identifier rubyid_loops'>loops</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_j'>j</span><span class='op'>|</span> <span class='comment'>#Then, for all the loops
+</span>					<span class='kw'>if</span> <span class='op'>!</span> <span class='id identifier rubyid_j'>j</span><span class='period'>.</span><span class='id identifier rubyid_outer?'>outer?</span> <span class='comment'>#that are not outer loops
+</span>						<span class='id identifier rubyid_w'>w</span><span class='op'>=</span><span class='id identifier rubyid_w'>w</span><span class='op'>+</span><span class='int'>1</span> <span class='comment'>#we take note of it
+</span>						<span class='id identifier rubyid_in_vert'>in_vert</span><span class='op'>=</span><span class='id identifier rubyid_j'>j</span><span class='period'>.</span><span class='id identifier rubyid_vertices'>vertices</span> <span class='comment'>#We extract the vertices of the interior loop
+</span>						<span class='id identifier rubyid_in_vert'>in_vert</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='op'>|</span> <span class='comment'>#and for each of them
+</span>							<span class='id identifier rubyid_out_vert'>out_vert</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_l'>l</span><span class='op'>|</span> <span class='comment'>#We check the distance to the vertices of the exterior loop
+</span>								<span class='id identifier rubyid_dist'>dist</span><span class='op'>=</span><span class='id identifier rubyid_l'>l</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span><span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='rparen'>)</span>
+								<span class='kw'>if</span> <span class='id identifier rubyid_dist'>dist</span><span class='op'>&lt;</span><span class='id identifier rubyid_min_dist'>min_dist</span> <span class='comment'>#if the distance is smaller than the smallest until now
+</span>									<span class='id identifier rubyid_min_dist'>min_dist</span><span class='op'>=</span><span class='id identifier rubyid_dist'>dist</span> <span class='comment'>#we change it
+</span>									<span class='id identifier rubyid_pt_o'>pt_o</span><span class='op'>=</span><span class='id identifier rubyid_k'>k</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span> <span class='comment'>#and store the points
+</span>									<span class='id identifier rubyid_pt_e'>pt_e</span><span class='op'>=</span><span class='id identifier rubyid_l'>l</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span>
+								<span class='kw'>end</span>
+							<span class='kw'>end</span>
+						<span class='kw'>end</span>	
+					<span class='kw'>end</span>
+				<span class='kw'>end</span>
+				<span class='id identifier rubyid_ln'>ln</span><span class='op'>=</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_add_line'>add_line</span><span class='lparen'>(</span><span class='id identifier rubyid_pt_o'>pt_o</span><span class='comma'>,</span><span class='id identifier rubyid_pt_e'>pt_e</span><span class='rparen'>)</span> <span class='comment'>#And connect it to the outer loop
+</span>				<span class='id identifier rubyid_lines'>lines</span><span class='op'>=</span><span class='id identifier rubyid_lines'>lines</span><span class='op'>+</span><span class='lbracket'>[</span><span class='id identifier rubyid_ln'>ln</span><span class='rbracket'>]</span> <span class='comment'>#store the lines, since they will be deleted after the export.
+</span>			<span class='kw'>end</span>
+		<span class='kw'>end</span>
+		<span class='id identifier rubyid_connect_faces_slow'>connect_faces_slow</span><span class='lparen'>(</span><span class='id identifier rubyid_lines'>lines</span><span class='comma'>,</span><span class='id identifier rubyid_w'>w</span><span class='comma'>,</span><span class='id identifier rubyid_p'>p</span><span class='comma'>,</span><span class='id identifier rubyid_new_selection'>new_selection</span><span class='rparen'>)</span>
+	<span class='kw'>end</span>
+	<span class='id identifier rubyid_lines'>lines</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
+		<span class='kw'>if</span> <span class='id identifier rubyid_i'>i</span><span class='op'>==</span><span class='kw'>nil</span> <span class='kw'>then</span>
+	
+		<span class='kw'>else</span>
+			<span class='id identifier rubyid_i'>i</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Class</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>added</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='kw'>end</span>
+	<span class='kw'>end</span>	
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="default_sky-class_method">
   
     + (<tt>Object</tt>) <strong>default_sky</strong> 
@@ -849,18 +1156,18 @@ does not.</p>
       <pre class="lines">
 
 
-633
-634
-635
-636
-637
-638
-639
-640
-641</pre>
+693
+694
+695
+696
+697
+698
+699
+700
+701</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 633</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 693</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_default_sky'>default_sky</span>
 	<span class='id identifier rubyid_info'>info</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_shadow_info'>shadow_info</span>
@@ -967,46 +1274,40 @@ different organization,  #exportFaces method should be modified.</p>
       <pre class="lines">
 
 
-226
-227
-228
-229
-230
-231
-232
-233
-234
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246
-247</pre>
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 226</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 292</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_do_multiphase'>do_multiphase</span>
 	
 	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_getpath'>getpath</span> <span class='comment'>#it returns false if not successful
 </span>	<span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_path'>path</span>	<span class='kw'>then</span>
-		<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
+		<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>The model has to be saved to perform this operation.\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='kw'>return</span> <span class='kw'>false</span> 
 	<span class='kw'>end</span>
-	
-	<span class='id identifier rubyid_path_to_save'>path_to_save</span> <span class='op'>=</span> <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_savepanel'>savepanel</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Export model for multiphase</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Multiphase Project</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_path_to_save'>path_to_save</span><span class='op'>=</span><span class='id identifier rubyid_path_to_save'>path_to_save</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>#</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 			
 	<span class='id identifier rubyid_s'>s</span><span class='op'>=</span><span class='const'>GH_OS</span><span class='period'>.</span><span class='id identifier rubyid_slash'>slash</span>
-	<span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mkdir </span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_path_to_save'>path_to_save</span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='id identifier rubyid_path_to_save'>path_to_save</span><span class='op'>+</span><span class='id identifier rubyid_s'>s</span>
-	
+	<span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mkdir </span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_path'>path</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GroundhogExport</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='id identifier rubyid_path'>path</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>GroundhogExport</span><span class='tstring_end'>&#39;</span></span><span class='op'>+</span><span class='id identifier rubyid_s'>s</span>
 	<span class='comment'>#Export the faces and obtain the modifiers
 </span>	<span class='id identifier rubyid_mod_list'>mod_list</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_layers'>export_layers</span><span class='lparen'>(</span><span class='kw'>true</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_modifiers'>export_modifiers</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_mod_list'>mod_list</span><span class='rparen'>)</span>
@@ -1116,46 +1417,40 @@ different organization,  #exportFaces method should be modified.</p>
       <pre class="lines">
 
 
-258
-259
-260
-261
-262
-263
-264
-265
-266
-267
-268
-269
-270
-271
-272
-273
-274
-275
-276
-277
-278
-279</pre>
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 258</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 321</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_do_Radiance'>do_Radiance</span>
 
 	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_getpath'>getpath</span> <span class='comment'>#it returns false if not successful
 </span>	<span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_path'>path</span>	<span class='kw'>then</span>
-		<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
+		<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>The model has to be saved to perform this operation.\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='kw'>return</span> <span class='kw'>false</span> 
 	<span class='kw'>end</span>
-	
-	<span class='id identifier rubyid_path_to_save'>path_to_save</span> <span class='op'>=</span> <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_savepanel'>savepanel</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Export model for multiphase</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Radiance Project</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_path_to_save'>path_to_save</span><span class='op'>=</span><span class='id identifier rubyid_path_to_save'>path_to_save</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>#</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-			
+
 	<span class='id identifier rubyid_s'>s</span><span class='op'>=</span><span class='const'>GH_OS</span><span class='period'>.</span><span class='id identifier rubyid_slash'>slash</span>
-	<span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mkdir </span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_path_to_save'>path_to_save</span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='id identifier rubyid_path_to_save'>path_to_save</span><span class='op'>+</span><span class='id identifier rubyid_s'>s</span>
-	
+	<span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mkdir </span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_path'>path</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>RadianceExport</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='id identifier rubyid_path'>path</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>RadianceExport</span><span class='tstring_end'>&#39;</span></span><span class='op'>+</span><span class='id identifier rubyid_s'>s</span>
 	<span class='comment'>#Export faces
 </span>	<span class='id identifier rubyid_mod_list'>mod_list</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_layers'>export_layers</span><span class='lparen'>(</span><span class='kw'>false</span><span class='comma'>,</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_modifiers'>export_modifiers</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_mod_list'>mod_list</span><span class='rparen'>)</span>
@@ -1262,66 +1557,6 @@ repeated in the “materials.mat” file.</p>
       <pre class="lines">
 
 
-653
-654
-655
-656
-657
-658
-659
-660
-661
-662
-663
-664
-665
-666
-667
-668
-669
-670
-671
-672
-673
-674
-675
-676
-677
-678
-679
-680
-681
-682
-683
-684
-685
-686
-687
-688
-689
-690
-691
-692
-693
-694
-695
-696
-697
-698
-699
-700
-701
-702
-703
-704
-705
-706
-707
-708
-709
-710
-711
-712
 713
 714
 715
@@ -1334,10 +1569,70 @@ repeated in the “materials.mat” file.</p>
 722
 723
 724
-725</pre>
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 653</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 713</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_component_definitions'>export_component_definitions</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_s'>s</span><span class='op'>=</span><span class='const'>GH_OS</span><span class='period'>.</span><span class='id identifier rubyid_slash'>slash</span>
@@ -1564,66 +1859,6 @@ separatedly.</p>
       <pre class="lines">
 
 
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327
-328
-329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346
-347
-348
-349
-350
-351
-352
-353
-354
 355
 356
 357
@@ -1637,10 +1872,70 @@ separatedly.</p>
 365
 366
 367
-368</pre>
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 295</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 355</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_layers'>export_layers</span><span class='lparen'>(</span><span class='id identifier rubyid_multiphase'>multiphase</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 
@@ -1840,49 +2135,49 @@ separatedly.</p>
       <pre class="lines">
 
 
-556
-557
-558
-559
-560
-561
-562
-563
-564
-565
-566
-567
-568
-569
-570
-571
-572
-573
-574
-575
-576
-577
-578
-579
-580
-581
-582
-583
-584
-585
-586
-587
-588
-589
-590
-591
-592
-593
-594
-595</pre>
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 556</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 616</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_modifiers'>export_modifiers</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_mat_array'>mat_array</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mkdir </span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_path'>path</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Materials</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -2033,27 +2328,27 @@ pages, within the API) in other files with the scene (page)name.</p>
       <pre class="lines">
 
 
-411
-412
-413
-414
-415
-416
-417
-418
-419
-420
-421
-422
-423
-424
-425
-426
-427
-428</pre>
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 411</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 471</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_views'>export_views</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mkdir </span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_path'>path</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Views</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -2169,29 +2464,29 @@ pages, within the API) in other files with the scene (page)name.</p>
       <pre class="lines">
 
 
-732
-733
-734
-735
-736
-737
-738
-739
-740
-741
-742
-743
-744
-745
-746
-747
-748
-749
-750
-751</pre>
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 732</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 792</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_component_string'>get_component_string</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_comp'>comp</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
 			
@@ -2906,30 +3201,30 @@ Radiance format.
       <pre class="lines">
 
 
-381
-382
-383
-384
-385
-386
-387
-388
-389
-390
-391
-392
-393
-394
-395
-396
-397
-398
-399
-400
-401</pre>
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 381</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 441</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_getViewString'>getViewString</span><span class='lparen'>(</span><span class='id identifier rubyid_camera'>camera</span><span class='rparen'>)</span>	
 	<span class='id identifier rubyid_vp'>vp</span><span class='op'>=</span><span class='id identifier rubyid_camera'>camera</span><span class='period'>.</span><span class='id identifier rubyid_eye'>eye</span>
@@ -2972,12 +3267,12 @@ Radiance format.
       <pre class="lines">
 
 
-643
-644
-645</pre>
+703
+704
+705</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 643</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 703</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_sky_complement'>sky_complement</span>
 	<span class='kw'>return</span> 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>skyfunc\tglow\tskyglow\n0\n0\n4\t0.99\t0.99\t1.1\t0\n\nskyglow\tsource\tskyball\n0\n0\n4\t0\t0\t1\t360\n\n</span><span class='tstring_end'>&quot;</span></span>
@@ -3079,38 +3374,38 @@ files to create the model.</p>
       <pre class="lines">
 
 
-603
-604
-605
-606
-607
-608
-609
-610
-611
-612
-613
-614
-615
-616
-617
-618
-619
-620
-621
-622
-623
-624
-625
-626
-627
-628
-629
-630
-631</pre>
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 603</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 663</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_scene_file'>write_scene_file</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>scene.rad</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span> <span class='comment'>#The file is opened
@@ -3277,58 +3572,58 @@ path on the Workplanes folder.</p>
       <pre class="lines">
 
 
-497
-498
-499
-500
-501
-502
-503
-504
-505
-506
-507
-508
-509
-510
-511
-512
-513
-514
-515
-516
-517
-518
-519
-520
-521
-522
-523
-524
-525
-526
-527
-528
-529
-530
-531
-532
-533
-534
-535
-536
-537
-538
-539
-540
-541
-542
-543
-544
-545</pre>
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 497</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 557</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_sensors'>write_sensors</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 
@@ -3492,56 +3787,56 @@ Creates a Window folder within the directory.</p>
       <pre class="lines">
 
 
-436
-437
-438
-439
-440
-441
-442
-443
-444
-445
-446
-447
-448
-449
-450
-451
-452
-453
-454
-455
-456
-457
-458
-459
-460
-461
-462
-463
-464
-465
-466
-467
-468
-469
-470
-471
-472
-473
-474
-475
-476
-477
-478
-479
-480
-481
-482</pre>
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 436</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Exporter.rb', line 496</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_window_groups'>write_window_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_windows'>windows</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mkdir </span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_path'>path</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -3733,7 +4028,7 @@ Creates a Window folder within the directory.</p>
 </div>
 
     <div id="footer">
-  Generated on Sat Jun 28 11:02:43 2014 by
+  Generated on Thu Apr 24 19:26:42 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.2 (ruby-2.0.0).
 </div>
