@@ -53,7 +53,7 @@ class GH_AddWorkplane
 			GH_Labeler.set_name(wps)
 	
 			if non_h then
-				UI.messagebox("Horizontal planes were not considered")
+				UI.messagebox("Non horizontal planes were not considered")
 			end
 			
 		  	model.commit_operation

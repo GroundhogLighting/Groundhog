@@ -305,7 +305,7 @@ class GH_Utilities
 	def self.get_component_instances(entities)
 		ret=[]
 		entities.each do |ent|
-			if ent.is_a? Sketchup::ComponentInstance then
+			if ent.is_a? Sketchup::ComponentInstance or ent.is_a? Sketchup::Group then
 				ret=ret+[ent]
 			end
 		end

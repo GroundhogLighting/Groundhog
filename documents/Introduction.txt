@@ -24,11 +24,11 @@ from a library.
 <li>Working with thick walls.
 <li>Exporting complex polygons as one polygon (window openings are not a problem).
 <li>Assigning materials from a library of auto-contained Radiance Material files.
-<li>Materials not existing in the library will be “guessed” by defining a plastic material with no specularity or roughness, with the same color. If the material is transparent, a colored glass material will be assigned.
+<li>Materials not existing in the library will be “guessed” by defining a plastic material with no specularity or roughness, with the same color. If the material is semi-transparent, a colored glass material will be assigned.
 <li>Adding workplanes, which will be exported as a set of sensors that can be used by rcontrib and rtrace programs.
 <li>Adding Illums.
 <li>Grouping windows in order to make more efficient lighting simulations.
-<li>Exporting by layers, separating (or not) the windows from the rest of the geometry.
+<li>Exporting by layers, separating the windows from the rest of the geometry.
 <li>Export views from Scenes saved within SketchUp.
 <li>Every exported file comes with a CIE clear sky with the sun located according to the sun direction in the model.</li>
 

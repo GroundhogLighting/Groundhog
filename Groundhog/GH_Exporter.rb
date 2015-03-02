@@ -156,7 +156,7 @@ class GH_Exporter
 	#
 	# This method is called within {#get_rad_string}
 	# @author German Molina	
-	# @version 1.0
+	# @version 1.0.5
 	# @param lines [Array] Should be empty
 	# @param p [Int] Should be different from w. It really does not matter what the input is (see source code)
 	# @param w [Int] Should be different from p. It really does not matter what the input is (see source code)
@@ -166,8 +166,8 @@ class GH_Exporter
 	#   close_face([],1,4,Sketchup.active_model.selection[0])
 	def self.close_face(lines, p, w, face)
 	
-		entities=Sketchup.active_model.entities
-
+		entities = face.parent.entities
+		
 		if p!=0 and p!=w then 
 		#p, here, was added because this function sometimes entered to an infinite loop... so when 
 		#nothing changes between one close_face implementation and the next one, we stop it.
@@ -182,7 +182,7 @@ class GH_Exporter
 					pt_o=Geom::Point3d.new(0,0,0) #Declare the outer and inner points.
 					pt_e=Geom::Point3d.new(0,0,0) 
 					loops.each do |j| #Then, for all the loops
-						if ! j.outer? #that are not outer loops
+						if ! j.outer? #that are inner loops
 							w=w+1 #we take note of it
 							in_vert=j.vertices #We extract the vertices of the interior loop
 							in_vert.each do |k| #and for each of them
@@ -201,7 +201,7 @@ class GH_Exporter
 					lines=lines+[ln] #store the lines, since they will be deleted after the export.
 				end
 
-			close_face(lines,w,p,face)
+			self.close_face(lines,w,p,face)
 		end
 		
 		lines.each do |i|
@@ -214,7 +214,7 @@ class GH_Exporter
 	end
 	
 	
-	# Export the entire model to the path where the model is saved, organized for multiphase simulation.
+	# Export the entire model to the path where the model is saved.
 	#
 	# Each layer is exported on a different file with the name of the layer, and the 
 	# "illums" of each layer are also exported on a separate file. To make a different organization, 
@@ -223,14 +223,15 @@ class GH_Exporter
 	# @version 1.0
 	# @param [Void]
 	# @return [Void]
-	def self.do_multiphase
+	# @note this method used to be called 'do_multiphase'
+	def self.export
 		
 		path=self.getpath #it returns false if not successful
 		if not path	then
 			path=""
 		end
 		
-		path_to_save = UI.savepanel("Export model for multiphase", path, "Multiphase Project")
+		path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
 		path_to_save=path_to_save.tr(" ","_").tr("#","_")
 				
 		s=GH_OS.slash
@@ -238,7 +239,7 @@ class GH_Exporter
 		path=path_to_save+s
 		
 		#Export the faces and obtain the modifiers
-		mod_list=self.export_layers(true, path, Sketchup.active_model.entities)
+		mod_list=self.export_layers(path, Sketchup.active_model.entities)
 		self.export_modifiers(path,mod_list)
 		self.export_views(path)
 		self.write_scene_file(path)
@@ -246,53 +247,20 @@ class GH_Exporter
 		return true
 	end
 
-	# Export the entire model to the path where the model is saved, organized for Ray-tracing simulation.
-	#
-	# Each layer is exported on a different file with the name of the layer, and the 
-	# "illums" of each layer are also exported on a separate file. To make a different organization, 
-	# {#exportFaces} method should be modified.
-	# @author German Molina	
-	# @version 1.0
-	# @param [Void]
-	# @return [Boolean] True if successful, False if not.
-	def self.do_Radiance
-
-		path=self.getpath #it returns false if not successful
-		if not path	then
-			path=""
-		end
-		
-		path_to_save = UI.savepanel("Export model for multiphase", path, "Radiance Project")
-		path_to_save=path_to_save.tr(" ","_").tr("#","_")
-				
-		s=GH_OS.slash
-		system("mkdir "+path_to_save)
-		path=path_to_save+s
-		
-		#Export faces
-		mod_list=self.export_layers(false,path, Sketchup.active_model.entities)
-		self.export_modifiers(path,mod_list)
-		self.export_views(path)		
-		self.write_scene_file(path)
-		self.export_component_definitions(path)
-		return true
-	end
 	
 	
-	# This method exports the faces organized for multiphase or ray-tracing simulation.
+	# This method exports the faces organized in Groundhog distribution
 	#
 	# Each layer will be exported on on a different file, as well as each illum of each layer.
 	#
-	# If Multiphase organization is chosen, each Window Group will be exported separatedly.
 	# @author German Molina	
-	# @version 1.0
-	# @param multiphase [Boolean] True for mutiphase organization, False for Ray-tracing
+	# @version 1.0.5
 	# @param path [String] Directory where the Geometry folder is.
 	# @param entities [Array<faces>] Array with the entities to export.
 	# @return [Array<Material>] Array of all the unique materials assigned to the exported faces.
-	# @example Export the whole model for Ray-tracing simulation.
-	#   mat_list=GH_Exporter.exportFaces(false,path, SketchUp.active_model.entities)
-	def self.export_layers(multiphase, path, entities)
+	# @example Export the whole model.
+	#   mat_list=GH_Exporter.exportFaces(path, SketchUp.active_model.entities)
+	def self.export_layers(path, entities)
 	
 		system("mkdir "+path+"Geometry")
 
@@ -312,7 +280,7 @@ class GH_Exporter
 		ill_writers=[] #this is an array of illum writers
 		layers.each do |lay|
 			writers=writers+[File.open(path+'Geometry'+s+lay.name.tr(" ","_")+'.rad','w')]
-			ill_writers=ill_writers+[File.open(path+'Geometry'+s+'illums-'+lay.name.tr(" ","_")+'.rad','w')] if not multiphase
+			ill_writers=ill_writers+[File.open(path+'Geometry'+s+'illums-'+lay.name.tr(" ","_")+'.rad','w')] 
 		end
 		
 		
@@ -320,33 +288,31 @@ class GH_Exporter
 		faces.each do |fc| #for each face
 			info=self.get_rad_string(fc,true) #get the information
 	
-			if GH_Labeler.window?(fc) and multiphase then 
-				#If we are exporting for multiple phases, the window groups will be exported
-				#separatedly
+			if GH_Labeler.window?(fc) 
+				#Window groups will be exported separatedly
 				windows=windows+[fc]
+			elsif GH_Labeler.workplane?(fc) then 
+				#if it is workplane, store
+				workplanes=workplanes+[fc]
 			else 
-				#if it is not a window, or it is not for multiphase simulation, we write it as everything else.
-				if GH_Labeler.workplane?(fc) then #if it is workplane, store
-					workplanes=workplanes+[fc]
-				else		
-					i=0
-					layers.each do |ly| #we look for the correct layer
-						if fc.layer.==ly then
-							if GH_Labeler.illum?(fc) and not multiphase then #if it is an illum, write.
-								ill_writers[i].write("void"+info[0])
-							else #if it is anything else
-								#write the information
-								writers[i].write(info[1].name.tr(" ","_")+info[0])
-								#store the material
-								mat_list=mat_list+[info[1]]
-								#and purge the list
-								mat_list.uniq!
-							end							
-						end #end of if in find layer
-						i=i+1		
-					end #end in for each layer
-				end #end in check if it is illum, WP or other
-			end #end of check if it is multiphase
+				i=0
+				layers.each do |ly| #we look for the correct layer
+					if fc.layer.==ly then
+						if GH_Labeler.illum?(fc) then 
+							ill_writers[i].write("void"+info[0])
+						else #if it is anything else
+							#write the information
+							writers[i].write(info[1].name.tr(" ","_")+info[0])
+							#store the material
+							mat_list=mat_list+[info[1]]
+							#and purge the list
+							mat_list.uniq!
+						end							
+					end #end of if in find layer
+					i=i+1		
+				end #end in for each layer
+				
+			end #end of check the label of the face
 		end #end for each faces
 	
 		#Close the rest of the files
@@ -359,10 +325,9 @@ class GH_Exporter
 		#write the workplanes
 		self.write_sensors(path,workplanes)
 
-		#Then, if needed, we analyze the windows
-		if multiphase then
-			self.write_window_groups(path,windows)
-		end
+		#Write windows
+		self.write_window_groups(path,windows)
+
 	
 		return mat_list
 	end
@@ -376,8 +341,8 @@ class GH_Exporter
 	#   File.open("/Certain/Directory/view.vf",'w'){|f|
 	#		f.write(self.getViewString(Sketchup.active_model.active_view.camera))
 	#	}
-	# @todo This is not a good program actually... there are much more options for views on Radiance.
-	#   some work should be done here in order to get it working right.	
+	# @todo This is not a good method actually... there are much more options for views on Radiance.
+	#   some work should be done here in order to get it working correctly.	
 	def self.getViewString(camera)	
 		vp=camera.eye
 		vd=camera.direction
@@ -579,7 +544,7 @@ class GH_Exporter
 
 					f.write("## unsupported Material\n\n")
 					if mat.alpha < 1 then #then this is a glass
-						r=r*mat.alpha #This is probably wrong... but it does the job.
+						r=r*mat.alpha #This is physically wrong... but it does give the appereance
 						g=g*mat.alpha
 						b=b*mat.alpha
 						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s
@@ -603,6 +568,10 @@ class GH_Exporter
 	def self.write_scene_file(path)
 		File.open(path+"scene.rad",'w'){ |f| #The file is opened
 			f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
+			
+			f.write("\n\n\n###### DEFAULT SKY \n\n")			
+			f.write(self.default_sky)
+			
 			f.write("\n\n\n###### GEOMETRY \n\n")
 			
 			Sketchup.active_model.layers.each do |layer|
@@ -625,8 +594,7 @@ class GH_Exporter
 				end
 			end		
 
-			f.write("\n\n\n###### DEFAULT SKY \n\n")			
-			f.write(self.default_sky)
+			
 		}
 	end
 
@@ -651,78 +619,82 @@ class GH_Exporter
 	# @param path [String] Directory to export the model (scene file)
 	# @return [Void]	
 	def self.export_component_definitions(path)
+		defi=Sketchup.active_model.definitions
+		defi.purge_unused
+
+		return if defi.count == 0 #better dont do anything if there are no components
+		
 		s=GH_OS.slash
 		system("mkdir "+path+"Components")
 		path=path+"Components"+s
-		defi=Sketchup.active_model.definitions
-		defi.purge_unused
 	
-		if defi.count > 0 then
-			defi.each do |h|
-				if h.is_a? Sketchup::ComponentDefinition then
-					entities=h.entities
-					faces=GH_Utilities.get_all_layer_faces(entities,[])
-					instances=GH_Utilities.get_component_instances(entities)
-					
-					geom_string=""	
-					instances.each do |inst| #include the nested components
-						geom_string=geom_string+self.get_component_string(" ./",inst,inst.definition.name.tr(" ","_").tr("#","_"))
+		defi.each do |h|
+			next if h.image? # or h.group? 
+			
+			entities=h.entities
+			faces=GH_Utilities.get_all_layer_faces(entities,[])
+			instances=GH_Utilities.get_component_instances(entities)
+			
+			geom_string=""	
+			instances.each do |inst| #include the nested components
+				geom_string=geom_string+self.get_component_string(" ./",inst,inst.definition.name.tr(" ","_").tr("#","_"))
+			end
+			geom_string+="\n\n"
+						
+			mat_array=[] 
+			faces.each do |fc| #then the rest of the faces
+				next if GH_Labeler.workplane? (fc) or GH_Labeler.illum? (fc) or GH_Labeler.window? (fc)
+				
+				info=self.get_rad_string(fc,false)
+				geom_string=geom_string+info[1].name.tr(" ","_")+info[0]
+				mat_array=mat_array+[info[1]]
+			end
+			mat_array.uniq!
+			mat_string=""
+			
+			
+			
+			unsup=0
+			mat_array.each do |mat| #THIS IS REPEATED FROM ANOTHER METHOD!!!
+				matName=mat.name.tr(" ","_").tr("#","_")
+				matPath=GH_OS.rad_material_path+matName+".mat"
+				if File.exist?(matPath) then #write the information.
+					File.open(matPath, "r").each_line do |line|
+					  mat_string=mat_string+line
 					end
-					geom_string+="\n\n"
-								
-					mat_array=[] 
-					faces.each do |fc| #then the rest of the faces
-						info=self.get_rad_string(fc,false)
-						geom_string=geom_string+info[1].name.tr(" ","_")+info[0]
-						mat_array=mat_array+[info[1]]
-					end
-					mat_array.uniq!
-					mat_string=""
-					
-					
-					
-					unsup=0
-					mat_array.each do |mat|
-						matName=mat.name.tr(" ","_").tr("#","_")
-						matPath=GH_OS.rad_material_path+matName+".mat"
-						if File.exist?(matPath) then #write the information.
-							File.open(matPath, "r").each_line do |line|
-							  mat_string=mat_string+line
-							end
-							mat_string=mat_string+"\n\n"
-						else
-							unsup+=1
-							if mat.texture==nil then
-								color=mat.color
-							else
-								color=mat.texture.average_color
-							end					
-							r=color.red/255.0
-							g=color.green/255.0
-							b=color.blue/255.0
+					mat_string=mat_string+"\n\n"
+				else
+					unsup+=1
+					if mat.texture==nil then
+						color=mat.color
+					else
+						color=mat.texture.average_color
+					end					
+					r=color.red/255.0
+					g=color.green/255.0
+					b=color.blue/255.0
 
-							mat_string=mat_string+"## unsupported Material\n\n"
-							if mat.alpha < 1 then #then this is a glass
-								r=r*mat.alpha #This is probably wrong... but it does the job.
-								g=g*mat.alpha
-								b=b*mat.alpha
-								rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s
-								mat_string=mat_string+"void\tglass\t"+matName+"\n0\n0\n3\t"+rgb+"\n"
-							else #This is an opaque material 
-								rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s+"\t0\t0"						
-								mat_string=mat_string+"void\tplastic\t"+matName+"\n0\n0\n5\t"+rgb+"\n"
-							end
-							mat_string=mat_string+"\n\n"
-						end
+					mat_string=mat_string+"## unsupported Material\n\n"
+					if mat.alpha < 1 then #then this is a glass
+						r=r*mat.alpha #This is probably wrong... but it does the job.
+						g=g*mat.alpha
+						b=b*mat.alpha
+						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s
+						mat_string=mat_string+"void\tglass\t"+matName+"\n0\n0\n3\t"+rgb+"\n"
+					else #This is an opaque material 
+						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s+"\t0\t0"						
+						mat_string=mat_string+"void\tplastic\t"+matName+"\n0\n0\n5\t"+rgb+"\n"
 					end
-					hName=h.name.tr(" ","_").tr("#","_") # The "#" symbol starts comments in Radiance.
-					File.open(path+hName+".rad",'w'){ |f|
-						f.write mat_string+geom_string
-					}				
+					mat_string=mat_string+"\n\n"
 				end
 			end
-		end		
-	end
+			hName=h.name.tr(" ","_").tr("#","_") # The "#" symbol starts comments in Radiance.
+			File.open(path+hName+".rad",'w'){ |f|
+				f.write mat_string+geom_string
+			}				
+
+		end	#end for each
+	end #end method
 	
 	# Returns the String that has to be written in the scene file... !xform etc.
 	# @author German Molina	

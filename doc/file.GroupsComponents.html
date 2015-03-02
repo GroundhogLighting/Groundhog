@@ -6,7 +6,7 @@
 <title>
   File: Groups and Components
   
-    &mdash; Documentation by YARD 0.8.7.2
+    &mdash; Documentation by YARD 0.8.7.6
   
 </title>
 
@@ -17,7 +17,7 @@
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
   relpath = '';
-  framesUrl = "frames.html#!" + escape(window.location.href);
+  framesUrl = "frames.html#!file.GroupsComponents.html";
 </script>
 
 
@@ -67,43 +67,39 @@
 
 <h2>About groups and components</h2>
 
-<p align="justify">Groups and components might seem a similar thing. However, they are very different and they
-are actually treated differently by Groundhog.</p>
+<p align="justify">Groundhog treats Groups and Components just as SketchUp does... that is, each group and component
+will be exported in its own file, with its own materials, and then 'xformed' into another file in order to position it
+somewhere... there are sutil diferences, though, and they are explain below.</p>
 
 <p align="justify">A Group is, well, a group of elements that are tied together. You can group, for example, 
-a set of luminaires or furniture. Then, you can copy and paste the whole group, move it around, delete it, etc. 
-Groups, from the Grounhog point of view, are meant to simplify the process of creating and handling models, 
-however, they are treated just as any other surface or line. Accordingly, 
-they will be exported with each layer just as any other geometry.</p>
+a set of luminaires or furniture. Then, you can copy and paste the whole group, move it around, delete it, etc. </p>
 
 <p align="justify">Components, on the other hand, can be thought as groups that are meant to be repeated
 a number of times and that will always be equal. For example, an office may have 15 chairs, and they will
 all be the same. In this case, it makes little sense to export the same chair 15 times. On the contrary, 
 it is better to export it just once and then tell Radiance that we are including that chair in different 
-locations and orientations within the Office. Accordingly, Components will be exported just once in a 
-different file and then included into the main 'scene.rad' file by using the Radiance's '!xform' command.</p>
+locations and orientations within the Office. Accordingly, Components will be exported just once in an exlusive
+file and then included into the main 'scene.rad' or another group or component file by using the Radiance's '!xform' 
+command.</p>
 
-<p align="justify">Nested components (components that lay within another component) will be “!xformed” inside
-the definition of the parent component (i.e. within the .rad file located in the corresponding directory). First
-level components (components that are not inside any other component), on the other hand, will be “!xformed”
-in the scene file. Play a little with this.</p>
+<p align="justify">Nested components  or groups (components or groups that lay within another component) will be 
+“!xformed” inside the definition of the parent component (i.e. within the .rad file located in the corresponding 
+directory). First level components (components that are not inside any other component), on the other hand, will 
+be “!xformed” in the scene file. Play a little with this.</p>
 
-<h2>Why treating them differently</h2>
-<p align="justify">On one hand, exporting Components once instead of a number of times saves space and helps
-keeping everything in order and under control. On the other hand, this is very useful for, for example, 
-exporting Shading Devices. Although this is a very specific personal interest, designing a Shading Device
-within SketchUp as a Component allows exporting it in its own file, making it easier to analyze it with Radiance.
-For example, placing it in the right orientation and position (within its own references), allows directly 
-running Radiance's 'genBSDF' program, that might be used for implementing 3 or 5 phase methods.</p>
+<h2>How to use this little difference</h2>
+<p align="justify">Replacing 10 equivalent groups by one component can save space time and space. Space since the 
+'xform' command used to place it in other files is much smaller than re-writing the same object again and again. And
+time since any modification made on the component file will be repeated in all of its instances, thus saving us modelling time.</p>
 
 
 <h3>Notes</h3>
-<p align="justify">Components within components, and components within groups seem to work fine. Groups within components, though, seem to be working incorrectly. Please avoid that by exploding (right click -> explode) the groups that lay inside other groups or components… I have found this very tricky to program. If you find a bug, please let me know.</p></div></div>
+<p align="justify">Windows, Illums and Workplanes that are placed within components or groups are totally ignored when exporting.</p></div></div>
 
     <div id="footer">
-  Generated on Sat Jun 28 11:02:42 2014 by
+  Generated on Mon Mar  2 17:16:31 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.7.2 (ruby-2.0.0).
+  0.8.7.6 (ruby-2.0.0).
 </div>
 
   </body>
