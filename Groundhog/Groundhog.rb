@@ -197,50 +197,30 @@ UI.add_context_menu_handler do |context_menu|
 	end
 end
 
-#render = UI::Command.new("render") { 
-#	   Sketchup.active_model.select_tool GH_Render.new
-# }
-# render.small_icon = "Icons/add_workplane.png"
-# render.large_icon = "Icons/add_workplane.png"
-# render.tooltip = "Groundhog rendering options"
-# render.status_bar_text = "Groundhog rendering options"
-# render.menu_text = "Groundhog rendering options"
-  
 
- export_multiphase = UI::Command.new("export_multiphase") { 
-	GH_Exporter.do_multiphase
- }
- export_multiphase.small_icon = "Icons/export_multiphase.png"
- export_multiphase.large_icon = "Icons/export_multiphase.png"
- export_multiphase.tooltip = "Export Radiance model for multiphase simulation"
- export_multiphase.status_bar_text = "Export Radiance model for multiphase simulation"
- export_multiphase.menu_text = "Export Radiance model for multiphase simulation"
- 
- export_Radiance = UI::Command.new("export_Radiance") { 
-	GH_Exporter.do_Radiance
- }
- export_Radiance.small_icon = "Icons/export_Radiance.png"
- export_Radiance.large_icon = "Icons/export_Radiance.png"
- export_Radiance.tooltip = "Export Radiance model for ray-tracing simulation"
- export_Radiance.status_bar_text = "Export Radiance model for ray-tracing simulation"
- export_Radiance.menu_text = "Export Radiance model for ray-tracing simulation"
- 
+file_menu = UI.menu "File"
+file_menu.add_separator
+file_menu.add_item("Export to Radiance") {
+	GH_Exporter.export
+}
+
+
 #############################
  
 
 gh_Toolbar = gh_Toolbar.add_item mkWindow
-#gh_Toolbar = gh_Toolbar.add_item render 
 gh_Toolbar = gh_Toolbar.add_item addWorkplane 
-#gh_Toolbar = gh_Toolbar.add_item rvu
-gh_Toolbar = gh_Toolbar.add_item export_multiphase
-gh_Toolbar = gh_Toolbar.add_item export_Radiance
-
-
 gh_Toolbar.show
 
-tool_menu = UI.menu "Plugins"
-tool_menu.add_item("Show Groundhog Toolbar") {
+
+
+extensions_menu = UI.menu "Plugins"
+extensions_menu.add_item("Show Groundhog Toolbar") {
 	gh_Toolbar.show
+}
+
+extensions_menu.add_item("About Groundhog"){
+	UI.messagebox "Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+"\n\nCreator:\n"+Sketchup.extensions["Groundhog"].creator+"\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
 }
 
 help_menu= UI.menu "Help"

@@ -20,7 +20,11 @@
   </head>
   <body>
     <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) {
+      var hasFrames = false;
+      try {
+        hasFrames = window.top.frames.main ? true : false;
+      } catch (e) { }
+      if (hasFrames) {
         document.getElementById('base_target').target = 'main';
         document.body.className = 'frames';
       }
@@ -48,61 +52,85 @@
         
 
   <li class="r1 ">
+    <span class='object_link'><a href="GH_MkWindow.html#activate-instance_method" title="GH_MkWindow#activate (method)">#activate</a></span>
+    <small>GH_MkWindow</small>
+  </li>
+  
+
+  <li class="r2 ">
+    <span class='object_link'><a href="GH_Render.html#activate-instance_method" title="GH_Render#activate (method)">#activate</a></span>
+    <small>GH_Render</small>
+  </li>
+  
+
+  <li class="r1 ">
+    <span class='object_link'><a href="GH_AddWorkplane.html#add_Workplanes-class_method" title="GH_AddWorkplane.add_Workplanes (method)">add_Workplanes</a></span>
+    <small>GH_AddWorkplane</small>
+  </li>
+  
+
+  <li class="r2 ">
     <span class='object_link'><a href="GH_Labeler.html#assign_CFS-class_method" title="GH_Labeler.assign_CFS (method)">assign_CFS</a></span>
     <small>GH_Labeler</small>
   </li>
   
 
-  <li class="r2 ">
+  <li class="r1 ">
     <span class='object_link'><a href="GH_Utilities.html#check_window_normals-class_method" title="GH_Utilities.check_window_normals (method)">check_window_normals</a></span>
     <small>GH_Utilities</small>
   </li>
   
 
-  <li class="r1 ">
+  <li class="r2 ">
     <span class='object_link'><a href="GH_Exporter.html#close_face-class_method" title="GH_Exporter.close_face (method)">close_face</a></span>
     <small>GH_Exporter</small>
   </li>
   
 
-  <li class="r2 ">
+  <li class="r1 ">
     <span class='object_link'><a href="GH_Labeler.html#component_definition%3F-class_method" title="GH_Labeler.component_definition? (method)">component_definition?</a></span>
     <small>GH_Labeler</small>
   </li>
   
 
-  <li class="r1 ">
+  <li class="r2 ">
     <span class='object_link'><a href="GH_Labeler.html#component_instance%3F-class_method" title="GH_Labeler.component_instance? (method)">component_instance?</a></span>
     <small>GH_Labeler</small>
   </li>
   
 
-  <li class="r2 ">
+  <li class="r1 ">
     <span class='object_link'><a href="GH_Utilities.html#count_windows-class_method" title="GH_Utilities.count_windows (method)">count_windows</a></span>
     <small>GH_Utilities</small>
   </li>
   
 
+  <li class="r2 ">
+    <span class='object_link'><a href="GH_MkWindow.html#deactivate-instance_method" title="GH_MkWindow#deactivate (method)">#deactivate</a></span>
+    <small>GH_MkWindow</small>
+  </li>
+  
+
   <li class="r1 ">
+    <span class='object_link'><a href="GH_Render.html#deactivate-instance_method" title="GH_Render#deactivate (method)">#deactivate</a></span>
+    <small>GH_Render</small>
+  </li>
+  
+
+  <li class="r2 ">
     <span class='object_link'><a href="GH_Exporter.html#default_sky-class_method" title="GH_Exporter.default_sky (method)">default_sky</a></span>
     <small>GH_Exporter</small>
   </li>
   
 
-  <li class="r2 ">
+  <li class="r1 ">
     <span class='object_link'><a href="GH_Utilities.html#delete_label-class_method" title="GH_Utilities.delete_label (method)">delete_label</a></span>
     <small>GH_Utilities</small>
   </li>
   
 
-  <li class="r1 ">
-    <span class='object_link'><a href="GH_Exporter.html#do_Radiance-class_method" title="GH_Exporter.do_Radiance (method)">do_Radiance</a></span>
-    <small>GH_Exporter</small>
-  </li>
-  
-
   <li class="r2 ">
-    <span class='object_link'><a href="GH_Exporter.html#do_multiphase-class_method" title="GH_Exporter.do_multiphase (method)">do_multiphase</a></span>
+    <span class='object_link'><a href="GH_Exporter.html#export-class_method" title="GH_Exporter.export (method)">export</a></span>
     <small>GH_Exporter</small>
   </li>
   

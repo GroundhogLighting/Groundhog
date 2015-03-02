@@ -6,7 +6,7 @@
 <title>
   Class: GH_Utilities
   
-    &mdash; Documentation by YARD 0.8.7.2
+    &mdash; Documentation by YARD 0.8.7.6
   
 </title>
 
@@ -17,7 +17,7 @@
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
   relpath = '';
-  framesUrl = "frames.html#!" + escape(window.location.href);
+  framesUrl = "frames.html#!GH_Utilities.html";
 </script>
 
 
@@ -1216,7 +1216,7 @@ simple faces and faces within groups).</p>
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_component_instances'>get_component_instances</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_ret'>ret</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
 	<span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ent'>ent</span><span class='op'>|</span>
-		<span class='kw'>if</span> <span class='id identifier rubyid_ent'>ent</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>ComponentInstance</span> <span class='kw'>then</span>
+		<span class='kw'>if</span> <span class='id identifier rubyid_ent'>ent</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>ComponentInstance</span> <span class='kw'>or</span> <span class='id identifier rubyid_ent'>ent</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Group</span> <span class='kw'>then</span>
 			<span class='id identifier rubyid_ret'>ret</span><span class='op'>=</span><span class='id identifier rubyid_ret'>ret</span><span class='op'>+</span><span class='lbracket'>[</span><span class='id identifier rubyid_ent'>ent</span><span class='rbracket'>]</span>
 		<span class='kw'>end</span>
 	<span class='kw'>end</span>
@@ -2644,9 +2644,9 @@ Radiance as non-planars when building the octree.</p>
 </div>
 
     <div id="footer">
-  Generated on Sat Jun 28 11:02:43 2014 by
+  Generated on Mon Mar  2 17:16:32 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.7.2 (ruby-2.0.0).
+  0.8.7.6 (ruby-2.0.0).
 </div>
 
   </body>
