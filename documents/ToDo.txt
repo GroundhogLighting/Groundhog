@@ -1,0 +1,33 @@
+# @markup markdown
+# @title To Do
+# @author German Molina
+
+# Welcome contributions
+Anything contribution that you think is be useful will be welcome, as long as it keeps the line of the project and is not invasive.
+You can do anything, from adding things to the lists below, create logos, icons, tutorials, etc. We will evaluate if it works.
+
+
+Please contact us to germolinal@gmail.com
+
+# Programing tasks
+- RAD (rid) exporter interface.
+- Fix Groups exporting… a few experiments of Nested Groups and Components will show the cases that cause errors.
+- Allow project overwrite. That is, modify the model, press “export” again and replace the existing project with the actual one. Much more comfortable for working with Radiance and SketchUp simultaneously.
+- Allow non-horizontal workplanes (what happens when workplanes point down?)
+- Fix the "view" exporter. It is not exporting properly... I think I need to understand better how to model a camera.
+- "Setworkplane" function works ok, but it would be nice to add an "offset" option, so it creates workplaces that are smaller than the original surface. This would avoid some uncomfortable situations (i.e. the new workplace divides the wall surfaces, creating more surfaces).
+- Enhance the export methods.
+- Importing models from Revit® or other CAD programs. 
+- Allow importing furniture, materials, fenestration systems and luminaries from a (online maybe?) library.
+
+# Non-programming tasks
+- Maybe "solve" some of the Radiance tutorials using Groundhog...?
+- Logo (please?)... the name comes from the Groundhog Day tradition, just in case you want to create it.
+- Icons for tools (please...?)
+- TUTORIAL: Groups and Components.
+- TUTORIAL: Tutorial 0.
+- TUTORIAL: Including models from the 3D warehouse
+- TUTORIAL: Adding terrain from Google Earth
+- Any documentation you would like to fix or add.
+- REPORT BUGS!!! germolinal@gmail.com
+- COMMENT IDEAS!!! germolinal@gmail.com

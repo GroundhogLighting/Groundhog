@@ -1,0 +1,49 @@
+# @markup html
+# @title Workplanes
+# @author German Molina
+
+<h1>Including workplanes into the model</h1>
+<p align="justify">Including workplanes into the model will be useful for obtaining numerical (quantitative) results such as
+annual simulations, daylight factors and other results.</p>
+
+<p align="justify">Workplanes will be shown as a semi-transparent red surface, although this surface is labeled as 
+"Workplane", and will not be exported to the Radiance model as a surface. Actually, at the moment of exporting, you will 
+be asked for the spacing of the workplane sensors.</p>
+
+<p align="justify">Workplanes are supposed to be horizontal. We are planning on allowing non-horizontal ones soon.</p>
+
+<h2>Including a workplane</h2>
+
+<h3>Step 1: Draw a surface over which you want to put a workplane.</h3>
+<p align="justify">This surface has to point down. I know is not the best or more intuitive, I wish this ged fixed soon.</p>
+<figure align="center">
+<img src="MakeWorkplane/fig1.png" alt="Draw a surface">
+<figcaption>Figure 1: First step - Draw a surface over which you want to put a workplane</figcaption>
+</figure>
+
+<h3>Step 2: Select the surface.</h3>
+<figure align="center">
+<img src="MakeWorkplane/fig2.png" alt="Select the surface">
+<figcaption>Figure 2: Second step - Select the surface.</figcaption>
+</figure>
+
+<h3>Step 3: Press the 'Add Workplane' tool.</h3>
+<!--<figure align="center">
+<img src="MakeWorkplane/fig3.png" alt="Press the tool">
+<figcaption>Figure 3: Third step - Press the 'Add Workplane' tool.</figcaption>
+</figure>-->
+
+<h3>Step 4: Write the distance from the floor to the workplane (height), and press enter</h3>
+<p align="justify">This is written "in the air", just as when you are making a rectangle</p>
+<figure align="center">
+<img src="MakeWorkplane/fig4.png" alt="Draw a surface">
+<figcaption>Figure 4: Write the distance from the floor to the workplane (height), and press enter.</figcaption>
+</figure>
+
+<h3>Step 5: Press the spacebar to quit the tool.</h3>
+<p align="justify">This should be done automatically... soon.</p>
+
+<h3>Notes</h3>
+<p align="justify">When a workplane is created inside a room, it usually splits the walls into two surfaces. 
+This is not convenient. I have managed to deal with this by "offsetting" the floor, so the final workplane
+is separated from the walls.</p>
