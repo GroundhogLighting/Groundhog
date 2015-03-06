@@ -243,6 +243,7 @@ class GH_Exporter
 		self.export_views(path)
 		self.write_scene_file(path)
 		self.export_component_definitions(path)
+		self.write_rif_file(path)
 		return true
 	end
 
@@ -720,7 +721,45 @@ class GH_Exporter
 		
 		return ret
 	end
-	
+
+	# Export the RIF file, for creating renders
+	# @author German Molina	
+	# @version 0.1
+	# @param path [String] Directory to export the RIF file
+	# @return [Void]	
+	# @note It assumes that the relevant zone is interior.
+	def self.write_rif_file(path)
+		model=Sketchup.active_model
+		box=model.bounds
+		max=box.max
+		min=box.min
+		pages=model.pages
+		
+		File.open(path+"scene.rif",'w'){ |f| #The file is opened
+			f.write("###############\n## RIF exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
+			
+			f.write("ZONE= I #{min.x.to_m} #{max.x.to_m} #{min.y.to_m} #{max.y.to_m} #{min.z.to_m}  #{max.z.to_m} \n")
+			f.write("UP=Z\n")
+			f.write("scene=./scene.rad\n")
+			f.write("materials=./Materials/materials.mat\n")
+			f.write("QUAL=LOW\n")
+			f.write("VAR=High\n")
+			f.write("RESOLUTION=560 560\n")
+			f.write("AMBFILE=ambient.amb\n")
+			f.write("INDIRECT=3\n")
+			f.write("PENUMBRAS=True\n")
+			f.write("REPORT=2")
+			f.write("\n\n#VIEWS\n\n")
+			f.write("view=actual_view -vf Views/view.vf\n")			
+			#then the scenes
+			if pages.count>=1 then
+				pages.each do |page|
+					f.write("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
+				end
+			end
+			
+		}
+	end	
 
 	
 end #end class
