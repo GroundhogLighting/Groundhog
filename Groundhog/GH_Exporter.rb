@@ -10,7 +10,6 @@ class GH_Exporter
 	# @version 1.0
 	# @param face [face] SketchUp face, that should be a window.
 	# @return [int] Orientation. North is 0, and degrees augment counterclockwise. East is 90, West is 270. 
-	#   Maybe we could put the 0 to North??
 	# @todo Verify and debug when implementing this feature.
 	# @example Get the orientation of a face
 	#   face=Sketchup.active_model.selection[0]
@@ -722,5 +721,6 @@ class GH_Exporter
 		return ret
 	end
 	
+
 	
 end #end class

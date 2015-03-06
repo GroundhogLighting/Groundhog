@@ -11,7 +11,6 @@ Please contact us to germolinal@gmail.com
 
 # Programing tasks
 - RAD (rid) exporter interface.
-- Fix Groups exporting… a few experiments of Nested Groups and Components will show the cases that cause errors.
 - Allow project overwrite. That is, modify the model, press “export” again and replace the existing project with the actual one. Much more comfortable for working with Radiance and SketchUp simultaneously.
 - Allow non-horizontal workplanes (what happens when workplanes point down?)
 - Fix the "view" exporter. It is not exporting properly... I think I need to understand better how to model a camera.
