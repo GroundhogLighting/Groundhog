@@ -243,7 +243,6 @@ class GH_Exporter
 		self.export_views(path)
 		self.write_scene_file(path)
 		self.export_component_definitions(path)
-		self.write_rif_file(path)
 		return true
 	end
 
@@ -272,15 +271,14 @@ class GH_Exporter
 		s=GH_OS.slash #just to avoid calling the method on every iteration.
 		windows=[] # this array will store the windows in case their are needed
 		workplanes=[]
-	
+		illums=[]
+		
 		#We get the layers in the model
 		layers=model.layers
 		#we open one file per each layer
 		writers=[] #this is an array of writers
-		ill_writers=[] #this is an array of illum writers
 		layers.each do |lay|
 			writers=writers+[File.open(path+'Geometry'+s+lay.name.tr(" ","_")+'.rad','w')]
-			ill_writers=ill_writers+[File.open(path+'Geometry'+s+'illums-'+lay.name.tr(" ","_")+'.rad','w')] 
 		end
 		
 		
@@ -294,20 +292,18 @@ class GH_Exporter
 			elsif GH_Labeler.workplane?(fc) then 
 				#if it is workplane, store
 				workplanes=workplanes+[fc]
+			elsif GH_Labeler.illum?(fc) then 
+				illums=illums+[fc]
 			else 
 				i=0
 				layers.each do |ly| #we look for the correct layer
 					if fc.layer.==ly then
-						if GH_Labeler.illum?(fc) then 
-							ill_writers[i].write("void"+info[0])
-						else #if it is anything else
-							#write the information
-							writers[i].write(info[1].name.tr(" ","_")+info[0])
-							#store the material
-							mat_list=mat_list+[info[1]]
-							#and purge the list
-							mat_list.uniq!
-						end							
+						#write the information
+						writers[i].write(info[1].name.tr(" ","_")+info[0])
+						#store the material
+						mat_list=mat_list+[info[1]]
+						#and purge the list
+						mat_list.uniq!
 					end #end of if in find layer
 					i=i+1		
 				end #end in for each layer
@@ -319,15 +315,18 @@ class GH_Exporter
 		writers.each do |w|
 			w.close
 		end
-		ill_writers.each do |w|
-			w.close
-		end
+
 		#write the workplanes
 		self.write_sensors(path,workplanes)
 
 		#Write windows
 		self.write_window_groups(path,windows)
 
+		#Write windows
+		self.write_illums(path,illums)
+
+		#write rif
+		self.write_rif_file(path, illums, windows)
 	
 		return mat_list
 	end
@@ -403,12 +402,10 @@ class GH_Exporter
 		
 		groups=GH_Utilities.get_win_groups(windows)
 		ngroups=groups.length
+		rad_strings=Array.new(ngroups,"") #store the geometry of the windows
+		materials=Array.new(ngroups,[]) #store the materials of the windows
 		nwin=1 #this will count the windows
 		s=GH_OS.slash
-		writers=[]
-		groups.each do |gr|
-			writers=writers+[File.open(path+'Windows'+s+gr+'.rad','w')]
-		end
 
 		windows.each do |win|
 			c=GH_Labeler.get_win_group(win)
@@ -418,9 +415,9 @@ class GH_Exporter
 				i=0
 				while i<ngroups
 					if c==groups[i] then #if the group of the window is the same as the one in the array
-						writers[i].write('#normal (points inside): '+win.normal.x.to_s+' '+win.normal.y.to_s+' '+win.normal.z.to_s+"\n")
-						writers[i].write('WinMat'+info[0])
-#						writers[i].write(info[1].name+' '+info[0])
+						materials[i]+=[info[1]]
+						rad_strings[i]+='#normal (points inside): '+win.normal.x.to_s+' '+win.normal.y.to_s+' '+win.normal.z.to_s+"\n"
+						rad_strings[i]+=info[1].name+' '+info[0]+"\n\n" #Window with its material
 						break # we leave the loop
 					end
 					i+=1
@@ -435,15 +432,29 @@ class GH_Exporter
 				else 
 					wr=File.open(path+'Windows'+s+winname+'.rad','w')
 				end
-				wr.write('WinMat '+info[0])
+				wr.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
 				wr.close	
 			end
 		end
 
 		#Close the rest of the files
-		writers.each do |w|
+		writers=[]
+		count=0
+		groups.each do |gr|
+			materials[count].uniq!
+			mat_string=""
+			materials[count].each do |mat|
+				mat_string+=self.get_mat_string(mat,false)
+			end
+			mat_string+="\n\n"
+			
+			w=File.open(path+'Windows'+s+gr+'.rad','w')
+			w.write(mat_string+rad_strings[count])
 			w.close
+			count=count+1
 		end
+
+
 	end
 
 	# Writes the sensors that are over the workplanes. Creates a Workplanes folder on the directory.
@@ -461,52 +472,75 @@ class GH_Exporter
 	# @todo Allow non-horizontal workplanes?
 	def self.write_sensors(path,entities)
 
-		system("mkdir "+path+"Workplanes")
-		
-		if entities.length>0 then #we export this only if there is any workplane	
-			path=path+GH_OS.slash+'Workplanes'+GH_OS.slash
-			prompts=["Workplane Sensor Spacing (m)"]
-			defaults=[0.3]
-			sys=UI.inputbox prompts, defaults, "Spacing of the sensors on workplanes?"
-			d=sys[0].m
 
-			entities.each do |ent| #for all the entities (which are faces)
-				if GH_Labeler.workplane?(ent) then #Only workplanes
-					name=GH_Labeler.get_name(ent).tr(" ","_") #Get the name of the surface
-					pts=[] #Create an array with all the points 
-					b=ent.bounds
-					max=b.max
-					min=b.min
-					max_x=max.x
-					max_y=max.y
-					x=min.x
-					y=min.y
-					z=min.z
-					while x<max_x do #loop over all the face
-						while y<max_y do
-							pt=Geom::Point3d.new(x,y,z)
-							if ent.classify_point(pt)==1 then #if the point is on the workplane
-								pts=pts+[pt]
-							end
-							y=y+d
+		return false if entities.length<1 #we export this only if there is any workplane	
+		
+		system("mkdir "+path+"Workplanes")
+		path=path+GH_OS.slash+'Workplanes'+GH_OS.slash
+		prompts=["Workplane Sensor Spacing (m)"]
+		defaults=[0.3]
+		sys=UI.inputbox prompts, defaults, "Spacing of the sensors on workplanes?"
+		d=sys[0].m
+
+		entities.each do |ent| #for all the entities (which are faces)
+			if GH_Labeler.workplane?(ent) then #Only workplanes
+				name=GH_Labeler.get_name(ent).tr(" ","_") #Get the name of the surface
+				pts=[] #Create an array with all the points 
+				b=ent.bounds
+				max=b.max
+				min=b.min
+				max_x=max.x
+				max_y=max.y
+				x=min.x
+				y=min.y
+				z=min.z
+				while x<max_x do #loop over all the face
+					while y<max_y do
+						pt=Geom::Point3d.new(x,y,z)
+						if ent.classify_point(pt)==1 then #if the point is on the workplane
+							pts=pts+[pt]
 						end
-						y=min.y #restart y.
-						x=x+d
-					end 
-			
-					File.open(path+name+'.pts','w'){ |f| #The file is opened
-						pts.each do |p| #and the sensors are written
-							x=p.x.to_m
-							y=p.y.to_m
-							z=p.z.to_m
-							f.write(x.to_s+"\t"+y.to_s+"\t"+z.to_s+"\t0\t0\t1\n") 
-							#this will have to change for exporting non horizontal workplanes.
-						end
-					}
-			
-				end
+						y=y+d
+					end
+					y=min.y #restart y.
+					x=x+d
+				end 
+		
+				File.open(path+name+'.pts','w'){ |f| #The file is opened
+					pts.each do |p| #and the sensors are written
+						x=p.x.to_m
+						y=p.y.to_m
+						z=p.z.to_m
+						f.write(x.to_s+"\t"+y.to_s+"\t"+z.to_s+"\t0\t0\t1\n") 
+						#this will have to change for exporting non horizontal workplanes.
+					end
+				}
+		
 			end
 		end
+		
+	end
+
+	def self.write_illums(path,entities)
+
+		return false if entities.length<1 
+			
+		
+		system("mkdir "+path+"Illums")
+		path=path+GH_OS.slash+'Illums'+GH_OS.slash
+
+		entities.each do |ent| #for all the entities (which are faces)
+			if GH_Labeler.illum?(ent) then #Only illums
+				name=GH_Labeler.get_name(ent).tr(" ","_") #Get the name of the surface
+				info=self.get_rad_string(ent,true)
+				
+				File.open(path+name+'.rad','w'){ |f| #The file is opened
+					f.write("void "+info[0]) 
+				}
+		
+			end
+		end
+
 	end
 
 	
@@ -524,37 +558,7 @@ class GH_Exporter
 		File.open(path+"materials.mat",'w'){ |f| #The file is opened
 			unsup=0
 			mat_array.each do |mat|
-				matName=mat.name.tr(" ","_").tr("#","_")
-				matPath=GH_OS.rad_material_path+matName+".mat"
-				if File.exist?(matPath) then #write the information.
-					File.open(matPath, "r").each_line do |line|
-					  f.write(line)
-					end
-					f.write("\n\n")
-				else
-					unsup+=1
-					if mat.texture==nil then
-						color=mat.color
-					else
-						color=mat.texture.average_color
-					end					
-					r=color.red/255.0
-					g=color.green/255.0
-					b=color.blue/255.0
-
-					f.write("## unsupported Material\n\n")
-					if mat.alpha < 1 then #then this is a glass
-						r=r*mat.alpha #This is physically wrong... but it does give the appereance
-						g=g*mat.alpha
-						b=b*mat.alpha
-						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s
-						f.write("void\tglass\t"+matName+"\n0\n0\n3\t"+rgb+"\n")
-					else #This is an opaque material 
-						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s+"\t0\t0"						
-						f.write("void\tplastic\t"+matName+"\n0\n0\n5\t"+rgb+"\n")
-					end
-					f.write("\n\n")
-				end
+				f.write(self.get_mat_string(mat,false)+"\n\n")
 			end	
 		}
 	end
@@ -631,6 +635,7 @@ class GH_Exporter
 		defi.each do |h|
 			next if h.image? # or h.group? 
 			
+			hName=h.name.tr(" ","_").tr("#","_") # The "#" symbol starts comments in Radiance.			
 			entities=h.entities
 			faces=GH_Utilities.get_all_layer_faces(entities,[])
 			instances=GH_Utilities.get_component_instances(entities)
@@ -652,43 +657,13 @@ class GH_Exporter
 			mat_array.uniq!
 			mat_string=""
 			
-			
-			
-			unsup=0
-			mat_array.each do |mat| #THIS IS REPEATED FROM ANOTHER METHOD!!!
-				matName=mat.name.tr(" ","_").tr("#","_")
-				matPath=GH_OS.rad_material_path+matName+".mat"
-				if File.exist?(matPath) then #write the information.
-					File.open(matPath, "r").each_line do |line|
-					  mat_string=mat_string+line
-					end
-					mat_string=mat_string+"\n\n"
-				else
-					unsup+=1
-					if mat.texture==nil then
-						color=mat.color
-					else
-						color=mat.texture.average_color
-					end					
-					r=color.red/255.0
-					g=color.green/255.0
-					b=color.blue/255.0
-
-					mat_string=mat_string+"## unsupported Material\n\n"
-					if mat.alpha < 1 then #then this is a glass
-						r=r*mat.alpha #This is probably wrong... but it does the job.
-						g=g*mat.alpha
-						b=b*mat.alpha
-						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s
-						mat_string=mat_string+"void\tglass\t"+matName+"\n0\n0\n3\t"+rgb+"\n"
-					else #This is an opaque material 
-						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s+"\t0\t0"						
-						mat_string=mat_string+"void\tplastic\t"+matName+"\n0\n0\n5\t"+rgb+"\n"
-					end
-					mat_string=mat_string+"\n\n"
-				end
+			mat_count=1
+			mat_array.each do |mat|
+				mat_string=mat_string+self.get_mat_string(mat, false)+"\n\n"#hName+"_"+mat_count.to_s)+"\n\n"
+				mat_count=mat_count+1
 			end
-			hName=h.name.tr(" ","_").tr("#","_") # The "#" symbol starts comments in Radiance.
+			
+			
 			File.open(path+hName+".rad",'w'){ |f|
 				f.write mat_string+geom_string
 			}				
@@ -728,7 +703,7 @@ class GH_Exporter
 	# @param path [String] Directory to export the RIF file
 	# @return [Void]	
 	# @note It assumes that the relevant zone is interior.
-	def self.write_rif_file(path)
+	def self.write_rif_file(path, illums, windows)
 		model=Sketchup.active_model
 		box=model.bounds
 		max=box.max
@@ -736,7 +711,7 @@ class GH_Exporter
 		pages=model.pages
 		
 		File.open(path+"scene.rif",'w'){ |f| #The file is opened
-			f.write("###############\n## RIF exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
+			f.write("###############\n## RIF exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n\n\n")
 			
 			f.write("ZONE= I #{min.x.to_m} #{max.x.to_m} #{min.y.to_m} #{max.y.to_m} #{min.z.to_m}  #{max.z.to_m} \n")
 			f.write("UP=Z\n")
@@ -749,17 +724,97 @@ class GH_Exporter
 			f.write("INDIRECT=3\n")
 			f.write("PENUMBRAS=True\n")
 			f.write("REPORT=2")
+
+			#then the pages
 			f.write("\n\n#VIEWS\n\n")
 			f.write("view=actual_view -vf Views/view.vf\n")			
-			#then the scenes
-			if pages.count>=1 then
-				pages.each do |page|
-					f.write("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
-				end
+			pages.each do |page|
+				f.write("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
+			end
+
+			#Then the illums
+			f.write("\n\n#ILLUMS\n\n")
+			illums.each do |ill|
+				name=GH_Labeler.get_name(ill).tr(" ","_") #Get the name of the surface
+				f.write("illum=./Illums/"+name+".rad\n")
 			end
 			
+			
+			
+			#Then the window groups
+			f.write("\n\n#WINDOW GROUPS\n\n")
+			groups=GH_Utilities.get_win_groups(windows)
+			groups.each do |gr|
+				f.write("illum=./Windows/"+gr.tr(" ","_")+".rad\n")
+			end
+			
+			#then the rest of the windows
+			f.write("\n\n#OTHER WINDOWS\n\n")
+			nwin=1 #this will count the windows
+			windows.each do |win|
+				c=GH_Labeler.get_win_group(win)
+				if c==nil then # if the window has no group
+
+					winname=win.get_attribute("Groundhog","Name") #get the name
+					if winname==nil then #if it does not have one
+						f.write("./Windows/WindowSet_"+nwin.to_s+".rad\n")
+						nwin=nwin+1
+					else #if it has one
+						f.write("./Windows/"+winname+".rad\n")
+					end
+				end
+			end
+
+
 		}
 	end	
+	
+	# Returns the Radiance primitive of a SketchUp material.
+	#  It first checks if it is available in the library, and if not, it guesses it.
+	#  If inputed a name (instead of "False"), the primitive's name will be forced to be
+	#  the inputed value. This is useful for exporting components.
+	# @author German Molina	
+	# @version 0.2
+	# @param SketchUp material, [string] name
+	# @return [string] 	
+	# @note: forcing the name is not used yet, since the surface still is modified by the original name... complicated.
+	def self.get_mat_string(material,name)
+		matName=material.name.tr(" ","_").tr("#","_")
+		matPath=GH_OS.rad_material_path+matName+".mat"
+		mat_string=""
+		
+		if File.exist?(matPath) then #Read the information from library
+			File.open(matPath, "r").each_line do |line|
+			  mat_string=mat_string+line
+			end
+		else #not in library... guess the material
+			matName=name if name
+			
+			if material.texture==nil then
+				color=material.color
+			else
+				color=material.texture.average_color
+			end					
+			r=color.red/255.0
+			g=color.green/255.0
+			b=color.blue/255.0
+
+			mat_string=mat_string+"## unsupported Material\n\n"
+			if material.alpha < 1 then #then this is a glass
+				r=r*material.alpha #This is probably wrong... but it does the job.
+				g=g*material.alpha
+				b=b*material.alpha
+				rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s
+				mat_string=mat_string+"void\tglass\t"+matName+"\n0\n0\n3\t"+rgb+"\n"
+			else #This is an opaque material 
+				rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s+"\t0\t0"						
+				mat_string=mat_string+"void\tplastic\t"+matName+"\n0\n0\n5\t"+rgb+"\n"
+			end
+		end
+		
+		return mat_string
+	end
 
 	
 end #end class
+
