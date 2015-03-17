@@ -126,7 +126,7 @@ class GH_Exporter
 		vert=face.vertices #get the vertices 
 		
 		n=3*vert.length
-		string1="\tpolygon\t"+GH_Labeler.get_name(face)+"\n0\n0\n"+n.to_s #Write the standard first three lines
+		string1="\tpolygon\t"+GH_Labeler.get_name(face).tr(" ","_").tr("#","_")+"\n0\n0\n"+n.to_s #Write the standard first three lines
 	
 		string2=""
 		vert.each do |v|
@@ -417,7 +417,7 @@ class GH_Exporter
 					if c==groups[i] then #if the group of the window is the same as the one in the array
 						materials[i]+=[info[1]]
 						rad_strings[i]+='#normal (points inside): '+win.normal.x.to_s+' '+win.normal.y.to_s+' '+win.normal.z.to_s+"\n"
-						rad_strings[i]+=info[1].name+' '+info[0]+"\n\n" #Window with its material
+						rad_strings[i]+=info[1].name.tr(" ","_")+' '+info[0]+"\n\n" #Window with its material
 						break # we leave the loop
 					end
 					i+=1
@@ -425,12 +425,12 @@ class GH_Exporter
 			
 			else #if not
 				#we write using a new writer
-				winname=win.get_attribute("Groundhog","Name")
+				winname=GH_Labeler.get_name(win)
 				if winname==nil then
 					wr=File.open(path+'Windows'+s+'WindowSet_'+nwin.to_s+'.rad','w')
 					nwin=nwin+1
 				else 
-					wr=File.open(path+'Windows'+s+winname+'.rad','w')
+					wr=File.open(path+'Windows'+s+winname.tr(" ","_")+'.rad','w')
 				end
 				wr.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
 				wr.close	
@@ -448,7 +448,7 @@ class GH_Exporter
 			end
 			mat_string+="\n\n"
 			
-			w=File.open(path+'Windows'+s+gr+'.rad','w')
+			w=File.open(path+'Windows'+s+gr.tr(" ","_")+'.rad','w')
 			w.write(mat_string+rad_strings[count])
 			w.close
 			count=count+1
@@ -506,7 +506,7 @@ class GH_Exporter
 					x=x+d
 				end 
 		
-				File.open(path+name+'.pts','w'){ |f| #The file is opened
+				File.open(path+name.tr(" ","_")+'.pts','w'){ |f| #The file is opened
 					pts.each do |p| #and the sensors are written
 						x=p.x.to_m
 						y=p.y.to_m
@@ -531,10 +531,10 @@ class GH_Exporter
 
 		entities.each do |ent| #for all the entities (which are faces)
 			if GH_Labeler.illum?(ent) then #Only illums
-				name=GH_Labeler.get_name(ent).tr(" ","_") #Get the name of the surface
+				name=GH_Labeler.get_name(ent) #Get the name of the surface
 				info=self.get_rad_string(ent,true)
 				
-				File.open(path+name+'.rad','w'){ |f| #The file is opened
+				File.open(path+name.tr(" ","_")+'.rad','w'){ |f| #The file is opened
 					f.write("void "+info[0]) 
 				}
 		

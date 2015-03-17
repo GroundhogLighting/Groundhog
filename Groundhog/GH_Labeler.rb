@@ -40,36 +40,7 @@ class GH_Labeler
 		end
 	end
 
-	# Gets the modifier of an entity.
-	# @author German Molina
-	# @param entity [entity] SketchUp entity (should be face)
-	# @return [String] Modifier of the entity.
-	# @note: Will ask for the modifier of anything, even if it is not a face.
-	#def self.get_modifier(entity)
-	#	mod= entity.get_attribute("Groundhog","Modifier")
 
-	#	if mod == nil then
-	#		return "GH_default_material"
-	#	else
-	#		return mod
-	#	end
-	#end
-
-	# Gets the Fenestration System of an entity.
-	# @author German Molina
-	# @param win [entity] SketchUp entity (should be window)
-	# @return [String] Name of the Fenestration System assigned.
-	# @note: Will ask for the CFS of anything, even if it is not a window.
-	def self.get_system(win)
-		#Author: Germán Molina. Date: Before January 24, 2013
-	
-		system=win.get_attribute("Groundhog","System")
-		if system == nil then
-			"GH_default_system.xml"
-		else
-			system
-		end
-	end
 
 	# Checks if an entity is of some Label.
 	# @author German Molina
@@ -184,28 +155,6 @@ class GH_Labeler
 		end
 	end
 
-
-	# Assigns a Complex Fenestration System to a set of faces. It will ask for it on the prompt.
-	# @author German Molina
-	# @param entities [Array<entities>] An array with the entities to be assigned a CFS.
-	# @return [Void]
-	# @unused CFS are not supported yet.
-	def self.assign_CFS(entities)
-	
-		faces=GH_Utilities.get_windows(entities)
-	
-		if faces.length>=1 then
-			prompts = ["Write the name of the Complex Fenestration System\n"]
-			defaults = ["GH_default_cfs"]
-			mat = UI.inputbox prompts, defaults, "Assign a Complex Fenestration System"
-	
-			faces.each do |i|
-				i.set_attribute("Groundhog","System",mat[0])
-			end
-		else
-			UI.messagebox("No faces selected")
-		end	
-	end
 	
 	# Transform selected faces into illums
 	# @author German Molina
