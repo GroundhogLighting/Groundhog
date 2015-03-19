@@ -7,8 +7,8 @@ Sketchup::require 'Groundhog/GH_Utilities'
 Sketchup::require 'Groundhog/GH_Labeler'
 Sketchup::require 'Groundhog/GH_OS'
 Sketchup::require 'Groundhog/Tools/GH_MkWindow'
-Sketchup::require 'Groundhog/Tools/GH_Render'
-Sketchup::require 'Groundhog/Tools/GH_AddWorkplane'
+#Sketchup::require 'Groundhog/Tools/GH_Render'
+#Sketchup::require 'Groundhog/Tools/GH_AddWorkplane'
 Sketchup::require 'Groundhog/GH_Exporter'
 
 
@@ -54,14 +54,14 @@ mkWindow = UI::Command.new("mkWindow") {
  mkWindow.menu_text = "Makes a window"
  
   
-addWorkplane = UI::Command.new("addWorkplane") { 
-	GH_AddWorkplane.add_Workplanes
- }
- addWorkplane.small_icon = "Icons/addWorkplane.png"
- addWorkplane.large_icon = "Icons/addWorkplane.png"
- addWorkplane.tooltip = "Creates a workplane over a surface"
- addWorkplane.status_bar_text = "Creates a workplane over a surface"
- addWorkplane.menu_text = "Creates a workplane over a surface "
+#addWorkplane = UI::Command.new("addWorkplane") { 
+#	GH_AddWorkplane.add_Workplanes
+# }
+# addWorkplane.small_icon = "Icons/addWorkplane.png"
+# addWorkplane.large_icon = "Icons/addWorkplane.png"
+# addWorkplane.tooltip = "Creates a workplane over a surface"
+# addWorkplane.status_bar_text = "Creates a workplane over a surface"
+# addWorkplane.menu_text = "Creates a workplane over a surface "
  
  #CFS are not yet supported.
 #UI.add_context_menu_handler do |context_menu|
@@ -209,7 +209,7 @@ file_menu.add_item("Export to Radiance") {
  
 
 gh_Toolbar = gh_Toolbar.add_item mkWindow
-gh_Toolbar = gh_Toolbar.add_item addWorkplane 
+#gh_Toolbar = gh_Toolbar.add_item addWorkplane 
 gh_Toolbar.show
 
 

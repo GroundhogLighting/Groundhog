@@ -478,7 +478,7 @@ class GH_Exporter
 		system("mkdir "+path+"Workplanes")
 		path=path+GH_OS.slash+'Workplanes'+GH_OS.slash
 		prompts=["Workplane Sensor Spacing (m)"]
-		defaults=[0.3]
+		defaults=[0.5]
 		sys=UI.inputbox prompts, defaults, "Spacing of the sensors on workplanes?"
 		d=sys[0].m
 
