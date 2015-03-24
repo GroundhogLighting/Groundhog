@@ -24,7 +24,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses>.
 
 
-<b>Contact:</b> germolinal@gmail.com
+<b>Contact:</b> gmolina1@uc.cl
 
 
 ## Groundhog philosophy
@@ -33,16 +33,5 @@ to enhancing the source code and proposing new ideas on what to add, and fill th
 This is why the whole project is in an online repository.
 
 ## Install
-To install Groundhog in your computer, you have to copy and paste into the plugins directory in your computer.
 
-SketchUp 2013 plugin directories:
-
-- OSx: /Library/Application Support/SketchUp 2013/SketchUp/plugins
-
-- Windows: C:\Program Files\SketchUp\SketchUp 2013\Plugins
-
-SketchUp 2014 plugin directories (you might need to allow seeing hidden directories):
-
-- OSx: /Users/<your_mac_user_name>/Library/Application Support/SketchUp 2014/SketchUp/Plugins
-
-- Windows: C:\Users\<your_windows_user_name>\AppData\Roaming\SketchUp\SketchUp 2014\SketchUp\Plugins
+SketchUp allows installing extensions from the "preferences" --> "extensions"--> "Install extension" menu within SketchUp. The extensions come in an RBZ file, which is provided with all the versions of Groundhog. Instructions for doing this are all over the internet. You may have got Groundhog with the complete source code which includes an RBZ file, or only the RBZ file. Either case, you have to go to SketchUp and install the extension as usual.

@@ -7,7 +7,7 @@ Anything contribution that you think is be useful will be welcome, as long as it
 You can do anything, from adding things to the lists below, create logos, icons, tutorials, etc. We will evaluate if it works.
 
 
-Please contact us to germolinal@gmail.com
+Please contact us to gmolina1@uc.cl
 
 # Programing tasks
 - RAD (rid) exporter interface.
@@ -28,5 +28,5 @@ Please contact us to germolinal@gmail.com
 - TUTORIAL: Including models from the 3D warehouse
 - TUTORIAL: Adding terrain from Google Earth
 - Any documentation you would like to fix or add.
-- REPORT BUGS!!! germolinal@gmail.com
-- COMMENT IDEAS!!! germolinal@gmail.com
+- REPORT BUGS!!! gmolina1@uc.cl
+- COMMENT IDEAS!!! gmolina1@uc.cl

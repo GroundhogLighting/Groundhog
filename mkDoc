@@ -1,6 +1,16 @@
-
+#make Documentation
 yardoc Groundhog/*.rb Groundhog/Tools/*.rb - Readme.txt - documents/License.txt - documents/ToDo.txt - documents/History.txt - documents/Introduction.txt - documents/GettingStarted.txt - documents/Materials.txt - documents/MakeWindow.txt - documents/MakeWorkplane.txt - documents/MakeIllum.txt - documents/Views.txt - documents/GroupsComponents.txt
 
+#modify documentation
+cd doc
+
+sed -i tmphtml 's/_index/doc_index/g' *.html
+mv _index.html doc_index.html
+rm *tmphtml
+
+cd ..
+
+#create RBZ
 zip -r Groundhog.rbz Groundhog Groundhog_extension.rb -x *yardoc* *.DS_Store
 
 
