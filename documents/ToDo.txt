@@ -10,7 +10,6 @@ You can do anything, from adding things to the lists below, create logos, icons,
 Please contact us to gmolina1@uc.cl
 
 # Programing tasks
-- RAD (rid) exporter interface.
 - Allow project overwrite. That is, modify the model, press “export” again and replace the existing project with the actual one. Much more comfortable for working with Radiance and SketchUp simultaneously.
 - Allow non-horizontal workplanes (what happens when workplanes point down?)
 - Fix the "view" exporter. It is not exporting properly... I think I need to understand better how to model a camera.
@@ -18,6 +17,7 @@ Please contact us to gmolina1@uc.cl
 - Enhance the export methods.
 - Importing models from Revit® or other CAD programs. 
 - Allow importing furniture, materials, fenestration systems and luminaries from a (online maybe?) library.
+- Show results.
 
 # Non-programming tasks
 - Maybe "solve" some of the Radiance tutorials using Groundhog...?

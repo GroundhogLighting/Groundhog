@@ -1,5 +1,5 @@
 # @markup html
-# @title Windows
+# @title TUTORIAL: Windows
 # @author German Molina
 
 <h1>Making windows in Groundhog</h1>

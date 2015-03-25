@@ -19,7 +19,7 @@ Three-phase</a> and the <a href="http://www.radiance-online.org/learning/tutoria
 Five-phase</a> methods.</p> However, it also exports models for ray-tracing and rendering, allowing using your own materials
 from a library.
 
-<p>That said, Groundhog intends to simplify scene creation, and modeling. It, for now, allows: </p>
+<p>That said, Groundhog intends to simplify scene creation and modeling. It, for now, allows: </p>
 
 <li>Working with thick walls.
 <li>Exporting complex polygons as one polygon (window openings are not a problem).
@@ -31,6 +31,8 @@ from a library.
 <li>Exporting by layers, separating the windows from the rest of the geometry.
 <li>Export views from Scenes saved within SketchUp.
 <li>Every exported file comes with a CIE clear sky with the sun located according to the sun direction in the model.</li>
+<li>Exporting Groups and Components in separated file.</li>
+<li>Exporting a "RIF" file for rendering</li>
 
 <p align="justify">On the other hand, Groundhog intends to use SketchUp capabilities as much as possible, like its material libraries, scenes (saved views), geolocation, time and date, layers, solar position. Accordingly, "workplanes" and "illums" are just another surface that is labeled, so the user can move them, create them, name them and delete them easily.</p>
 
