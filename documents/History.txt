@@ -9,6 +9,8 @@
 - Groups are now exported as if they were components.
 - SketchUp 2015 is now considered the required SketchUp version
 - Added a RIF file exporter to simplify rendering.
+- Workplanes now need to be 4-sided and have no holes.
+
 
 # Groundhog 0.5
 
@@ -19,7 +21,6 @@
 - Added the “Label as workplane” Context Menu. The faces have to be horizontal.
 - Window Groups and Workplanes require a name. This name will be used for exporting them.
 - Components may now be exported. Even Nested components (components within components) seem to be working OK. Groups are trickier.
-
 
 
 # Groundhog 0.4

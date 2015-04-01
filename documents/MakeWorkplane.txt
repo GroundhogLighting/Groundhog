@@ -10,6 +10,10 @@ annual simulations, daylight factors and other results.</p>
 "Workplane", and will not be exported to the Radiance model as a surface. Actually, at the moment of exporting, you will 
 be asked for the spacing of the workplane sensors.</p>
 
+<p align="justify">Workplanes need to be horizontal and 4-sided surfaces with no holes.</p>
+
+
+
 <p align="justify">Workplanes are supposed to be horizontal. We are planning on allowing non-horizontal ones soon.</p>
 
 <h2>Including a workplane</h2>

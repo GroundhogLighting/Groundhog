@@ -195,22 +195,31 @@ class GH_Labeler
 		end	
 	end
 	
-	# Transform selected faces into workplanes
+	# Label selected faces as workplanes
 	# @author German Molina
-	# @param entities [Array<entities>] An array with the entities to be assigned a CFS.
+	# @param entities [Array<entities>] An array with the entities to be declared as Workplane
+	# @version 0.2
 	# @return [Void]
 	def self.to_workplane(entities)
 		faces=GH_Utilities.get_horizontal_faces(entities)
-	
+		not_sutable=false
+		correct=[]
 		if faces.length>=1 then
 			faces.each do |i|
+				if i.vertices.count!=4 or i.loops.count!=1 then 
+				#not rectangular faces are ignored, as well as those with holes (more than 1 loop)
+					not_sutable=true
+					next
+				end
+				correct=correct+[i]
 				i.set_attribute("Groundhog","Label","workplane")
 				i.material=[1.0,0.0,0.0]
 				i.material.alpha=0.2
 				i.back_material=[1.0,0.0,0.0]
 				i.back_material.alpha=0.2
 			end
-			GH_Labeler.set_name(faces)
+			GH_Labeler.set_name(correct)
+			UI.messagebox("Non-rectangular faces were ignored, as well as those with holes.") if not_sutable
 		else
 			UI.messagebox("No faces selected")
 		end	

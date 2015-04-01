@@ -463,7 +463,7 @@ class GH_Exporter
 	#
 	# The name of the file will be the name of the entity.
 	# @author German Molina	
-	# @version 1.0
+	# @version 1.1
 	# @param path [String] Directory to export the Window Groups.
 	# @param entities [entities] Array of workplanes.
 	# @return [Void]
