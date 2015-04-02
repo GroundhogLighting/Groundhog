@@ -486,26 +486,60 @@ class GH_Exporter
 			if GH_Labeler.workplane?(ent) then #Only workplanes
 				name=GH_Labeler.get_name(ent).tr(" ","_") #Get the name of the surface
 				pts=[] #Create an array with all the points 
-				b=ent.bounds
-				max=b.max
-				min=b.min
-				max_x=max.x
-				max_y=max.y
-				x=min.x
-				y=min.y
-				z=min.z
-				while x<max_x do #loop over all the face
-					while y<max_y do
-						pt=Geom::Point3d.new(x,y,z)
-						if ent.classify_point(pt)==1 then #if the point is on the workplane
-							pts=pts+[pt]
-						end
-						y=y+d
+				
+				#b=ent.bounds
+				#max=b.max
+				#min=b.min
+				#max_x=max.x
+				#max_y=max.y
+				#x=min.x
+				#y=min.y
+				#z=min.z
+				#while x<max_x do #loop over all the face
+				#	while y<max_y do
+				#		pt=Geom::Point3d.new(x,y,z)
+				#		if ent.classify_point(pt)==1 then #if the point is on the workplane
+				#			pts=pts+[pt]
+				#		end
+				#		y=y+d
+				#	end
+				#	y=min.y #restart y.
+				#	x=x+d
+				#end 
+				
+				#get the basis system for moving around the plane seting sensors
+				vertices=ent.vertices
+				v=vertices[0].position.vector_to(vertices[3].position)
+				u=vertices[0].position.vector_to(vertices[1].position)
+				
+				#store the length
+				normU=u.length
+				normV=v.length
+				
+				#correct the spacing (to provide exact division of the plane)
+				qU=normU/d
+				qU=qU.round
+				dU=normU/qU
+				
+				qV=normV/d
+				qV=qV.round
+				dV=normV/qV
+				
+				#then, each step will be the same length
+				u.length=dU
+				v.length=dV
+				
+				#place the first sensor
+				p0=vertices[0].position.offset!(u.transform(0.5)).offset!(v.transform(0.5))
+				
+				for i in 0..qU-1 
+					for j in 0..qV-1
+						pts=pts+[p0.offset(u.transform(i)).offset(v.transform(j))]
+						puts p0.offset(u.transform(i)).offset(v.transform(j))
 					end
-					y=min.y #restart y.
-					x=x+d
-				end 
-		
+				end
+				
+				
 				File.open(path+name.tr(" ","_")+'.pts','w'){ |f| #The file is opened
 					pts.each do |p| #and the sensors are written
 						x=p.x.to_m
