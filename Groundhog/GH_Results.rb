@@ -12,7 +12,7 @@ class GH_Results
 	# The positions are assumed to be in meters.
 	#
 	# @author German Molina
-	# @param void
+	# @param path [String] the path to the results file
 	# @return An array with the values when succesful, "false" if not.
 	# @version 0.2
 	def self.results_to_array(results_path)
@@ -48,8 +48,8 @@ class GH_Results
 	# shift one U to the side, and again all sensors in direction V.
 	#
 	# @author German Molina
-	# @param a 2d array with 4 columns
-	# @return [u,v] an array of Geom::Vector3d objects
+	# @param Array a 2d array with 4 columns
+	# @return UV [array] an array of Geom::Vector3d objects
 	# @version 0.1
 	def self.get_UV(array)
 		#Start with the first two points
@@ -86,9 +86,9 @@ class GH_Results
 	# all the sensors lie in the same plane point in the same direction.
 	#
 	# @author German Molina
-	# @param u U vector
-	# @param v V vector
-	# @param array The array (2D, 4 columns) with the data to show.
+	# @param u [vector3d] U vector
+	# @param v [vector3d] V vector
+	# @param array [array] The array (2D, 4 columns) with the data to show.
 	# @return void
 	# @version 0.1
 	def self.draw_results(u,v,array)
@@ -145,9 +145,9 @@ class GH_Results
 	# in a plane in the model.
 	#
 	# @author German Molina
-	# @param value The value to be assigned a color
-	# @param max The maximum value, the one that saturates the color scale.
-	# @return [r,g,b] array with Red, Green and Blue components
+	# @param value  [float] The value to be assigned a color
+	# @param max [float] The maximum value, the one that saturates the color scale.
+	# @return color [Array] with Red, Green and Blue components
 	# @version 0.2
 	def self.get_pixel_color(value,max)
 

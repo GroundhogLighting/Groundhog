@@ -1,0 +1,54 @@
+# @markup html
+# @title TUTORIAL: Import Results
+# @author German Molina
+
+<h1>Importing results for data visualization</h1>
+
+
+<p align="justify">
+After exporting a model and performing a simulation or calculation, it is often very important to see the results you 
+generated (i.e. Daylight factor, lux, or other) within the model, so you and people who are going to 
+see your analysis can visualize the spacial lighting distribution. This can lead to diagnostics and enhancement of the design.
+</p>
+<p align="justify">
+Groundhog, even if it does not allow (yet) performing calculations, it helps you visualize the results on the space.
+</p>
+
+<h2>Import results</h2>
+
+<h3>Step 1: Include workplanes in the model</h3>
+<p align="justify">See that specific tutorial. It is easy.</p>
+
+<h3>Step 2: Export the model and perform some calculations</h2>
+<p align="justify">
+The file that contains the results needs to be a four-column list of tab-separated parameters, without any header.
+Each line (row) will be the result for one sensor, and the four values correspond to the X,Y,Z position
+and the value calculated for such sensor. This value can correspond to whatever you want (Lux, Daylight factor or other)
+</p>
+
+<p align="justify">
+Below is an example of a file
+</p>
+<p style="font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;">
+0.0	0.0	0.8	2.3<br>
+0.0	0.5	0.8	2.1<br>
+0.0	1.0	0.8	1.8<br>
+0.0	1.5	0.8	1.5<br>
+...
+</p>
+
+<p align="justify">
+All kind of results may be obtained with RTRACE and RCONTRIB programs, and the format may be arranged by using RCALC.
+</p>
+<p align="justify">
+An example, getting the Lux of a certain scene:
+</p>
+
+<p style="font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;">
+rtrace -h -oov [options] octree < Workplanes/Grid.pts | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results.txt
+</p>
+
+
+<h3>Step 3: Import results</h3>
+<p align="justify">Go to the menu Plugins (Extensions)--> Groundhog --> Import Results, and choose the file you are looking for.</p>
+
