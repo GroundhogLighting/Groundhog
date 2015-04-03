@@ -104,10 +104,18 @@ class GH_Results
 			v.transform!(0.5)
 		
 			max=0
+			min=9999999999999
 			array.each do |data|
+				min=data[3] if min>data[3]
 				max=data[3] if max<data[3]
 			end
-		
+
+			# ask for scale
+			#prompts = ["Maximum value in the scale?"]
+			#defaults = [max.to_s]
+			#input = UI.inputbox(prompts, defaults, "Choose scale")
+			
+			
 			#draw every line. Each pixel is a quadrilateral.
 			array.each do |data|
 				pt=Geom::Point3d.new(data[0],data[1],data[2])
@@ -118,7 +126,7 @@ class GH_Results
 			
 				pixel=entities.add_face(vertex1,vertex2,vertex3,vertex4)
 
-				color=self.get_pixel_color(data[3],max)
+				color=self.get_pixel_color(data[3],max,0) #minimum scale will always be 0.
 				pixel.material=color
 				pixel.back_material=color
 			end
@@ -147,17 +155,22 @@ class GH_Results
 	# @author German Molina
 	# @param value  [float] The value to be assigned a color
 	# @param max [float] The maximum value, the one that saturates the color scale.
+	# @param min [float] The min value, the one that saturates the color scale.
 	# @return color [Array] with Red, Green and Blue components
-	# @version 0.2
-	def self.get_pixel_color(value,max)
+	# @version 0.3
+	def self.get_pixel_color(value,max,min)
 
 		red=[0.18848,0.05468174,0.00103547,8.311144e-08,7.449763e-06,0.0004390987,0.001367254,0.003076,0.01376382,0.06170773,0.1739422,0.2881156,0.3299725,0.3552663,0.372552,0.3921184,0.4363976,0.6102754,0.7757267,0.9087369,1,1,0.9863]
 		green=[0.0009766,2.35501e-05,0.0008966244,0.0264977,0.1256843,0.2865799,0.4247083,0.4739468,0.4402732,0.3671876,0.2629843,0.1725325,0.1206819,0.07316644,0.03761026,0.01612362,0.004773749,6.830967e-06,0.00803605,0.1008085,0.3106831,0.6447838,0.9707]
 		blue=[0.2666,0.3638662,0.4770437,0.5131397,0.5363797,0.5193677,0.4085123,0.1702815,0.05314236,0.05194055,0.08564082,0.09881395,0.08324373,0.06072902,0.0391076,0.02315354,0.01284458,0.005184709,0.001691774,2.432735e-05,1.212949e-05,0.006659406,0.02539]
 		nbins=red.length-1 #the number of color bins
 		
-		return [red[0],green[0],blue[0]] if value<0
+		return [red[0],green[0],blue[0]] if value<min
 		return [red[nbins],green[nbins],blue[nbins]] if value>max
+		
+		max=max-min
+		value=value-min
+		min=0
 		
 		norm_value=value/max
 		bin_value=norm_value*nbins
@@ -180,6 +193,7 @@ class GH_Results
 	# @version 0.1
 	def self.import_results
 		path=UI.openpanel("Open results file","c:/")
+		return if not path
 		array=self.results_to_array(path)
 		uv=self.get_UV(array)
 		self.draw_results(uv[0],uv[1],array)	
