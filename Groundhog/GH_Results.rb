@@ -5,15 +5,9 @@ class GH_Results
 	
 	# Converts sensor results into a 2D array
 	# 
-	# It expects the grid be in format "Px Py Pz Nx Ny Nz Value"
+	# It expects the grid be in format "Px Py Pz Value"
 	# where the first three terms are the position in space,
-	# the second three values are the normal
-	# and the 7th value is the actual value to be put in the grid.
-	#
-	# If there are only 4 values per line, it will fill the second
-	# three values with "0 0 1". That is, it will 
-	# be assumed that this is a horizontal and Up-looking plane. Maybe in the future 
-	# non-horizontal planes will be accepted, so I am being cautious.
+	# and the 4th value is the actual value to be put in the grid.
 	#
 	# The positions are assumed to be in meters.
 	#
@@ -32,12 +26,8 @@ class GH_Results
 		File.open(results_path, "r").each_line do |line|
 			line.strip!
 			data=line.split("\t")
-			if data.length == 7 then
-				#it has normal
-				ret=ret+[[data[0].to_f.m, data[1].to_f.m, data[2].to_f.m, data[3].to_f, data[4].to_f, data[5].to_f, data[6].to_f]]
-			elsif data.length==4 then
-				#does not have normal
-				ret=ret+[[data[0].to_f.m, data[1].to_f.m, data[2].to_f.m, 0, 0, 1, data[3].to_f]]
+			if data.length==4 then #check the correct format
+				ret=ret+[[data[0].to_f.m, data[1].to_f.m, data[2].to_f.m, data[3].to_f]]
 			else
 				UI.messagebox("Incorrect results file format at line"+line_num.to_s)
 				return false
@@ -58,7 +48,7 @@ class GH_Results
 	# shift one U to the side, and again all sensors in direction V.
 	#
 	# @author German Molina
-	# @param a 2d array with 7 columns
+	# @param a 2d array with 4 columns
 	# @return [u,v] an array of Geom::Vector3d objects
 	# @version 0.1
 	def self.get_UV(array)
@@ -91,8 +81,12 @@ class GH_Results
 	# Reads the results from a grid, and represent them as a heat map
 	# in a plane in the model.
 	#
+	# The normal of the plane as well as the dimension of the pixels 
+	# are calculated from the position of the sensors. It is assumed that
+	# all the sensors lie in the same plane point in the same direction.
+	#
 	# @author German Molina
-	# @param [u,v,array] U and V Vectors and the array with the data to show.
+	# @param [u,v,array] U and V Vectors and the array (2D, 4 columns) with the data to show.
 	# @return void
 	# @version 0.1
 	def self.draw_results(u,v,array)
@@ -109,7 +103,7 @@ class GH_Results
 		
 			max=0
 			array.each do |data|
-				max=data[6] if max<data[6]
+				max=data[3] if max<data[3]
 			end
 		
 			#draw every line. Each pixel is a quadrilateral.
@@ -122,7 +116,7 @@ class GH_Results
 			
 				pixel=entities.add_face(vertex1,vertex2,vertex3,vertex4)
 
-				color=self.get_pixel_color(data[6],max)
+				color=self.get_pixel_color(data[3],max)
 				pixel.material=color
 				pixel.back_material=color
 			end
