@@ -7,10 +7,8 @@ Sketchup::require 'Groundhog/GH_Utilities'
 Sketchup::require 'Groundhog/GH_Labeler'
 Sketchup::require 'Groundhog/GH_OS'
 Sketchup::require 'Groundhog/Tools/GH_MkWindow'
-#Sketchup::require 'Groundhog/Tools/GH_Render'
-#Sketchup::require 'Groundhog/Tools/GH_AddWorkplane'
 Sketchup::require 'Groundhog/GH_Exporter'
-
+Sketchup::require 'Groundhog/GH_Results'
 
 #########################################
 model=Sketchup.active_model
@@ -34,15 +32,6 @@ end
 
 gh_Toolbar=UI::Toolbar.new "Groundhog"
 
-
-#rvu = UI::Command.new("rvu") { 
-#   Rad.rvu
-# }
-# rvu.small_icon = "Icons/rvu.png"
-# rvu.large_icon = "Icons/rvu.png"
-# rvu.tooltip = "Interactive GH_Render"
-# rvu.status_bar_text = "Interactive Renderer"
-# rvu.menu_text = "Interactive Renderer"
  
 mkWindow = UI::Command.new("mkWindow") { 
        Sketchup.active_model.select_tool GH_MkWindow.new
@@ -53,25 +42,7 @@ mkWindow = UI::Command.new("mkWindow") {
  mkWindow.status_bar_text = "Makes a window"
  mkWindow.menu_text = "Makes a window"
  
-  
-#addWorkplane = UI::Command.new("addWorkplane") { 
-#	GH_AddWorkplane.add_Workplanes
-# }
-# addWorkplane.small_icon = "Icons/addWorkplane.png"
-# addWorkplane.large_icon = "Icons/addWorkplane.png"
-# addWorkplane.tooltip = "Creates a workplane over a surface"
-# addWorkplane.status_bar_text = "Creates a workplane over a surface"
-# addWorkplane.menu_text = "Creates a workplane over a surface "
- 
- #CFS are not yet supported.
-#UI.add_context_menu_handler do |context_menu|
-#   wins=GH_Utilities.get_windows(Sketchup.active_model.selection)
-#	if wins.length>=1 then
-#	   context_menu.add_item("Assign Complex Fenestration System") { 
-#			GH_Labeler.assign_CFS(Sketchup.active_model.selection)
-#	   }
-#	end
-#end
+
 
 UI.add_context_menu_handler do |context_menu|
    faces=GH_Utilities.get_faces(Sketchup.active_model.selection)
@@ -128,15 +99,6 @@ UI.add_context_menu_handler do |context_menu|
 	   }
 	end
 end
-
-#UI.add_context_menu_handler do |context_menu|
-#   faces=GH_Utilities.get_faces(Sketchup.active_model.selection)
-#	if faces.length>=1 then
-#	   context_menu.add_item("Label as Workplane") { 
-#			GH_Labeler.to_workplane(faces)
-#	   }
-#	end
-#end
 
 UI.add_context_menu_handler do |context_menu|
    faces=GH_Utilities.get_faces(Sketchup.active_model.selection)
@@ -215,11 +177,16 @@ gh_Toolbar.show
 
 
 extensions_menu = UI.menu "Plugins"
-extensions_menu.add_item("Show Groundhog Toolbar") {
+groundhog_menu=extensions_menu.add_submenu("Groundhog")
+groundhog_menu.add_item("Show Groundhog Toolbar") {
 	gh_Toolbar.show
 }
 
-extensions_menu.add_item("About Groundhog"){
+groundhog_menu.add_item("Import results"){
+	GH_Results.import_results
+}
+
+groundhog_menu.add_item("About Groundhog"){
 	UI.messagebox "Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+"\n\nCreator:\n"+Sketchup.extensions["Groundhog"].creator+"\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
 }
 

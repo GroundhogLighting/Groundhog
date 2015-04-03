@@ -535,7 +535,6 @@ class GH_Exporter
 				for i in 0..qU-1 
 					for j in 0..qV-1
 						pts=pts+[p0.offset(u.transform(i)).offset(v.transform(j))]
-						puts p0.offset(u.transform(i)).offset(v.transform(j))
 					end
 				end
 				

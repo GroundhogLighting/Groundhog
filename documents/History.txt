@@ -9,7 +9,7 @@
 - Groups are now exported as if they were components.
 - SketchUp 2015 is now considered the required SketchUp version
 - Added a RIF file exporter to simplify rendering.
-- Workplanes now need to be 4-sided and have no holes.
+- Workplanes now need to be rectangular and have no holes.
 
 
 # Groundhog 0.5
