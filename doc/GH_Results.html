@@ -128,7 +128,57 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_UV-class_method" title="get_UV (class method)">+ (u, v) <strong>get_UV</strong>(results_path) </a>
+      <a href="#draw_results-class_method" title="draw_results (class method)">+ (Object) <strong>draw_results</strong>(u, v, array) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Reads the results from a grid, and represent them as a heat map in a plane
+in the model.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_pixel_color-class_method" title="get_pixel_color (class method)">+ (r, ...) <strong>get_pixel_color</strong>(value, max) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Reads the results from a grid, and represent them as a heat map in a plane
+in the model.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_UV-class_method" title="get_UV (class method)">+ (u, v) <strong>get_UV</strong>(array) </a>
     
 
     
@@ -145,6 +195,31 @@
     <span class="summary_desc"><div class='inline'>
 <p>Calculates the u and v vectors for drawing the “pixels” in the solved
 workplanes.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#import_results-class_method" title="import_results (class method)">+ (Object) <strong>import_results</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Reads the results from a grid, and represent them as a heat map in a plane
+in the model.</p>
 </div></span>
   
 </li>
@@ -184,9 +259,411 @@ workplanes.</p>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="get_UV-class_method">
+  <h3 class="signature first" id="draw_results-class_method">
   
-    + (<tt>u</tt>, <tt>v</tt>) <strong>get_UV</strong>(results_path) 
+    + (<tt>Object</tt>) <strong>draw_results</strong>(u, v, array) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Reads the results from a grid, and represent them as a heat map in a plane
+in the model.</p>
+
+<p>The normal of the plane as well as the dimension of the pixels  are
+calculated from the position of the sensors. It is assumed that all the
+sensors lie in the same plane point in the same direction.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>u</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>U vector</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>v</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>V vector</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>array</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The array (2D, 4 columns) with the data to show.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'>
+<p>void</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Version:</p>
+<ul class="version">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>0.1</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Results.rb', line 94</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_draw_results'>draw_results</span><span class='lparen'>(</span><span class='id identifier rubyid_u'>u</span><span class='comma'>,</span><span class='id identifier rubyid_v'>v</span><span class='comma'>,</span><span class='id identifier rubyid_array'>array</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
+	<span class='kw'>begin</span>
+
+	  	<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_start_operation'>start_operation</span><span class='lparen'>(</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>draw results</span><span class='tstring_end'>&quot;</span></span> <span class='rparen'>)</span>
+	
+		<span class='id identifier rubyid_entities'>entities</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span>
+	
+		<span class='comment'>#we move half step to each side.
+</span>		<span class='id identifier rubyid_u'>u</span><span class='period'>.</span><span class='id identifier rubyid_transform!'>transform!</span><span class='lparen'>(</span><span class='float'>0.5</span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_transform!'>transform!</span><span class='lparen'>(</span><span class='float'>0.5</span><span class='rparen'>)</span>
+	
+		<span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='int'>0</span>
+		<span class='id identifier rubyid_array'>array</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_data'>data</span><span class='op'>|</span>
+			<span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>3</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_max'>max</span><span class='op'>&lt;</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>3</span><span class='rbracket'>]</span>
+		<span class='kw'>end</span>
+	
+		<span class='comment'>#draw every line. Each pixel is a quadrilateral.
+</span>		<span class='id identifier rubyid_array'>array</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_data'>data</span><span class='op'>|</span>
+			<span class='id identifier rubyid_pt'>pt</span><span class='op'>=</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Point3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+			<span class='id identifier rubyid_vertex1'>vertex1</span><span class='op'>=</span><span class='id identifier rubyid_pt'>pt</span><span class='period'>.</span><span class='id identifier rubyid_offset'>offset</span><span class='lparen'>(</span><span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_offset'>offset</span><span class='lparen'>(</span><span class='id identifier rubyid_u'>u</span><span class='rparen'>)</span>
+			<span class='id identifier rubyid_vertex4'>vertex4</span><span class='op'>=</span><span class='id identifier rubyid_pt'>pt</span><span class='period'>.</span><span class='id identifier rubyid_offset'>offset</span><span class='lparen'>(</span><span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_transform'>transform</span><span class='lparen'>(</span><span class='op'>-</span><span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_offset'>offset</span><span class='lparen'>(</span><span class='id identifier rubyid_u'>u</span><span class='rparen'>)</span>
+			<span class='id identifier rubyid_vertex3'>vertex3</span><span class='op'>=</span><span class='id identifier rubyid_pt'>pt</span><span class='period'>.</span><span class='id identifier rubyid_offset'>offset</span><span class='lparen'>(</span><span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_transform'>transform</span><span class='lparen'>(</span><span class='op'>-</span><span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_offset'>offset</span><span class='lparen'>(</span><span class='id identifier rubyid_u'>u</span><span class='period'>.</span><span class='id identifier rubyid_transform'>transform</span><span class='lparen'>(</span><span class='op'>-</span><span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span>
+			<span class='id identifier rubyid_vertex2'>vertex2</span><span class='op'>=</span><span class='id identifier rubyid_pt'>pt</span><span class='period'>.</span><span class='id identifier rubyid_offset'>offset</span><span class='lparen'>(</span><span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_offset'>offset</span><span class='lparen'>(</span><span class='id identifier rubyid_u'>u</span><span class='period'>.</span><span class='id identifier rubyid_transform'>transform</span><span class='lparen'>(</span><span class='op'>-</span><span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span>
+		
+			<span class='id identifier rubyid_pixel'>pixel</span><span class='op'>=</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_add_face'>add_face</span><span class='lparen'>(</span><span class='id identifier rubyid_vertex1'>vertex1</span><span class='comma'>,</span><span class='id identifier rubyid_vertex2'>vertex2</span><span class='comma'>,</span><span class='id identifier rubyid_vertex3'>vertex3</span><span class='comma'>,</span><span class='id identifier rubyid_vertex4'>vertex4</span><span class='rparen'>)</span>
+
+			<span class='id identifier rubyid_color'>color</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_pixel_color'>get_pixel_color</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>3</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_max'>max</span><span class='rparen'>)</span>
+			<span class='id identifier rubyid_pixel'>pixel</span><span class='period'>.</span><span class='id identifier rubyid_material'>material</span><span class='op'>=</span><span class='id identifier rubyid_color'>color</span>
+			<span class='id identifier rubyid_pixel'>pixel</span><span class='period'>.</span><span class='id identifier rubyid_back_material'>back_material</span><span class='op'>=</span><span class='id identifier rubyid_color'>color</span>
+		<span class='kw'>end</span>
+	
+	
+		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_commit_operation'>commit_operation</span>
+	<span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
+		<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Operation failed... please contact us to tell us what happened.\n\nTHANKS.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='comment'>#else
+</span>	  <span class='comment'>#
+</span>	  <span class='comment'># Do code here ONLY if NO errors occur.
+</span>	  <span class='comment'>#
+</span>	<span class='comment'>#ensure
+</span>	  <span class='comment'>#
+</span>	  <span class='comment'># ALWAYS do code here errors or not.
+</span>	  <span class='comment'>#
+</span>	<span class='kw'>end</span>
+	
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_pixel_color-class_method">
+  
+    + (<tt>r</tt>, ...) <strong>get_pixel_color</strong>(value, max) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Reads the results from a grid, and represent them as a heat map in a plane
+in the model.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The value to be assigned a color</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>max</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The maximum value, the one that saturates the color scale.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>r</tt>, <tt>g</tt>, <tt>b</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>array with Red, Green and Blue components</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Version:</p>
+<ul class="version">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>0.2</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Results.rb', line 152</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_pixel_color'>get_pixel_color</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='comma'>,</span><span class='id identifier rubyid_max'>max</span><span class='rparen'>)</span>
+
+	<span class='id identifier rubyid_red'>red</span><span class='op'>=</span><span class='lbracket'>[</span><span class='float'>0.18848</span><span class='comma'>,</span><span class='float'>0.05468174</span><span class='comma'>,</span><span class='float'>0.00103547</span><span class='comma'>,</span><span class='float'>8.311144e-08</span><span class='comma'>,</span><span class='float'>7.449763e-06</span><span class='comma'>,</span><span class='float'>0.0004390987</span><span class='comma'>,</span><span class='float'>0.001367254</span><span class='comma'>,</span><span class='float'>0.003076</span><span class='comma'>,</span><span class='float'>0.01376382</span><span class='comma'>,</span><span class='float'>0.06170773</span><span class='comma'>,</span><span class='float'>0.1739422</span><span class='comma'>,</span><span class='float'>0.2881156</span><span class='comma'>,</span><span class='float'>0.3299725</span><span class='comma'>,</span><span class='float'>0.3552663</span><span class='comma'>,</span><span class='float'>0.372552</span><span class='comma'>,</span><span class='float'>0.3921184</span><span class='comma'>,</span><span class='float'>0.4363976</span><span class='comma'>,</span><span class='float'>0.6102754</span><span class='comma'>,</span><span class='float'>0.7757267</span><span class='comma'>,</span><span class='float'>0.9087369</span><span class='comma'>,</span><span class='int'>1</span><span class='comma'>,</span><span class='int'>1</span><span class='comma'>,</span><span class='float'>0.9863</span><span class='rbracket'>]</span>
+	<span class='id identifier rubyid_green'>green</span><span class='op'>=</span><span class='lbracket'>[</span><span class='float'>0.0009766</span><span class='comma'>,</span><span class='float'>2.35501e-05</span><span class='comma'>,</span><span class='float'>0.0008966244</span><span class='comma'>,</span><span class='float'>0.0264977</span><span class='comma'>,</span><span class='float'>0.1256843</span><span class='comma'>,</span><span class='float'>0.2865799</span><span class='comma'>,</span><span class='float'>0.4247083</span><span class='comma'>,</span><span class='float'>0.4739468</span><span class='comma'>,</span><span class='float'>0.4402732</span><span class='comma'>,</span><span class='float'>0.3671876</span><span class='comma'>,</span><span class='float'>0.2629843</span><span class='comma'>,</span><span class='float'>0.1725325</span><span class='comma'>,</span><span class='float'>0.1206819</span><span class='comma'>,</span><span class='float'>0.07316644</span><span class='comma'>,</span><span class='float'>0.03761026</span><span class='comma'>,</span><span class='float'>0.01612362</span><span class='comma'>,</span><span class='float'>0.004773749</span><span class='comma'>,</span><span class='float'>6.830967e-06</span><span class='comma'>,</span><span class='float'>0.00803605</span><span class='comma'>,</span><span class='float'>0.1008085</span><span class='comma'>,</span><span class='float'>0.3106831</span><span class='comma'>,</span><span class='float'>0.6447838</span><span class='comma'>,</span><span class='float'>0.9707</span><span class='rbracket'>]</span>
+	<span class='id identifier rubyid_blue'>blue</span><span class='op'>=</span><span class='lbracket'>[</span><span class='float'>0.2666</span><span class='comma'>,</span><span class='float'>0.3638662</span><span class='comma'>,</span><span class='float'>0.4770437</span><span class='comma'>,</span><span class='float'>0.5131397</span><span class='comma'>,</span><span class='float'>0.5363797</span><span class='comma'>,</span><span class='float'>0.5193677</span><span class='comma'>,</span><span class='float'>0.4085123</span><span class='comma'>,</span><span class='float'>0.1702815</span><span class='comma'>,</span><span class='float'>0.05314236</span><span class='comma'>,</span><span class='float'>0.05194055</span><span class='comma'>,</span><span class='float'>0.08564082</span><span class='comma'>,</span><span class='float'>0.09881395</span><span class='comma'>,</span><span class='float'>0.08324373</span><span class='comma'>,</span><span class='float'>0.06072902</span><span class='comma'>,</span><span class='float'>0.0391076</span><span class='comma'>,</span><span class='float'>0.02315354</span><span class='comma'>,</span><span class='float'>0.01284458</span><span class='comma'>,</span><span class='float'>0.005184709</span><span class='comma'>,</span><span class='float'>0.001691774</span><span class='comma'>,</span><span class='float'>2.432735e-05</span><span class='comma'>,</span><span class='float'>1.212949e-05</span><span class='comma'>,</span><span class='float'>0.006659406</span><span class='comma'>,</span><span class='float'>0.02539</span><span class='rbracket'>]</span>
+	<span class='id identifier rubyid_nbins'>nbins</span><span class='op'>=</span><span class='id identifier rubyid_red'>red</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span><span class='op'>-</span><span class='int'>1</span> <span class='comment'>#the number of color bins
+</span>	
+	<span class='kw'>return</span> <span class='lbracket'>[</span><span class='id identifier rubyid_red'>red</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_green'>green</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_blue'>blue</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span><span class='op'>&lt;</span><span class='int'>0</span>
+	<span class='kw'>return</span> <span class='lbracket'>[</span><span class='id identifier rubyid_red'>red</span><span class='lbracket'>[</span><span class='id identifier rubyid_nbins'>nbins</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_green'>green</span><span class='lbracket'>[</span><span class='id identifier rubyid_nbins'>nbins</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_blue'>blue</span><span class='lbracket'>[</span><span class='id identifier rubyid_nbins'>nbins</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span><span class='op'>&gt;</span><span class='id identifier rubyid_max'>max</span>
+	
+	<span class='id identifier rubyid_norm_value'>norm_value</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='op'>/</span><span class='id identifier rubyid_max'>max</span>
+	<span class='id identifier rubyid_bin_value'>bin_value</span><span class='op'>=</span><span class='id identifier rubyid_norm_value'>norm_value</span><span class='op'>*</span><span class='id identifier rubyid_nbins'>nbins</span>
+	<span class='id identifier rubyid_under_bin'>under_bin</span><span class='op'>=</span><span class='id identifier rubyid_bin_value'>bin_value</span><span class='period'>.</span><span class='id identifier rubyid_floor'>floor</span>
+	<span class='id identifier rubyid_upper_bin'>upper_bin</span><span class='op'>=</span><span class='id identifier rubyid_bin_value'>bin_value</span><span class='period'>.</span><span class='id identifier rubyid_ceil'>ceil</span>
+	
+	<span class='id identifier rubyid_r'>r</span><span class='op'>=</span><span class='id identifier rubyid_red'>red</span><span class='lbracket'>[</span><span class='id identifier rubyid_under_bin'>under_bin</span><span class='rbracket'>]</span><span class='op'>+</span><span class='lparen'>(</span><span class='id identifier rubyid_bin_value'>bin_value</span><span class='op'>-</span><span class='id identifier rubyid_under_bin'>under_bin</span><span class='rparen'>)</span><span class='op'>*</span><span class='lparen'>(</span><span class='id identifier rubyid_red'>red</span><span class='lbracket'>[</span><span class='id identifier rubyid_upper_bin'>upper_bin</span><span class='rbracket'>]</span><span class='op'>-</span><span class='id identifier rubyid_red'>red</span><span class='lbracket'>[</span><span class='id identifier rubyid_under_bin'>under_bin</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_g'>g</span><span class='op'>=</span><span class='id identifier rubyid_green'>green</span><span class='lbracket'>[</span><span class='id identifier rubyid_under_bin'>under_bin</span><span class='rbracket'>]</span><span class='op'>+</span><span class='lparen'>(</span><span class='id identifier rubyid_bin_value'>bin_value</span><span class='op'>-</span><span class='id identifier rubyid_under_bin'>under_bin</span><span class='rparen'>)</span><span class='op'>*</span><span class='lparen'>(</span><span class='id identifier rubyid_green'>green</span><span class='lbracket'>[</span><span class='id identifier rubyid_upper_bin'>upper_bin</span><span class='rbracket'>]</span><span class='op'>-</span><span class='id identifier rubyid_green'>green</span><span class='lbracket'>[</span><span class='id identifier rubyid_under_bin'>under_bin</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_b'>b</span><span class='op'>=</span><span class='id identifier rubyid_blue'>blue</span><span class='lbracket'>[</span><span class='id identifier rubyid_under_bin'>under_bin</span><span class='rbracket'>]</span><span class='op'>+</span><span class='lparen'>(</span><span class='id identifier rubyid_bin_value'>bin_value</span><span class='op'>-</span><span class='id identifier rubyid_under_bin'>under_bin</span><span class='rparen'>)</span><span class='op'>*</span><span class='lparen'>(</span><span class='id identifier rubyid_blue'>blue</span><span class='lbracket'>[</span><span class='id identifier rubyid_upper_bin'>upper_bin</span><span class='rbracket'>]</span><span class='op'>-</span><span class='id identifier rubyid_blue'>blue</span><span class='lbracket'>[</span><span class='id identifier rubyid_under_bin'>under_bin</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+	
+	<span class='kw'>return</span> <span class='lbracket'>[</span><span class='id identifier rubyid_r'>r</span><span class='comma'>,</span><span class='id identifier rubyid_g'>g</span><span class='comma'>,</span><span class='id identifier rubyid_b'>b</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_UV-class_method">
+  
+    + (<tt>u</tt>, <tt>v</tt>) <strong>get_UV</strong>(array) 
   
 
   
@@ -200,6 +677,10 @@ workplanes.</p>
 
 <p>This method was thought to be used along with “results_to_array” and,
 accordingly, that array is the parameter it receives.</p>
+
+<p>This method assumes that the sensors have a certain order… that is, written
+as Groundhog writes them. First, all sensors in direction V, then shift one
+U to the side, and again all sensors in direction V.</p>
 
 
   </div>
@@ -219,7 +700,7 @@ accordingly, that array is the parameter it receives.</p>
       
         &mdash;
         <div class='inline'>
-<p>2d array with 7 columns</p>
+<p>2d array with 4 columns</p>
 </div>
       
     </li>
@@ -283,15 +764,168 @@ accordingly, that array is the parameter it receives.</p>
       <pre class="lines">
 
 
+54
+55
+56
+57
+58
 59
 60
-61</pre>
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Results.rb', line 59</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Results.rb', line 54</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_UV'>get_UV</span><span class='lparen'>(</span><span class='id identifier rubyid_results_path'>results_path</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_UV'>get_UV</span><span class='lparen'>(</span><span class='id identifier rubyid_array'>array</span><span class='rparen'>)</span>
+	<span class='comment'>#Start with the first two points
+</span>	<span class='id identifier rubyid_data0'>data0</span><span class='op'>=</span><span class='id identifier rubyid_array'>array</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+	<span class='id identifier rubyid_data'>data</span><span class='op'>=</span><span class='id identifier rubyid_array'>array</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+	
+	<span class='comment'>#get V... easy. Two sequencial points
+</span>	<span class='id identifier rubyid_pt0'>pt0</span><span class='op'>=</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Point3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_data0'>data0</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_data0'>data0</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_data0'>data0</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_pt'>pt</span><span class='op'>=</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Point3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_v'>v</span><span class='op'>=</span><span class='id identifier rubyid_pt0'>pt0</span><span class='period'>.</span><span class='id identifier rubyid_vector_to'>vector_to</span><span class='lparen'>(</span><span class='id identifier rubyid_pt'>pt</span><span class='rparen'>)</span>
+	
+	<span class='id identifier rubyid_u'>u</span><span class='op'>=</span><span class='id identifier rubyid_v'>v</span>
+	<span class='id identifier rubyid_i'>i</span><span class='op'>=</span><span class='int'>2</span>
+	<span class='comment'>#Now, for getting U, we need to check the moment when we shift one &quot;U&quot;
+</span>	<span class='kw'>while</span> <span class='id identifier rubyid_u'>u</span><span class='period'>.</span><span class='id identifier rubyid_parallel?'>parallel?</span> <span class='id identifier rubyid_v'>v</span> <span class='kw'>do</span>
+		<span class='id identifier rubyid_data'>data</span><span class='op'>=</span><span class='id identifier rubyid_array'>array</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span>
+		<span class='id identifier rubyid_pt'>pt</span><span class='op'>=</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Point3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_u'>u</span><span class='op'>=</span><span class='id identifier rubyid_pt0'>pt0</span><span class='period'>.</span><span class='id identifier rubyid_vector_to'>vector_to</span><span class='lparen'>(</span><span class='id identifier rubyid_pt'>pt</span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_i'>i</span><span class='op'>+=</span><span class='int'>1</span>
+	<span class='kw'>end</span>
+	
+	
+	<span class='kw'>return</span> <span class='lbracket'>[</span><span class='id identifier rubyid_u'>u</span><span class='comma'>,</span><span class='id identifier rubyid_v'>v</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="import_results-class_method">
+  
+    + (<tt>Object</tt>) <strong>import_results</strong> 
+  
 
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Reads the results from a grid, and represent them as a heat map in a plane
+in the model.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>void</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'>
+<p>void</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Version:</p>
+<ul class="version">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>0.1</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+181
+182
+183
+184
+185
+186</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Results.rb', line 181</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_import_results'>import_results</span>
+	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_openpanel'>openpanel</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Open results file</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>c:/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_array'>array</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_results_to_array'>results_to_array</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_uv'>uv</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_UV'>get_UV</span><span class='lparen'>(</span><span class='id identifier rubyid_array'>array</span><span class='rparen'>)</span>
+	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_draw_results'>draw_results</span><span class='lparen'>(</span><span class='id identifier rubyid_uv'>uv</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_uv'>uv</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_array'>array</span><span class='rparen'>)</span>	
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -312,14 +946,11 @@ accordingly, that array is the parameter it receives.</p>
     
 <p>Converts sensor results into a 2D array</p>
 
-<p>It expects the grid be in format “Px Py Pz Nx Ny Nz Value” where the first
-three terms are the position in space, the second three values are the
-normal and the 7th value is the actual value to be put in the grid.</p>
+<p>It expects the grid be in format “Px Py Pz Value” where the first three
+terms are the position in space, and the 4th value is the actual value to
+be put in the grid.</p>
 
-<p>If there are only 4 values per line, it will fill the second three values
-with “0 0 1”. That is, it will  be assumed that this is a horizontal and
-Up-looking plane. Maybe in the future  non-horizontal planes will be
-accepted, so I am being cautious.</p>
+<p>The positions are assumed to be in meters.</p>
 
 
   </div>
@@ -385,7 +1016,7 @@ accepted, so I am being cautious.</p>
       
         
         <div class='inline'>
-<p>0.1</p>
+<p>0.2</p>
 </div>
       
     </li>
@@ -398,6 +1029,10 @@ accepted, so I am being cautious.</p>
       <pre class="lines">
 
 
+18
+19
+20
+21
 22
 23
 24
@@ -415,19 +1050,10 @@ accepted, so I am being cautious.</p>
 36
 37
 38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48</pre>
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'Groundhog/GH_Results.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'Groundhog/GH_Results.rb', line 18</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_results_to_array'>results_to_array</span><span class='lparen'>(</span><span class='id identifier rubyid_results_path'>results_path</span><span class='rparen'>)</span>
 	<span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_results_path'>results_path</span><span class='rparen'>)</span> <span class='kw'>then</span> 
@@ -440,18 +1066,13 @@ accepted, so I am being cautious.</p>
 	<span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_results_path'>results_path</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>r</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each_line'>each_line</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_line'>line</span><span class='op'>|</span>
 		<span class='id identifier rubyid_line'>line</span><span class='period'>.</span><span class='id identifier rubyid_strip!'>strip!</span>
 		<span class='id identifier rubyid_data'>data</span><span class='op'>=</span><span class='id identifier rubyid_line'>line</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\t</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-		
-		<span class='kw'>if</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>==</span> <span class='int'>7</span> <span class='kw'>then</span>
-			<span class='comment'>#it has normal
-</span>			<span class='id identifier rubyid_ret'>ret</span><span class='op'>=</span><span class='id identifier rubyid_ret'>ret</span><span class='op'>+</span><span class='lbracket'>[</span><span class='lbracket'>[</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>3</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>4</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>5</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>6</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='rbracket'>]</span><span class='rbracket'>]</span>
-		<span class='kw'>elsif</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span><span class='op'>==</span><span class='int'>4</span> <span class='kw'>then</span>
-			<span class='comment'>#does not have normal
-</span>			<span class='id identifier rubyid_ret'>ret</span><span class='op'>=</span><span class='id identifier rubyid_ret'>ret</span><span class='op'>+</span><span class='lbracket'>[</span><span class='lbracket'>[</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='comma'>,</span> <span class='int'>0</span><span class='comma'>,</span> <span class='int'>0</span><span class='comma'>,</span> <span class='int'>1</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>3</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='rbracket'>]</span><span class='rbracket'>]</span>
+		<span class='kw'>if</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span><span class='op'>==</span><span class='int'>4</span> <span class='kw'>then</span> <span class='comment'>#check the correct format
+</span>			<span class='id identifier rubyid_ret'>ret</span><span class='op'>=</span><span class='id identifier rubyid_ret'>ret</span><span class='op'>+</span><span class='lbracket'>[</span><span class='lbracket'>[</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='period'>.</span><span class='id identifier rubyid_m'>m</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='period'>.</span><span class='id identifier rubyid_m'>m</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='period'>.</span><span class='id identifier rubyid_m'>m</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='int'>3</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span><span class='rbracket'>]</span><span class='rbracket'>]</span>
 		<span class='kw'>else</span>
 			<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Incorrect results file format at line</span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_line_num'>line_num</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
 			<span class='kw'>return</span> <span class='kw'>false</span>
 		<span class='kw'>end</span>
-		<span class='id identifier rubyid_line_num'>line_num</span><span class='op'>=</span><span class='id identifier rubyid_line_num'>line_num</span><span class='op'>+</span><span class='int'>1</span>
+		<span class='id identifier rubyid_line_num'>line_num</span><span class='op'>+=</span><span class='int'>1</span>
 	<span class='kw'>end</span>	
 	
 	<span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
@@ -466,7 +1087,7 @@ accepted, so I am being cautious.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Apr  2 16:57:50 2015 by
+  Generated on Fri Apr  3 10:02:57 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

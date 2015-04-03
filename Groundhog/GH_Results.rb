@@ -86,7 +86,9 @@ class GH_Results
 	# all the sensors lie in the same plane point in the same direction.
 	#
 	# @author German Molina
-	# @param [u,v,array] U and V Vectors and the array (2D, 4 columns) with the data to show.
+	# @param u U vector
+	# @param v V vector
+	# @param array The array (2D, 4 columns) with the data to show.
 	# @return void
 	# @version 0.1
 	def self.draw_results(u,v,array)
@@ -143,9 +145,10 @@ class GH_Results
 	# in a plane in the model.
 	#
 	# @author German Molina
-	# @param value, max... the value to be assigned a color, and the maximum value available
-	# @return void
-	# @version 0.1
+	# @param value The value to be assigned a color
+	# @param max The maximum value, the one that saturates the color scale.
+	# @return [r,g,b] array with Red, Green and Blue components
+	# @version 0.2
 	def self.get_pixel_color(value,max)
 
 		red=[0.18848,0.05468174,0.00103547,8.311144e-08,7.449763e-06,0.0004390987,0.001367254,0.003076,0.01376382,0.06170773,0.1739422,0.2881156,0.3299725,0.3552663,0.372552,0.3921184,0.4363976,0.6102754,0.7757267,0.9087369,1,1,0.9863]
