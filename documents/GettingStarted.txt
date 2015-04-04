@@ -1,73 +1,37 @@
-# @markup html
+# @markup markdown
 # @title Getting Started
 # @author German Molina
 
 
-<h1>Understanding Groundhog</h1>
-<p align="justify">The following sections reference some <a href="http://www.radiance-online.org/">Radiance</a> 
-programs and conceptual elements. It is assumed that you have some (not really advanced) knowledge about those topics.</p>
+#Understanding Groundhog
+The following sections reference some [Radiance](http://www.radiance-online.org)
+programs and conceptual elements. It is assumed that you have some (not really advanced) knowledge about those topics.
 
-<p align="justify">Groundhog intends to use as much as possible the main SketchUp features. 
+Groundhog intends to use as much as possible the main SketchUp features. 
 This allows using other SketchUp geometry-generating-plugins and still be able to export to 
 Radiance. You can even download models from the 3D Warehouse (some complex models will include "non planar" faces... 
-in my experience, I just erase them, and the model is usually not affected).</p>
+in my experience, I just erase them, and the model is usually not affected).
 
-<p align="justify">Internally, Groundhog only analyzes SketchUp surfaces (<a href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/face.php">faces</a>), 
+Internally, Groundhog only analyzes SketchUp surfaces ([faces](http://www.sketchup.com/intl/en/developer/docs/ourdoc/face.php)), 
+and [Groups](http://www.sketchup.com/intl/en/developer/docs/ourdoc/group#definition) and [Components](http://www.sketchup.com/intl/en/developer/docs/ourdoc/componentdefinition), 
 and only exports Radiance polygons (which will not only be triangles, but more complex 
-polygons as well). For now, Groundhog only exports in one distribution (i.e. set of files and folders) 
-making a difference between Windows, Workplanes, Illums and normal surfaces. This distribution
-is the one I use, and keeping it constant helps creating scripts for Daylight analysis.</p>
+polygons as well). Groundhog always exports in one distribution (i.e. set of files and folders) 
+making a difference between Windows, Workplanes, Illums and other kinds of surfaces. This distribution
+is the one I use, and keeping it constant helps creating scripts for accelerating Daylight analysis, 
+and avoiding errors.
 
-<p align="justify">The following section explains what are and how Groundhog identifies different kinds of 
-surfaces in the scene, and how the two different exporting options deal with such components.</p>
+The following section explains what are and how Groundhog identifies different kinds of 
+surfaces in the scene, and how the two different exporting options deal with such components.
 
-<h2>Different kinds of surfaces: Labels</h2>
-<p align="justify">As was explained earlier, Groundhog will only export SketchUp's <a href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/face.php">faces</a>. 
-Such faces may be of four different classes: illum, window, workplane and "the rest".  
+##Different kinds of surfaces: Labels
+As was explained earlier, Groundhog will only export SketchUp's faces (including those within components and groups).
+Such faces may be of different classes, such as illum, window, workplane and "the rest".  
+
 In order to be light, fast and easy to use, Groundhog "Labels" the different polygons in the 
-scene by using SketchUp's <a href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/entity.php#set_attribute">
-set_attribute</a> and <a href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/entity.php#get_attribute">
-get_attribute</a> API methods. This allows the used to delete, move, create and split workplanes, illums and windows with the tools provided by SketchUp. 
+scene by using SketchUp's [set_attribute](http://www.sketchup.com/intl/en/developer/docs/ourdoc/entity.php#set_attribute)
+and [get_attribute](http://www.sketchup.com/intl/en/developer/docs/ourdoc/entity.php#get_attribute)
+ API methods. This allows the used to delete, move, create and split workplanes, illums and windows with the tools provided by SketchUp. 
 For example, if a workplane has been define within the model, dividing it (by drawing a line within it) or copying and pasting it
 will result in the existence of two workplanes. In the same way, deleting it will make the workplane desapear without the need
-of going through complex internal data structures.</p>
-
-<h3>Windows</h3>
-<p align="justify">Even though it is not necessary to identify windows as "special elements" when we want 
-to make a render, there are some other cases where it is very convenient to export them separately. In order 
-to achieve this identification, Groundhog can internally tell (from its Label) if a surface is a window or not, 
-and export it separatly.</p>
-
-<h3>Workplanes</h3>
-<p align="justify">Workplanes are planes of the space where we would like to measure the illuminance or luminance 
-levels. Even though in a Groundhog-created SketchUp model the workplanes will be represented as a (semi-transparent red)
- surface, it will be exported as a sensor grid in a file that represent such sensors in a format that can be used with 
- Radiance's  <a href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/rcontrib.pdf">rcontrib</a> 
- and <a href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/rtrace.pdf">rtrace</a> programs.</p>
- 
-<h3>Illum surfaces</h3>
-
-<p align="justify">On an e-mail conversation, Greg Ward helped me define illum surfaces as:</p>
-
-<blockquote align="justify"><i>Illum surfaces, also known as "impostors" or "proxies," are light-emitting surfaces whose luminous 
-distributions are equivalent to the distribution transmitted through them as the consequence of the existence of other 
-(direct and indirect) light sources. <a href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/mkillum.pdf">Mkillum</a> 
-is the program that allows creating illum surfaces in a convenient way <a href="http://radsite.lbl.gov/radiance/book/">(Ward & Shakespeare, 1998).
-</a>For example, the daylight distribution transmitted through a window, which can be considered a consequence of the existence of the sun and sky, 
-can be summarized into an illum surface.</i></blockquote>
-
-<p align="justify">Illum surfaces may be very useful when rendering and modeling luminaires in detail. Personally, I am not
-good at either of those, but I thought it was useful to include this feature in Groundhog.</p>
-
-<p align="justify">Strictly speaking, these surfaces are not yet illum surfaces. They are exported without any Radiance modifier 
-("void"), so they are invisible, and are supposed to be used for creating illums by running mkIllum program in order to create 
-the actual illum.</p>
-<p align="justify"><b>NOTE:</b> Every time the "Make Window" tool is used, an illum surface is created at the
-interior side of the wall, represented in a semi-transparent green.</p>
-
-
-<h3>Unlabeled surfaces</h3>
-<p align="justify">The rest of the surfaces are the not-labeled surfaces of the scene. They will be
-exported in radiance geometry files separated by layers.</p>
-
+of going through complex internal data structures.
 

@@ -40,7 +40,21 @@ class GH_Labeler
 		end
 	end
 
+	# Assigns the maximum and minimum value to a solved workplane
+	#
+	# The value, in this case, is an aray with [min,max] values.
+	#
+	# @author German Molina
+	# @param workplane [Float] The workplane to be assigned the value
+	# @param min [Float] Minimum value
+	# @param max [Float] Maximum value
+	# @return [void]
+	def self.set_workplane_value(workplane,min,max)
+		return false if not self.solved_workplane?(workplane)
+		workplane.set_attribute("Groundhog","Value",[min,max])
+	end
 
+	
 
 	# Checks if an entity is of some Label.
 	# @author German Molina
@@ -59,6 +73,22 @@ class GH_Labeler
 	# @return [Boolean]
 	def self.illum?(entity)
 		entity.get_attribute("Groundhog","Label")=="illum"
+	end
+	
+	# Checks if a component definition is a solved workplane
+	# @author German Molina
+	# @param entity [entity] Entity to test.
+	# @return [Boolean]
+	def self.solved_workplane?(component_definition)
+		component_definition.get_attribute("Groundhog","Label")=="solved_workplane"
+	end
+	
+	# Checks if an entity is an illum
+	# @author German Molina
+	# @param entity [entity] Entity to test.
+	# @return [Boolean]
+	def self.result_pixel?(entity)
+		entity.get_attribute("Groundhog","Label")=="result_pixel"
 	end
 
 	# Checks if an entity is a workplane
@@ -97,9 +127,9 @@ class GH_Labeler
 	# @author German Molina
 	# @param entity [entity] Entity to test.
 	# @return [Boolean]
-	def self.component_definition?(entity)
-		entity.is_a? Sketchup::ComponentInstance
-	end
+	#def self.component_definition?(entity)
+	#	entity.is_a? Sketchup::ComponentInstance
+	#end
 	
 	# Checks if an entity is a Group
 	# @author German Molina
@@ -155,10 +185,19 @@ class GH_Labeler
 		end
 	end
 
+	# Assigns a value to a pixel.
+	#
+	# @author German Molina
+	# @param pixel [SketchUp::Face] the pixel to be assigned a value
+	# @param value [Float] the value to be assigned
+	# @return [Void]
+	def self.set_pixel_value(pixel,value)	
+		pixel.set_attribute("Groundhog","Value",value)
+	end
 	
 	# Transform selected faces into illums
 	# @author German Molina
-	# @param entities [Array<entities>] An array with the entities to be assigned a CFS.
+	# @param entities [Array<entities>] An array with the entities to be transformed into illums.
 	# @return [Void]
 	def self.to_illum(entities)
 	
@@ -176,10 +215,28 @@ class GH_Labeler
 			UI.messagebox("No faces selected")
 		end	
 	end
+	
+	# Transform selected faces into results_pixels
+	# @author German Molina
+	# @param face [Sketchup Face] The face to be labeled as result_pixels
+	# @return [Void]
+	def self.to_result_pixel(face)	
+		face.set_attribute("Groundhog","Label","result_pixel")
+	end
+	
+	# Transform selected faces into results_pixels
+	# @author German Molina
+	# @param workplane [SkecthUp::ComponentDefinition] A SketchUp component definition
+	# @return [Void]
+	def self.to_solved_workplane(workplane)
+		workplane.set_attribute("Groundhog","Label","solved_workplane")
+	
+	end
+
 
 	# Transform selected faces into windows
 	# @author German Molina
-	# @param entities [Array<entities>] An array with the entities to be assigned a CFS.
+	# @param entities [Array<entities>] An array with the entities to be labeled as windows.
 	# @return [Void]
 	def self.to_window(entities)
 		faces=GH_Utilities.get_faces(entities)
@@ -197,7 +254,7 @@ class GH_Labeler
 	
 	# Label selected faces as workplanes
 	# @author German Molina
-	# @param entities [Array<entities>] An array with the entities to be declared as Workplane
+	# @param entities [Array<entities>] An array with the entities to be labeled as Workplane
 	# @version 0.2
 	# @return [Void]
 	def self.to_workplane(entities)
@@ -227,7 +284,7 @@ class GH_Labeler
 	
 	# Delete label from entities
 	# @author German Molina
-	# @param entities [Array<entities>] An array with the entities to be assigned a CFS.
+	# @param entities [Array<entities>] An array with the entities whose Label will be removed
 	# @return [Void]
 	def self.to_nothing(entities)
 		faces=GH_Utilities.get_faces(entities)
@@ -241,6 +298,20 @@ class GH_Labeler
 		else
 			UI.messagebox("No faces selected")
 		end	
+	end
+	
+	# Get Groundhog-asgned value of an entity
+	#
+	# It is important to notice that, depending on the kind of entity and label, 
+	# there will be different kinds of "values". For example,
+	# the value for Solved Workplanes is an array with [min,max] values. Result pixels,
+	# on the other hand, will return a float.
+	#
+	# @author German Molina
+	# @param entity [SketchUp entity] The entity to get the value from
+	# @return Value [depends]
+	def self.get_value(entity)
+		entity.get_attribute("Groundhog","Value")
 	end
 
 

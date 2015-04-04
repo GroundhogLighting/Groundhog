@@ -62,76 +62,78 @@
     <iframe id="search_frame"></iframe>
 
     <div id="content"><div id='filecontents'>
+<h1 id="label-Understanding+Groundhog">Understanding Groundhog</h1>
 
-<h1>Understanding Groundhog</h1>
-<p align="justify">The following sections reference some <a href="http://www.radiance-online.org/">Radiance</a> 
-programs and conceptual elements. It is assumed that you have some (not really advanced) knowledge about those topics.</p>
+<p>The following sections reference some <a
+href="http://www.radiance-online.org">Radiance</a>
+programs and conceptual
+elements. It is assumed that you have some (not really advanced) knowledge
+about those topics.</p>
 
-<p align="justify">Groundhog intends to use as much as possible the main SketchUp features. 
-This allows using other SketchUp geometry-generating-plugins and still be able to export to 
-Radiance. You can even download models from the 3D Warehouse (some complex models will include "non planar" faces... 
-in my experience, I just erase them, and the model is usually not affected).</p>
+<p>Groundhog intends to use as much as possible the main SketchUp
+features.
+This allows using other SketchUp geometry-generating-plugins and
+still be able to export to
+Radiance. You can even download models from the
+3D Warehouse (some complex models will include &quot;non planar&quot;
+faces...
+in my experience, I just erase them, and the model is usually not
+affected).</p>
 
-<p align="justify">Internally, Groundhog only analyzes SketchUp surfaces (<a href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/face.php">faces</a>), 
-and only exports Radiance polygons (which will not only be triangles, but more complex 
-polygons as well). For now, Groundhog only exports in one distribution (i.e. set of files and folders) 
-making a difference between Windows, Workplanes, Illums and normal surfaces. This distribution
-is the one I use, and keeping it constant helps creating scripts for Daylight analysis.</p>
+<p>Internally, Groundhog only analyzes SketchUp surfaces (<a
+href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/face.php">faces</a>),
+and
+<a
+href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/group#definition">Groups</a>
+and <a
+href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/componentdefinition">Components</a>,
+and
+only exports Radiance polygons (which will not only be triangles, but more
+complex
+polygons as well). Groundhog always exports in one distribution
+(i.e. set of files and folders)
+making a difference between Windows,
+Workplanes, Illums and other kinds of surfaces. This distribution
+is the
+one I use, and keeping it constant helps creating scripts for accelerating
+Daylight analysis,
+and avoiding errors.</p>
 
-<p align="justify">The following section explains what are and how Groundhog identifies different kinds of 
-surfaces in the scene, and how the two different exporting options deal with such components.</p>
+<p>The following section explains what are and how Groundhog identifies
+different kinds of
+surfaces in the scene, and how the two different
+exporting options deal with such components.</p>
 
-<h2>Different kinds of surfaces: Labels</h2>
-<p align="justify">As was explained earlier, Groundhog will only export SketchUp's <a href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/face.php">faces</a>. 
-Such faces may be of four different classes: illum, window, workplane and "the rest".  
-In order to be light, fast and easy to use, Groundhog "Labels" the different polygons in the 
-scene by using SketchUp's <a href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/entity.php#set_attribute">
-set_attribute</a> and <a href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/entity.php#get_attribute">
-get_attribute</a> API methods. This allows the used to delete, move, create and split workplanes, illums and windows with the tools provided by SketchUp. 
-For example, if a workplane has been define within the model, dividing it (by drawing a line within it) or copying and pasting it
-will result in the existence of two workplanes. In the same way, deleting it will make the workplane desapear without the need
-of going through complex internal data structures.</p>
+<h2 id="label-Different+kinds+of+surfaces%3A+Labels">Different kinds of surfaces: Labels</h2>
 
-<h3>Windows</h3>
-<p align="justify">Even though it is not necessary to identify windows as "special elements" when we want 
-to make a render, there are some other cases where it is very convenient to export them separately. In order 
-to achieve this identification, Groundhog can internally tell (from its Label) if a surface is a window or not, 
-and export it separatly.</p>
+<p>As was explained earlier, Groundhog will only export SketchUp&#39;s faces
+(including those within components and groups).
+Such faces may be of
+different classes, such as illum, window, workplane and &quot;the
+rest&quot;.</p>
 
-<h3>Workplanes</h3>
-<p align="justify">Workplanes are planes of the space where we would like to measure the illuminance or luminance 
-levels. Even though in a Groundhog-created SketchUp model the workplanes will be represented as a (semi-transparent red)
- surface, it will be exported as a sensor grid in a file that represent such sensors in a format that can be used with 
- Radiance's  <a href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/rcontrib.pdf">rcontrib</a> 
- and <a href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/rtrace.pdf">rtrace</a> programs.</p>
- 
-<h3>Illum surfaces</h3>
+<p>In order to be light, fast and easy to use, Groundhog “Labels” the
+different polygons in the
+scene by using SketchUp&#39;s <a
+href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/entity.php#set_attribute">set_attribute</a>
+and
+<a
+href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/entity.php#get_attribute">get_attribute</a>
 
-<p align="justify">On an e-mail conversation, Greg Ward helped me define illum surfaces as:</p>
-
-<blockquote align="justify"><i>Illum surfaces, also known as "impostors" or "proxies," are light-emitting surfaces whose luminous 
-distributions are equivalent to the distribution transmitted through them as the consequence of the existence of other 
-(direct and indirect) light sources. <a href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/mkillum.pdf">Mkillum</a> 
-is the program that allows creating illum surfaces in a convenient way <a href="http://radsite.lbl.gov/radiance/book/">(Ward & Shakespeare, 1998).
-</a>For example, the daylight distribution transmitted through a window, which can be considered a consequence of the existence of the sun and sky, 
-can be summarized into an illum surface.</i></blockquote>
-
-<p align="justify">Illum surfaces may be very useful when rendering and modeling luminaires in detail. Personally, I am not
-good at either of those, but I thought it was useful to include this feature in Groundhog.</p>
-
-<p align="justify">Strictly speaking, these surfaces are not yet illum surfaces. They are exported without any Radiance modifier 
-("void"), so they are invisible, and are supposed to be used for creating illums by running mkIllum program in order to create 
-the actual illum.</p>
-<p align="justify"><b>NOTE:</b> Every time the "Make Window" tool is used, an illum surface is created at the
-interior side of the wall, represented in a semi-transparent green.</p>
-
-
-<h3>Unlabeled surfaces</h3>
-<p align="justify">The rest of the surfaces are the not-labeled surfaces of the scene. They will be
-exported in radiance geometry files separated by layers.</p></div></div>
+API methods. This allows the used to delete, move, create and split
+workplanes, illums and windows with the tools provided by SketchUp.
+For
+example, if a workplane has been define within the model, dividing it (by
+drawing a line within it) or copying and pasting it
+will result in the
+existence of two workplanes. In the same way, deleting it will make the
+workplane desapear without the need
+of going through complex internal data
+structures.</p>
+</div></div>
 
     <div id="footer">
-  Generated on Fri Apr  3 12:25:37 2015 by
+  Generated on Sat Apr  4 15:36:49 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

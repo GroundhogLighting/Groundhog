@@ -89,16 +89,21 @@ class GH_Results
 	# @param u [vector3d] U vector
 	# @param v [vector3d] V vector
 	# @param array [array] The array (2D, 4 columns) with the data to show.
+	# @param name [String] The name that will be given to the group that contains the pixels
 	# @return void
-	# @version 0.1
-	def self.draw_results(u,v,array)
+	# @version 0.2
+	def self.draw_pixels(u,v,array,name)
 		model=Sketchup.active_model
 		begin
 
-		  	model.start_operation( "draw results" )
-		
-			entities=Sketchup.active_model.entities
-		
+		  	model.start_operation("draw pixels")
+			
+			group = Sketchup.active_model.entities.add_group
+			group.name=name
+			GH_Labeler.to_solved_workplane(group.definition)
+			entities=group.entities
+			
+			
 			#we move half step to each side.
 			u.transform!(0.5)
 			v.transform!(0.5)
@@ -109,12 +114,7 @@ class GH_Results
 				min=data[3] if min>data[3]
 				max=data[3] if max<data[3]
 			end
-
-			# ask for scale
-			#prompts = ["Maximum value in the scale?"]
-			#defaults = [max.to_s]
-			#input = UI.inputbox(prompts, defaults, "Choose scale")
-			
+			GH_Labeler.set_workplane_value(group.definition,min,max)
 			
 			#draw every line. Each pixel is a quadrilateral.
 			array.each do |data|
@@ -125,17 +125,16 @@ class GH_Results
 				vertex2=pt.offset(v).offset(u.transform(-1))
 			
 				pixel=entities.add_face(vertex1,vertex2,vertex3,vertex4)
+				GH_Labeler.to_result_pixel(pixel)
+				GH_Labeler.set_pixel_value(pixel,data[3])
 
-				color=self.get_pixel_color(data[3],max,0) #minimum scale will always be 0.
-				pixel.material=color
-				pixel.back_material=color
 			end
 		
 		
 			model.commit_operation
 		rescue => e
 			model.abort_operation
-			UI.messagebox("Operation failed... please contact us to tell us what happened.\n\nTHANKS.")
+			UI.messagebox("'draw_pixels' pperation failed... please contact us to tell us what happened.\n\nTHANKS.")
 		#else
 		  #
 		  # Do code here ONLY if NO errors occur.
@@ -183,6 +182,76 @@ class GH_Results
 		
 		return [r,g,b]
 	end
+
+	# Update the pixel colors of all the solved_workplanes in the model.
+	#
+	# @author German Molina
+	# @param max [Float] the maximum value for the scale
+	# @param min [Float] the minimum value for the scale
+	# @return void
+	# @version 0.1
+	def self.update_pixel_colors(min,max)
+		model=Sketchup.active_model
+		begin
+
+		  	model.start_operation("update pixels")
+		
+			definitions=Sketchup.active_model.definitions
+		
+			definitions.each do |defi|
+				next if not GH_Labeler.solved_workplane?(defi) 
+				#now we are sure this is a solved_workplane
+			
+				entities=defi.entities
+				entities.each do |pixel|
+					next if not GH_Labeler.face?(pixel) or not GH_Labeler.result_pixel?(pixel)
+					# not we are sure ent is a pixel.
+				
+					value=GH_Labeler.get_value(pixel)
+				
+					color=self.get_pixel_color(value,max,min) #minimum scale will always be 0.
+					pixel.material=color
+					pixel.back_material=color
+					
+				end
+			
+			end
+		rescue => e
+			model.abort_operation
+			UI.messagebox("'update pixel' pperation failed... please contact us to tell us what happened.\n\nTHANKS.")
+		#else
+		  #
+		  # Do code here ONLY if NO errors occur.
+		  #
+		#ensure
+		  #
+		  # ALWAYS do code here errors or not.
+		  #
+		end		
+	end
+	
+	# Checks all the solved workplanes in the model
+	# and gets the minimum and maximum values from all of them
+	#
+	# @author German Molina
+	# @param void
+	# @return min_max [array] An array with the minimum and maximum values
+	# @version 0.1
+	def self.get_min_max_from_model()
+		definitions=Sketchup.active_model.definitions
+		#Get the maximum and minimum in the whole model
+		max=-1
+		min=9999999999999
+		definitions.each do |defi|
+			next if not GH_Labeler.solved_workplane?(defi) 
+			#now we are sure this is a solved_workplane
+			min_max=GH_Labeler.get_value(defi)
+			
+			min=min_max[0] if min > min_max[0]
+			max=min_max[1] if max < min_max[1]
+		end
+		return [min,max]
+	end
 	
 	# Reads the results from a grid, and represent them as a heat map
 	# in a plane in the model.
@@ -192,12 +261,27 @@ class GH_Results
 	# @return void
 	# @version 0.1
 	def self.import_results
+		model=Sketchup.active_model
+
+		model.definitions.purge_unused
+		model.start_operation("import results")
+		
 		path=UI.openpanel("Open results file","c:/")
 		return if not path
+	
+		name=path.split(GH_OS.slash())[-1].split(".")[0]
 		array=self.results_to_array(path)
+		return if not array #if the format was wrong, for example
+	
 		uv=self.get_UV(array)
-		self.draw_results(uv[0],uv[1],array)	
+		self.draw_pixels(uv[0],uv[1],array,name)
+		min_max=self.get_min_max_from_model
+		self.update_pixel_colors(0,min_max[1])	#minimum is 0
+	
 	end
+	
+	
+	
 	
 
 
