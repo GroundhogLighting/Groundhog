@@ -277,70 +277,63 @@ groundhog_menu=extensions_menu.add_submenu("Groundhog")
 
 	GH_help_menu=groundhog_menu.add_submenu("Help")
 		GH_help_menu.add_item("Full Groundhog documentation") {
-	
-			s=GH_OS.getsystem
-			if Sketchup.is_online
-				UI.openURL "http://igd-labs.github.io/Groundhog/doc/doc_index.html"
-			elsif
-				UI.messagebox("Sorry, documentation is only available when you are online... we really want to solve this")
-			end
+			s=GH_OS.slash	
+			wd=UI::WebDialog.new( 
+				"Full doc", true, "", 
+				700, 700, 100, 100, false )
+			wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"doc_index.html" )			
+			wd.show()
 		}
 	
 		## Tutorials
 		GH_tutorials_menu=GH_help_menu.add_submenu("Tutorials")
 			GH_tutorials_menu.add_item("Getting Started") {
-	
-				s=GH_OS.getsystem
-				if Sketchup.is_online
-					UI.openURL "http://igd-labs.github.io/Groundhog/doc/file.GettingStarted.html"
-				elsif
-					UI.messagebox("Sorry, documentation is only available when you are online... we really want to solve this")
-				end
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Full doc", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.GettingStarted.html" )			
+				wd.show()	
 			}
 			GH_tutorials_menu.add_item("Adding windows") {
-	
-				s=GH_OS.getsystem
-				if Sketchup.is_online
-					UI.openURL "http://igd-labs.github.io/Groundhog/doc/file.MakeWindow.html"
-				elsif
-					UI.messagebox("Sorry, documentation is only available when you are online... we really want to solve this")
-				end
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Full doc", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.MakeWindow.html" )			
+				wd.show()		
 			}
 			GH_tutorials_menu.add_item("Adding workplanes") {
-	
-				s=GH_OS.getsystem
-				if Sketchup.is_online
-					UI.openURL "http://igd-labs.github.io/Groundhog/doc/file.MakeWorkplane.html"
-				elsif
-					UI.messagebox("Sorry, documentation is only available when you are online... we really want to solve this")
-				end
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Full doc", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.MakeWorkplane.html" )			
+				wd.show()	
 			}
 			GH_tutorials_menu.add_item("Adding illums") {
-	
-				s=GH_OS.getsystem
-				if Sketchup.is_online
-					UI.openURL "http://igd-labs.github.io/Groundhog/doc/file.MakeIllum.html"
-				elsif
-					UI.messagebox("Sorry, documentation is only available when you are online... we really want to solve this")
-				end
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Full doc", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.MakeIllum.html" )			
+				wd.show()	
 			}
 			GH_tutorials_menu.add_item("Exporting views") {
-	
-				s=GH_OS.getsystem
-				if Sketchup.is_online
-					UI.openURL "http://igd-labs.github.io/Groundhog/doc/file.Views.html"
-				elsif
-					UI.messagebox("Sorry, documentation is only available when you are online... we really want to solve this")
-				end
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Full doc", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.Views.html" )			
+				wd.show()		
 			}
 			GH_tutorials_menu.add_item("Visualizing results") {
-	
-				s=GH_OS.getsystem
-				if Sketchup.is_online
-					UI.openURL "http://igd-labs.github.io/Groundhog/doc/file.ImportResults.html"
-				elsif
-					UI.messagebox("Sorry, documentation is only available when you are online... we really want to solve this")
-				end
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Full doc", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.ImportResults.html" )			
+				wd.show()		
 			}
 
 	# Add the About.

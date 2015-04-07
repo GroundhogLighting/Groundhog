@@ -12,6 +12,9 @@ rm *tmphtml
 
 cd ..
 
+#Include new doc into the main Groundhog directory
+cp -rf doc Groundhog/doc
+
 #create RBZ
 zip -r Groundhog.rbz Groundhog Groundhog_extension.rb -x *yardoc* *.DS_Store
 
