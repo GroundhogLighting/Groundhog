@@ -1,0 +1,88 @@
+
+<html>
+	<head>
+		<title>Scale handling</title>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+
+
+    <p align="center">Max: <input type="number" id="max" min="0" style="width:57px;"><input type="checkbox" id="auto_max" onclick='onCheckMax()'>Auto</p>
+    
+    <p align="center"><img align="center" src="scale.png" alt="scale" style="width:50px;height:200px"></p>
+    
+    <p align="center">Min: <input type="number" id="min"  min="0" style="width:57px;"><input type="checkbox" id="auto_min" onclick='onCheckMin()'>Auto</p>
+    
+       <p align="center"> <button 
+    	style='font-size:10pt;'
+    	onclick='update()'
+    > Update Scale </button></p>
+
+	</body>
+	<script type='text/javascript'>
+
+
+		function update() {
+			max=parseFloat(document.getElementById("max").value)
+			min=parseFloat(document.getElementById("min").value)
+			
+			if(min>=max){
+				alert("Minimum value must be smaller than maximum value");
+				return;
+			}else if(min<0 || max < 0){
+				alert("Both scale values need to be greater than zero")
+				return;
+			}
+			
+			auto_min=document.getElementById("auto_min")
+			auto_max=document.getElementById("auto_max")
+			
+			if(auto_min.checked){
+				min=-1;
+			}
+			if(auto_max.checked){
+				max=-1;
+			}
+			
+			if(isNaN(min) || isNaN(max)){
+				alert("Please insert a valid number")
+				return;
+			}
+			
+			console.log(min+max)
+			
+			query = 'skp:update_scale@'+min+'/'+max;
+			window.location.href = query;
+		}
+		
+		function onCheckMax(){
+			max=document.getElementById("max")
+			auto_max=document.getElementById("auto_max")
+		
+			if(auto_max.checked){		
+				max.readOnly=true
+				max.value="auto"
+			}else{
+				max.readOnly=false
+
+			}
+			
+		}
+		function onCheckMin(){
+			min=document.getElementById("min")
+			auto_min=document.getElementById("auto_min")
+		
+			if(auto_min.checked){		
+				min.readOnly=true
+				min.value="auto"
+			}else{
+				min.readOnly=false
+			}
+			
+		}
+		
+	</script>
+
+
+</html>
+

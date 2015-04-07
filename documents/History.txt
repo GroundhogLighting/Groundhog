@@ -15,6 +15,7 @@ This just intends to show a little bit of how Groundhog has been developed.
 - Workplanes now need to be rectangular and have no holes.
 - Importing results for visualizing them within SketchUp.
 - The concept of "value" was incorporated. 
+- All tools, features and functions are now grouped under the same menu: Plugins --> Groundhog
 
 ## Groundhog 0.5
 

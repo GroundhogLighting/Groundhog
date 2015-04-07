@@ -1,4 +1,4 @@
-# @markup html
+# @markup markdown
 # @title TUTORIAL: Import Results
 # @author German Molina
 

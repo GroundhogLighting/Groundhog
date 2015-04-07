@@ -11,13 +11,10 @@ Please contact us to gmolina1@uc.cl
 
 # Programing tasks
 - Allow project overwrite. That is, modify the model, press “export” again and replace the existing project with the actual one. Much more comfortable for working with Radiance and SketchUp simultaneously.
-- Allow non-horizontal workplanes (what happens when workplanes point down?)
+- Allow non-horizontal workplanes
 - Fix the "view" exporter. It is not exporting properly... I think I need to understand better how to model a camera.
-- "Setworkplane" function works ok, but it would be nice to add an "offset" option, so it creates workplaces that are smaller than the original surface. This would avoid some uncomfortable situations (i.e. the new workplace divides the wall surfaces, creating more surfaces).
-- Enhance the export methods.
 - Importing models from Revit® or other CAD programs. 
 - Allow importing furniture, materials, fenestration systems and luminaries from a (online maybe?) library.
-- Show results.
 
 # Non-programming tasks
 - Maybe "solve" some of the Radiance tutorials using Groundhog...?

@@ -63,4 +63,22 @@ class GH_OS
 		"/Applications/Otros/RadianceResources/Furniture/"
 	end
 
+	# Returns the path where the Groundhog files are located
+	# @author German Molina
+	# @param [Void]
+	# @return [String] The corresponding path
+	# @note Require testing under Windows.
+	def self.main_groundhog_path
+			
+		files = Sketchup.find_support_file "Groundhog_extension.rb" ,"Plugins"
+		s=self.slash
+		array=files.split(s)
+		array=array.first(array.length-1)
+		return array.join(s)+s+"Groundhog"+s
+		
+	end
+
+		
+	
+
 end
