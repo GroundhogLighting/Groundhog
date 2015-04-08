@@ -231,6 +231,7 @@ class GH_Exporter
 		end
 		
 		path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
+		return if not path_to_save
 		path_to_save=path_to_save.tr(" ","_").tr("#","_")
 				
 		s=GH_OS.slash

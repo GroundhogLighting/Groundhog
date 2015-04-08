@@ -219,7 +219,7 @@ groundhog_menu=extensions_menu.add_submenu("Groundhog")
 			
 			wd=UI::WebDialog.new( 
 				"Scale handler", false, "", 
-				180, 340, 100, 100, false )
+				180, 380, 100, 100, false )
 
 			wd.set_file( GH_OS.main_groundhog_path+"html"+s+"scale.html" )
 			
@@ -238,9 +238,12 @@ groundhog_menu=extensions_menu.add_submenu("Groundhog")
 
 				
 				GH_Results.update_pixel_colors(min,max)
+				
+				web_dialog.execute_script("document.getElementById('min').value="+min.to_s+";""document.getElementById('max').value="+max.to_s+";");
 			end
 			
 			wd.show()
+
 		}
 
 
@@ -290,7 +293,7 @@ groundhog_menu=extensions_menu.add_submenu("Groundhog")
 			GH_tutorials_menu.add_item("Getting Started") {
 				s=GH_OS.slash	
 				wd=UI::WebDialog.new( 
-					"Full doc", true, "", 
+					"Tutorials", true, "", 
 					700, 700, 100, 100, false )
 				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.GettingStarted.html" )			
 				wd.show()	
@@ -298,7 +301,7 @@ groundhog_menu=extensions_menu.add_submenu("Groundhog")
 			GH_tutorials_menu.add_item("Adding windows") {
 				s=GH_OS.slash	
 				wd=UI::WebDialog.new( 
-					"Full doc", true, "", 
+					"Tutorials", true, "", 
 					700, 700, 100, 100, false )
 				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.MakeWindow.html" )			
 				wd.show()		
@@ -306,7 +309,7 @@ groundhog_menu=extensions_menu.add_submenu("Groundhog")
 			GH_tutorials_menu.add_item("Adding workplanes") {
 				s=GH_OS.slash	
 				wd=UI::WebDialog.new( 
-					"Full doc", true, "", 
+					"Tutorials", true, "", 
 					700, 700, 100, 100, false )
 				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.MakeWorkplane.html" )			
 				wd.show()	
@@ -314,7 +317,7 @@ groundhog_menu=extensions_menu.add_submenu("Groundhog")
 			GH_tutorials_menu.add_item("Adding illums") {
 				s=GH_OS.slash	
 				wd=UI::WebDialog.new( 
-					"Full doc", true, "", 
+					"Tutorials", true, "", 
 					700, 700, 100, 100, false )
 				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.MakeIllum.html" )			
 				wd.show()	
@@ -322,7 +325,7 @@ groundhog_menu=extensions_menu.add_submenu("Groundhog")
 			GH_tutorials_menu.add_item("Exporting views") {
 				s=GH_OS.slash	
 				wd=UI::WebDialog.new( 
-					"Full doc", true, "", 
+					"Tutorials", true, "", 
 					700, 700, 100, 100, false )
 				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.Views.html" )			
 				wd.show()		
@@ -330,7 +333,7 @@ groundhog_menu=extensions_menu.add_submenu("Groundhog")
 			GH_tutorials_menu.add_item("Visualizing results") {
 				s=GH_OS.slash	
 				wd=UI::WebDialog.new( 
-					"Full doc", true, "", 
+					"Tutorials", true, "", 
 					700, 700, 100, 100, false )
 				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.ImportResults.html" )			
 				wd.show()		

@@ -13,6 +13,7 @@ rm *tmphtml
 cd ..
 
 #Include new doc into the main Groundhog directory
+rm -fr Groundhog/doc
 cp -rf doc Groundhog/doc
 
 #create RBZ

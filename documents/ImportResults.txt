@@ -1,4 +1,4 @@
-# @markup markdown
+# @markup html
 # @title TUTORIAL: Import Results
 # @author German Molina
 
@@ -58,8 +58,24 @@ rtrace -h -oov [options] octree < Workplanes/Grid.pts | rcalc -e '$1=$1; $2=$2; 
 
 
 
-<h3>Step 4: Interpret the results</h3>
+<h3>Step 4: Analyse results</h3>
+
+<p>Groundhog allows importing results from multiple workplanes in the same model, so an entire space can be analyzed easily. However, 
+the only way of comparing results from different workplanes is to have one single scale for the entire model.</p>
+
+<p>Accordingly, every time a set of results is imported, the scale is reset in order to cover from 
+the minimum result value to the maximum. That means that when you import a second workplane, the colors 
+of the first one will probably change.</p>
+
 <figure align="center">
 <img src="ImportResults/fig4.png" alt="Import Results">
 <figcaption>Figure 2: Fourth step - See the results</figcaption>
+</figure>
+
+<p>However, in some cases, it might be useful to choose your own scale. 
+This can be done by going to Plugins –> Groundhog –> Results –> Scale handler.</p>
+
+<figure align="center">
+<img src="ImportResults/fig5.png" alt="Import Results">
+<figcaption>Figure 3: Optional - change the scale</figcaption>
 </figure>

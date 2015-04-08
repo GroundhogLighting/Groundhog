@@ -134,7 +134,7 @@ class GH_Results
 			model.commit_operation
 		rescue => e
 			model.abort_operation
-			UI.messagebox("'draw_pixels' pperation failed... please contact us to tell us what happened.\n\nTHANKS.")
+			UI.messagebox("'draw_pixels' operation failed... please contact us to tell us what happened.\n\nTHANKS.")
 		#else
 		  #
 		  # Do code here ONLY if NO errors occur.
@@ -218,7 +218,7 @@ class GH_Results
 			end
 		rescue => e
 			model.abort_operation
-			UI.messagebox("'update pixel' pperation failed... please contact us to tell us what happened.\n\nTHANKS.")
+			UI.messagebox("'update pixel' operation failed... please contact us to tell us what happened.\n\nTHANKS.")
 		#else
 		  #
 		  # Do code here ONLY if NO errors occur.

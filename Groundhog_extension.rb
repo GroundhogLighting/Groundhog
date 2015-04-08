@@ -15,7 +15,7 @@ if (actual_version < version_required)
 
 end
 	Groundhog = SketchupExtension.new "Groundhog", "Groundhog/Groundhog.rb"
-	Groundhog.version = '0.5.3'
+	Groundhog.version = '0.5.5'
 	Groundhog.description = "OpenSource SketchUp extension for exporting Radiance Models, focused on annual daylight simulations"
 	Groundhog.creator='Germán Molina (gmolina1@uc.cl)'
 	Groundhog.copyright='Germán Molina, Sergio Vera, Waldo Bustamante'

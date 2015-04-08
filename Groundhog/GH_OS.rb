@@ -72,7 +72,7 @@ class GH_OS
 			
 		files = Sketchup.find_support_file "Groundhog_extension.rb" ,"Plugins"
 		s=self.slash
-		array=files.split(s)
+		array=files.split("/")
 		array=array.first(array.length-1)
 		return array.join(s)+s+"Groundhog"+s
 		
