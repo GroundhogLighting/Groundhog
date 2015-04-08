@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+  File: List of Values
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!file.LisValues.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="doc_index.html">Index</a> &raquo; 
+    <span class="title">File: List of Values</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'>
+<h1 id="label-Groundhog+List+of+Values">Groundhog List of Values</h1>
+
+<p>Some surfaces in the models will actually contain values that may be
+useless for SketchUp but that may be
+very useful for Radiance.</p>
+
+<p>Different kinds of entities will have different kinds of values, as is
+specified later.</p>
+
+<p>The way of retrieving a value is the following:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span></code></pre>
+
+<h2 id="label-Result+Pixel+value">Result Pixel value</h2>
+
+<p>Every pixel, generated when Radiance results are imported back to SketchUp,
+contains its
+value within it. This allow updating the scale (which will
+require modifying the color of the pixel)
+and retrieving the value of a
+certain pixel for numeric analysis.</p>
+
+<p>The value of a pixel is a Float.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span> <span class='comment'># &#39;value&#39; is a float</span></code></pre>
+
+<h2 id="label-Solved+Workplane+value">Solved Workplane value</h2>
+
+<p>A Solved Workplane is a group of Result Pixels, each of which has its own
+numeric value stored. The value
+of the Solved Workplane will be a
+2-component array of floats that represent the minimum and
+maximum value of
+all the Result Pixels within it. This value is used for updating the scale
+of
+the results being shown.</p>
+
+<p>The value of a Solved Workplane is an array of floats with 2 components.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span> <span class='comment'># &#39;value&#39; is an array
+</span><span class='id identifier rubyid_min_value'>min_value</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_max_value'>max_value</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span></code></pre>
+</div></div>
+
+    <div id="footer">
+  Generated on Wed Apr  8 12:19:44 2015 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>

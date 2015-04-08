@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>
-  File: TURORIAL: Workplanes
+  File: TUTORIAL: Workplanes
   
     &mdash; Documentation by YARD 0.8.7.6
   
@@ -32,7 +32,7 @@
       <div id="menu">
   
     <a href="doc_index.html">Index</a> &raquo; 
-    <span class="title">File: TURORIAL: Workplanes</span>
+    <span class="title">File: TUTORIAL: Workplanes</span>
   
 
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
@@ -70,49 +70,60 @@ annual simulations, daylight factors and other results.</p>
 "Workplane", and will not be exported to the Radiance model as a surface. Actually, at the moment of exporting, you will 
 be asked for the spacing of the workplane sensors.</p>
 
+<p align="justify">Workplanes need to be horizontal and rectangular surfaces with no holes.</p>
+
+
+
 <p align="justify">Workplanes are supposed to be horizontal. We are planning on allowing non-horizontal ones soon.</p>
 
 <h2>Including a workplane</h2>
 
-<h3>Step 1: Draw a surface over which you want to put a workplane.</h3>
-<p align="justify">This surface has to point down. I know is not the best or more intuitive, I wish this ged fixed soon.</p>
+<h3>Step 1: Draw a surface that you want to be a Workplane</h3>
+<p align="justify">This surface has to be rectangular, horizontal and cannot have any holes</p>
 <figure align="center">
 <img src="MakeWorkplane/fig1.png" alt="Draw a surface">
-<figcaption>Figure 1: First step - Draw a surface over which you want to put a workplane</figcaption>
+<figcaption>Figure 1: First step - Draw a rectangle that you want to become a Workplane</figcaption>
 </figure>
 
-<h3>Step 2: Select the surface.</h3>
-<figure align="center">
-<img src="MakeWorkplane/fig2.png" alt="Select the surface">
-<figcaption>Figure 2: Second step - Select the surface.</figcaption>
-</figure>
 
-<h3>Step 3: Press the 'Add Workplane' tool.</h3>
-<!--<figure align="center">
-<img src="MakeWorkplane/fig3.png" alt="Press the tool">
-<figcaption>Figure 3: Third step - Press the 'Add Workplane' tool.</figcaption>
-</figure>-->
+<h3>Step 2: Right click the surface.</h3>
+<p align="justify">When right clicking, look for "Label as workplane" in the Context menu, and click it.</p>
 
-<h3>Step 4: Write the name of the workplace</h3>
+
+<h3>Step 3: Write the name of the workplace</h3>
 <p align="justify">The idea is to give it a reasonable name as “Office desk” or “hallway”. This name will be used when exporting sensors.</p>
 <figure align="center">
-<img src="MakeWorkplane/fig4.png" alt="Draw a surface">
-<figcaption>Figure 4: Workplace at 80cm over the surface. Placed after given a name</figcaption>
+<img src="MakeWorkplane/fig3.png" alt="Assign a name">
+<figcaption>Figure 3: Third step - Assign a name to the workplane</figcaption>
 </figure>
 
-<h3>Step 5: Press the spacebar to quit the tool.</h3>
-<p align="justify">This should be done automatically... soon.</p>
-
-<h3>Step 6: Move it to choose the final location</h3>
+<h3>Step 4: Move it to choose the final location</h3>
 <p align="justify">The workplace can be moved and modified. You should notice that rotating it might end in errors.</p>
 
+<h3>Step 5: Choose the spacing of the sensors</h3>
+<p align="justify">This will be done at the moment of exporting the model.</p>
+
+
 <h3>Notes</h3>
-<p align="justify">When a workplane is created inside a room, it usually splits the walls into two surfaces. 
-This is not convenient. I have managed to deal with this by "offsetting" the floor, so the final workplane
-is separated from the walls.</p></div></div>
+<p align="justify">More than one surface can be labeled as Workplane at the same time. The assigned name will be "Name_1", "Name_2, etc
+ where 'Name' corresponds to what the user introduced as the name</p>
+
+<h2>Actual location of the sensors</h2>
+<p align="justify">There are a couple of things to know of where will the sensors finally be.
+	<ul>
+		<li>The sensor spacing you define when exporting will be slightly modified in order to allow an exact division of the workplane and allow a uniform distribution</li>
+		<li>The previous point is done in both directions of the workplane, so the spacing in both direction will be similar, but not exactly the same</li>
+		<li>Margins are left in the border of the workplane. These margin correspond to one half of the spacing on each direction. This allow drawing the results correctly when importing results</li>
+	</ul>
+</p>
+
+<figure align="center">
+<img src="MakeWorkplane/Sensors.png" alt="Sensor position">
+<figcaption>Figure 4: Sensor final position according to the workplane</figcaption>
+</figure></div></div>
 
     <div id="footer">
-  Generated on Wed Mar 25 12:21:13 2015 by
+  Generated on Wed Apr  8 12:19:44 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
