@@ -35,20 +35,7 @@ class GH_Exporter
 	
 	end
 
-	# Writes an array into a file. 
-	# @author German Molina	
-	# @version 1.0
-	# @param list [Array<String>] The list to be written
-	# @param path [String] The path of the file.
-	# @return [Void]
-	# @deprecated useless for now.
-	def self.writeArray(list,path)
-		File.open(path, 'w') {|f| 
-			list.each do |i|
-				f.write(i+"\n\n")
-			end	
-		}
-	end
+	
 
 	# Gets the path where the SketchUp model is saved. If it is not saved, it will return false.
 	# @author German Molina	
@@ -225,6 +212,7 @@ class GH_Exporter
 	# @note this method used to be called 'do_multiphase'
 	def self.export
 		
+		s=GH_OS.slash	
 		path=self.getpath #it returns false if not successful
 		if not path	then
 			path=""
@@ -232,10 +220,10 @@ class GH_Exporter
 		
 		path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
 		return if not path_to_save
-		path_to_save=path_to_save.tr(" ","_").tr("#","_")
+		
+		path_to_save=path_to_save
 				
-		s=GH_OS.slash
-		system("mkdir "+path_to_save)
+		system("mkdir '"+path_to_save+"'")
 		path=path_to_save+s
 		
 		#Export the faces and obtain the modifiers
@@ -262,7 +250,7 @@ class GH_Exporter
 	#   mat_list=GH_Exporter.exportFaces(path, SketchUp.active_model.entities)
 	def self.export_layers(path, entities)
 	
-		system("mkdir "+path+"Geometry")
+		system("mkdir '"+path+"Geometry'")
 
 		faces=GH_Utilities.get_all_layer_faces(entities,[]) #in order to include groups.
 		
@@ -279,7 +267,7 @@ class GH_Exporter
 		#we open one file per each layer
 		writers=[] #this is an array of writers
 		layers.each do |lay|
-			writers=writers+[File.open(path+'Geometry'+s+lay.name.tr(" ","_")+'.rad','w')]
+			writers=writers+[File.open(path+'Geometry'+s+lay.name.tr(" ","_")+".rad",'w')]
 		end
 		
 		
@@ -374,17 +362,17 @@ class GH_Exporter
 	# @example Export the actual view
 	#   GH_Exporter.exportView(path)	
 	def self.export_views(path)
-		system("mkdir "+path+"Views")
+		system("mkdir '"+path+"Views'")
 		path=path+'Views'+GH_OS.slash
 		#Export the actual view
-		File.open(path+'view.vf','w'){|f|
+		File.open(path+"view.vf",'w'){|f|
 			f.write(self.getViewString(Sketchup.active_model.active_view.camera))
 		}
 		#then the scenes
 		pages=Sketchup.active_model.pages
 		if pages.count>=1 then
 			pages.each do |page|
-				File.open(path+page.name.tr(" ","_")+'.vf','w'){|f|
+				File.open(path+page.name.tr(" ","_")+".vf",'w'){|f|
 					f.write(self.getViewString(page.camera))
 				}
 			end
@@ -399,7 +387,7 @@ class GH_Exporter
 	# @param windows [faces] A directory with windows, selected during #{exportFaces}.
 	# @return [Void]	
 	def self.write_window_groups(path,windows)
-		system("mkdir "+path+"Windows")
+		system("mkdir '"+path+"Windows'")
 		
 		groups=GH_Utilities.get_win_groups(windows)
 		ngroups=groups.length
@@ -428,10 +416,10 @@ class GH_Exporter
 				#we write using a new writer
 				winname=GH_Labeler.get_name(win)
 				if winname==nil then
-					wr=File.open(path+'Windows'+s+'WindowSet_'+nwin.to_s+'.rad','w')
+					wr=File.open(path+'Windows'+s+'WindowSet_'+nwin.to_s+".rad",'w')
 					nwin=nwin+1
 				else 
-					wr=File.open(path+'Windows'+s+winname.tr(" ","_")+'.rad','w')
+					wr=File.open(path+'Windows'+s+winname.tr(" ","_")+".rad",'w')
 				end
 				wr.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
 				wr.close	
@@ -449,7 +437,7 @@ class GH_Exporter
 			end
 			mat_string+="\n\n"
 			
-			w=File.open(path+'Windows'+s+gr.tr(" ","_")+'.rad','w')
+			w=File.open(path+'Windows'+s+gr.tr(" ","_")+".rad",'w')
 			w.write(mat_string+rad_strings[count])
 			w.close
 			count=count+1
@@ -476,7 +464,7 @@ class GH_Exporter
 
 		return false if entities.length<1 #we export this only if there is any workplane	
 		
-		system("mkdir "+path+"Workplanes")
+		system("mkdir '"+path+"Workplanes'")
 		path=path+GH_OS.slash+'Workplanes'+GH_OS.slash
 		prompts=["Workplane Sensor Spacing (m)"]
 		defaults=[0.5]
@@ -520,7 +508,7 @@ class GH_Exporter
 				end
 				
 				
-				File.open(path+name.tr(" ","_")+'.pts','w'){ |f| #The file is opened
+				File.open(path+name.tr(" ","_")+".pts",'w'){ |f| #The file is opened
 					pts.each do |p| #and the sensors are written
 						x=p.x.to_m
 						y=p.y.to_m
@@ -540,7 +528,7 @@ class GH_Exporter
 		return false if entities.length<1 
 			
 		
-		system("mkdir "+path+"Illums")
+		system("mkdir '"+path+"Illums'")
 		path=path+GH_OS.slash+'Illums'+GH_OS.slash
 
 		entities.each do |ent| #for all the entities (which are faces)
@@ -548,7 +536,7 @@ class GH_Exporter
 				name=GH_Labeler.get_name(ent) #Get the name of the surface
 				info=self.get_rad_string(ent,true)
 				
-				File.open(path+name.tr(" ","_")+'.rad','w'){ |f| #The file is opened
+				File.open(path+name.tr(" ","_")+".rad",'w'){ |f| #The file is opened
 					f.write("void "+info[0]) 
 				}
 		
@@ -567,7 +555,7 @@ class GH_Exporter
 	# @example Export the actual view
 	#   GH_Exporter.exportView(path)	
 	def self.export_modifiers(path,mat_array)
-		system("mkdir "+path+"Materials")
+		system("mkdir '"+path+"Materials'")
 		path=path+"Materials"+GH_OS.slash
 		File.open(path+"materials.mat",'w'){ |f| #The file is opened
 			unsup=0
@@ -651,7 +639,7 @@ class GH_Exporter
 
 			if first_exported then #create directories if there is actually something to export
 				s=GH_OS.slash
-				system("mkdir "+path+"Components")
+				system("mkdir '"+path+"Components'")
 				path=path+"Components"+s
 				first_exported=false
 			end
