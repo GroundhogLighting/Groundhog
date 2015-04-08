@@ -1,5 +1,7 @@
 #make Documentation
 
+rm -f Groundhog.rbz
+
 yardoc Groundhog/*.rb Groundhog/Tools/*.rb - Readme.txt - documents/*
 
 #modify documentation
@@ -17,7 +19,7 @@ rm -fr Groundhog/doc
 cp -rf doc Groundhog/doc
 
 #create RBZ
-zip -r Groundhog.rbz Groundhog Groundhog_extension.rb -x *yardoc* *.DS_Store
+zip -r Groundhog.rbz Groundhog Groundhog.rb -x *yardoc* *.DS_Store
 
 
 
