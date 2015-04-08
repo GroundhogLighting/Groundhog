@@ -231,6 +231,7 @@ class GH_Exporter
 		end
 		
 		path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
+		return if not path_to_save
 		path_to_save=path_to_save.tr(" ","_").tr("#","_")
 				
 		s=GH_OS.slash
@@ -463,7 +464,7 @@ class GH_Exporter
 	#
 	# The name of the file will be the name of the entity.
 	# @author German Molina	
-	# @version 1.0
+	# @version 1.1
 	# @param path [String] Directory to export the Window Groups.
 	# @param entities [entities] Array of workplanes.
 	# @return [Void]
@@ -486,26 +487,39 @@ class GH_Exporter
 			if GH_Labeler.workplane?(ent) then #Only workplanes
 				name=GH_Labeler.get_name(ent).tr(" ","_") #Get the name of the surface
 				pts=[] #Create an array with all the points 
-				b=ent.bounds
-				max=b.max
-				min=b.min
-				max_x=max.x
-				max_y=max.y
-				x=min.x
-				y=min.y
-				z=min.z
-				while x<max_x do #loop over all the face
-					while y<max_y do
-						pt=Geom::Point3d.new(x,y,z)
-						if ent.classify_point(pt)==1 then #if the point is on the workplane
-							pts=pts+[pt]
-						end
-						y=y+d
+				
+				#get the basis system for moving around the plane seting sensors
+				vertices=ent.vertices
+				v=vertices[0].position.vector_to(vertices[3].position)
+				u=vertices[0].position.vector_to(vertices[1].position)
+				
+				#store the length
+				normU=u.length
+				normV=v.length
+				
+				#correct the spacing (to provide exact division of the plane)
+				qU=normU/d
+				qU=qU.round
+				dU=normU/qU
+				
+				qV=normV/d
+				qV=qV.round
+				dV=normV/qV
+				
+				#then, each step will be the same length
+				u.length=dU
+				v.length=dV
+				
+				#place the first sensor
+				p0=vertices[0].position.offset!(u.transform(0.5)).offset!(v.transform(0.5))
+				
+				for i in 0..qU-1 
+					for j in 0..qV-1
+						pts=pts+[p0.offset(u.transform(i)).offset(v.transform(j))]
 					end
-					y=min.y #restart y.
-					x=x+d
-				end 
-		
+				end
+				
+				
 				File.open(path+name.tr(" ","_")+'.pts','w'){ |f| #The file is opened
 					pts.each do |p| #and the sensors are written
 						x=p.x.to_m
@@ -588,6 +602,7 @@ class GH_Exporter
 			defi.purge_unused
 			defi.each do |h|
 				if h.is_a? Sketchup::ComponentDefinition then
+					next if GH_Labeler.solved_workplane?(h)
 					hName=h.name.tr(" ","_").tr("#","_") # The "#" symbol starts comments in Radiance.
 					instances=h.instances
 					instances.each do |inst|
@@ -619,23 +634,29 @@ class GH_Exporter
 	# Export the ComponentDefinitions into separate files into "Components" folder.
 	# Each file is autocontained, although some materials might be repeated in the "materials.mat" file.
 	# @author German Molina	
-	# @version 0.1
+	# @version 0.3
 	# @param path [String] Directory to export the model (scene file)
 	# @return [Void]	
 	def self.export_component_definitions(path)
 		defi=Sketchup.active_model.definitions
 		defi.purge_unused
 
-		return if defi.count == 0 #better dont do anything if there are no components
+		return true if defi.count == 0 #dont do anything if there are no components
 		
-		s=GH_OS.slash
-		system("mkdir "+path+"Components")
-		path=path+"Components"+s
-	
+		first_exported=true
+		
 		defi.each do |h|
-			next if h.image? # or h.group? 
-			
-			hName=h.name.tr(" ","_").tr("#","_") # The "#" symbol starts comments in Radiance.			
+			next if h.image?  
+			next if GH_Labeler.solved_workplane?(h)
+
+			if first_exported then #create directories if there is actually something to export
+				s=GH_OS.slash
+				system("mkdir "+path+"Components")
+				path=path+"Components"+s
+				first_exported=false
+			end
+
+			hName=h.name.tr(" ","_").tr("#","_") 
 			entities=h.entities
 			faces=GH_Utilities.get_all_layer_faces(entities,[])
 			instances=GH_Utilities.get_component_instances(entities)

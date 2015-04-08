@@ -2,15 +2,22 @@
 # @title Groundhog History
 # @author German Molina
 
+# Groundhog History
 
-# Groundhog 0.6 (not yet finished)
+This just intends to show a little bit of how Groundhog has been developed.
+
+## Groundhog 0.6 (not yet finished)
 
 - Exporting distributions were unified into a unique one that places illums of each layer in a separate file and window groups in other files.
 - Groups are now exported as if they were components.
 - SketchUp 2015 is now considered the required SketchUp version
 - Added a RIF file exporter to simplify rendering.
+- Workplanes now need to be rectangular and have no holes.
+- Importing results for visualizing them within SketchUp.
+- The concept of "value" was incorporated. 
+- All tools, features and functions are now grouped under the same menu: Plugins --> Groundhog
 
-# Groundhog 0.5
+## Groundhog 0.5
 
 - The “show/hide” tools were moved from the Groundhog Toolbar to the View menu.
 - The “Show Window Groups” tool was algo moved to the View Menu.
@@ -21,8 +28,7 @@
 - Components may now be exported. Even Nested components (components within components) seem to be working OK. Groups are trickier.
 
 
-
-# Groundhog 0.4
+## Groundhog 0.4
 
 - Groundhog seem to be working O.K. on SketchUp 2014
 - Materials can be supported by *.mat file stored on a directory... if not, they are guessed.
@@ -30,20 +36,20 @@
 - Wrapped "Make Window" and "Add Workplane" operations into one "Undo"... better and more comfortable.
 
 
-# Groundhog 0.3
+## Groundhog 0.3
 
 - Materials started to be supported, as well as SketchUp Components (non of them is ready yet).
 - Although windows can still be grouped, the groups can´t be seen, since "materials" (i.e. colors) mean something now. We need to solve this.
 - The project was completely reorganized, introducing classes… Then, it was published.
 
-# Groundhog 0.2
+## Groundhog 0.2
 
 - Change of paradigm. Groundhog intends to export well, for now. In the future we might simulate within SketchUp.
 - Grouping of windows option was added, as well as showing them in different colors.
 - "Winfo" and "SimFile" files do not exist any more. 
 - Groundhog is now an extension, that can be turned on or off inside SketchUp.
 
-# Groundhog 0.1
+## Groundhog 0.1
 
 - Project started as part of Germán Molina´s MSc. thesis, under the advice of Sergio Vera 
 Ph.D and Waldo Bustamante, Ph.D, at the school of Engineering of Pontificia Universidad Catolica de Chile.

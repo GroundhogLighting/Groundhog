@@ -7,10 +7,8 @@ Sketchup::require 'Groundhog/GH_Utilities'
 Sketchup::require 'Groundhog/GH_Labeler'
 Sketchup::require 'Groundhog/GH_OS'
 Sketchup::require 'Groundhog/Tools/GH_MkWindow'
-#Sketchup::require 'Groundhog/Tools/GH_Render'
-#Sketchup::require 'Groundhog/Tools/GH_AddWorkplane'
 Sketchup::require 'Groundhog/GH_Exporter'
-
+Sketchup::require 'Groundhog/GH_Results'
 
 #########################################
 model=Sketchup.active_model
@@ -26,23 +24,15 @@ Sketchup.active_model.materials["GH_default_glass"].alpha=0.2
 
 
 
-
-UI.add_context_menu_handler do |context_menu|
-	context_menu.add_separator
-end
+#######################
+### TOOLBAR
+#######################
 
 
 gh_Toolbar=UI::Toolbar.new "Groundhog"
 
 
-#rvu = UI::Command.new("rvu") { 
-#   Rad.rvu
-# }
-# rvu.small_icon = "Icons/rvu.png"
-# rvu.large_icon = "Icons/rvu.png"
-# rvu.tooltip = "Interactive GH_Render"
-# rvu.status_bar_text = "Interactive Renderer"
-# rvu.menu_text = "Interactive Renderer"
+### Make Window
  
 mkWindow = UI::Command.new("mkWindow") { 
        Sketchup.active_model.select_tool GH_MkWindow.new
@@ -52,26 +42,21 @@ mkWindow = UI::Command.new("mkWindow") {
  mkWindow.tooltip = "Makes a window"
  mkWindow.status_bar_text = "Makes a window"
  mkWindow.menu_text = "Makes a window"
- 
-  
-#addWorkplane = UI::Command.new("addWorkplane") { 
-#	GH_AddWorkplane.add_Workplanes
-# }
-# addWorkplane.small_icon = "Icons/addWorkplane.png"
-# addWorkplane.large_icon = "Icons/addWorkplane.png"
-# addWorkplane.tooltip = "Creates a workplane over a surface"
-# addWorkplane.status_bar_text = "Creates a workplane over a surface"
-# addWorkplane.menu_text = "Creates a workplane over a surface "
- 
- #CFS are not yet supported.
-#UI.add_context_menu_handler do |context_menu|
-#   wins=GH_Utilities.get_windows(Sketchup.active_model.selection)
-#	if wins.length>=1 then
-#	   context_menu.add_item("Assign Complex Fenestration System") { 
-#			GH_Labeler.assign_CFS(Sketchup.active_model.selection)
-#	   }
-#	end
-#end
+
+gh_Toolbar = gh_Toolbar.add_item mkWindow 
+
+
+
+### Show Toolbar.
+gh_Toolbar.show
+
+#######################
+### CONTEXT MENUS
+#######################
+
+UI.add_context_menu_handler do |context_menu|
+	context_menu.add_separator
+end
 
 UI.add_context_menu_handler do |context_menu|
    faces=GH_Utilities.get_faces(Sketchup.active_model.selection)
@@ -128,15 +113,6 @@ UI.add_context_menu_handler do |context_menu|
 	   }
 	end
 end
-
-#UI.add_context_menu_handler do |context_menu|
-#   faces=GH_Utilities.get_faces(Sketchup.active_model.selection)
-#	if faces.length>=1 then
-#	   context_menu.add_item("Label as Workplane") { 
-#			GH_Labeler.to_workplane(faces)
-#	   }
-#	end
-#end
 
 UI.add_context_menu_handler do |context_menu|
    faces=GH_Utilities.get_faces(Sketchup.active_model.selection)
@@ -198,51 +174,173 @@ UI.add_context_menu_handler do |context_menu|
 end
 
 
-file_menu = UI.menu "File"
-file_menu.add_separator
-file_menu.add_item("Export to Radiance") {
-	GH_Exporter.export
-}
 
 
-#############################
+
  
 
-gh_Toolbar = gh_Toolbar.add_item mkWindow
-#gh_Toolbar = gh_Toolbar.add_item addWorkplane 
-gh_Toolbar.show
 
+#######################
+### MENUS
+#######################
 
+### GROUNDHOG MENU
 
 extensions_menu = UI.menu "Plugins"
-extensions_menu.add_item("Show Groundhog Toolbar") {
-	gh_Toolbar.show
-}
+groundhog_menu=extensions_menu.add_submenu("Groundhog")
 
-extensions_menu.add_item("About Groundhog"){
-	UI.messagebox "Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+"\n\nCreator:\n"+Sketchup.extensions["Groundhog"].creator+"\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
-}
+	#Add the Show Toolbar
+	groundhog_menu.add_item("Show Groundhog Toolbar") {
+		gh_Toolbar.show
+	}
 
-help_menu= UI.menu "Help"
-help_menu.add_item("Full Groundhog documentation") {
+
+	### TOOLS SUBMENU
+
+	GH_tools_menu=groundhog_menu.add_submenu("Tools")
+
+		GH_tools_menu.add_item("Make Window"){
+			Sketchup.active_model.select_tool GH_MkWindow.new
+		}
+
+
+
+
+	### RESULTS SUBMENU
+
+	GH_results_menu=groundhog_menu.add_submenu("Results")
+
+		GH_results_menu.add_item("Import results"){
+			GH_Results.import_results
+		}
+		
+		GH_results_menu.add_item("Scale handler"){
+			s=GH_OS.slash
+			
+			wd=UI::WebDialog.new( 
+				"Scale handler", false, "", 
+				180, 380, 100, 100, false )
+
+			wd.set_file( GH_OS.main_groundhog_path+"html"+s+"scale.html" )
+			
+			wd.add_action_callback("update_scale") do |web_dialog,msg|
+				values=msg.split('/')
+				
+				min=values[0].to_f
+				max=values[1].to_f
+				
+				#check if there is any auto
+				if(min<0 or max<0) then
+					min_max=GH_Results.get_min_max_from_model
+					min=min_max[0] if min<0
+					max=min_max[1] if max<0
+				end
+
+				
+				GH_Results.update_pixel_colors(min,max)
+				
+				web_dialog.execute_script("document.getElementById('min').value="+min.to_s+";""document.getElementById('max').value="+max.to_s+";");
+			end
+			
+			wd.show()
+
+		}
+
+
+
+
+	### VIEW
+	GH_view_menu=groundhog_menu.add_submenu("View")
+
+		GH_view_menu.add_item("Show/Hide illums"){
+			GH_Utilities.hide_show_specific("illum")	
+		}
+		GH_view_menu.add_item("Show/Hide Workplanes"){
+			GH_Utilities.hide_show_specific("workplane")	
+		}
+		GH_view_menu.add_item("Show/Hide window groups"){
+			Sketchup.active_model.select_tool GH_Render.new
+		}
+
+
+
+
+
+	### EXPORT
+	groundhog_menu.add_item("Export to Radiance") {
+		GH_Exporter.export
+	}
+
 	
-	s=GH_OS.getsystem
-	if Sketchup.is_online
-		UI.openURL "http://groundhoglabs.github.io/Groundhog/doc/doc_index.html"
-	elsif s=="MAC"
-		UI.messagebox "Sorry, offline documentation is available on the '_index.html' file within the SketchUp's 'plugins/Groundhog/doc' directory.\n\nIf you know how to call that file directly, please let us know."
-	elsif s=="WIN"
-		UI.messagebox "Sorry, offline documentation is available on the '_index.html' file within the SketchUp's 'plugins/Groundhog/doc' directory.\n\nIf you know how to call that file directly, please let us know."
-	end
-}
+	
+	
+	
+	
+	### HELP MENU
 
-view_menu=UI.menu "View"
-view_menu.add_item("Show/Hide illums"){
-	GH_Utilities.hide_show_specific("illum")	
-}
-view_menu.add_item("Show/Hide Workplanes"){
-	GH_Utilities.hide_show_specific("workplane")	
-}
-view_menu.add_item("Show/Hide window groups"){
-	Sketchup.active_model.select_tool GH_Render.new
-}
+	GH_help_menu=groundhog_menu.add_submenu("Help")
+		GH_help_menu.add_item("Full Groundhog documentation") {
+			s=GH_OS.slash	
+			wd=UI::WebDialog.new( 
+				"Full doc", true, "", 
+				700, 700, 100, 100, false )
+			wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"doc_index.html" )			
+			wd.show()
+		}
+	
+		## Tutorials
+		GH_tutorials_menu=GH_help_menu.add_submenu("Tutorials")
+			GH_tutorials_menu.add_item("Getting Started") {
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Tutorials", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.GettingStarted.html" )			
+				wd.show()	
+			}
+			GH_tutorials_menu.add_item("Adding windows") {
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Tutorials", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.MakeWindow.html" )			
+				wd.show()		
+			}
+			GH_tutorials_menu.add_item("Adding workplanes") {
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Tutorials", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.MakeWorkplane.html" )			
+				wd.show()	
+			}
+			GH_tutorials_menu.add_item("Adding illums") {
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Tutorials", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.MakeIllum.html" )			
+				wd.show()	
+			}
+			GH_tutorials_menu.add_item("Exporting views") {
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Tutorials", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.Views.html" )			
+				wd.show()		
+			}
+			GH_tutorials_menu.add_item("Visualizing results") {
+				s=GH_OS.slash	
+				wd=UI::WebDialog.new( 
+					"Tutorials", true, "", 
+					700, 700, 100, 100, false )
+				wd.set_file( GH_OS.main_groundhog_path+"doc"+s+"file.ImportResults.html" )			
+				wd.show()		
+			}
+
+	# Add the About.
+	groundhog_menu.add_item("About Groundhog"){
+		UI.messagebox "Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+"\n\nCreator:\n"+Sketchup.extensions["Groundhog"].creator+"\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
+	}
+
