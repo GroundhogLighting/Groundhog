@@ -2,7 +2,7 @@
 
 rm -f Groundhog.rbz
 
-yardoc Groundhog/*.rb Groundhog/Tools/*.rb - Readme.txt - documents/*
+yardoc IGD_Groundhog/*.rb IGD_Groundhog/Tools/*.rb - Readme.txt - documents/*
 
 #modify documentation
 cd doc
@@ -15,11 +15,11 @@ rm *tmphtml
 cd ..
 
 #Include new doc into the main Groundhog directory
-rm -fr Groundhog/doc
-cp -rf doc Groundhog/doc
+rm -fr IGD_Groundhog/doc
+cp -rf doc IGD_Groundhog/doc
 
 #create RBZ
-zip -r Groundhog.rbz Groundhog Groundhog.rb -x *yardoc* *.DS_Store
+zip -r Groundhog.rbz IGD_Groundhog IGD_Groundhog.rb -x *yardoc* *.DS_Store
 
 
 

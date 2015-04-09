@@ -3,12 +3,12 @@
 
 #################################
 
-Sketchup::require 'Groundhog/GH_Utilities'
-Sketchup::require 'Groundhog/GH_Labeler'
-Sketchup::require 'Groundhog/GH_OS'
-Sketchup::require 'Groundhog/Tools/GH_MkWindow'
-Sketchup::require 'Groundhog/GH_Exporter'
-Sketchup::require 'Groundhog/GH_Results'
+Sketchup::require 'IGD_Groundhog/GH_Utilities'
+Sketchup::require 'IGD_Groundhog/GH_Labeler'
+Sketchup::require 'IGD_Groundhog/GH_OS'
+Sketchup::require 'IGD_Groundhog/Tools/GH_MkWindow'
+Sketchup::require 'IGD_Groundhog/GH_Exporter'
+Sketchup::require 'IGD_Groundhog/GH_Results'
 
 #########################################
 model=Sketchup.active_model

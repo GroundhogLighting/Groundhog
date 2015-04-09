@@ -220,10 +220,8 @@ class GH_Exporter
 		
 		path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
 		return if not path_to_save
-		
-		path_to_save=path_to_save
 				
-		system("mkdir '"+path_to_save+"'")
+		GH_OS.mkdir(path_to_save)
 		path=path_to_save+s
 		
 		#Export the faces and obtain the modifiers
@@ -250,8 +248,10 @@ class GH_Exporter
 	#   mat_list=GH_Exporter.exportFaces(path, SketchUp.active_model.entities)
 	def self.export_layers(path, entities)
 	
-		system("mkdir '"+path+"Geometry'")
-
+#		system("mkdir '"+path+"Geometry'")
+		
+		GH_OS.mkdir(path+"Geometry")
+		
 		faces=GH_Utilities.get_all_layer_faces(entities,[]) #in order to include groups.
 		
 		mat_list=[] #This will become the name of the modifiers (materials) of each face.
@@ -362,7 +362,8 @@ class GH_Exporter
 	# @example Export the actual view
 	#   GH_Exporter.exportView(path)	
 	def self.export_views(path)
-		system("mkdir '"+path+"Views'")
+#		system("mkdir '"+path+"Views'")
+		GH_OS.mkdir(path+"Views")
 		path=path+'Views'+GH_OS.slash
 		#Export the actual view
 		File.open(path+"view.vf",'w'){|f|
@@ -387,8 +388,8 @@ class GH_Exporter
 	# @param windows [faces] A directory with windows, selected during #{exportFaces}.
 	# @return [Void]	
 	def self.write_window_groups(path,windows)
-		system("mkdir '"+path+"Windows'")
-		
+#		system("mkdir '"+path+"Windows'")
+		GH_OS.mkdir(path+"Windows")
 		groups=GH_Utilities.get_win_groups(windows)
 		ngroups=groups.length
 		rad_strings=Array.new(ngroups,"") #store the geometry of the windows
@@ -464,7 +465,8 @@ class GH_Exporter
 
 		return false if entities.length<1 #we export this only if there is any workplane	
 		
-		system("mkdir '"+path+"Workplanes'")
+#		system("mkdir '"+path+"Workplanes'")
+		GH_OS.mkdir(path+"Workplanes")
 		path=path+GH_OS.slash+'Workplanes'+GH_OS.slash
 		prompts=["Workplane Sensor Spacing (m)"]
 		defaults=[0.5]
@@ -528,7 +530,8 @@ class GH_Exporter
 		return false if entities.length<1 
 			
 		
-		system("mkdir '"+path+"Illums'")
+#		system("mkdir '"+path+"Illums'")
+		GH_OS.mkdir(path+"Illums")
 		path=path+GH_OS.slash+'Illums'+GH_OS.slash
 
 		entities.each do |ent| #for all the entities (which are faces)
@@ -555,7 +558,8 @@ class GH_Exporter
 	# @example Export the actual view
 	#   GH_Exporter.exportView(path)	
 	def self.export_modifiers(path,mat_array)
-		system("mkdir '"+path+"Materials'")
+#		system("mkdir '"+path+"Materials'")
+		GH_OS.mkdir(path+"Materials")
 		path=path+"Materials"+GH_OS.slash
 		File.open(path+"materials.mat",'w'){ |f| #The file is opened
 			unsup=0
@@ -639,7 +643,8 @@ class GH_Exporter
 
 			if first_exported then #create directories if there is actually something to export
 				s=GH_OS.slash
-				system("mkdir '"+path+"Components'")
+#				system("mkdir '"+path+"Components'")
+				GH_OS.mkdir(path+"Components")
 				path=path+"Components"+s
 				first_exported=false
 			end

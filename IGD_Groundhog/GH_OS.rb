@@ -67,15 +67,29 @@ class GH_OS
 	# @author German Molina
 	# @param [Void]
 	# @return [String] The corresponding path
-	# @note Require testing under Windows.
 	def self.main_groundhog_path
 			
-		files = Sketchup.find_support_file "Groundhog_extension.rb" ,"Plugins"
+		files = Sketchup.find_support_file "IGD_Groundhog.rb" ,"Plugins"
 		s=self.slash
 		array=files.split("/")
 		array=array.first(array.length-1)
-		return array.join(s)+s+"Groundhog"+s
+		return array.join(s)+s+"IGD_Groundhog"+s
 		
+	end
+	
+	# Creates a directory in the selected path
+	# @author German Molina
+	# @param path [String] The path with the directory to create
+	# @return [Void]
+	def self.mkdir(path)
+		sys=self.getsystem
+		if sys=="MAC" then
+			system("mkdir '"+path+"'")
+		elsif sys=="WIN" then
+			system('mkdir "'+path+'"')
+		else
+			return false
+		end
 	end
 
 		
