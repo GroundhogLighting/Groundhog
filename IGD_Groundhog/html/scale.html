@@ -4,6 +4,7 @@
 		<title>Scale handling</title>
 		<meta charset="UTF-8">
 	</head>
+	
 	<body>
 
 
@@ -19,12 +20,13 @@
     > Update Scale </button></p>
 
 	</body>
+	
 	<script type='text/javascript'>
 
 
 		function update() {
-			max=parseFloat(document.getElementById("max").value)
-			min=parseFloat(document.getElementById("min").value)
+			var max=parseFloat(document.getElementById("max").value)
+			var min=parseFloat(document.getElementById("min").value)
 			
 			if(min>=max){
 				alert("Minimum value must be smaller than maximum value");
@@ -34,14 +36,14 @@
 				return;
 			}
 			
-			auto_min=document.getElementById("auto_min")
-			auto_max=document.getElementById("auto_max")
+			var auto_min=document.getElementById("auto_min")
+			var auto_max=document.getElementById("auto_max")
 			
 			if(auto_min.checked){
-				min=-1;
+				var min=-1;
 			}
 			if(auto_max.checked){
-				max=-1;
+				var max=-1;
 			}
 			
 			if(isNaN(min) || isNaN(max)){
@@ -49,15 +51,13 @@
 				return;
 			}
 			
-			console.log(min+max)
-			
-			query = 'skp:update_scale@'+min+'/'+max;
+			var query = 'skp:update_scale@'+min+'/'+max;
 			window.location.href = query;
 		}
 		
 		function onCheckMax(){
-			max=document.getElementById("max")
-			auto_max=document.getElementById("auto_max")
+			var max=document.getElementById("max")
+			var auto_max=document.getElementById("auto_max")
 		
 			if(auto_max.checked){		
 				max.readOnly=true
@@ -69,8 +69,8 @@
 			
 		}
 		function onCheckMin(){
-			min=document.getElementById("min")
-			auto_min=document.getElementById("auto_min")
+			var min=document.getElementById("min")
+			var auto_min=document.getElementById("auto_min")
 		
 			if(auto_min.checked){		
 				min.readOnly=true
