@@ -170,7 +170,7 @@ exported in radiance geometry files separated by layers.</p>
 
 <h2 id="label-Definition+Labels">Definition Labels</h2>
 
-<h3 id="label-Solved+Workplanes">Solved Workplanes</h3>
+<h3 id="label-Solved+workplanes">Solved workplanes</h3>
 
 <p>When results are imported back to SketchUp using Groundhog, a number of
 squares (result pixels) will be packed in a group.
@@ -184,10 +184,23 @@ labeled as a Solved Workplane</p>
 </span><span class='kw'>end</span></code></pre>
 
 <h2 id="label-Material+Labels">Material Labels</h2>
+
+<h3 id="label-Local+materials">Local materials</h3>
+
+<p>Local materials are SketchUp materials that contain their Radiance string
+definition (i.e. primitive, modifier and arguments)
+stored their
+&quot;value&quot;</p>
+
+<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_local_material?'>local_material?</span><span class='lparen'>(</span><span class='id identifier rubyid_material'>material</span><span class='rparen'>)</span> <span class='kw'>then</span>
+	<span class='comment'>#material is a local_material
+</span><span class='kw'>else</span>
+	<span class='comment'>#material is not a local_material
+</span><span class='kw'>end</span></code></pre>
 </div></div>
 
     <div id="footer">
-  Generated on Sat Apr 11 11:47:11 2015 by
+  Generated on Sun Apr 12 11:11:35 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

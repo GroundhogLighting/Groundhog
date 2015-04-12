@@ -201,54 +201,6 @@ Operating Systems, and system calls</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#rad_component_path-class_method" title="rad_component_path (class method)">+ (String) <strong>rad_component_path</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the path where the radiance components should be stored.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#rad_material_path-class_method" title="rad_material_path (class method)">+ (String) <strong>rad_material_path</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the path where the radiance materials should be stored.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#slash-class_method" title="slash (class method)">+ (String) <strong>slash</strong> </a>
     
 
@@ -454,18 +406,18 @@ German Molina</p>
       <pre class="lines">
 
 
-70
-71
-72
-73
-74
-75
-76
-77
-78</pre>
+46
+47
+48
+49
+50
+51
+52
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/GH_OS.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/GH_OS.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span>
 		
@@ -556,19 +508,19 @@ German Molina</p>
       <pre class="lines">
 
 
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93</pre>
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/GH_OS.rb', line 84</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/GH_OS.rb', line 60</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_sys'>sys</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_getsystem'>getsystem</span>
@@ -578,218 +530,6 @@ German Molina</p>
 		<span class='id identifier rubyid_system'>system</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>mkdir &quot;</span><span class='tstring_end'>&#39;</span></span><span class='op'>+</span><span class='id identifier rubyid_path'>path</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&quot;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
 	<span class='kw'>else</span>
 		<span class='kw'>return</span> <span class='kw'>false</span>
-	<span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="rad_component_path-class_method">
-  
-    + (<tt>String</tt>) <strong>rad_component_path</strong> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-  <div class="note notetag">
-    <strong>Note:</strong>
-    <div class='inline'>
-<p>This material is not yet in use, since there is no support for components
-in Groundhog yet.</p>
-</div>
-  </div>
-
-
-<p>Returns the path where the radiance components should be stored.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
-  
-    <li>
-      
-        <span class='name'></span>
-      
-      
-        <span class='type'>(<tt>Void</tt>)</span>
-      
-      
-      
-    </li>
-  
-</ul>
-
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The corresponding path</p>
-</div>
-      
-    </li>
-  
-</ul>
-<p class="tag_title">Author:</p>
-<ul class="author">
-  
-    <li>
-      
-      
-      
-      
-        
-        <div class='inline'>
-<p>German Molina</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-62
-63
-64</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/GH_OS.rb', line 62</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rad_component_path'>rad_component_path</span>
-	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/Applications/Otros/RadianceResources/Furniture/</span><span class='tstring_end'>&quot;</span></span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="rad_material_path-class_method">
-  
-    + (<tt>String</tt>) <strong>rad_material_path</strong> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-  <div class="note notetag">
-    <strong>Note:</strong>
-    <div class='inline'>
-<p>It would be ideal to allow customizing this path, so the user can choose
-it.</p>
-</div>
-  </div>
-
-
-<p>Returns the path where the radiance materials should be stored.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
-  
-    <li>
-      
-        <span class='name'></span>
-      
-      
-        <span class='type'>(<tt>Void</tt>)</span>
-      
-      
-      
-    </li>
-  
-</ul>
-
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The corresponding path</p>
-</div>
-      
-    </li>
-  
-</ul>
-<p class="tag_title">Author:</p>
-<ul class="author">
-  
-    <li>
-      
-      
-      
-      
-        
-        <div class='inline'>
-<p>German Molina</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/GH_OS.rb', line 46</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rad_material_path'>rad_material_path</span>
-	<span class='id identifier rubyid_sys'>sys</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_getsystem'>getsystem</span>
-	<span class='kw'>if</span> <span class='id identifier rubyid_sys'>sys</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>MAC</span><span class='tstring_end'>&quot;</span></span> 
-		<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/Applications/Groundhog/RadianceMaterials/</span><span class='tstring_end'>&quot;</span></span> <span class='comment'># Example of a directory in Mac
-</span>	<span class='kw'>elsif</span> <span class='id identifier rubyid_sys'>sys</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WIN</span><span class='tstring_end'>&quot;</span></span>
-		<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>C:\\Program Files (x86)\\Groundhog\\RadianceMaterials\\</span><span class='tstring_end'>&quot;</span></span> <span class='comment'>#Example of a directory in Windows
-</span>	<span class='kw'>else</span>
-		<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Sorry, unsupported Operative System</span><span class='tstring_end'>&quot;</span></span>
 	<span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -906,7 +646,7 @@ it.</p>
 </div>
 
     <div id="footer">
-  Generated on Sat Apr 11 11:47:11 2015 by
+  Generated on Sun Apr 12 11:11:36 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

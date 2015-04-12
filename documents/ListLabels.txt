@@ -97,7 +97,7 @@ exported in radiance geometry files separated by layers.
 
 ## Definition Labels
 
-###Solved Workplanes
+###Solved workplanes
 
 When results are imported back to SketchUp using Groundhog, a number of squares (result pixels) will be packed in a group.
 Such group will be labeled as a Solved Workplane
@@ -111,3 +111,17 @@ end
 ```
 
 ## Material Labels
+
+
+###Local materials
+
+Local materials are SketchUp materials that contain their Radiance string definition (i.e. primitive, modifier and arguments)
+stored their "value"
+
+``` 
+if GH_Labeler.local_material?(material) then
+	#material is a local_material
+else
+	#material is not a local_material
+end
+```
