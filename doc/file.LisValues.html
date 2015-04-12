@@ -75,7 +75,9 @@ specified later.</p>
 
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span></code></pre>
 
-<h2 id="label-Result+Pixel+value">Result Pixel value</h2>
+<h2 id="label-Faces+Values">Faces Values</h2>
+
+<h3 id="label-Result+Pixel+value">Result Pixel value</h3>
 
 <p>Every pixel, generated when Radiance results are imported back to SketchUp,
 contains its
@@ -88,7 +90,9 @@ certain pixel for numeric analysis.</p>
 
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span> <span class='comment'># &#39;value&#39; is a float</span></code></pre>
 
-<h2 id="label-Solved+Workplane+value">Solved Workplane value</h2>
+<h2 id="label-Definition+Values">Definition Values</h2>
+
+<h3 id="label-Solved+Workplane+value">Solved Workplane value</h3>
 
 <p>A Solved Workplane is a group of Result Pixels, each of which has its own
 numeric value stored. The value
@@ -104,10 +108,27 @@ the results being shown.</p>
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span> <span class='comment'># &#39;value&#39; is an array
 </span><span class='id identifier rubyid_min_value'>min_value</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
 <span class='id identifier rubyid_max_value'>max_value</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span></code></pre>
+
+<h2 id="label-Material+Values">Material Values</h2>
+
+<h3 id="label-Local+material+values">Local material values</h3>
+
+<p>Local materials are SketchUp materials that contain their Radiance string
+definition (i.e. primitive, modifier and arguments)
+stored their
+&quot;value&quot;.</p>
+
+<p>The value of these materials is stored as an array containing two strings:
+one is everything that is before the
+materials&#39;s name, and the second
+is everything that goes after the material&#39;s name.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_material'>material</span><span class='rparen'>)</span> <span class='comment'># &#39;value&#39; is an array
+</span><span class='id identifier rubyid_material_full_string'>material_full_string</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\t</span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Material_Name</span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span></code></pre>
 </div></div>
 
     <div id="footer">
-  Generated on Sat Apr 11 11:47:10 2015 by
+  Generated on Sun Apr 12 11:11:35 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

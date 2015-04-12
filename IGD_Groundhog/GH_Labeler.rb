@@ -42,10 +42,10 @@ class GH_Labeler
 
 	# Assigns the maximum and minimum value to a solved workplane
 	#
-	# The value, in this case, is an aray with [min,max] values.
+	# The value, in this case, is an array with [min,max] values.
 	#
 	# @author German Molina
-	# @param workplane [Float] The workplane to be assigned the value
+	# @param workplane [SketchUp::ComponentDefinition] The workplane to be assigned the value
 	# @param min [Float] Minimum value
 	# @param max [Float] Maximum value
 	# @return [void]
@@ -54,6 +54,18 @@ class GH_Labeler
 		workplane.set_attribute("Groundhog","Value",[min,max])
 	end
 
+	# Assigns the Radiance definition as the value of a Local Material
+	#
+	# The value, in this case, is an array
+	#
+	# @author German Molina
+	# @param workplane [Float] The workplane to be assigned the value
+	# @param value [array] an array of 2 strings, with what goes before the name, and what goes after the name.
+	# @return [void]
+	def self.set_local_material_value(material,value)
+		return false if not self.local_material?(material)
+		material.set_attribute("Groundhog","Value",value)
+	end
 	
 
 	# Checks if an entity is of some Label.
@@ -75,13 +87,22 @@ class GH_Labeler
 		entity.get_attribute("Groundhog","Label")=="illum"
 	end
 	
-	# Checks if a component definition is a solved workplane
+	# Checks if a component definition is a local_material
+	# @author German Molina
+	# @param entity [entity] Entity to test.
+	# @return [Boolean]
+	def self.local_material?(material)
+		material.get_attribute("Groundhog","Label")=="local_material"
+	end
+	
+	# Checks if a material is a solved_workplane
 	# @author German Molina
 	# @param entity [entity] Entity to test.
 	# @return [Boolean]
 	def self.solved_workplane?(component_definition)
 		component_definition.get_attribute("Groundhog","Label")=="solved_workplane"
 	end
+	
 	
 	# Checks if an entity is an illum
 	# @author German Molina
@@ -123,13 +144,6 @@ class GH_Labeler
 		entity.is_a? Sketchup::ComponentInstance
 	end
 
-	# Checks if an entity is a ComponentDefinition
-	# @author German Molina
-	# @param entity [entity] Entity to test.
-	# @return [Boolean]
-	#def self.component_definition?(entity)
-	#	entity.is_a? Sketchup::ComponentInstance
-	#end
 	
 	# Checks if an entity is a Group
 	# @author German Molina
@@ -195,7 +209,7 @@ class GH_Labeler
 		pixel.set_attribute("Groundhog","Value",value)
 	end
 	
-	# Transform selected faces into illums
+	# Label selected faces as illums
 	# @author German Molina
 	# @param entities [Array<entities>] An array with the entities to be transformed into illums.
 	# @return [Void]
@@ -216,7 +230,7 @@ class GH_Labeler
 		end	
 	end
 	
-	# Transform selected faces into results_pixels
+	# Label selected face as result_pixel
 	# @author German Molina
 	# @param face [Sketchup Face] The face to be labeled as result_pixels
 	# @return [Void]
@@ -224,13 +238,20 @@ class GH_Labeler
 		face.set_attribute("Groundhog","Label","result_pixel")
 	end
 	
-	# Transform selected faces into results_pixels
+	# Label selected face into as solved_workplane
 	# @author German Molina
 	# @param workplane [SkecthUp::ComponentDefinition] A SketchUp component definition
 	# @return [Void]
 	def self.to_solved_workplane(workplane)
-		workplane.set_attribute("Groundhog","Label","solved_workplane")
-	
+		workplane.set_attribute("Groundhog","Label","solved_workplane")	
+	end
+
+	# Label selected material as local_material
+	# @author German Molina
+	# @param workplane [SkecthUp::ComponentDefinition] A SketchUp component definition
+	# @return [Void]
+	def self.to_local_material(workplane)
+		workplane.set_attribute("Groundhog","Label","local_material")	
 	end
 
 

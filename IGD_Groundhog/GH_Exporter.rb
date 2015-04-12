@@ -230,6 +230,7 @@ class GH_Exporter
 		self.export_views(path)
 		self.write_scene_file(path)
 		self.export_component_definitions(path)
+		self.write_sky(path)
 		return true
 	end
 
@@ -247,8 +248,6 @@ class GH_Exporter
 	# @example Export the whole model.
 	#   mat_list=GH_Exporter.exportFaces(path, SketchUp.active_model.entities)
 	def self.export_layers(path, entities)
-	
-#		system("mkdir '"+path+"Geometry'")
 		
 		GH_OS.mkdir(path+"Geometry")
 		
@@ -362,7 +361,7 @@ class GH_Exporter
 	# @example Export the actual view
 	#   GH_Exporter.exportView(path)	
 	def self.export_views(path)
-#		system("mkdir '"+path+"Views'")
+
 		GH_OS.mkdir(path+"Views")
 		path=path+'Views'+GH_OS.slash
 		#Export the actual view
@@ -388,7 +387,7 @@ class GH_Exporter
 	# @param windows [faces] A directory with windows, selected during #{exportFaces}.
 	# @return [Void]	
 	def self.write_window_groups(path,windows)
-#		system("mkdir '"+path+"Windows'")
+
 		GH_OS.mkdir(path+"Windows")
 		groups=GH_Utilities.get_win_groups(windows)
 		ngroups=groups.length
@@ -465,7 +464,6 @@ class GH_Exporter
 
 		return false if entities.length<1 #we export this only if there is any workplane	
 		
-#		system("mkdir '"+path+"Workplanes'")
 		GH_OS.mkdir(path+"Workplanes")
 		path=path+GH_OS.slash+'Workplanes'+GH_OS.slash
 		prompts=["Workplane Sensor Spacing (m)"]
@@ -529,8 +527,6 @@ class GH_Exporter
 
 		return false if entities.length<1 
 			
-		
-#		system("mkdir '"+path+"Illums'")
 		GH_OS.mkdir(path+"Illums")
 		path=path+GH_OS.slash+'Illums'+GH_OS.slash
 
@@ -558,7 +554,7 @@ class GH_Exporter
 	# @example Export the actual view
 	#   GH_Exporter.exportView(path)	
 	def self.export_modifiers(path,mat_array)
-#		system("mkdir '"+path+"Materials'")
+
 		GH_OS.mkdir(path+"Materials")
 		path=path+"Materials"+GH_OS.slash
 		File.open(path+"materials.mat",'w'){ |f| #The file is opened
@@ -572,15 +568,16 @@ class GH_Exporter
 
 	# Export the Scene file. The Scene file references the different Radiance files to create the model.
 	# @author German Molina	
-	# @version 0.7
+	# @version 0.8
 	# @param path [String] Directory to export the scene file
 	# @return [Void]	
 	def self.write_scene_file(path)
 		File.open(path+"scene.rad",'w'){ |f| #The file is opened
 			f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
 			
-			f.write("\n\n\n###### DEFAULT SKY \n\n")			
-			f.write(self.default_sky)
+			f.write("\n\n\n###### SKY \n\n")
+			
+			f.write("!xform ./Skies/sky.rad")
 			
 			f.write("\n\n\n###### GEOMETRY \n\n")
 			
@@ -609,16 +606,35 @@ class GH_Exporter
 		}
 	end
 
-	def self.default_sky
+
+
+	def self.write_sky(path)
+	
+		GH_OS.mkdir(path+"Skies")
+		path=path+"Skies"+GH_OS.slash
+
 		info=Sketchup.active_model.shadow_info
 		sun=info["SunDirection"]
 		floor=Geom::Vector3d.new(sun.x, sun.y, 0)
 		alt=sun.angle_between(floor).radians
 		azi=floor.angle_between(Geom::Vector3d.new(0,-1,0)).radians
 		azi=-azi if sun.x>0
-		return "!gensky -ang #{alt} #{azi} +s\n\n"+self.sky_complement
-	end
 	
+		File.open(path+"sky.rad",'w'){ |f| #The file is opened
+			f.write("\n\n\n###### DEFAULT SKY \n\n")			
+		
+			f.write("!gensky -ang #{alt} #{azi} +s\n\n")
+			f.write(self.sky_complement)
+		}
+	end
+
+
+	# Get the sky_complement, defining the sky and ground semi-hemispheres
+	# 
+	# @author German Molina	
+	# @version 1.0
+	# @param void
+	# @return sky_complement [String]	
 	def self.sky_complement
 		return 	"skyfunc\tglow\tskyglow\n0\n0\n4\t0.99\t0.99\t1.1\t0\n\nskyglow\tsource\tskyball\n0\n0\n4\t0\t0\t1\t360\n\n"
 	end
@@ -643,7 +659,7 @@ class GH_Exporter
 
 			if first_exported then #create directories if there is actually something to export
 				s=GH_OS.slash
-#				system("mkdir '"+path+"Components'")
+
 				GH_OS.mkdir(path+"Components")
 				path=path+"Components"+s
 				first_exported=false
@@ -665,16 +681,15 @@ class GH_Exporter
 				next if GH_Labeler.workplane? (fc) or GH_Labeler.illum? (fc) or GH_Labeler.window? (fc)
 				
 				info=self.get_rad_string(fc,false)
-				geom_string=geom_string+info[1].name.tr(" ","_")+info[0]
+				matName=info[1].name.tr(" ","_")+"__"+hName
+				geom_string=geom_string+matName+info[0]
 				mat_array=mat_array+[info[1]]
 			end
 			mat_array.uniq!
 			mat_string=""
 			
-			mat_count=1
 			mat_array.each do |mat|
-				mat_string=mat_string+self.get_mat_string(mat, false)+"\n\n"#hName+"_"+mat_count.to_s)+"\n\n"
-				mat_count=mat_count+1
+				mat_string=mat_string+self.get_mat_string(mat, mat.name.tr(" ","_")+"__"+hName)+"\n\n"
 			end
 			
 			
@@ -788,21 +803,19 @@ class GH_Exporter
 	#  If inputed a name (instead of "False"), the primitive's name will be forced to be
 	#  the inputed value. This is useful for exporting components.
 	# @author German Molina	
-	# @version 0.2
+	# @version 0.4
 	# @param SketchUp material, [string] name
 	# @return [string] 	
 	# @note: forcing the name is not used yet, since the surface still is modified by the original name... complicated.
 	def self.get_mat_string(material,name)
 		matName=material.name.tr(" ","_").tr("#","_")
-		matPath=GH_OS.rad_material_path+matName+".mat"
-		mat_string=""
-		
-		if File.exist?(matPath) then #Read the information from library
-			File.open(matPath, "r").each_line do |line|
-			  mat_string=mat_string+line
-			end
-		else #not in library... guess the material
-			matName=name if name
+		matName=name if name #if inputed a name, overwrite.
+
+		if GH_Labeler.local_material?(material) then
+			value= GH_Labeler.get_value(material)
+			return value[0]+"\t"+matName+"\n"+value[1]
+		else #not local, then guess the material
+			mat_string=""
 			
 			if material.texture==nil then
 				color=material.color
@@ -813,7 +826,7 @@ class GH_Exporter
 			g=color.green/255.0
 			b=color.blue/255.0
 
-			mat_string=mat_string+"## unsupported Material\n\n"
+			mat_string=mat_string+"## guessed Material\n\n"
 			if material.alpha < 1 then #then this is a glass
 				r=r*material.alpha #This is probably wrong... but it does the job.
 				g=g*material.alpha
@@ -824,9 +837,9 @@ class GH_Exporter
 				rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s+"\t0\t0"						
 				mat_string=mat_string+"void\tplastic\t"+matName+"\n0\n0\n5\t"+rgb+"\n"
 			end
+			return mat_string
 		end
 		
-		return mat_string
 	end
 
 	
