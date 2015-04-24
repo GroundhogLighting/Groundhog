@@ -66,7 +66,9 @@
 
 <p>This just intends to show a little bit of how Groundhog has been developed.</p>
 
-<h2 id="label-Groundhog+0.6+%28not+yet+finished%29">Groundhog 0.6 (not yet finished)</h2>
+<h2 id="label-Groundhog+0.7+%28in+development%29">Groundhog 0.7 (in development)</h2>
+
+<h2 id="label-Groundhog+0.6">Groundhog 0.6</h2>
 <ul><li>
 <p>Exporting distributions were unified into a unique one that places illums
 of each layer in a separate file and window groups in other files.</p>
@@ -84,7 +86,18 @@ of each layer in a separate file and window groups in other files.</p>
 <p>The concept of “value” was incorporated.</p>
 </li><li>
 <p>All tools, features and functions are now grouped under the same menu:
-Plugins –&gt; Groundhog</p>
+Plugins (extensions) –&gt; Groundhog</p>
+</li><li>
+<p>Local materials were introduced. These are materials that contain their
+whole Radiance definition as their value</p>
+</li><li>
+<p>Eliminated duplicity of materials. Now the same material may be exported a
+number of times (one for each component or group on which is used), but
+every time with different names.</p>
+</li><li>
+<p>Sky is exported separately</p>
+</li><li>
+<p>Bug fixing, testing on Windows and OSX.</p>
 </li></ul>
 
 <h2 id="label-Groundhog+0.5">Groundhog 0.5</h2>
@@ -178,7 +191,7 @@ drawing two lines forming an X.</p>
 </div></div>
 
     <div id="footer">
-  Generated on Wed Apr  8 12:19:42 2015 by
+  Generated on Fri Apr 24 13:31:58 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
