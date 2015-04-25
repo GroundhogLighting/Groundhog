@@ -1,0 +1,53 @@
+
+<html>
+	<head>
+		<title>Light source materials</title>
+		<meta charset="UTF-8">
+	</head>
+
+	<link rel="stylesheet" type="text/css" href="css/tabs.css">
+
+	<body>
+
+
+		<td >
+				<ul id="tabs">
+					<li>
+						<a class="selected" href="#light">Light</a>
+					</li>
+					<li>
+						<a href="#glow">Glow</a>
+					</li>
+					<li>
+						<a href="#spotlight">Spotlight</a>
+					</li>
+				</ul>
+				   
+			   <div id="light" class="tabContent">
+					<h2>Light</h2>
+					<p>Light is the basic material for self-luminous surfaces (i.e., light sources). In addition to the source surface type, spheres, discs (rings with zero inner radius), cylinders (provided they are long enough), and polygons can act as light sources. Polygons work best when they are rectangular. Cones cannot be used at this time.</p>
+					<h3>Required inputs</h3>	
+					
+				</div>
+				
+				<div id="glow" class="tabContent hide">
+					<h2>Glow</h2>
+					<p>Glow is used for surfaces that are self-luminous, but limited in their effect. In addition to the radiance value, a maximum radius for shadow testing is given</p>
+					<h3>Required inputs</h3>	
+				</div>				   
+				<div id="spotlight" class="tabContent hide">
+					<h2>Spotlight</h2>
+					<p>Spotlight is used for self-luminous surfaces having directed output. As well as radiance, the full cone angle (in degrees) and orientation (output direction) vector are given. The length of the orientation vector is the distance of the effective focus behind the source center (i.e., the focal length).</p>
+					<h3>Required inputs</h3>	
+				</div>				   
+  
+		</td>
+
+
+	</body>
+	
+	 <script src="js/tabs.js"></script> 
+	<script type="text/javascript">
+		init();
+	</script>
+</html>
