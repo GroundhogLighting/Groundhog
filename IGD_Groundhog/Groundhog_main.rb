@@ -156,18 +156,12 @@ module IGD
 		extensions_menu = UI.menu "Plugins"
 		groundhog_menu=extensions_menu.add_submenu("Groundhog")
 
-			#Add the Show Toolbar
-			groundhog_menu.add_item("Show Groundhog Toolbar") {
-				gh_Toolbar.show
-			}
-
-
 			### TOOLS SUBMENU
 
 			GH_tools_menu=groundhog_menu.add_submenu("Tools")
 
 				GH_tools_menu.add_item("Make Window"){
-					Sketchup.active_model.select_tool MkWindow.new
+					MkWindow.make_window(Utilities.get_faces(Sketchup.active_model.selection))
 				}
 
 
