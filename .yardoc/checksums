@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-IGD_Groundhog/Exporter.rb 855c446c43d513f0cdb731cfb241a49730b4b0c7
-IGD_Groundhog/Groundhog_main.rb 21127c0c8f6f67a9ffe0a3eddbf7112f80445964
-IGD_Groundhog/Labeler.rb 5e7531e3160805d90bc1f04f62a5859107a90a6e
-=======
 IGD_Groundhog/Exporter.rb 67e7a75a5a20d0ddaca0f8e192e44af0a00576a8
 IGD_Groundhog/Groundhog_main.rb ad603851520252ed17bad615a6886787a7b6f5bb
 IGD_Groundhog/Labeler.rb 62e56729299cfef2c876fd1943512573740beb1c
 IGD_Groundhog/Materials.rb 4a36faeecffccc10adc70479997846f5f1551161
->>>>>>> Materials
 IGD_Groundhog/OS.rb 9daba728f5280d1912b18eedbac7d689736c8bd4
 IGD_Groundhog/Results.rb c0b2e235dcaa0adab6847101d7eca5a6dea10a5c
 IGD_Groundhog/Utilities.rb 312eae3b2382854fe07c2d8ab893a5a5595c93d0
