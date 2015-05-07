@@ -282,8 +282,40 @@ module IGD
 	
 			end
 	
-	
-	
+			# Opens the "Scale Handler" web dialog and adds the appropriate action_callback
+			#
+			# @author German Molina
+			# @param void
+			# @return void
+			# @version 0.1	
+			def self.show_scale_handler
+				s=OS.slash
+			
+				wd=UI::WebDialog.new( 
+					"Scale handler", false, "", 
+					180, 380, 100, 100, false )
+
+				wd.set_file( OS.main_groundhog_path+"html"+s+"scale.html" )
+		
+				wd.add_action_callback("update_scale") do |web_dialog,msg|
+					scale=JSON.parse(msg)
+					min=scale["min"]
+					max=scale["max"]
+					#check if there is any auto
+					if(min<0 or max<0) then
+						min_max=Results.get_min_max_from_model
+						min=min_max[0] if min<0
+						max=min_max[1] if max<0
+					end
+
+			
+					Results.update_pixel_colors(min,max)
+			
+					web_dialog.execute_script("document.getElementById('min').value="+min.to_s+";""document.getElementById('max').value="+max.to_s+";");
+				end
+		
+				wd.show()
+			end
 	
 
 

@@ -299,27 +299,6 @@ module IGD
 				return entities.select{|x| x.is_a? Sketchup::ComponentInstance or x.is_a? Sketchup::Group}
 			end
 
-			# Adds the default material to the model
-			# @author German Molina
-			# @param entities [Array]
-			def self.add_default_material
-				#Add the default materials to the model
-				Sketchup.active_model.materials.add "GH_default_material"
-				Sketchup.active_model.materials["GH_default_material"].color=[0.7,0.7,0.7]
-				Labeler.to_local_material(Sketchup.active_model.materials["GH_default_material"])
-				Labeler.set_local_material_value(Sketchup.active_model.materials["GH_default_material"],["void\tplastic","\n0\n0\n5\t0.6\t0.6\t0.6\t0\t0"])
-			end
-
-			# Adds the glass material to the model
-			# @author German Molina
-			# @param entities [Array]			
-			def self.add_default_glass
-				Sketchup.active_model.materials.add "GH_default_glass"
-				Sketchup.active_model.materials["GH_default_glass"].color=[0.0,0.0,1.0]
-				Sketchup.active_model.materials["GH_default_glass"].alpha=0.2	
-				Labeler.to_local_material(Sketchup.active_model.materials["GH_default_glass"])
-				Labeler.set_local_material_value(Sketchup.active_model.materials["GH_default_glass"],["void\tglass","\n0\n0\n3\t0.86\t0.86\t0.86"])
-			end
 
 		end
 	end #end module
