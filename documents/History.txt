@@ -22,6 +22,7 @@ This just intends to show a little bit of how Groundhog has been developed.
 - Local materials were introduced. These are materials that contain their whole Radiance definition as their value
 - Eliminated duplicity of materials. Now the same material may be exported a number of times (one for each component or group on which is used), but every time with different names.
 - Sky is exported separately
+- Basic materials can now be created from within SketchUp… avoiding some post-processing.
 - Bug fixing, testing on Windows and OSX.
 
 ## Groundhog 0.5
