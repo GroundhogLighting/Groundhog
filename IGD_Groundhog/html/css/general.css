@@ -1,11 +1,10 @@
-body { font-size: 80%; font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif; 	text-align: justify; }
+body { font-size: 80%; font-family: 'Open Sans', Verdana, Arial, Sans-Serif; 	text-align: justify; }
 button {font-size: 100%;}
 
 table, th, td {
    border: 0px solid black;
    font-size: 100%;
 } 
-
 
 
 .more_info {
@@ -25,10 +24,10 @@ table, th, td {
 
 .tooltip {
 	font-size: 90%;
-	width: 355px;
+	width: 400%; 
 	text-align: justify;
 	background:#ffffff;
-  	margin-bottom: -45px;
+  	margin-bottom: -105px;
   	left: 25px;
 }
 

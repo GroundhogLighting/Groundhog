@@ -96,13 +96,13 @@ module IGD
 					if Labeler.window?(face) then #defaults are assigned
 						mat=Sketchup.active_model.materials["GH_default_glass"] #If it is a glass
 						if mat==nil #this means the materials has been deleted or are not there yet.
-							Utilities.add_default_glass
+							Materials.add_default_glass
 							mat=Sketchup.active_model.materials["GH_default_glass"] #If it is a glass
 						end
 					else
 						mat=Sketchup.active_model.materials["GH_default_material"] #if it is anything else (Illums and Workplanes will be ignored later)
 						if mat==nil #material deleted
-							Utilities.add_default_material
+							Materials.add_default_material
 							mat=Sketchup.active_model.materials["GH_default_material"] #if it is anything else (Illums and Workplanes will be ignored later)
 						end
 					end

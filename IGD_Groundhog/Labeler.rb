@@ -265,7 +265,7 @@ module IGD
 	
 				if faces.length>=1 then
 					mat=Sketchup.active_model.materials["GH_default_glass"]
-					Utilities.add_default_glass if mat==nil
+					Materials.add_default_glass if mat==nil
 					faces.each do |i|
 						i.set_attribute("Groundhog","Label","window")
 						i.material=Sketchup.active_model.materials["GH_default_glass"]

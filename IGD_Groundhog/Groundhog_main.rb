@@ -23,6 +23,8 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/Tools/MkWindow'
 		Sketchup::require 'IGD_Groundhog/Exporter'
 		Sketchup::require 'IGD_Groundhog/Results'
+		Sketchup::require 'IGD_Groundhog/Materials'
+		require 'json'
 
 		#########################################
 		model=Sketchup.active_model
@@ -166,6 +168,14 @@ module IGD
 
 
 
+			### RESULTS SUBMENU
+
+			GH_materials_menu=groundhog_menu.add_submenu("Materials")
+
+				GH_materials_menu.add_item("Add Materials"){
+					Materials.show_material_wizard("materials_wizard.html")
+				}
+
 
 			### RESULTS SUBMENU
 
@@ -176,34 +186,7 @@ module IGD
 				}
 		
 				GH_results_menu.add_item("Scale handler"){
-					s=OS.slash
-			
-					wd=UI::WebDialog.new( 
-						"Scale handler", false, "", 
-						180, 380, 100, 100, false )
-
-					wd.set_file( OS.main_groundhog_path+"html"+s+"scale.html" )
-			
-					wd.add_action_callback("update_scale") do |web_dialog,msg|
-						values=msg.split('/')
-				
-						min=values[0].to_f
-						max=values[1].to_f
-				
-						#check if there is any auto
-						if(min<0 or max<0) then
-							min_max=Results.get_min_max_from_model
-							min=min_max[0] if min<0
-							max=min_max[1] if max<0
-						end
-
-				
-						Results.update_pixel_colors(min,max)
-				
-						web_dialog.execute_script("document.getElementById('min').value="+min.to_s+";""document.getElementById('max').value="+max.to_s+";");
-					end
-			
-					wd.show()
+					Results.show_scale_handler
 
 				}
 
