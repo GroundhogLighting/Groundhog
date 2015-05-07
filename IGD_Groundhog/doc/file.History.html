@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+  File: Groundhog History
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!file.History.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="doc_index.html">Index</a> &raquo; 
+    <span class="title">File: Groundhog History</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'>
+<h1 id="label-Groundhog+History">Groundhog History</h1>
+
+<p>This just intends to show a little bit of how Groundhog has been developed.</p>
+
+<h2 id="label-Groundhog+0.7+%28in+development%29">Groundhog 0.7 (in development)</h2>
+
+<h2 id="label-Groundhog+0.6">Groundhog 0.6</h2>
+<ul><li>
+<p>Exporting distributions were unified into a unique one that places illums
+of each layer in a separate file and window groups in other files.</p>
+</li><li>
+<p>Groups are now exported as if they were components.</p>
+</li><li>
+<p>SketchUp 2015 is now considered the required SketchUp version</p>
+</li><li>
+<p>Added a RIF file exporter to simplify rendering.</p>
+</li><li>
+<p>Workplanes now need to be rectangular and have no holes.</p>
+</li><li>
+<p>Importing results for visualizing them within SketchUp.</p>
+</li><li>
+<p>The concept of “value” was incorporated.</p>
+</li><li>
+<p>All tools, features and functions are now grouped under the same menu:
+Plugins (extensions) –&gt; Groundhog</p>
+</li><li>
+<p>Local materials were introduced. These are materials that contain their
+whole Radiance definition as their value</p>
+</li><li>
+<p>Eliminated duplicity of materials. Now the same material may be exported a
+number of times (one for each component or group on which is used), but
+every time with different names.</p>
+</li><li>
+<p>Sky is exported separately</p>
+</li><li>
+<p>Basic materials can now be created from within SketchUp… avoiding some
+post-processing.</p>
+</li><li>
+<p>Bug fixing, testing on Windows and OSX.</p>
+</li></ul>
+
+<h2 id="label-Groundhog+0.5">Groundhog 0.5</h2>
+<ul><li>
+<p>The “show/hide” tools were moved from the Groundhog Toolbar to the View
+menu.</p>
+</li><li>
+<p>The “Show Window Groups” tool was algo moved to the View Menu.</p>
+</li><li>
+<p>It is now possible to export a model without saving it as well as saving it
+in a different directory.</p>
+</li><li>
+<p>The “Add Workplane” tool was downgraded to a simple script. It is more
+comfortable since the user no longer has to write down the height of the
+Worplane. The Workplanes may be moved just as any other face.</p>
+</li><li>
+<p>Added the “Label as workplane” Context Menu. The faces have to be
+horizontal.</p>
+</li><li>
+<p>Window Groups and Workplanes require a name. This name will be used for
+exporting them.</p>
+</li><li>
+<p>Components may now be exported. Even Nested components (components within
+components) seem to be working OK. Groups are trickier.</p>
+</li></ul>
+
+<h2 id="label-Groundhog+0.4">Groundhog 0.4</h2>
+<ul><li>
+<p>Groundhog seem to be working O.K. on SketchUp 2014</p>
+</li><li>
+<p>Materials can be supported by *.mat file stored on a directory… if not,
+they are guessed.</p>
+</li><li>
+<p>Exporting groups and one-level components is supported (components within
+components do not really work… needed?)</p>
+</li><li>
+<p>Wrapped “Make Window” and “Add Workplane” operations into one “Undo”…
+better and more comfortable.</p>
+</li></ul>
+
+<h2 id="label-Groundhog+0.3">Groundhog 0.3</h2>
+<ul><li>
+<p>Materials started to be supported, as well as SketchUp Components (non of
+them is ready yet).</p>
+</li><li>
+<p>Although windows can still be grouped, the groups can´t be seen, since
+“materials” (i.e. colors) mean something now. We need to solve this.</p>
+</li><li>
+<p>The project was completely reorganized, introducing classes… Then, it was
+published.</p>
+</li></ul>
+
+<h2 id="label-Groundhog+0.2">Groundhog 0.2</h2>
+<ul><li>
+<p>Change of paradigm. Groundhog intends to export well, for now. In the
+future we might simulate within SketchUp.</p>
+</li><li>
+<p>Grouping of windows option was added, as well as showing them in different
+colors.</p>
+</li><li>
+<p>“Winfo” and “SimFile” files do not exist any more.</p>
+</li><li>
+<p>Groundhog is now an extension, that can be turned on or off inside
+SketchUp.</p>
+</li></ul>
+
+<h2 id="label-Groundhog+0.1">Groundhog 0.1</h2>
+<ul><li>
+<p>Project started as part of Germán Molina´s MSc. thesis, under the advice of
+Sergio Vera
+Ph.D and Waldo Bustamante, Ph.D, at the school of Engineering
+of Pontificia Universidad Catolica de Chile.</p>
+</li><li>
+<p>Exports into Radiance and 3phase method formats.</p>
+</li><li>
+<p>Calculations have to be done from a “Window Information File” and a
+“Simulation File”, using perl scripts outside SketchUp.</p>
+</li><li>
+<p>Materials are not supported at all. The program exports a list of assigned
+modifiers, and they have to be filled by the user.</p>
+</li><li>
+<p>Sensor location is done over the workplane… the location is shown by
+drawing two lines forming an X.</p>
+</li><li>
+<p>Sensor location involves ray-casting… which is very inefficient.</p>
+</li><li>
+<p>Materials are treated separated from CFS.</p>
+</li><li>
+<p>Grouping windows was not yet supported.</p>
+</li></ul>
+</div></div>
+
+    <div id="footer">
+  Generated on Thu May  7 11:34:04 2015 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>
