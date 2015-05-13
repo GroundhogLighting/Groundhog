@@ -79,7 +79,7 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">IGD_Groundhog/Results.rb</dd>
+    <dd class="r1 last">IGD_Groundhog/src/Results.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -213,7 +213,7 @@ workplanes.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#import_results-class_method" title="import_results (class method)">+ (Object) <strong>import_results</strong> </a>
+      <a href="#import_results-class_method" title="import_results (class method)">+ (Object) <strong>import_results</strong>(path) </a>
     
 
     
@@ -522,7 +522,7 @@ sensors lie in the same plane point in the same direction.</p>
 150</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Results.rb', line 97</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 97</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_draw_pixels'>draw_pixels</span><span class='lparen'>(</span><span class='id identifier rubyid_u'>u</span><span class='comma'>,</span><span class='id identifier rubyid_v'>v</span><span class='comma'>,</span><span class='id identifier rubyid_array'>array</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
@@ -657,8 +657,6 @@ maximum values from all of them</p>
       <pre class="lines">
 
 
-242
-243
 244
 245
 246
@@ -671,10 +669,12 @@ maximum values from all of them</p>
 253
 254
 255
-256</pre>
+256
+257
+258</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Results.rb', line 242</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 244</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_definitions'>definitions</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span>
@@ -834,7 +834,7 @@ in the model.</p>
 186</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Results.rb', line 162</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 162</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_pixel_color'>get_pixel_color</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='comma'>,</span><span class='id identifier rubyid_max'>max</span><span class='comma'>,</span><span class='id identifier rubyid_min'>min</span><span class='rparen'>)</span>
 
@@ -977,7 +977,7 @@ U to the side, and again all sensors in direction V.</p>
 78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Results.rb', line 56</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 56</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_UV'>get_UV</span><span class='lparen'>(</span><span class='id identifier rubyid_array'>array</span><span class='rparen'>)</span>
 	<span class='comment'>#Start with the first two points
@@ -1010,7 +1010,7 @@ U to the side, and again all sensors in direction V.</p>
       <div class="method_details ">
   <h3 class="signature " id="import_results-class_method">
   
-    + (<tt>Object</tt>) <strong>import_results</strong> 
+    + (<tt>Object</tt>) <strong>import_results</strong>(path) 
   
 
   
@@ -1031,10 +1031,10 @@ in the model.</p>
   
     <li>
       
-        <span class='name'>void</span>
+        <span class='name'>path</span>
       
       
-        <span class='type'></span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
@@ -1099,8 +1099,6 @@ in the model.</p>
       <pre class="lines">
 
 
-265
-266
 267
 268
 269
@@ -1113,22 +1111,12 @@ in the model.</p>
 276
 277
 278
-279
-280
-281
-282
-283</pre>
+279</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Results.rb', line 265</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 267</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_import_results'>import_results</span>
-
-	<span class='id identifier rubyid_s'>s</span><span class='op'>=</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_slash'>slash</span>	
-	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_getpath'>getpath</span> <span class='comment'>#it returns false if not successful
-</span>	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>c:/</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_path'>path</span>
-	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_openpanel'>openpanel</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Open results file</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
-	<span class='kw'>return</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_path'>path</span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_import_results'>import_results</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	
 	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
 	<span class='id identifier rubyid_name'>name</span><span class='op'>=</span><span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_slash'>slash</span><span class='lparen'>(</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
@@ -1272,7 +1260,7 @@ be put in the grid.</p>
 41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Results.rb', line 20</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 20</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_results_to_array'>results_to_array</span><span class='lparen'>(</span><span class='id identifier rubyid_results_path'>results_path</span><span class='rparen'>)</span>
 	<span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_results_path'>results_path</span><span class='rparen'>)</span> <span class='kw'>then</span> 
@@ -1393,6 +1381,10 @@ action_callback</p>
       <pre class="lines">
 
 
+287
+288
+289
+290
 291
 292
 293
@@ -1416,14 +1408,10 @@ action_callback</p>
 311
 312
 313
-314
-315
-316
-317
-318</pre>
+314</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Results.rb', line 291</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 287</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_show_scale_handler'>show_scale_handler</span>
 	<span class='id identifier rubyid_s'>s</span><span class='op'>=</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_slash'>slash</span>
@@ -1608,10 +1596,12 @@ action_callback</p>
 230
 231
 232
-233</pre>
+233
+234
+235</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Results.rb', line 195</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 195</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='id identifier rubyid_min'>min</span><span class='comma'>,</span><span class='id identifier rubyid_max'>max</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
@@ -1639,6 +1629,8 @@ action_callback</p>
 			<span class='kw'>end</span>
 
 		<span class='kw'>end</span>
+		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_commit_operation'>commit_operation</span>
+		
 	<span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
 		<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_failed_operation_message'>failed_operation_message</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='rparen'>)</span>
@@ -1662,7 +1654,7 @@ action_callback</p>
 </div>
 
     <div id="footer">
-  Generated on Thu May  7 11:34:07 2015 by
+  Generated on Wed May 13 18:19:32 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

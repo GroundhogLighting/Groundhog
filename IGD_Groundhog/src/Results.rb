@@ -218,6 +218,8 @@ module IGD
 						end
 			
 					end
+					model.commit_operation
+					
 				rescue => e
 					model.abort_operation
 					OS.failed_operation_message(op_name)
@@ -259,16 +261,10 @@ module IGD
 			# in a plane in the model.
 			#
 			# @author German Molina
-			# @param void
+			# @param path [String]
 			# @return void
 			# @version 0.1
-			def self.import_results
-			
-				s=OS.slash	
-				path=Exporter.getpath #it returns false if not successful
-				path="c:/" if not path
-				path=UI.openpanel("Open results file",path)
-				return if not path
+			def self.import_results(path)
 				
 				model=Sketchup.active_model
 				name=path.split(OS.slash())[-1].split(".")[0]

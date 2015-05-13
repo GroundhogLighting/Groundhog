@@ -207,27 +207,15 @@ module IGD
 			# {#exportFaces} method should be modified.
 			# @author German Molina	
 			# @version 1.0
-			# @param [Void]
+			# @param path_to_save [String] The path where the model will be exported
 			# @return [Void]
 			# @note this method used to be called 'do_multiphase'
-			def self.export
-		
+			def self.export(path)
+				OS.clear_path(path)
 				begin
 					model=Sketchup.active_model
 					op_name = "Export"
 					model.start_operation( op_name,true )
-		  
-					s=OS.slash	
-					path=self.getpath #it returns false if not successful
-					if not path	then
-						path=""
-					end
-
-					path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
-					return if not path_to_save
-
-					OS.mkdir(path_to_save)
-					path=path_to_save+s
 
 					#Export the faces and obtain the modifiers
 					mod_list=self.export_layers(path, Sketchup.active_model.entities)
@@ -265,11 +253,16 @@ module IGD
 		
 				OS.mkdir(path+"Geometry")
 		
-				faces=Utilities.get_all_layer_faces(entities,[]) #in order to include groups.
-		
+
+				
 				mat_list=[] #This will become the name of the modifiers (materials) of each face.
 				model=Sketchup.active_model	
 				entities=model.entities
+
+				### THIS IS UNDER TESTING.... REMIND ME TO CHANGE IT SOON.
+				faces=Utilities.get_faces(entities)
+				#faces=Utilities.get_all_layer_faces(entities,[]) #in order to include groups.
+				
 				s=OS.slash #just to avoid calling the method on every iteration.
 				windows=[] # this array will store the windows in case their are needed
 				workplanes=[]
@@ -398,10 +391,12 @@ module IGD
 			# @author German Molina	
 			# @version 1.1
 			# @param path [String] Directory to export the Window Groups.
-			# @param windows [faces] A directory with windows, selected during #{exportFaces}.
+			# @param windows [faces] An array with windows, selected during #{exportFaces}.
 			# @return [Void]	
 			def self.write_window_groups(path,windows)
-
+				
+				return if windows.length < 1
+				
 				OS.mkdir(path+"Windows")
 				groups=Utilities.get_win_groups(windows)
 				ngroups=groups.length
@@ -587,7 +582,7 @@ module IGD
 			# @return [Void]	
 			def self.write_scene_file(path)
 				File.open(path+"scene.rad",'w'){ |f| #The file is opened
-					f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
+					f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
 			
 					f.write("\n\n\n###### SKY \n\n")
 			

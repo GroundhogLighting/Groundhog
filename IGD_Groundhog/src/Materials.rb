@@ -101,6 +101,7 @@ module IGD
 		
 					mat = Sketchup.active_model.materials.add name if mat == nil
 					mat.color=[red,green,blue]
+					
 					Labeler.to_local_material(mat)
 					Labeler.set_local_material_value(mat,[material_JSON["mod_type"],self.parse_material_argument(material_JSON["argument"])])					
 					

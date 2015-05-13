@@ -79,7 +79,7 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">IGD_Groundhog/Materials.rb</dd>
+    <dd class="r1 last">IGD_Groundhog/src/Materials.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -297,7 +297,7 @@ action_callback.</p>
 25</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Materials.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 19</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_add_default_glass'>add_default_glass</span>
 	<span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH_default_glass</span><span class='tstring_end'>&quot;</span></span>
@@ -377,7 +377,7 @@ action_callback.</p>
 14</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Materials.rb', line 8</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 8</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_add_default_material'>add_default_material</span>
 	<span class='comment'>#Add the default materials to the model
@@ -486,7 +486,7 @@ new lines and tabs… easier to read.</p>
 75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Materials.rb', line 57</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 57</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_parse_material_argument'>parse_material_argument</span><span class='lparen'>(</span><span class='id identifier rubyid_argument'>argument</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_ret'>ret</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
@@ -616,10 +616,11 @@ new lines and tabs… easier to read.</p>
 111
 112
 113
-114</pre>
+114
+115</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Materials.rb', line 84</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 84</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_process_material_JSON'>process_material_JSON</span><span class='lparen'>(</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_name'>name</span><span class='op'>=</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>name</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -641,6 +642,7 @@ new lines and tabs… easier to read.</p>
 		
 		<span class='id identifier rubyid_mat'>mat</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span> <span class='id identifier rubyid_name'>name</span> <span class='kw'>if</span> <span class='id identifier rubyid_mat'>mat</span> <span class='op'>==</span> <span class='kw'>nil</span>
 		<span class='id identifier rubyid_mat'>mat</span><span class='period'>.</span><span class='id identifier rubyid_color'>color</span><span class='op'>=</span><span class='lbracket'>[</span><span class='id identifier rubyid_red'>red</span><span class='comma'>,</span><span class='id identifier rubyid_green'>green</span><span class='comma'>,</span><span class='id identifier rubyid_blue'>blue</span><span class='rbracket'>]</span>
+		
 		<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_to_local_material'>to_local_material</span><span class='lparen'>(</span><span class='id identifier rubyid_mat'>mat</span><span class='rparen'>)</span>
 		<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_set_local_material_value'>set_local_material_value</span><span class='lparen'>(</span><span class='id identifier rubyid_mat'>mat</span><span class='comma'>,</span><span class='lbracket'>[</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mod_type</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_parse_material_argument'>parse_material_argument</span><span class='lparen'>(</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>argument</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='rparen'>)</span>					
 		
@@ -767,7 +769,7 @@ action_callback</p>
 48</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/Materials.rb', line 33</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 33</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_show_material_wizard'>show_material_wizard</span><span class='lparen'>(</span><span class='id identifier rubyid_web'>web</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_s'>s</span><span class='op'>=</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_slash'>slash</span>
@@ -795,7 +797,7 @@ action_callback</p>
 </div>
 
     <div id="footer">
-  Generated on Thu May  7 11:34:07 2015 by
+  Generated on Wed May 13 18:19:32 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

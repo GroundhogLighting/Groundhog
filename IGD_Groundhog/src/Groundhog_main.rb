@@ -17,15 +17,25 @@ module IGD
 
 		#################################
 
-		Sketchup::require 'IGD_Groundhog/Utilities'
-		Sketchup::require 'IGD_Groundhog/Labeler'
-		Sketchup::require 'IGD_Groundhog/OS'
-		Sketchup::require 'IGD_Groundhog/Tools/MkWindow'
-		Sketchup::require 'IGD_Groundhog/Exporter'
-		Sketchup::require 'IGD_Groundhog/Results'
-		Sketchup::require 'IGD_Groundhog/Materials'
-		require 'json'
+		Sketchup::require 'IGD_Groundhog/src/Utilities'
+		Sketchup::require 'IGD_Groundhog/src/Config'
+		Sketchup::require 'IGD_Groundhog/src/Labeler'
+		Sketchup::require 'IGD_Groundhog/src/OS'
+		Sketchup::require 'IGD_Groundhog/src/Tools/MkWindow'
+		Sketchup::require 'IGD_Groundhog/src/Exporter'
+		Sketchup::require 'IGD_Groundhog/src/Results'
+		Sketchup::require 'IGD_Groundhog/src/Materials'
+		Sketchup::require 'IGD_Groundhog/src/Rad'
 
+		require 'json'
+		require 'Open3'
+		require 'fileutils'
+		
+		
+		#########################################
+		#add RADIANCE to Path		
+		ENV["PATH"]=Config.get_radiance_path+":" << ENV["PATH"]
+			
 		#########################################
 		model=Sketchup.active_model
 		selection=model.selection
@@ -165,7 +175,14 @@ module IGD
 				GH_tools_menu.add_item("Make Window"){
 					MkWindow.make_window(Utilities.get_faces(Sketchup.active_model.selection))
 				}
-
+				
+				GH_tools_menu.add_item("Preview"){
+					Rad.rvu
+				}
+				
+				GH_tools_menu.add_item("Calculate Daylight Factor"){
+					Rad.daylight_factor
+				}
 
 
 			### RESULTS SUBMENU
@@ -182,7 +199,14 @@ module IGD
 			GH_results_menu=groundhog_menu.add_submenu("Results")
 
 				GH_results_menu.add_item("Import results"){
-					Results.import_results
+					
+					s=OS.slash	
+					path=Exporter.getpath #it returns false if not successful
+					path="c:/" if not path
+					path=UI.openpanel("Open results file",path)
+					Results.import_results(path) if path
+					
+
 				}
 		
 				GH_results_menu.add_item("Scale handler"){
@@ -212,7 +236,18 @@ module IGD
 
 			### EXPORT
 			groundhog_menu.add_item("Export to Radiance") {
-				Exporter.export
+				
+				s=OS.slash	
+				path=Exporter.getpath #it returns false if not successful
+				path="" if not path				
+
+				path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
+				
+				if path_to_save then
+					OS.mkdir(path_to_save)
+					path=path_to_save+s					
+					Exporter.export(path)
+				end
 			}
 
 	
