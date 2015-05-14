@@ -30,14 +30,14 @@ module IGD
 			# @param void
 			# @return void
 			# @version 0.1	
-			def self.show_material_wizard(web)
+			def self.show_material_wizard
 				s=OS.slash
 			
 				wd=UI::WebDialog.new( 
 					"Materials", false, "", 
 					530, 450, 100, 100, false )
 
-				wd.set_file( OS.main_groundhog_path+"html"+s+web )
+				wd.set_file( OS.main_groundhog_path+"src"+s+"html"+s+"materials_wizard.html" )
 
 				wd.add_action_callback("get_material_JSON") do |web_dialog,msg|
 					material_JSON=JSON.parse(msg)

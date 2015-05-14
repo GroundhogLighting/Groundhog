@@ -9,7 +9,7 @@ module IGD
 
 		if (actual_version < version_required) 
 		  UI.messagebox("Groundhog is being developed and tested using Sketchup 20" + version_required.to_i.to_s +
-						". Since it seems that you are using an older version, some features might not work correctly for you."+
+						". Since it seems that you are using an older version, some features might not work correctly."+
 						"\n\n You can upgrade SketchUp going to "+
 						"www.SketchUp.com")
 
@@ -33,8 +33,17 @@ module IGD
 		
 		
 		#########################################
-		#add RADIANCE to Path		
-		ENV["PATH"]=Config.get_radiance_path+":" << ENV["PATH"]
+		if File.exists?("#{OS.main_groundhog_path}rad.cfg") then #if Radiance was once configured
+			#load the Radiance path
+			Config.load_rad_config
+			rad_path=Config.radiance_path
+			if rad_path ==nil
+				UI.messagebox("It seems that your configuration has some problem. Please re-configure it.")
+				Config.set_rad_config
+			else
+				ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
+			end
+		end
 			
 		#########################################
 		model=Sketchup.active_model
@@ -190,7 +199,7 @@ module IGD
 			GH_materials_menu=groundhog_menu.add_submenu("Materials")
 
 				GH_materials_menu.add_item("Add Materials"){
-					Materials.show_material_wizard("materials_wizard.html")
+					Materials.show_material_wizard
 				}
 
 
@@ -252,7 +261,12 @@ module IGD
 
 	
 	
-	
+			### PREFERENCES MENU
+			
+			GH_preferences_menu=groundhog_menu.add_submenu("Preferences")
+				GH_preferences_menu.add_item("Radiance preferences") {
+					Config.set_rad_config
+				}
 	
 	
 			### HELP MENU

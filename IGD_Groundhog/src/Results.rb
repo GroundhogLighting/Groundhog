@@ -291,7 +291,7 @@ module IGD
 					"Scale handler", false, "", 
 					180, 380, 100, 100, false )
 
-				wd.set_file( OS.main_groundhog_path+"html"+s+"scale.html" )
+				wd.set_file( OS.main_groundhog_path+"src"+s+"html"+s+"scale.html" )
 		
 				wd.add_action_callback("update_scale") do |web_dialog,msg|
 					scale=JSON.parse(msg)

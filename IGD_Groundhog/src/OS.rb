@@ -128,6 +128,9 @@ module IGD
 			# @author German Molina
 			# @param cmd [String] The command to execute.
 			def self.run_command(cmd)
+				UI.messagebox("Your Radiance configuration seems to be incorrect. Please fix") if Config.radiance_path == nil
+				return false if Config.radiance_path == nil
+				
 				exit_status=""
 				Open3.popen3(cmd){ |stdin, stdout, stderr, wait_thr|
 					pid = wait_thr.pid # pid of the started process.					

@@ -273,7 +273,7 @@ module IGD
 				#we open one file per each layer
 				writers=[] #this is an array of writers
 				layers.each do |lay|
-					writers=writers+[File.open(path+'Geometry'+s+lay.name.tr(" ","_")+".rad",'w')]
+					writers=writers+[File.open(path+'Geometry'+s+lay.name.tr(" ","_")+".rad",'w+')]
 				end
 		
 		
@@ -372,14 +372,14 @@ module IGD
 				OS.mkdir(path+"Views")
 				path=path+'Views'+OS.slash
 				#Export the actual view
-				File.open(path+"view.vf",'w'){|f|
+				File.open(path+"view.vf",'w+'){|f|
 					f.write(self.getViewString(Sketchup.active_model.active_view.camera))
 				}
 				#then the scenes
 				pages=Sketchup.active_model.pages
 				if pages.count>=1 then
 					pages.each do |page|
-						File.open(path+page.name.tr(" ","_")+".vf",'w'){|f|
+						File.open(path+page.name.tr(" ","_")+".vf",'w+'){|f|
 							f.write(self.getViewString(page.camera))
 						}
 					end
@@ -425,10 +425,10 @@ module IGD
 						#we write using a new writer
 						winname=Labeler.get_name(win)
 						if winname==nil then
-							wr=File.open(path+'Windows'+s+'WindowSet_'+nwin.to_s+".rad",'w')
+							wr=File.open(path+'Windows'+s+'WindowSet_'+nwin.to_s+".rad",'w+')
 							nwin=nwin+1
 						else 
-							wr=File.open(path+'Windows'+s+winname.tr(" ","_")+".rad",'w')
+							wr=File.open(path+'Windows'+s+winname.tr(" ","_")+".rad",'w+')
 						end
 						wr.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
 						wr.close	
@@ -446,7 +446,7 @@ module IGD
 					end
 					mat_string+="\n\n"
 			
-					w=File.open(path+'Windows'+s+gr.tr(" ","_")+".rad",'w')
+					w=File.open(path+'Windows'+s+gr.tr(" ","_")+".rad",'w+')
 					w.write(mat_string+rad_strings[count])
 					w.close
 					count=count+1
@@ -517,7 +517,7 @@ module IGD
 						end
 				
 				
-						File.open(path+name.tr(" ","_")+".pts",'w'){ |f| #The file is opened
+						File.open(path+name.tr(" ","_")+".pts",'w+'){ |f| #The file is opened
 							pts.each do |p| #and the sensors are written
 								x=p.x.to_m
 								y=p.y.to_m
@@ -544,7 +544,7 @@ module IGD
 						name=Labeler.get_name(ent) #Get the name of the surface
 						info=self.get_rad_string(ent,true)
 				
-						File.open(path+name.tr(" ","_")+".rad",'w'){ |f| #The file is opened
+						File.open(path+name.tr(" ","_")+".rad",'w+'){ |f| #The file is opened
 							f.write("void "+info[0]) 
 						}
 		
@@ -566,7 +566,7 @@ module IGD
 
 				OS.mkdir(path+"Materials")
 				path=path+"Materials"+OS.slash
-				File.open(path+"materials.mat",'w'){ |f| #The file is opened
+				File.open(path+"materials.mat",'w+'){ |f| #The file is opened
 					unsup=0
 					mat_array.each do |mat|
 						f.write(self.get_mat_string(mat,false)+"\n\n")
@@ -581,7 +581,7 @@ module IGD
 			# @param path [String] Directory to export the scene file
 			# @return [Void]	
 			def self.write_scene_file(path)
-				File.open(path+"scene.rad",'w'){ |f| #The file is opened
+				File.open(path+"scene.rad",'w+'){ |f| #The file is opened
 					f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
 			
 					f.write("\n\n\n###### SKY \n\n")
@@ -629,7 +629,7 @@ module IGD
 				azi=floor.angle_between(Geom::Vector3d.new(0,-1,0)).radians
 				azi=-azi if sun.x>0
 	
-				File.open(path+"sky.rad",'w'){ |f| #The file is opened
+				File.open(path+"sky.rad",'w+'){ |f| #The file is opened
 					f.write("\n\n\n###### DEFAULT SKY \n\n")			
 		
 					f.write("!gensky -ang #{alt} #{azi} +s\n\n")
@@ -701,7 +701,7 @@ module IGD
 					end
 			
 			
-					File.open(path+hName+".rad",'w'){ |f|
+					File.open(path+hName+".rad",'w+'){ |f|
 						f.write mat_string+geom_string
 					}				
 
@@ -747,7 +747,7 @@ module IGD
 				min=box.min
 				pages=model.pages
 		
-				File.open(path+"scene.rif",'w'){ |f| #The file is opened
+				File.open(path+"scene.rif",'w+'){ |f| #The file is opened
 					f.write("###############\n## RIF exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n\n\n")
 			
 					f.write("ZONE= I #{min.x.to_m} #{max.x.to_m} #{min.y.to_m} #{max.y.to_m} #{min.z.to_m}  #{max.z.to_m} \n")
