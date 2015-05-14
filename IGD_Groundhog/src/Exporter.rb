@@ -475,10 +475,7 @@ module IGD
 		
 				OS.mkdir(path+"Workplanes")
 				path=path+OS.slash+'Workplanes'+OS.slash
-				prompts=["Workplane Sensor Spacing (m)"]
-				defaults=[0.5]
-				sys=UI.inputbox prompts, defaults, "Spacing of the sensors on workplanes?"
-				d=sys[0].m
+				d=Config.sensor_spacing.m
 
 				entities.each do |ent| #for all the entities (which are faces)
 					if Labeler.workplane?(ent) then #Only workplanes
@@ -808,8 +805,8 @@ module IGD
 	
 			# Returns the Radiance primitive of a SketchUp material.
 			#  It first checks if it is available in the library, and if not, it guesses it.
-			#  If inputed a name (instead of "False"), the primitive's name will be forced to be
-			#  the inputed value. This is useful for exporting components.
+			#  If inputted a name (instead of "False"), the primitive's name will be forced to be
+			#  the inputted value. This is useful for exporting components.
 			# @author German Molina	
 			# @version 0.4
 			# @param SketchUp material, [string] name
@@ -817,7 +814,7 @@ module IGD
 			# @note: forcing the name is not used yet, since the surface still is modified by the original name... complicated.
 			def self.get_mat_string(material,name)
 				matName=material.name.tr(" ","_").tr("#","_")
-				matName=name if name #if inputed a name, overwrite.
+				matName=name if name #if inputted a name, overwrite.
 
 				if Labeler.local_material?(material) then
 					value= Labeler.get_value(material)

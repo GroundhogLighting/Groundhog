@@ -2,7 +2,7 @@ module IGD
 	module Groundhog
 		module Config
 		
-			@@rad_config=Hash.new(0) 
+			@@rad_config=Hash.new() 
 			
 			def self.get_rad_config
 				@@rad_config
@@ -50,7 +50,11 @@ module IGD
 			# @author German Molina
 			# @return n_threads [String] The number of threads
 			def self.sensor_spacing
-				@@rad_config["SENSOR_SPACING"]
+				return @@rad_config["SENSOR_SPACING"] if @@rad_config["SENSOR_SPACING"]!= nil
+				prompts=["Workplane Sensor Spacing (m)"]
+				defaults=[0.5]
+				sys=UI.inputbox prompts, defaults, "Spacing of the sensors on workplanes?"
+				return sys[0]
 			end	
 			
 			
