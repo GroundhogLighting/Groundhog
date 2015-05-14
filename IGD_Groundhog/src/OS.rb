@@ -128,7 +128,7 @@ module IGD
 			# @author German Molina
 			# @param cmd [String] The command to execute.
 			def self.run_command(cmd)
-				UI.messagebox("Your Radiance configuration seems to be incorrect. Please fix") if Config.radiance_path == nil
+				UI.messagebox("Either your Radiance configuration is incorrect or inexistent.\n\nPlease reconfigure.") if Config.radiance_path == nil
 				return false if Config.radiance_path == nil
 				
 				exit_status=""

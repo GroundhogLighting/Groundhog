@@ -16,12 +16,18 @@ module IGD
 					end
 
 					OS.mkdir("Results")
-			
+
+					#modify sky
+					File.open("Skies/sky.rad",'w+'){ |f| #The file is opened
+						f.write("!gensky -ang 45 0 -c -B 55.86592\n\n")
+						f.write("skyfunc glow skyglow\n0\n0\n4 1 1 1 0\n\nskyglow source skyball\n0\n0\n 4 0 0 1 360")
+					}
+								
 					#build the script	
 					script=[]
 					#add overcast sky
-					script << "gensky -ang 45 0 -c -B 0.5586592 > Skies/sky.rad"
-					script << "echo 'skyfunc glow skyglow 0 0 4 1 1 1 0     skyglow source skyball 0 0 4 0 0 1 360'  >> Skies/sky.rad"
+#					script << "gensky -ang 45 0 -c -B 0.5586592 > Skies/sky.rad"
+#					script << "echo 'skyfunc glow skyglow 0 0 4 1 1 1 0     skyglow source skyball 0 0 4 0 0 1 360'  >> Skies/sky.rad"
 					#oconv
 					if File.directory?("Windows") then
 						script << "oconv ./Materials/materials.mat ./scene.rad ./Windows/* > octree.oct"
@@ -35,7 +41,7 @@ module IGD
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						results << name
-						script << "rtrace -h -I+ -oov #{Config.rtrace_options} -n #{Config.n_threads} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results/#{name}.txt"
+						script << "rtrace -h -I+ -oov #{Config.rtrace_options} -n #{Config.n_threads} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100' > Results/#{name}.txt"
 					end
 				
 					success=OS.execute_script(script)
@@ -49,7 +55,7 @@ module IGD
 				end
 			end
 
-			# Calls RVU for previewing the actual scene from the current view.
+			# Calls RVU for previewing the actual scene from the current view and sky.
 			# @author German Molina
 			# @param void			
 			def self.rvu

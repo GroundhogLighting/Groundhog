@@ -182,19 +182,19 @@ module IGD
 			# @param entities [Sketchup::DefinitionList] Basically an array of definitions
 			# @param faces [empty array] Needed for the recursion
 			# @return [Array <Sketchup::ComponentDefinition>] Array with the unique component definitions
-			def self.get_all_layer_faces(entities,faces)
-				faces=faces+self.get_faces(entities)
-				groups=self.get_groups(entities)
-		
-				return faces if groups.length < 1
-
-				entities=[]
-				groups.each do |gr|
-					gr.make_unique 
-					entities=entities+self.get_groups(gr.entities)+self.get_faces(gr.entities)
-				end
-				self.get_all_layer_faces(entities,faces)
-			end
+			#def self.get_all_layer_faces(entities,faces)
+			#	faces=faces+self.get_faces(entities)
+			#	groups=self.get_groups(entities)
+		#
+		#		return faces if groups.length < 1
+#
+#				entities=[]
+#				groups.each do |gr|
+#					gr.make_unique 
+#					entities=entities+self.get_groups(gr.entities)+self.get_faces(gr.entities)
+#				end
+#				self.get_all_layer_faces(entities,faces)
+#			end
 	
 	
 			# Checks if the face is planar. For some reason some faces were recognized in Radiance as non-planars when building the octree.

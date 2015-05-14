@@ -189,31 +189,6 @@ delete all the entities with a certain label.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_all_layer_faces-class_method" title="get_all_layer_faces (class method)">+ (Array &lt;Sketchup::ComponentDefinition&gt;) <strong>get_all_layer_faces</strong>(entities, faces) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Recursively gets all the faces that have to be exported with layers (i.e.
-simple faces and faces within groups).</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#get_component_instances-class_method" title="get_component_instances (class method)">+ (Object) <strong>get_component_instances</strong>(entities) </a>
     
 
@@ -844,138 +819,6 @@ simple faces and faces within groups).</p>
 </span>	<span class='kw'>if</span> <span class='id identifier rubyid_labeled'>labeled</span><span class='op'>!=</span><span class='int'>0</span> <span class='kw'>then</span>
 		<span class='id identifier rubyid_delete_label'>delete_label</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='comma'>,</span><span class='id identifier rubyid_label'>label</span><span class='rparen'>)</span>
 	<span class='kw'>end</span>	
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="get_all_layer_faces-class_method">
-  
-    + (<tt>Array &lt;Sketchup::ComponentDefinition&gt;</tt>) <strong>get_all_layer_faces</strong>(entities, faces) 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Recursively gets all the faces that have to be exported with layers (i.e.
-simple faces and faces within groups).</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
-  
-    <li>
-      
-        <span class='name'>entities</span>
-      
-      
-        <span class='type'>(<tt>Sketchup::DefinitionList</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Basically an array of definitions</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>faces</span>
-      
-      
-        <span class='type'>(<tt>empty array</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Needed for the recursion</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>Array &lt;Sketchup::ComponentDefinition&gt;</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Array with the unique component definitions</p>
-</div>
-      
-    </li>
-  
-</ul>
-<p class="tag_title">Author:</p>
-<ul class="author">
-  
-    <li>
-      
-      
-      
-      
-        
-        <div class='inline'>
-<p>German Molina</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 185</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_all_layer_faces'>get_all_layer_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='comma'>,</span><span class='id identifier rubyid_faces'>faces</span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_faces'>faces</span><span class='op'>=</span><span class='id identifier rubyid_faces'>faces</span><span class='op'>+</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_faces'>get_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_groups'>groups</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_groups'>get_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
-		
-	<span class='kw'>return</span> <span class='id identifier rubyid_faces'>faces</span> <span class='kw'>if</span> <span class='id identifier rubyid_groups'>groups</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>&lt;</span> <span class='int'>1</span>
-
-	<span class='id identifier rubyid_entities'>entities</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
-	<span class='id identifier rubyid_groups'>groups</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_gr'>gr</span><span class='op'>|</span>
-		<span class='id identifier rubyid_gr'>gr</span><span class='period'>.</span><span class='id identifier rubyid_make_unique'>make_unique</span> 
-		<span class='id identifier rubyid_entities'>entities</span><span class='op'>=</span><span class='id identifier rubyid_entities'>entities</span><span class='op'>+</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_groups'>get_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_gr'>gr</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span><span class='op'>+</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_faces'>get_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_gr'>gr</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
-	<span class='kw'>end</span>
-	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_all_layer_faces'>get_all_layer_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='comma'>,</span><span class='id identifier rubyid_faces'>faces</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2431,7 +2274,7 @@ Radiance as non-planars when building the octree.</p>
 </div>
 
     <div id="footer">
-  Generated on Wed May 13 18:19:32 2015 by
+  Generated on Thu May 14 19:07:40 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

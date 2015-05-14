@@ -472,11 +472,14 @@ module IGD
 
 
 				return false if entities.length<1 #we export this only if there is any workplane	
-		
+				d=Config.sensor_spacing
+				return false if not d
+				d=d.m
+						
 				OS.mkdir(path+"Workplanes")
 				path=path+OS.slash+'Workplanes'+OS.slash
-				d=Config.sensor_spacing.m
 
+				
 				entities.each do |ent| #for all the entities (which are faces)
 					if Labeler.workplane?(ent) then #Only workplanes
 						name=Labeler.get_name(ent).tr(" ","_") #Get the name of the surface
@@ -672,7 +675,9 @@ module IGD
 
 					hName=h.name.tr(" ","_").tr("#","_") 
 					entities=h.entities
-					faces=Utilities.get_all_layer_faces(entities,[])
+#					faces=Utilities.get_all_layer_faces(entities,[])
+					faces=Utilities.get_faces(entities)
+	
 					instances=Utilities.get_component_instances(entities)
 			
 					geom_string=""	

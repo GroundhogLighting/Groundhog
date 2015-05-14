@@ -45,8 +45,7 @@ module IGD
 				return @@rad_config["THREADS"]				
 			end	
 			
-			# Gets the number of threads to be used by Radiance programs.
-			#	Windows always returns 1.
+			# Gets the spacing between workplane sensors
 			# @author German Molina
 			# @return n_threads [String] The number of threads
 			def self.sensor_spacing
@@ -54,6 +53,7 @@ module IGD
 				prompts=["Workplane Sensor Spacing (m)"]
 				defaults=[0.5]
 				sys=UI.inputbox prompts, defaults, "Spacing of the sensors on workplanes?"
+				return false if not sys
 				return sys[0]
 			end	
 			
