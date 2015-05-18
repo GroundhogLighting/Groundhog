@@ -30,14 +30,12 @@ module IGD
 			# @param void
 			# @return void
 			# @version 0.1	
-			def self.show_material_wizard(web)
-				s=OS.slash
-			
+			def self.show_material_wizard
 				wd=UI::WebDialog.new( 
 					"Materials", false, "", 
 					530, 450, 100, 100, false )
 
-				wd.set_file( OS.main_groundhog_path+"html"+s+web )
+				wd.set_file("#{OS.main_groundhog_path}/src/html/materials_wizard.html" )
 
 				wd.add_action_callback("get_material_JSON") do |web_dialog,msg|
 					material_JSON=JSON.parse(msg)
@@ -101,6 +99,7 @@ module IGD
 		
 					mat = Sketchup.active_model.materials.add name if mat == nil
 					mat.color=[red,green,blue]
+					
 					Labeler.to_local_material(mat)
 					Labeler.set_local_material_value(mat,[material_JSON["mod_type"],self.parse_material_argument(material_JSON["argument"])])					
 					

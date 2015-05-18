@@ -139,7 +139,7 @@ module IGD
 						Labeler.to_window([wn])
 					end		
 
-				
+					model.commit_operation
 				rescue => e
 					model.abort_operation
 					OS.OS.failed_operation_message(op_name)

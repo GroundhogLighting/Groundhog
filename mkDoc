@@ -2,7 +2,7 @@
 
 rm -f Groundhog.rbz
 
-yardoc IGD_Groundhog/*.rb IGD_Groundhog/Tools/*.rb - Readme.txt - documents/*
+yardoc IGD_Groundhog/src/*.rb IGD_Groundhog/src/Tools/*.rb - Readme.txt - documents/*
 
 #modify documentation
 cd doc
@@ -13,6 +13,9 @@ mv file.README.html file.Readme.html
 rm *tmphtml
 
 cd ..
+
+#rm config file
+rm -f IGD_Groundhog/rad.cfg
 
 #Include new doc into the main Groundhog directory
 rm -fr IGD_Groundhog/doc
