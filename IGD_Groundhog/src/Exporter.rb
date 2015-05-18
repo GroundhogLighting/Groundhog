@@ -6,7 +6,7 @@ module IGD
 	
 	
 	
-			# This method is was designed to get the orientation of a window. 
+			# This method was designed to get the orientation of a window. 
 			#
 			# The idea is to avoid calculating of some Daylight Matrix.
 			# @author German Molina	
@@ -52,15 +52,10 @@ module IGD
 				path=model.path
 				return false if path=="" #model has not been saved
 				
-				p=path.split(OS.slash) 
-				path=""
-				#I do not remember why I did this split... probably because of Window-Mac stuff.
-				# it is not slow anyway... not hurting anyone.
-				for i in 0..p.length-2
-					path=path+p[i]+OS.slash  
-				end
-		
-				return path
+				path=path.tr("\\","/") #normalize Windows paths into Ruby paths (with /)
+				path=path.split("/")
+				path.pop #drop the name of the file						
+				return File.join(path)
 			end
 
 			# Assess the String that should be written in the Radiance geometry file.
@@ -251,9 +246,7 @@ module IGD
 			#   mat_list=Exporter.exportFaces(path, SketchUp.active_model.entities)
 			def self.export_layers(path, entities)
 		
-				OS.mkdir(path+"Geometry")
-		
-
+				OS.mkdir("#{path}/Geometry")
 				
 				mat_list=[] #This will become the name of the modifiers (materials) of each face.
 				model=Sketchup.active_model	
@@ -263,7 +256,6 @@ module IGD
 				faces=Utilities.get_faces(entities)
 				#faces=Utilities.get_all_layer_faces(entities,[]) #in order to include groups.
 				
-				s=OS.slash #just to avoid calling the method on every iteration.
 				windows=[] # this array will store the windows in case their are needed
 				workplanes=[]
 				illums=[]
@@ -273,7 +265,7 @@ module IGD
 				#we open one file per each layer
 				writers=[] #this is an array of writers
 				layers.each do |lay|
-					writers=writers+[File.open(path+'Geometry'+s+lay.name.tr(" ","_")+".rad",'w+')]
+					writers=writers+[File.open("#{path}/Geometry/#{lay.name.tr(" ","_")}.rad",'w+')]
 				end
 		
 		
@@ -369,17 +361,17 @@ module IGD
 			#   Exporter.exportView(path)	
 			def self.export_views(path)
 
-				OS.mkdir(path+"Views")
-				path=path+'Views'+OS.slash
+				OS.mkdir("#{path}/Views")
+				path="#{path}/Views"
 				#Export the actual view
-				File.open(path+"view.vf",'w+'){|f|
+				File.open("#{path}/view.vf",'w+'){|f|
 					f.write(self.getViewString(Sketchup.active_model.active_view.camera))
 				}
 				#then the scenes
 				pages=Sketchup.active_model.pages
 				if pages.count>=1 then
 					pages.each do |page|
-						File.open(path+page.name.tr(" ","_")+".vf",'w+'){|f|
+						File.open("#{path}/#{page.name.tr(" ","_")}.vf",'w+'){|f|
 							f.write(self.getViewString(page.camera))
 						}
 					end
@@ -397,13 +389,12 @@ module IGD
 				
 				return if windows.length < 1
 				
-				OS.mkdir(path+"Windows")
+				OS.mkdir("#{path}/Windows")
 				groups=Utilities.get_win_groups(windows)
 				ngroups=groups.length
 				rad_strings=Array.new(ngroups,"") #store the geometry of the windows
 				materials=Array.new(ngroups,[]) #store the materials of the windows
 				nwin=1 #this will count the windows
-				s=OS.slash
 
 				windows.each do |win|
 					c=Labeler.get_win_group(win)
@@ -425,10 +416,10 @@ module IGD
 						#we write using a new writer
 						winname=Labeler.get_name(win)
 						if winname==nil then
-							wr=File.open(path+'Windows'+s+'WindowSet_'+nwin.to_s+".rad",'w+')
-							nwin=nwin+1
+							wr=File.open("#{path}/Windows/WindowSet_#{nwin}.rad",'w+')
+							nwin+=1
 						else 
-							wr=File.open(path+'Windows'+s+winname.tr(" ","_")+".rad",'w+')
+							wr=File.open("#{path}/Windows/#{winname.tr(" ","_")}.rad",'w+')
 						end
 						wr.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
 						wr.close	
@@ -446,7 +437,7 @@ module IGD
 					end
 					mat_string+="\n\n"
 			
-					w=File.open(path+'Windows'+s+gr.tr(" ","_")+".rad",'w+')
+					w=File.open("#{path}/Windows/#{gr.tr(" ","_")}.rad",'w+')
 					w.write(mat_string+rad_strings[count])
 					w.close
 					count=count+1
@@ -476,8 +467,8 @@ module IGD
 				return false if not d
 				d=d.m
 						
-				OS.mkdir(path+"Workplanes")
-				path=path+OS.slash+'Workplanes'+OS.slash
+				OS.mkdir("#{path}/Workplanes")
+				path="#{path}/Workplanes"
 
 				
 				entities.each do |ent| #for all the entities (which are faces)
@@ -517,7 +508,7 @@ module IGD
 						end
 				
 				
-						File.open(path+name.tr(" ","_")+".pts",'w+'){ |f| #The file is opened
+						File.open("#{path}/#{name.tr(" ","_")}.pts",'w+'){ |f| #The file is opened
 							pts.each do |p| #and the sensors are written
 								x=p.x.to_m
 								y=p.y.to_m
@@ -536,15 +527,15 @@ module IGD
 
 				return false if entities.length<1 
 			
-				OS.mkdir(path+"Illums")
-				path=path+OS.slash+'Illums'+OS.slash
+				OS.mkdir("#{path}/Illums")
+				path="#{path}/Illums"
 
 				entities.each do |ent| #for all the entities (which are faces)
 					if Labeler.illum?(ent) then #Only illums
 						name=Labeler.get_name(ent) #Get the name of the surface
 						info=self.get_rad_string(ent,true)
 				
-						File.open(path+name.tr(" ","_")+".rad",'w+'){ |f| #The file is opened
+						File.open("#{path}/#{name.tr(" ","_")}.rad",'w+'){ |f| #The file is opened
 							f.write("void "+info[0]) 
 						}
 		
@@ -564,10 +555,9 @@ module IGD
 			#   Exporter.exportView(path)	
 			def self.export_modifiers(path,mat_array)
 
-				OS.mkdir(path+"Materials")
-				path=path+"Materials"+OS.slash
-				File.open(path+"materials.mat",'w+'){ |f| #The file is opened
-					unsup=0
+				OS.mkdir("#{path}/Materials")
+				path="#{path}/Materials"
+				File.open("#{path}/materials.mat",'w+'){ |f| #The file is opened
 					mat_array.each do |mat|
 						f.write(self.get_mat_string(mat,false)+"\n\n")
 					end	
@@ -581,7 +571,7 @@ module IGD
 			# @param path [String] Directory to export the scene file
 			# @return [Void]	
 			def self.write_scene_file(path)
-				File.open(path+"scene.rad",'w+'){ |f| #The file is opened
+				File.open("#{path}/scene.rad",'w+'){ |f| #The file is opened
 					f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
 			
 					f.write("\n\n\n###### SKY \n\n")
@@ -619,8 +609,8 @@ module IGD
 
 			def self.write_sky(path)
 	
-				OS.mkdir(path+"Skies")
-				path=path+"Skies"+OS.slash
+				OS.mkdir("#{path}/Skies")
+				path="#{path}/Skies"
 
 				info=Sketchup.active_model.shadow_info
 				sun=info["SunDirection"]
@@ -629,7 +619,7 @@ module IGD
 				azi=floor.angle_between(Geom::Vector3d.new(0,-1,0)).radians
 				azi=-azi if sun.x>0
 	
-				File.open(path+"sky.rad",'w+'){ |f| #The file is opened
+				File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
 					f.write("\n\n\n###### DEFAULT SKY \n\n")			
 		
 					f.write("!gensky -ang #{alt} #{azi} +s\n\n")
@@ -646,6 +636,16 @@ module IGD
 			# @return sky_complement [String]	
 			def self.sky_complement
 				return 	"skyfunc\tglow\tskyglow\n0\n0\n4\t0.99\t0.99\t1.1\t0\n\nskyglow\tsource\tskyball\n0\n0\n4\t0\t0\t1\t360\n\n"
+			end
+	
+			# Get the white sky, for calculating DC matrix, for example
+			# 
+			# @author German Molina	
+			# @version 1.0
+			# @param bins [Integer] The number of reinhart subdivitions of the sky
+			# @return white_sky [String]	
+			def self.white_sky(bins)
+				return 	"\#@rfluxmtx h=u u=Y\nvoid glow ground_glow\n0\n0\n4 1 1 1 0\n\nground_glow source ground\n0\n0\n4 0 0 -1 180\n\n\#@rfluxmtx h=r#{bins} u=Y\nvoid glow sky_glow\n0\n0\n4 1 1 1 0\n\nsky_glow source sky\n0\n0\n4 0 0 1 180"
 			end
 	
 			# Export the ComponentDefinitions into separate files into "Components" folder.
@@ -666,10 +666,9 @@ module IGD
 					next if Labeler.solved_workplane?(h)
 
 					if first_exported then #create directories if there is actually something to export
-						s=OS.slash
 
-						OS.mkdir(path+"Components")
-						path=path+"Components"+s
+						OS.mkdir("#{path}/Components")
+						path="#{path}/Components"
 						first_exported=false
 					end
 
@@ -703,7 +702,7 @@ module IGD
 					end
 			
 			
-					File.open(path+hName+".rad",'w+'){ |f|
+					File.open("#{path}/#{hName}.rad",'w+'){ |f|
 						f.write mat_string+geom_string
 					}				
 
@@ -749,7 +748,7 @@ module IGD
 				min=box.min
 				pages=model.pages
 		
-				File.open(path+"scene.rif",'w+'){ |f| #The file is opened
+				File.open("#{path}/scene.rif",'w+'){ |f| #The file is opened
 					f.write("###############\n## RIF exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n\n\n")
 			
 					f.write("ZONE= I #{min.x.to_m} #{max.x.to_m} #{min.y.to_m} #{max.y.to_m} #{min.z.to_m}  #{max.z.to_m} \n")

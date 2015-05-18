@@ -33,7 +33,7 @@ module IGD
 		
 		
 		#########################################
-		if File.exists?("#{OS.main_groundhog_path}rad.cfg") then #if Radiance was once configured
+		if File.exists?("#{OS.main_groundhog_path}/rad.cfg") then #if Radiance was once configured
 			#load the Radiance path
 			Config.load_rad_config
 			rad_path=Config.radiance_path
@@ -193,6 +193,9 @@ module IGD
 					Rad.daylight_factor
 				}
 
+				GH_tools_menu.add_item("Calculate actual illuminance"){
+					Rad.actual_illuminance
+				}
 
 			### RESULTS SUBMENU
 
@@ -208,8 +211,7 @@ module IGD
 			GH_results_menu=groundhog_menu.add_submenu("Results")
 
 				GH_results_menu.add_item("Import results"){
-					
-					s=OS.slash	
+				
 					path=Exporter.getpath #it returns false if not successful
 					path="c:/" if not path
 					path=UI.openpanel("Open results file",path)
@@ -246,16 +248,14 @@ module IGD
 			### EXPORT
 			groundhog_menu.add_item("Export to Radiance") {
 				
-				s=OS.slash	
 				path=Exporter.getpath #it returns false if not successful
 				path="" if not path				
 
 				path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
 				
 				if path_to_save then
-					OS.mkdir(path_to_save)
-					path=path_to_save+s					
-					Exporter.export(path)
+					OS.mkdir(path_to_save)			
+					Exporter.export(path_to_save)
 				end
 			}
 
@@ -273,62 +273,55 @@ module IGD
 
 			GH_help_menu=groundhog_menu.add_submenu("Help")
 				GH_help_menu.add_item("Full Groundhog documentation") {
-					s=OS.slash	
 					wd=UI::WebDialog.new( 
 						"Full doc", true, "", 
 						700, 700, 100, 100, true )
-					wd.set_file( OS.main_groundhog_path+"doc"+s+"doc_index.html" )			
+					wd.set_file("#{OS.main_groundhog_path}/doc/doc_index.html" )			
 					wd.show()
 				}
 	
 				## Tutorials
 				GH_tutorials_menu=GH_help_menu.add_submenu("Tutorials")
 					GH_tutorials_menu.add_item("Getting Started") {
-						s=OS.slash	
 						wd=UI::WebDialog.new( 
 							"Tutorials", true, "", 
 							700, 700, 100, 100, true )
-						wd.set_file( OS.main_groundhog_path+"doc"+s+"file.GettingStarted.html" )			
+						wd.set_file( "#{OS.main_groundhog_path}/doc/file.GettingStarted.html" )			
 						wd.show()	
 					}
 					GH_tutorials_menu.add_item("Adding windows") {
-						s=OS.slash	
 						wd=UI::WebDialog.new( 
 							"Tutorials", true, "", 
 							700, 700, 100, 100, true )
-						wd.set_file( OS.main_groundhog_path+"doc"+s+"file.MakeWindow.html" )			
+						wd.set_file("#{OS.main_groundhog_path}/doc/file.MakeWindow.html" )			
 						wd.show()		
 					}
 					GH_tutorials_menu.add_item("Adding workplanes") {
-						s=OS.slash	
 						wd=UI::WebDialog.new( 
 							"Tutorials", true, "", 
 							700, 700, 100, 100, true )
-						wd.set_file( OS.main_groundhog_path+"doc"+s+"file.MakeWorkplane.html" )			
+						wd.set_file("#{OS.main_groundhog_path}/doc/file.MakeWorkplane.html" )			
 						wd.show()	
 					}
 					GH_tutorials_menu.add_item("Adding illums") {
-						s=OS.slash	
 						wd=UI::WebDialog.new( 
 							"Tutorials", true, "", 
 							700, 700, 100, 100, true )
-						wd.set_file( OS.main_groundhog_path+"doc"+s+"file.MakeIllum.html" )			
+						wd.set_file("#{OS.main_groundhog_path}/doc/file.MakeIllum.html" )			
 						wd.show()	
 					}
 					GH_tutorials_menu.add_item("Exporting views") {
-						s=OS.slash	
 						wd=UI::WebDialog.new( 
 							"Tutorials", true, "", 
 							700, 700, 100, 100, true )
-						wd.set_file( OS.main_groundhog_path+"doc"+s+"file.Views.html" )			
+						wd.set_file("#{OS.main_groundhog_path}/doc/file.Views.html" )			
 						wd.show()		
 					}
 					GH_tutorials_menu.add_item("Visualizing results") {
-						s=OS.slash	
 						wd=UI::WebDialog.new( 
 							"Tutorials", true, "", 
 							700, 700, 100, 100, true )
-						wd.set_file( OS.main_groundhog_path+"doc"+s+"file.ImportResults.html" )			
+						wd.set_file("#{OS.main_groundhog_path}/doc/file.ImportResults.html" )			
 						wd.show()		
 					}
 

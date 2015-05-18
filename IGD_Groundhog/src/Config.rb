@@ -15,6 +15,15 @@ module IGD
 				@@rad_config["RADIANCE_PATH"]
 			end		
 
+			# Gets the path where the weather files are supposed to be stored... must be configured by the user.
+			# @author German Molina
+			# @return path [String] The radiance bin path
+			def self.weather_path
+				return @@rad_config["WEATHER_PATH"] if @@rad_config["WEATHER_PATH"]!= nil
+				return "c:/"
+			end		
+
+
 			# Gets the preconfigured RVU options for previsualization
 			# @author German Molina
 			# @return options[String] The options
@@ -63,8 +72,7 @@ module IGD
 			# @author German Molina
 			# @return void
 			def self.load_rad_config
-				s=OS.slash
-				path="#{OS.main_groundhog_path}rad.cfg"
+				path="#{OS.main_groundhog_path}/rad.cfg"
 				UI.messagebox("It seems that you have not configured Groundhog yet.\nPlease do it.") if not File.exist?(path)
 				if not File.exist?(path) then
 					return false if not self.set_rad_config 
@@ -80,15 +88,16 @@ module IGD
 			# @return void			
 			def self.set_rad_config
 				
-				config_path="#{OS.main_groundhog_path}rad.cfg"
+				config_path="#{OS.main_groundhog_path}/rad.cfg"
 					
-				prompts = ["Radiance path","Threads", "RVU", "RCONTRIB", "RTRACE", "Sensor spacing"]
+				prompts = ["Radiance path","Weathers","Threads", "RVU", "RCONTRIB", "RTRACE", "Sensor spacing"]
 				
 				defaults=[]
 				old_path=false
 				if File.exists?(config_path) then
 					d=JSON.parse(File.open(config_path).read)
-					defaults << d["RADIANCE_PATH"].to_s
+					defaults << d["RADIANCE_PATH"]
+					defaults << d["WEATHER_PATH"]
 					old_path=d["RADIANCE_PATH"]
 					defaults << d["THREADS"].to_s
 					defaults << d["RVU"]
@@ -96,7 +105,7 @@ module IGD
 					defaults << d["RTRACE"]
 					defaults << d["SENSOR_SPACING"].to_s
 				else	
-					defaults = ["","1", "-ab 2 -ad 128","-ab 2 -ad 128","-ab 2 -ad 128", "0.5"]
+					defaults = ["","","1", "-ab 2 -ad 128","-ab 2 -ad 128","-ab 2 -ad 128", "0.5"]
 				end
 				
 				input=[]
@@ -108,33 +117,40 @@ module IGD
 					
 					#path
 					UI.messagebox("Please insert a non-empty path.") if input[0]=="" 
+					defaults[0]=input[0] #avoids erasing the well-written stuff
 					next if input[0]=="" 
 					UI.messagebox("Directory not found. Please insert another one.") if not File.directory?(input[0])
 					defaults[0]=input[0] #avoids erasing the well-written stuff
 					next if not File.directory?(input[0])
+					oconv="#{input[0]}/oconv.exe"
+					oconv="#{input[0]}/oconv" if OS.getsystem=="MAC"
+					UI.messagebox("Radiance binaries do not seem to be there! Please input the correct path.") if not File.exists?(oconv)
+					defaults[0]=input[0] #avoids erasing the well-written stuff
+					next if not File.exists?(oconv)
 					
 					#threads
-					input[1]=input[1].to_i
-					UI.messagebox("The number of threads must be an integer equal or greater than 1") if input[1] < 1
-					defaults[1]=input[1]
-					next if input[1] < 1
+					input[2]=input[2].to_i
+					UI.messagebox("The number of threads must be an integer equal or greater than 1") if input[2] < 1
+					defaults[2]=input[2]
+					next if input[2] < 1
 					
 					#spacing
-					input[5]=input[5].to_f
-					UI.messagebox("The sensor spacing must be a number greater than 0.") if input[5] <=0
-					defaults[5]=input[5]
-					next if input[5] <=0
+					input[6]=input[6].to_f
+					UI.messagebox("The sensor spacing must be a number greater than 0.") if input[6] <=0
+					defaults[6]=input[6]
+					next if input[6] <=0
 					
 					break #if it passed all the tests.
 				end
 				
 				#update the rad_config hash
 				@@rad_config["RADIANCE_PATH"]=input[0]
-				@@rad_config["THREADS"]=input[1].to_i
-				@@rad_config["RVU"]=input[2]				
-				@@rad_config["RCONTRIB"]=input[3]
-				@@rad_config["RTRACE"]=input[4]
-				@@rad_config["SENSOR_SPACING"]=input[5].to_f
+				@@rad_config["WEATHER_PATH"]=input[1]
+				@@rad_config["THREADS"]=input[2].to_i
+				@@rad_config["RVU"]=input[3]				
+				@@rad_config["RCONTRIB"]=input[4]
+				@@rad_config["RTRACE"]=input[5]
+				@@rad_config["SENSOR_SPACING"]=input[6].to_f
 				
 				#write the rad file
 				File.open(config_path,'w+'){ |f| 

@@ -30,6 +30,7 @@ module IGD
 			# @author German Molina
 			# @param [Void]
 			# @return [String] The corresponding Slash ("\\" for WIN and "/" for MAC or OTHER).
+			# @unused
 			def self.slash
 				os=self.getsystem
 		
@@ -45,14 +46,6 @@ module IGD
 			# @param path [String] The path with the directory to create
 			# @return [Void]
 			def self.mkdir(path)
-#				sys=self.getsystem
-#				if sys=="MAC" then
-#					#system("mkdir '"+path+"'")
-#				elsif sys=="WIN" then
-#					system('mkdir "'+path+'"')
-#				else
-#					return false
-#				end
 				Dir.mkdir(path) unless File.directory?(path)
 			end
 
@@ -62,11 +55,10 @@ module IGD
 			def self.main_groundhog_path
 		
 				files = Sketchup.find_support_file "IGD_Groundhog.rb" ,"Plugins"
-				s=self.slash
 				array=files.split("/")
-				array=array.first(array.length-1)
-				return array.join(s)+s+"IGD_Groundhog"+s
-	
+				array.pop
+				array.push("IGD_Groundhog")
+				return File.join(array)
 			end		
 
 			# Gets the path where a temporal Radiance project will be exported for analysis
@@ -74,11 +66,10 @@ module IGD
 			# @return path[Void] The tmp groundhog path
 			def self.tmp_groundhog_path
 		
-				files = Sketchup.find_support_file "IGD_Groundhog.rb" ,"Plugins"
-				s=self.slash
-				array=files.split("/")
-				array=array.first(array.length-1)
-				return array.join(s)+s+"IGD_Groundhog"+s+"tmp"+s	
+				dir=self.main_groundhog_path
+				array=dir.split("/")
+				array.push("tmp")
+				return File.join(array)
 			end		
 
 			
@@ -94,10 +85,7 @@ module IGD
 			# The commands need to be strings.
 			# @author German Molina
 			# @param void
-			def self.clear_path(path)
-				dirs=["Workplanes","Materials","Windows","Geometry","Illums","Results","Skies","Views", "Components"]
-				files=["octree.oct","scene.rad","scene.rif"]
-				
+			def self.clear_path(path)				
 				FileUtils.cd(path) do
 					self.clear_actual_path
 				end
@@ -107,18 +95,21 @@ module IGD
 
 			# Removes everything from the actual path
 			# The commands need to be strings.
+			# @version 0.3
 			# @author German Molina
 			# @param void
 			def self.clear_actual_path
-				dirs=["Workplanes","Materials","Windows","Geometry","Illums","Results","Skies","Views", "Components"]
-				files=["octree.oct","scene.rad","scene.rif"]								
-				dirs.each do |dir|
-					next if not File.directory?(dir)
-					FileUtils.rm_rf(dir)
+				dirs=["Workplanes","Materials","Windows","Geometry","Illums","Results","Skies","Views", "Components", "DC"]
+				files=["*.oct","scene.rad","scene.rif","*.amb","*.wea","*.epw"]		
+										
+				dirs.each do |dir|				
+					FileUtils.rm_rf(dir) if File.directory?(dir)
 				end
 			
 				files.each do |fl|
-					File.delete(fl) if File.exists?(fl)					
+					Dir[fl].each do |fd| 
+						File.delete(fd) #this double loop allows using wildcards
+					end
 				end
 				
 				return true
