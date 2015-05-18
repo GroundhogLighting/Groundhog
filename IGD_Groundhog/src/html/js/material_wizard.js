@@ -21,8 +21,9 @@ function calcLight(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
+	alpha=0
 	
-	var query = 'skp:get_material_JSON@{"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
+	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
 }
 
@@ -48,8 +49,9 @@ function calcGlow(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
+	alpha=0
 	
-	var query = 'skp:get_material_JSON@{"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
+	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
 }
 
@@ -86,8 +88,9 @@ function calcSpotLight(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
+	alpha=0
 	
-	var query = 'skp:get_material_JSON@{"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
+	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
 }		
 
@@ -119,8 +122,9 @@ function calcPlastic(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
+	alpha=0
 	
-	var query = 'skp:get_material_JSON@{"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
+	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
 }		
 
@@ -151,8 +155,9 @@ function calcMetal(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
+	alpha=0
 	
-	var query = 'skp:get_material_JSON@{"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
+	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
 }
 
@@ -185,8 +190,9 @@ function calcTrans(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
+	alpha=parseFloat(trans)
 	
-	var query = 'skp:get_material_JSON@{"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
+	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
 }	
 
@@ -225,8 +231,9 @@ function calcDielectric(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
+	alpha=0.5
 	
-	var query = 'skp:get_material_JSON@{"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
+	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
 }	
 
@@ -257,8 +264,9 @@ function calcGlass(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
+	alpha=1.0-(parseFloat(red)*0.265+parseFloat(green)*0.67+parseFloat(blue)*0.065)
 	
-	var query = 'skp:get_material_JSON@{"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
+	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
 }	
 
