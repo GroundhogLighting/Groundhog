@@ -3,15 +3,42 @@ module IGD
 		module Rad
 			#This module calls Radiance for performing calculations
 
-			# Calculates the simplest DC matrix
+			# Calculates the UDI using the simplest DC matrix
 			# @author German Molina
 			# @param bins [Integer] The sky subdivition		
-			def self.calc_annual_illuminance(bins)				
-				return if not self.calc_DC(bins)
+			# @return success [Boolean]
+			def self.calc_UDI(bins)
+				
+				return false if not self.calc_DC_annual_illuminance(bins)
+				path=OS.tmp_groundhog_path
+				FileUtils.cd(path) do						
+					wps=Dir["Workplanes/*"]
+				
+					wps.each do |workplane| #calculate UDI for each workplane
+						info=workplane.split("/")
+						name=info[1].split(".")[0]
+						array=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", 200, 2000)
+						return if not array #if the format was wrong, for example
+
+						uv=Results.get_UV(array)
+						Results.draw_pixels(uv[0],uv[1],array,name)
+						min_max=Results.get_min_max_from_model
+						Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
+					end
+				end
+				return true
+			end
+
+
+			# Calculates the annual illuminance using the simplest DC matrix
+			# @author German Molina
+			# @param bins [Integer] The sky subdivition		
+			# @return success [Boolean]
+			def self.calc_DC_annual_illuminance(bins)				
+				return false if not self.calc_DC(bins)
 				path=OS.tmp_groundhog_path
 				FileUtils.cd(path) do
 					script=[]
-					results=[]
 					wps=Dir["Workplanes/*"]
 
 					#Asks for weather file (EPW or WEA)
@@ -22,7 +49,6 @@ module IGD
 					OS.mkdir("Results")
 								
 					extension=path.split(".").pop
-					puts extension
 					UI.messagebox("Please choose a EPW or WEA file.") if extension != "wea" and extension != "epw"
 					return false if extension != "wea" and extension != "epw"
 					weaname=path.tr("\\","/").split("/").pop.tr("#{extension}","")
@@ -34,25 +60,14 @@ module IGD
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						results << name
 						#OSX
-						script << "gendaymtx -m #{bins} #{weaname}wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_udi.txt" if OS.getsystem=="MAC"
+						script << "gendaymtx -m #{bins} #{weaname}wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
 						#WIN
-						script << "gendaymtx -m #{bins} #{weaname}wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_udi.txt" if OS.getsystem=="WIN"
+						script << "gendaymtx -m #{bins} #{weaname}wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
 					end
 				
 					return false if not OS.execute_script(script)
-					
-					
-					results.each do |res|
-						array=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{res}_udi.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{res}.pts", 200, 2000)
-						return if not array #if the format was wrong, for example
-	
-						uv=Results.get_UV(array)
-						Results.draw_pixels(uv[0],uv[1],array,name)
-						min_max=Results.get_min_max_from_model
-						Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
-					end
+					return true
 				end
 			end
 			
@@ -60,9 +75,11 @@ module IGD
 			# Calculates the simplest DC matrix
 			# @author German Molina
 			# @param bins [Integer] The sky subdivition		
+			# @return success [Boolean]
 			def self.calc_DC(bins)
 				path=OS.tmp_groundhog_path
-				Exporter.export(path)
+				return false if not Exporter.export(path)
+				
 				FileUtils.cd(path) do
 					if not File.directory?("Workplanes") 
 						UI.messagebox("There are no workplanes to calculate")
@@ -154,7 +171,7 @@ module IGD
 			# @param void			
 			def self.daylight_factor
 				path=OS.tmp_groundhog_path
-				Exporter.export(path)
+				return false if not Exporter.export(path)
 				FileUtils.cd(path) do
 					if not File.directory?("Workplanes") 
 						UI.messagebox("There are no workplanes to calculate")

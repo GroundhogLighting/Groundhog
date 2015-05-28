@@ -58,31 +58,42 @@ module IGD
 				
 				return false if not File.exist?(results_path)
 				return false if not File.exist?(workplane_file)
-				
+	
 				results=File.open(results_path).read.split("\n").collect!{|x| x.to_f}
 				n_results=results.length
-				
+	
 				sensors=File.open(workplane_file).read.split("\n")	
 				n_sensors=sensors.length
-				
+	
 				warn "Weather file does not seem to have 8760 hours!!" if n_results/n_sensors != 8760
-						
+			
 				ret=[]
 				sensors.each do |line|
 					line.strip!
 					sensor=line.split("\t")					
 					ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
 				end	
-				
-				for i in 1..8760
-					ret.each do |sensor|
+
+				#assuming they alternate hour
+				ret.each do |sensor|
+					for i in 1..8760
 						ill=results.shift
 						next if ill > max
 						next if ill < min
 						sensor[3]+=100.0/8760.0
 					end
 				end
-		
+			
+			#	#assuming they alternate sensor
+			#	for i in 1..8760
+			#		ret.each do |sensor|
+			#			ill=results.shift						
+			#			next if ill > max
+			#			next if ill < min
+			#			sensor[3]+=100.0/8760.0
+			#		end
+			#	end		
+
 				return ret
 			end
 	
@@ -253,11 +264,11 @@ module IGD
 						entities=defi.entities
 						entities.each do |pixel|
 							next if not Labeler.face?(pixel) or not Labeler.result_pixel?(pixel)
-							# not we are sure ent is a pixel.
+							# now we are sure ent is a pixel.
 				
 							value=Labeler.get_value(pixel)
 				
-							color=self.get_pixel_color(value,max,min) #minimum scale will always be 0.
+							color=self.get_pixel_color(value,max,min) 
 							pixel.material=color
 							pixel.back_material=color
 					

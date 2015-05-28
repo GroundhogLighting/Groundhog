@@ -21,7 +21,7 @@ function calcLight(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
-	alpha=0
+	alpha=1
 	
 	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
@@ -49,7 +49,7 @@ function calcGlow(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
-	alpha=0
+	alpha=1
 	
 	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
@@ -88,7 +88,7 @@ function calcSpotLight(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
-	alpha=0
+	alpha=1
 	
 	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
@@ -122,7 +122,7 @@ function calcPlastic(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
-	alpha=0
+	alpha=1
 	
 	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
@@ -155,7 +155,7 @@ function calcMetal(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
-	alpha=0
+	alpha=1
 	
 	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;
@@ -190,7 +190,7 @@ function calcTrans(){
 	render_red=red;
 	render_green=green;
 	render_blue=blue;
-	alpha=parseFloat(trans)
+	alpha=parseFloat(1-trans)
 	
 	var query = 'skp:get_material_JSON@{"alpha":'+alpha+',"name":"'+name+'","red":'+render_red+',"green":'+render_green+', "blue":'+render_blue+', "mod_type":"'+mod_type+'", "argument":"'+argument+'"}';
 	window.location.href = query;

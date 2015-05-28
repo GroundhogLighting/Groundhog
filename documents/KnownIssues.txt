@@ -1,0 +1,15 @@
+# @markup markdown
+# @title Known issues
+# @author German Molina
+
+#Known issues
+
+##Exporting problems
+- Copying and pasting windows, walls, workplanes or any surface with a name will end in repeated names... that causes errors when exporting.
+
+##Simulation problems
+- Radiance multithreading does not seem to be working on OSX. I think that is a problem of compatibility between Radiance and OSX
+- Radiance multithreading is not supported on Windows
+
+##Creating materials problems
+- Issues may be found when inputing an incomplete numbers on forms. That is, ".7" instead of "0.7".
