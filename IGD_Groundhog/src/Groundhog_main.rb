@@ -33,7 +33,7 @@ module IGD
 		
 		
 		#########################################
-		if File.exists?("#{OS.main_groundhog_path}/rad.cfg") then #if Radiance was once configured
+		if File.exists?("#{OS.main_groundhog_path}/config") then #if Radiance was once configured
 			#load the Radiance path
 			Config.load_rad_config
 			rad_path=Config.radiance_path
@@ -263,11 +263,14 @@ module IGD
 	
 			### PREFERENCES MENU
 			
-			GH_preferences_menu=groundhog_menu.add_submenu("Preferences")
-				GH_preferences_menu.add_item("Radiance preferences") {
-					Config.set_rad_config
-				}
-	
+#			GH_preferences_menu=groundhog_menu.add_submenu("Preferences")
+#				GH_preferences_menu.add_item("Radiance preferences") {
+#					Config.set_rad_config
+#				}
+				
+			groundhog_menu.add_item("Preferences") {
+				Config.show_config
+			}
 	
 			### HELP MENU
 
@@ -327,7 +330,7 @@ module IGD
 
 			# Add the About.
 			groundhog_menu.add_item("About Groundhog"){
-				UI.messagebox "Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+"\n\nCreator:\n"+Sketchup.extensions["Groundhog"].creator+"\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
+				UI.messagebox "Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+"\n\nCreator and support contact:\n"+Sketchup.extensions["Groundhog"].creator+"\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
 			}
 
 	end #end module

@@ -45,14 +45,6 @@ module IGD
 				@@rad_config["RCONTRIB"]
 			end
 
-			# Gets the number of threads to be used by Radiance programs.
-			#	Windows always returns 1.
-			# @author German Molina
-			# @return n_threads [String] The number of threads
-			def self.n_threads
-				return "1" if OS.getsystem == "Win"
-				return @@rad_config["THREADS"]				
-			end	
 			
 			# Gets the spacing between workplane sensors
 			# @author German Molina
@@ -72,100 +64,113 @@ module IGD
 			# @author German Molina
 			# @return void
 			def self.load_rad_config
-				path="#{OS.main_groundhog_path}/rad.cfg"
+				path="#{OS.main_groundhog_path}/config"
 				UI.messagebox("It seems that you have not configured Groundhog yet.\nPlease do it.") if not File.exist?(path)
 				if not File.exist?(path) then
-					return false if not self.set_rad_config 
+					return false if not self.show_config 
 				end
 				
 				@@rad_config=JSON.parse(File.open(path).read)
 				return true
 			end
 
-			# Asks the user for the information to put in the config file.
-			# After that, it writes it down.
+			# Opens the configuration web dialog and adds the appropriate action_callback
+			#
 			# @author German Molina
-			# @return void			
-			def self.set_rad_config
+			# @param void
+			# @return success [Boolean] Only when the preferences are saved
+			# @version 0.4
+			def self.show_config
 				
-				config_path="#{OS.main_groundhog_path}/rad.cfg"
-					
-				prompts = ["Radiance path","Weathers","Threads", "RVU", "RCONTRIB", "RTRACE", "Sensor spacing"]
+				config_path="#{OS.main_groundhog_path}/config"
 				
-				defaults=[]
-				old_path=false
-				if File.exists?(config_path) then
-					d=JSON.parse(File.open(config_path).read)
-					defaults << d["RADIANCE_PATH"]
-					defaults << d["WEATHER_PATH"]
-					old_path=d["RADIANCE_PATH"]
-					defaults << d["THREADS"].to_s
-					defaults << d["RVU"]
-					defaults << d["RCONTRIB"]
-					defaults << d["RTRACE"]
-					defaults << d["SENSOR_SPACING"].to_s
-				else	
-					defaults = ["","","1", "-ab 2 -ad 128","-ab 2 -ad 128","-ab 2 -ad 128", "0.5"]
+				wd=UI::WebDialog.new( 
+					"Preferences", false, "", 
+					530, 450, 100, 100, false )
+
+				wd.set_file("#{OS.main_groundhog_path}/src/html/preferences.html" )
+
+				wd.execute_script("document.getElementById('rvu').value='-ab 3';")
+				wd.show				
+
+				wd.add_action_callback("onLoad") do |web_dialog,msg|
+					old_path=false
+					if File.exists?(config_path) then
+						d=JSON.parse(File.open(config_path).read)
+						script=""
+						script+="document.getElementById('rad_path').value='#{d['RADIANCE_PATH']}';" if d["RADIANCE_PATH"] != ""
+						old_path=d["RADIANCE_PATH"] if d["RADIANCE_PATH"] != nil
+						script+="document.getElementById('weather_path').value=' #{d['WEATHER_PATH']}';" if d["WEATHER_PATH"] != ""
+						script+="document.getElementById('rvu').value='#{d['RVU']}';" if d["RVU"] != ""
+						script+="document.getElementById('rcontrib').value='#{d['RCONTRIB']}';" if d["RCONTRIB"] != ""
+						script+="document.getElementById('rtrace').value='#{d['RTRACE']}';" if d["RTRACE"] != ""
+						script+="document.getElementById('sensor_spacing').value='#{d['SENSOR_SPACING']}';"	 if d["SENSOR_SPACING"] != ""			
+
+						#fill defaults of them that are not specified
+						script+="document.getElementById('rvu').value='-ab 3';" if d["RVU"] == ""
+						script+="document.getElementById('rcontrib').value='-ab 4 -ad 1024';" if d["RCONTRIB"] == ""
+						script+="document.getElementById('rtrace').value='-ab 4 -ad 1024';" if d["RTRACE"] == ""
+
+						web_dialog.execute_script(script);
+					else					
+						script=""
+						script+="document.getElementById('rvu').value='-ab 3';"
+						script+="document.getElementById('rcontrib').value='-ab 4 -ad 1024';"
+						script+="document.getElementById('rtrace').value='-ab 4 -ad 1024';"
+
+						web_dialog.execute_script(script);
+
+					end
 				end
 				
-				input=[]
-				while true do #this will bother the users until it inserts valid inputs OR desists.
-					input = UI.inputbox(prompts, defaults, "Please configure the Radiance parameters")
-					return false if not input #if the user press "cancel"
+
+				wd.add_action_callback("set_radiance_preferences") do |web_dialog,msg|
+					config=JSON.parse(msg)
 					
-					#now we test the inputs
+					old_path=@@rad_config["RADIANCE_PATH"]
 					
-					#path
-					UI.messagebox("Please insert a non-empty path.") if input[0]=="" 
-					defaults[0]=input[0] #avoids erasing the well-written stuff
-					next if input[0]=="" 
-					UI.messagebox("Directory not found. Please insert another one.") if not File.directory?(input[0])
-					defaults[0]=input[0] #avoids erasing the well-written stuff
-					next if not File.directory?(input[0])
-					oconv="#{input[0]}/oconv.exe"
-					oconv="#{input[0]}/oconv" if OS.getsystem=="MAC"
-					UI.messagebox("Radiance binaries do not seem to be there! Please input the correct path.") if not File.exists?(oconv)
-					defaults[0]=input[0] #avoids erasing the well-written stuff
-					next if not File.exists?(oconv)
-					
-					#threads
-					input[2]=input[2].to_i
-					UI.messagebox("The number of threads must be an integer equal or greater than 1") if input[2] < 1
-					defaults[2]=input[2]
-					next if input[2] < 1
-					
-					#spacing
-					input[6]=input[6].to_f
-					UI.messagebox("The sensor spacing must be a number greater than 0.") if input[6] <=0
-					defaults[6]=input[6]
-					next if input[6] <=0
-					
-					break #if it passed all the tests.
+					@@rad_config["RADIANCE_PATH"]=config["RADIANCE_PATH"]
+					@@rad_config["WEATHER_PATH"]=config["WEATHER_PATH"]
+					@@rad_config["RVU"]=config["RVU"]
+					@@rad_config["RCONTRIB"]=config["RCONTRIB"]
+					@@rad_config["RTRACE"]=config["RTRACE"]						
+											
+					if OS.check_Radiance_Path(config["RADIANCE_PATH"]) then
+						
+						#write the rad file
+						File.open(config_path,'w+'){ |f| 
+							f.write(@@rad_config.to_json)
+						}		
+						
+						#update the Radiance path
+						if not old_path then
+							ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
+						else
+							ENV["PATH"]=ENV["PATH"].split(old_path).join(Config.radiance_path) #erase the old one and replace it
+						end		
+
+						UI.messagebox("Preferences saved") 
+					else
+						UI.messagebox("Radiance does not seem to be where you told us, or maybe such directory does not even exist.")
+					end								
 				end
 				
-				#update the rad_config hash
-				@@rad_config["RADIANCE_PATH"]=input[0]
-				@@rad_config["WEATHER_PATH"]=input[1]
-				@@rad_config["THREADS"]=input[2].to_i
-				@@rad_config["RVU"]=input[3]				
-				@@rad_config["RCONTRIB"]=input[4]
-				@@rad_config["RTRACE"]=input[5]
-				@@rad_config["SENSOR_SPACING"]=input[6].to_f
-				
-				#write the rad file
-				File.open(config_path,'w+'){ |f| 
-					f.write(@@rad_config.to_json)
-				}		
-				
-				#update the path
-				if not old_path then
-					ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
-				else
-					ENV["PATH"]=ENV["PATH"].split(old_path).join(Config.radiance_path) #erase the old one and replace it
-				end			
-				
-				return true								
+				wd.add_action_callback("set_general_preferences") do |web_dialog,msg|
+					config=JSON.parse(msg)
+					@@rad_config["SENSOR_SPACING"]=config["SENSOR_SPACING"]
+					
+					#sensor spacing is validated within the javascript
+																	
+					#write the rad file
+					File.open(config_path,'w+'){ |f| 
+						f.write(@@rad_config.to_json)
+					}		
+					UI.messagebox("Preferences saved") 												
+				end
+		
 			end
+
+
 						
 		end
 	end

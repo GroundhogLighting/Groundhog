@@ -15,7 +15,7 @@ rm *tmphtml
 cd ..
 
 #rm config file
-rm -f IGD_Groundhog/rad.cfg
+rm -f IGD_Groundhog/config
 
 #Include new doc into the main Groundhog directory
 rm -fr IGD_Groundhog/doc

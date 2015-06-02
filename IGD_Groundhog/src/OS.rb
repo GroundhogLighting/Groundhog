@@ -149,6 +149,32 @@ module IGD
 				end
 				return true
 			end
+			
+			# Looks for OCONV program to check if the given Radiance path contains Radiance
+			# @author German Molina
+			# @param path [String] The path where Radiance is supposed to be
+			# @return success [Boolean] True if oconv is there, false if not.
+			def self.check_Radiance_Path(path)			
+				return false if path==nil
+				return false if not File.directory?(path)
+				
+				oconv="#{path}/oconv.exe"
+				oconv="#{path}/oconv" if OS.getsystem=="MAC"
+				return File.exists?(oconv)
+			end
+			
+			# Checks if Radiance is installed. If not, it will offer for configuration... the user can say no.
+			# @author German Molina
+			# @param void
+			# @return status [Boolean] True if Radiance was installed... if not, it offers to do it, and return false
+			def self.ask_about_Radiance
+				return true if self.check_Radiance_Path(Config.radiance_path) #return true if it is installed			
+				#if there is no Radiance Path
+				result = UI.messagebox("Radiance does not seem to be configured with Groundhog.\nWould you like to set it up now?", MB_YESNO)
+				Config.show_config if result==IDYES
+				return false				
+			end
+			
 
 		end
 	end #end module

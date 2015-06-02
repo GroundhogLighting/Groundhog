@@ -8,7 +8,7 @@ module IGD
 			# @param bins [Integer] The sky subdivition		
 			# @return success [Boolean]
 			def self.calc_UDI(bins)
-				
+				return false if not OS.ask_about_Radiance				
 				return false if not self.calc_DC_annual_illuminance(bins)
 				path=OS.tmp_groundhog_path
 				FileUtils.cd(path) do						
@@ -34,7 +34,8 @@ module IGD
 			# @author German Molina
 			# @param bins [Integer] The sky subdivition		
 			# @return success [Boolean]
-			def self.calc_DC_annual_illuminance(bins)				
+			def self.calc_DC_annual_illuminance(bins)	
+				return false if not OS.ask_about_Radiance						
 				return false if not self.calc_DC(bins)
 				path=OS.tmp_groundhog_path
 				FileUtils.cd(path) do
@@ -77,6 +78,8 @@ module IGD
 			# @param bins [Integer] The sky subdivition		
 			# @return success [Boolean]
 			def self.calc_DC(bins)
+				return false if not OS.ask_about_Radiance			
+				
 				path=OS.tmp_groundhog_path
 				return false if not Exporter.export(path)
 				
@@ -117,6 +120,7 @@ module IGD
 			# @author German Molina
 			# @param void			
 			def self.actual_illuminance
+				return false if not OS.ask_about_Radiance			
 				path=OS.tmp_groundhog_path
 				return false if not Exporter.export(path)
 				
@@ -150,9 +154,9 @@ module IGD
 						name=info[1].split(".")[0]
 						results << name
 						#for OSX
-						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} -n #{Config.n_threads} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results/#{name}.txt" if OS.getsystem=="MAC"
+						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results/#{name}.txt" if OS.getsystem=="MAC"
 						#for Windows
-						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} -n #{Config.n_threads} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)\" > Results/#{name}.txt" if OS.getsystem=="WIN"
+						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)\" > Results/#{name}.txt" if OS.getsystem=="WIN"
 					end
 				
 					success=OS.execute_script(script)
@@ -170,6 +174,7 @@ module IGD
 			# @author German Molina
 			# @param void			
 			def self.daylight_factor
+				return false if not OS.ask_about_Radiance			
 				path=OS.tmp_groundhog_path
 				return false if not Exporter.export(path)
 				FileUtils.cd(path) do
@@ -202,9 +207,9 @@ module IGD
 						name=info[1].split(".")[0]
 						results << name
 						#for OSX
-						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} -n #{Config.n_threads} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100' > Results/#{name}.txt" if OS.getsystem=="MAC"
+						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100' > Results/#{name}.txt" if OS.getsystem=="MAC"
 						#for Windows
-						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} -n #{Config.n_threads} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100\" > Results/#{name}.txt" if OS.getsystem=="WIN"
+						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100\" > Results/#{name}.txt" if OS.getsystem=="WIN"
 					end
 				
 					success=OS.execute_script(script)
@@ -220,11 +225,15 @@ module IGD
 
 			# Calls RVU for previewing the actual scene from the current view and sky.
 			# @author German Molina
-			# @param void			
+			# @param void	
+			# @return success [Boolean]
 			def self.rvu
+				return false if not OS.ask_about_Radiance
+	
 				path=OS.tmp_groundhog_path
 				Exporter.export(path)
-				
+	
+				success=false
 				FileUtils.cd(path) do	
 					script=[]
 								
@@ -234,11 +243,12 @@ module IGD
 					winstring="" if winstring.length==0
 					script << "oconv ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
 				
-					script << "rvu #{Config.rvu_options} -n #{Config.n_threads} -vf Views/view.vf octree.oct"
+					script << "rvu #{Config.rvu_options} -vf Views/view.vf octree.oct"
 
 					success = OS.execute_script(script)
 					OS.clear_actual_path
 				end	
+				return success
 			end
 		
 		

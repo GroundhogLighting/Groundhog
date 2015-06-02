@@ -347,7 +347,7 @@ module IGD
 					"Scale handler", false, "", 
 					180, 380, 100, 100, false )
 
-				wd.set_file("#{OS.main_groundhog_path}/src/html/scale.html" )
+				wd.set_file("#{OS.main_groundhog_path}/src/html/scale.html" )		
 		
 				wd.add_action_callback("update_scale") do |web_dialog,msg|
 					scale=JSON.parse(msg)
@@ -363,10 +363,11 @@ module IGD
 			
 					Results.update_pixel_colors(min,max)
 			
-					web_dialog.execute_script("document.getElementById('min').value="+min.to_s+";""document.getElementById('max').value="+max.to_s+";");
+					web_dialog.execute_script("document.getElementById('min').value="+min.to_s+";document.getElementById('max').value="+max.to_s+";");
 				end
 		
 				wd.show()
+
 			end
 	
 

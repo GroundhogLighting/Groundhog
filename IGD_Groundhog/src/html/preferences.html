@@ -1,0 +1,94 @@
+
+<html>
+	<head>
+		<title>Groundhog Preferences</title>
+		<meta charset="UTF-8">
+	</head>
+	<link rel="stylesheet" type="text/css" href="css/general.css">
+	<link rel="stylesheet" type="text/css" href="css/tabs.css">
+	<body>
+
+
+				<ul id="tabs">
+					<li>
+						<a class="selected" href="#general">General</a>
+					</li>
+					<li>
+						<a href="#radiance">Radiance</a>
+					</li>
+													
+				</ul>
+ 
+ 
+ 
+ 
+			   <div id="general" class="tabContent">
+					<h2>General preferences</h2>
+					<p>Please set up Groundhog.</p>
+					<div class="more_info">
+						More info
+						<div class="tooltip">
+							<p>Sensor spacing is the desired distance between measurement points in workplanes, in meters.</p>
+						</div>	
+					</div>
+					<br>
+					<table>										
+					  <tr>
+						<td>Sensor spacing (m)</td>
+						<td><input type="text" size="5" id="sensor_spacing"></td>		
+					  </tr>					 
+					</table>
+					<p align="center"> <button onclick='set_general_preferences()'> Save general preferences </button></p>		
+				</div>
+				
+				
+				
+				
+				<div id="radiance" class="tabContent hide">
+					<h2>Radiance Preferences</h2>
+					<p>Please set up Radiance simulation parameters, paths and others.</p>
+					<div class="more_info">
+						More info
+						<div class="tooltip">
+							<p>Rvu is the programs that allows previewing.</p>
+							<p>Rcontrib is used for annual simulations.</p>
+							<p>Rtrace is used for 'Daylight Factor' and 'Actual Illuminance' calculations.</p>							
+						</div>	
+					</div>
+					<br>	
+					<table>
+	
+										
+					  <tr>
+						<td>Radiance path</td>
+						<td><input type="text" size="42" id="rad_path"></td>		
+					  </tr>
+					  <tr>
+						<td>Weathers path</td>
+						<td><input type="text" size="42" id="weather_path"></td>		
+					  </tr>
+					  <tr>
+						<td>Rvu options</td>
+						<td><input type="text" size="42" id="rvu"></td>		
+					  </tr>
+					  <tr>
+						<td>Rcontrib options</td>
+						<td><input type="text" size="42" id="rcontrib"></td>		
+					  </tr>
+					  <tr>
+						<td>Rtrace options</td>
+						<td><input type="text" size="42" id="rtrace"></td>		
+					  </tr>
+					</table>
+					<p align="center"> <button onclick='set_radiance_preferences()'> Save Radiance preferences </button></p>		   
+				</div>		
+				
+				
+						   
+					
+
+	</body>
+	
+	 <script src="js/tabs.js"></script> 
+	 <script src="js/preferences.js"></script> 
+</html>
