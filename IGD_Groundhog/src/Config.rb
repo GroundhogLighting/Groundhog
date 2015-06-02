@@ -63,7 +63,7 @@ module IGD
 			# If the file does not exist, it ask you to fill it.
 			# @author German Molina
 			# @return void
-			def self.load_rad_config
+			def self.load_config
 				path="#{OS.main_groundhog_path}/config"
 				UI.messagebox("It seems that you have not configured Groundhog yet.\nPlease do it.") if not File.exist?(path)
 				if not File.exist?(path) then

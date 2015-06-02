@@ -34,15 +34,7 @@ module IGD
 		
 		#########################################
 		if File.exists?("#{OS.main_groundhog_path}/config") then #if Radiance was once configured
-			#load the Radiance path
-			Config.load_rad_config
-			rad_path=Config.radiance_path
-			if rad_path ==nil
-				UI.messagebox("It seems that your configuration has some problem. Please re-configure it.")
-				Config.show_config
-			else
-				ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
-			end
+			Config.load_config			
 		end
 			
 		#########################################
