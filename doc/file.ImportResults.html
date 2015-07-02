@@ -62,86 +62,104 @@
     <iframe id="search_frame"></iframe>
 
     <div id="content"><div id='filecontents'>
-<h1>Importing results for data visualization</h1>
+<h1 id="label-Importing+results+for+data+visualization">Importing results for data visualization</h1>
 
+<p>After exporting a model and performing a simulation or calculation, it is
+often very important to see the results you
+generated (i.e. Daylight
+factor, lux, or other) within the model, so you and people who are going
+to
+see your analysis can visualize the spacial lighting distribution. This
+can lead to diagnostics and enhancement of the design.</p>
 
-<p align="justify">
-After exporting a model and performing a simulation or calculation, it is often very important to see the results you 
-generated (i.e. Daylight factor, lux, or other) within the model, so you and people who are going to 
-see your analysis can visualize the spacial lighting distribution. This can lead to diagnostics and enhancement of the design.
-</p>
-<p align="justify">
-Groundhog, even if it does not allow (yet) performing calculations, it helps you visualize the results on the space.
-</p>
+<p>Groundhog, even if it does not allow (yet) performing calculations, it
+helps you visualize the results on the space.</p>
 
-<h2>Import results</h2>
+<h2 id="label-Import+results">Import results</h2>
 
-<h3>Step 1: Include workplanes in the model</h3>
-<p align="justify">See that specific tutorial. It is easy.</p>
-<figure align="center">
-<img src="ImportResults/fig1.png" alt="Create workplanes">
-<figcaption>Figure 1: First step - Include Workplanes in the model</figcaption>
-</figure>
+<h3 id="label-Step+1%3A+Include+workplanes+in+the+model">Step 1: Include workplanes in the model</h3>
 
-<h3>Step 2: Export the model and perform some calculations</h2>
-<p align="justify">
-The file that contains the results needs to be a four-column list of tab-separated parameters, without any header.
-Each line (row) will be the result for one sensor, and the four values correspond to the X,Y,Z position
-and the value calculated for such sensor. This value can correspond to whatever you want (Lux, Daylight factor or other)
-</p>
+<p>See that specific tutorial. It is easy.
+&lt;figure
+align=&quot;center&quot;&gt;
+&lt;img src=&quot;ImportResults/fig1.png&quot;
+alt=&quot;Create workplanes&quot;&gt;
+&lt;figcaption&gt;Figure 1: First
+step - Include Workplanes in the model&lt;/figcaption&gt;
+&lt;/figure&gt;</p>
 
-<p align="justify">
-Below is an example of a file
-</p>
-<p style="font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;">
-0.0	0.0	0.8	2.3<br>
-0.0	0.5	0.8	2.1<br>
-0.0	1.0	0.8	1.8<br>
-0.0	1.5	0.8	1.5<br>
-...
-</p>
+<h3 id="label-Step+2%3A+Export+the+model+and+perform+some+calculations">Step 2: Export the model and perform some calculations</h3>
 
-<p align="justify">
-All kind of results may be obtained with RTRACE and RCONTRIB programs, and the format may be arranged by using RCALC.
-</p>
-<p align="justify">
-An example, getting the Lux of a certain scene:
-</p>
+<p>The file that contains the results needs to be a four-column list of
+tab-separated parameters, without any header.
+Each line (row) will be the
+result for one sensor, and the four values correspond to the X,Y,Z
+position
+and the value calculated for such sensor. This value can
+correspond to whatever you want (Lux, Daylight factor or other)</p>
 
-<p style="font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;">
-rtrace -h -oov [options] octree < Workplanes/Grid.pts | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results.txt
-</p>
+<p>Below is an example of a file</p>
 
+<p>&lt;p style=“font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida
+Typewriter,monospace;”&gt;
+0.0 0.0 0.8 2.3<br>
+0.0 0.5 0.8 2.1<br>
+0.0 1.0
+0.8 1.8<br>
+0.0 1.5 0.8 1.5<br>
+...</p>
 
-<h3>Step 3: Import results</h3>
-<p align="justify">Go to the menu Plugins (Extensions)--> Groundhog --> Import Results, and look for the file you want to import.</p>
+<p>All kind of results may be obtained with RTRACE and RCONTRIB programs, and
+the format may be arranged by using RCALC.</p>
 
+<p>An example, getting the Lux of a certain scene:</p>
 
+<pre class="code ruby"><code class="ruby">rtrace -h -oov [options] octree &lt; Workplanes/Grid.pts | rcalc -e &#39;$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)&#39; &gt; Results.txt</code></pre>
 
-<h3>Step 4: Analyse results</h3>
+<h3 id="label-Step+3%3A+Import+results">Step 3: Import results</h3>
 
-<p>Groundhog allows importing results from multiple workplanes in the same model, so an entire space can be analyzed easily. However, 
-the only way of comparing results from different workplanes is to have one single scale for the entire model.</p>
+<p>Go to the menu Plugins (Extensions)–&gt; Groundhog –&gt; Import Results,
+and look for the file you want to import.</p>
 
-<p>Accordingly, every time a set of results is imported, the scale is reset in order to cover from 
-the minimum result value to the maximum. That means that when you import a second workplane, the colors 
-of the first one will probably change.</p>
+<h3 id="label-Step+4%3A+Analyse+results">Step 4: Analyse results</h3>
 
-<figure align="center">
-<img src="ImportResults/fig4.png" alt="Import Results">
-<figcaption>Figure 2: Fourth step - See the results</figcaption>
-</figure>
+<p>Groundhog allows importing results from multiple workplanes in the same
+model, so an entire space can be analyzed easily. However,
+the only way of
+comparing results from different workplanes is to have one single scale for
+the entire model.</p>
 
-<p>However, in some cases, it might be useful to choose your own scale. 
-This can be done by going to Plugins –> Groundhog –> Results –> Scale handler.</p>
+<p>Accordingly, every time a set of results is imported, the scale is reset in
+order to cover from
+the minimum result value to the maximum. That means
+that when you import a second workplane, the colors
+of the first one will
+probably change.</p>
 
-<figure align="center">
-<img src="ImportResults/fig5.png" alt="Import Results">
-<figcaption>Figure 3: Optional - change the scale</figcaption>
-</figure></div></div>
+<p>&lt;figure align=“center”&gt;
+&lt;img
+src=&quot;ImportResults/fig4.png&quot; alt=&quot;Import
+Results&quot;&gt;
+&lt;figcaption&gt;Figure 2: Fourth step - See the
+results&lt;/figcaption&gt;
+&lt;/figure&gt;</p>
+
+<p>However, in some cases, it might be useful to choose your own scale.
+This
+can be done by going to Plugins –&gt; Groundhog –&gt; Results –&gt; Scale
+handler.</p>
+
+<p>&lt;figure align=“center”&gt;
+&lt;img
+src=&quot;ImportResults/fig5.png&quot; alt=&quot;Import
+Results&quot;&gt;
+&lt;figcaption&gt;Figure 3: Optional - change the
+scale&lt;/figcaption&gt;
+&lt;/figure&gt;</p>
+</div></div>
 
     <div id="footer">
-  Generated on Tue Jun  2 10:11:50 2015 by
+  Generated on Thu Jul  2 18:49:35 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
