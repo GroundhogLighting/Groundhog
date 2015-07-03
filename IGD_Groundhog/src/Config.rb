@@ -23,6 +23,20 @@ module IGD
 				return "c:/"
 			end
 
+			# Sets the path where the weather files are supposed to be stored... must be configured by the user.
+			# @author German Molina
+			# @param path [String] the path
+			# @return void
+			def self.set_weather_path(path)
+				 @@rad_config["WEATHER_PATH"] = path
+				#write the rad file
+				File.open("#{OS.main_groundhog_path}/config",'w+'){ |f|
+					f.write(@@rad_config.to_json)
+				}
+			end
+
+
+
 
 			# Gets the preconfigured RVU options for previsualization
 			# @author German Molina

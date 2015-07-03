@@ -7,9 +7,9 @@ module IGD
 			# @author German Molina
 			# @param bins [Integer] The sky subdivition
 			# @return success [Boolean]
-			def self.calc_UDI(bins)
+			def self.calc_UDI(options)
 				return false if not OS.ask_about_Radiance
-				return false if not self.calc_DC_annual_illuminance(bins)
+				return false if not self.calc_annual_illuminance(options)
 				path=OS.tmp_groundhog_path
 				FileUtils.cd(path) do
 					wps=Dir["Workplanes/*"]
@@ -30,29 +30,44 @@ module IGD
 			end
 
 
-			# Calculates the annual illuminance using the simplest DC matrix
+			# Calculates the annual illuminance using a chosen method
 			# @author German Molina
-			# @param bins [Integer] The sky subdivition
+			# @param options [Hash] A hash with the options (method, bins)
 			# @return success [Boolean]
-			def self.calc_DC_annual_illuminance(bins)
+			def self.calc_annual_illuminance(options)
 				return false if not OS.ask_about_Radiance
-				return false if not self.calc_DC(bins)
+
+				case options["method"]
+				when "DC"
+					return false if not self.calc_DC(options["bins"])
+				else
+					UI.messagebox "Calculation method not recognized when trying to calculate the Annual Illuminance"
+					return false
+				end
+
 				path=OS.tmp_groundhog_path
 				FileUtils.cd(path) do
 					script=[]
 					wps=Dir["Workplanes/*"]
 
 					#Asks for weather file (EPW or WEA)
+					weaname = false
 					path=Config.weather_path
-					path=UI.openpanel("Choose a weather file",path)
-					return false if not path
+					extension=path.split(".").pop
+
+					if extension == "wea" or extension == "epw" then
+						weaname=path.tr("\\","/").split("/").pop.tr(extension,"")
+					else
+						path=UI.openpanel("Choose a weather file",path)
+						return false if not path
+						Config.set_weather_path(path)
+						extension=path.split(".").pop
+						UI.messagebox("Please choose a EPW or WEA file.") if extension != "wea" and extension != "epw"
+						return false if extension != "wea" and extension != "epw"
+						weaname=path.tr("\\","/").split("/").pop.tr(extension,"")
+					end
 
 					OS.mkdir("Results")
-
-					extension=path.split(".").pop
-					UI.messagebox("Please choose a EPW or WEA file.") if extension != "wea" and extension != "epw"
-					return false if extension != "wea" and extension != "epw"
-					weaname=path.tr("\\","/").split("/").pop.tr("#{extension}","")
 
 					#get the file... transform if needed
 					script << "epw2wea #{path} #{weaname}wea" if extension=="epw"
@@ -62,9 +77,9 @@ module IGD
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#OSX
-						script << "gendaymtx -m #{bins} #{weaname}wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
+						script << "gendaymtx -m #{options["bins"]} #{weaname}wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
 						#WIN
-						script << "gendaymtx -m #{bins} #{weaname}wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
+						script << "gendaymtx -m #{options["bins"]} #{weaname}wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
 					end
 
 					return false if not OS.execute_script(script)

@@ -6,3 +6,12 @@ ul#tabs li a:hover { background-color: #f1f0ee; }
 ul#tabs li a.selected { color: #000; background-color: #f1f0ee; font-weight: bold; padding: 0.3em 0.5em 0.3em 0.3em; }
 div.tabContent {position:absolute; margin-left: 67px; float:left; border: 1px solid #c9c3ba; padding: 0.0em 0.5em 0.3em 1.3em; background-color: #f1f0ee; width:400px; height: 430px;}
 div.tabContent.hide { display: none; }
+
+
+ul#large_tabs {position:absolute; list-style-type: none; margin: 0px 0 0 0; padding: 0 0 0.0em 0; z-index: 1;}
+ul#large_tabs li { height: 18px; width: 120px; margin-bottom: 11px;  }
+ul#large_tabs li a {display: block; width: 100%; color: #42454a; background-color: #dedbde; border: 1px solid #c9c3ba; border-right: none; padding: 0.3em 0.3em 0.3em 0.3em; text-decoration: none; }
+ul#large_tabs li a:hover { background-color: #f1f0ee; }
+ul#large_tabs li a.selected { color: #000; background-color: #f1f0ee; font-weight: bold; padding: 0.3em 0.5em 0.3em 0.3em; }
+div.large_tabContent {position:absolute; margin-left: 130px; float:left; border: 1px solid #c9c3ba; padding: 0.0em 0.5em 0.3em 1.3em; background-color: #f1f0ee; width:400px; height: 430px;}
+div.large_tabContent.hide { display: none; }
