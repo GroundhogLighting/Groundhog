@@ -403,12 +403,12 @@ a:hover {
 .slider > ul > li > p{
     padding: 10px;
     max-width: 50%;
-    background-color: rgba(255,255,255,0.8);
-    color: rgb(60,60,60);
+    background-color: rgba(0,0,0,0.6);
+    color: white;
     z-index: 1000;
     position: absolute;
     font-size: 120%;
-    bottom: 20px;
+    bottom: 0px;
     left: 0px;
     text-align: left;
     width:auto;
