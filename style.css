@@ -129,8 +129,8 @@ a:hover {
     border-style: solid;
     border-width: 1px;
     border-color: white;
-
-
+    padding-top: 20px;
+    padding-bottom: 30px;
 }
 
 #disclaimer {
