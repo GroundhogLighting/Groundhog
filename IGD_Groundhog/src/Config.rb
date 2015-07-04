@@ -10,14 +10,14 @@ module IGD
 
 			# Gets the path where the Radiance programs are installed... must be configured by the user.
 			# @author German Molina
-			# @return path [String] The radiance bin path
+			# @return [String] The radiance bin path
 			def self.radiance_path
 				@@rad_config["RADIANCE_PATH"]
 			end
 
 			# Gets the path where the weather files are supposed to be stored... must be configured by the user.
 			# @author German Molina
-			# @return path [String] The radiance bin path
+			# @return [String] The radiance bin path
 			def self.weather_path
 				return @@rad_config["WEATHER_PATH"] if @@rad_config["WEATHER_PATH"]!= nil
 				return "c:/"
@@ -40,21 +40,21 @@ module IGD
 
 			# Gets the preconfigured RVU options for previsualization
 			# @author German Molina
-			# @return options[String] The options
+			# @return [String] The options
 			def self.rvu_options
 				@@rad_config["RVU"]
 			end
 
 			# Gets the preconfigured RTRACE options for calculations
 			# @author German Molina
-			# @return options[String] The options
+			# @return [String] The options
 			def self.rtrace_options
 				@@rad_config["RTRACE"]
 			end
 
 			# Gets the preconfigured RCONTRIB options for calculations
 			# @author German Molina
-			# @return options[String] The options
+			# @return [String] The options
 			def self.rcontrib_options
 				@@rad_config["RCONTRIB"]
 			end
@@ -62,7 +62,7 @@ module IGD
 
 			# Gets the spacing between workplane sensors
 			# @author German Molina
-			# @return n_threads [String] The number of threads
+			# @return [Float] Sensor Spacing
 			def self.sensor_spacing
 				return @@rad_config["SENSOR_SPACING"] if @@rad_config["SENSOR_SPACING"]!= nil
 				prompts=["Workplane Sensor Spacing (m)"]
@@ -91,9 +91,8 @@ module IGD
 
 			# Opens the configuration web dialog and adds the appropriate action_callback
 			#
-			# @author German Molina
-			# @param void
-			# @return success [Boolean] Only when the preferences are saved
+			# @author German Molina			
+			# @return [Boolean] success
 			# @version 0.4
 			def self.show_config
 

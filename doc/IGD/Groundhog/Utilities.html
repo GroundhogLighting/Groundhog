@@ -189,7 +189,7 @@ delete all the entities with a certain label.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_component_instances-class_method" title="get_component_instances (class method)">+ (Object) <strong>get_component_instances</strong>(entities) </a>
+      <a href="#get_component_instances-class_method" title="get_component_instances (class method)">+ (Array &lt;SketchUp::ComponentInstances&gt;) <strong>get_component_instances</strong>(entities) </a>
     
 
     
@@ -213,7 +213,7 @@ delete all the entities with a certain label.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_faces-class_method" title="get_faces (class method)">+ (Sketchup::Faces) <strong>get_faces</strong>(entities) </a>
+      <a href="#get_faces-class_method" title="get_faces (class method)">+ (Array&lt;Sketchup::Faces&gt;) <strong>get_faces</strong>(entities) </a>
     
 
     
@@ -309,7 +309,7 @@ delete all the entities with a certain label.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_name-class_method" title="get_name (class method)">+ (Sketchup::Faces) <strong>get_name</strong> </a>
+      <a href="#get_name-class_method" title="get_name (class method)">+ (String) <strong>get_name</strong> </a>
     
 
     
@@ -405,7 +405,7 @@ delete all the entities with a certain label.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#hide_show_specific-class_method" title="hide_show_specific (class method)">+ (Object) <strong>hide_show_specific</strong>(a) </a>
+      <a href="#hide_show_specific-class_method" title="hide_show_specific (class method)">+ (Void) <strong>hide_show_specific</strong>(a) </a>
     
 
     
@@ -583,6 +583,7 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+113
 114
 115
 116
@@ -593,22 +594,21 @@ delete all the entities with a certain label.</p>
 121
 122
 123
-124
-125</pre>
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 114</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 113</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_window_normals'>check_window_normals</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>	
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_window_normals'>check_window_normals</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_windows'>windows</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_windows'>get_windows</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_normal'>normal</span><span class='op'>=</span><span class='id identifier rubyid_windows'>windows</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_normal'>normal</span>
-		
+
 	<span class='id identifier rubyid_windows'>windows</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_win'>win</span><span class='op'>|</span> <span class='comment'>#I know... it will check with itself as well.
 </span>		<span class='kw'>if</span> <span class='id identifier rubyid_win'>win</span><span class='period'>.</span><span class='id identifier rubyid_normal'>normal</span><span class='op'>!=</span><span class='id identifier rubyid_normal'>normal</span> <span class='kw'>then</span> <span class='comment'>#in the first non-equal normal, it will return false.
 </span>			<span class='kw'>return</span> <span class='kw'>false</span>
 		<span class='kw'>end</span>
 	<span class='kw'>end</span>
-		
+
 	<span class='kw'>return</span> <span class='kw'>true</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -696,14 +696,14 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+90
 91
-92
-93</pre>
+92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 91</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 90</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_count_windows'>count_windows</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>	
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_count_windows'>count_windows</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_windows'>get_windows</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -786,6 +786,7 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+70
 71
 72
 73
@@ -799,11 +800,10 @@ delete all the entities with a certain label.</p>
 81
 82
 83
-84
-85</pre>
+84</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 71</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 70</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_delete_label'>delete_label</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='comma'>,</span> <span class='id identifier rubyid_label'>label</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_labeled'>labeled</span><span class='op'>=</span><span class='int'>0</span>
@@ -812,13 +812,13 @@ delete all the entities with a certain label.</p>
 			<span class='kw'>if</span> <span class='id identifier rubyid_ent'>ent</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='op'>==</span><span class='id identifier rubyid_label'>label</span> <span class='kw'>then</span>
 				<span class='id identifier rubyid_ent'>ent</span><span class='period'>.</span><span class='id identifier rubyid_erase!'>erase!</span>
 				<span class='id identifier rubyid_labeled'>labeled</span><span class='op'>=</span><span class='id identifier rubyid_labeled'>labeled</span><span class='op'>+</span><span class='int'>1</span>
-			<span class='kw'>end</span>	
-		<span class='kw'>end</span>	
+			<span class='kw'>end</span>
+		<span class='kw'>end</span>
 	<span class='kw'>end</span>
 	<span class='comment'># if, for some reason, there are some left, try again... it happened.
 </span>	<span class='kw'>if</span> <span class='id identifier rubyid_labeled'>labeled</span><span class='op'>!=</span><span class='int'>0</span> <span class='kw'>then</span>
 		<span class='id identifier rubyid_delete_label'>delete_label</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='comma'>,</span><span class='id identifier rubyid_label'>label</span><span class='rparen'>)</span>
-	<span class='kw'>end</span>	
+	<span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -828,7 +828,7 @@ delete all the entities with a certain label.</p>
       <div class="method_details ">
   <h3 class="signature " id="get_component_instances-class_method">
   
-    + (<tt>Object</tt>) <strong>get_component_instances</strong>(entities) 
+    + (<tt>Array &lt;SketchUp::ComponentInstances&gt;</tt>) <strong>get_component_instances</strong>(entities) 
   
 
   
@@ -851,7 +851,7 @@ delete all the entities with a certain label.</p>
         <span class='name'>entities</span>
       
       
-        <span class='type'>(<tt>Array</tt>)</span>
+        <span class='type'>(<tt>Array&lt;SketchUp::Entities&gt;</tt>)</span>
       
       
       
@@ -859,6 +859,24 @@ delete all the entities with a certain label.</p>
   
 </ul>
 
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array &lt;SketchUp::ComponentInstances&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An array with the component instances</p>
+</div>
+      
+    </li>
+  
+</ul>
 <p class="tag_title">Author:</p>
 <ul class="author">
   
@@ -882,14 +900,14 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+297
 298
-299
-300</pre>
+299</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 298</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 297</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_component_instances'>get_component_instances</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>	
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_component_instances'>get_component_instances</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>ComponentInstance</span> <span class='kw'>or</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Group</span><span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -900,7 +918,7 @@ delete all the entities with a certain label.</p>
       <div class="method_details ">
   <h3 class="signature " id="get_faces-class_method">
   
-    + (<tt>Sketchup::Faces</tt>) <strong>get_faces</strong>(entities) 
+    + (<tt>Array&lt;Sketchup::Faces&gt;</tt>) <strong>get_faces</strong>(entities) 
   
 
   
@@ -923,7 +941,7 @@ delete all the entities with a certain label.</p>
         <span class='name'>entities</span>
       
       
-        <span class='type'>(<tt>Array&lt;entities&gt;</tt>)</span>
+        <span class='type'>(<tt>Array&lt;SketchUp::Entities&gt;</tt>)</span>
       
       
       
@@ -942,7 +960,7 @@ delete all the entities with a certain label.</p>
     <li>
       
       
-        <span class='type'>(<tt>Sketchup::Faces</tt>)</span>
+        <span class='type'>(<tt>Array&lt;Sketchup::Faces&gt;</tt>)</span>
       
       
       
@@ -977,12 +995,12 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+24
 25
-26
-27</pre>
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_faces'>get_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Face</span> <span class='rbrace'>}</span>
@@ -1072,6 +1090,7 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+33
 34
 35
 36
@@ -1079,11 +1098,10 @@ delete all the entities with a certain label.</p>
 38
 39
 40
-41
-42</pre>
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 34</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 33</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_groups'>get_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_ret'>ret</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -1179,12 +1197,12 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+281
 282
-283
-284</pre>
+283</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 282</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 281</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_horizontal_faces'>get_horizontal_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_face?'>face?</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_is_horizontal?'>is_horizontal?</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rbrace'>}</span>
@@ -1274,6 +1292,7 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+47
 48
 49
 50
@@ -1281,11 +1300,10 @@ delete all the entities with a certain label.</p>
 52
 53
 54
-55
-56</pre>
+55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 48</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 47</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_images'>get_images</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_ret'>ret</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -1304,7 +1322,7 @@ delete all the entities with a certain label.</p>
       <div class="method_details ">
   <h3 class="signature " id="get_name-class_method">
   
-    + (<tt>Sketchup::Faces</tt>) <strong>get_name</strong> 
+    + (<tt>String</tt>) <strong>get_name</strong> 
   
 
   
@@ -1319,40 +1337,20 @@ delete all the entities with a certain label.</p>
   </div>
 </div>
 <div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
   
-    <li>
-      
-        <span class='name'>entities</span>
-      
-      
-        <span class='type'>(<tt>Array&lt;entities&gt;</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Array with entities.</p>
-</div>
-      
-    </li>
-  
-</ul>
-
 <p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
       
       
-        <span class='type'>(<tt>Sketchup::Faces</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
         &mdash;
         <div class='inline'>
-<p>An array of faces.</p>
+<p>The asigned name</p>
 </div>
       
     </li>
@@ -1381,16 +1379,16 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+12
 13
 14
 15
 16
 17
-18
-19</pre>
+18</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 12</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_name'>get_name</span>
 	<span class='id identifier rubyid_prompts'>prompts</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Name\n</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='comment'>#get the name
@@ -1484,6 +1482,7 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+164
 165
 166
 167
@@ -1494,11 +1493,10 @@ delete all the entities with a certain label.</p>
 172
 173
 174
-175
-176</pre>
+175</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 165</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 164</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_win_groups'>get_win_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_groups'>groups</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -1507,9 +1505,9 @@ delete all the entities with a certain label.</p>
 		<span class='id identifier rubyid_a'>a</span><span class='op'>=</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_win_group'>get_win_group</span><span class='lparen'>(</span><span class='id identifier rubyid_i'>i</span><span class='rparen'>)</span>
 		<span class='kw'>if</span> <span class='id identifier rubyid_a'>a</span><span class='op'>!=</span><span class='kw'>nil</span>
 			<span class='id identifier rubyid_groups'>groups</span><span class='op'>=</span><span class='id identifier rubyid_groups'>groups</span><span class='op'>+</span><span class='lbracket'>[</span><span class='id identifier rubyid_a'>a</span><span class='rbracket'>]</span>
-		<span class='kw'>end</span>	
+		<span class='kw'>end</span>
 	<span class='kw'>end</span>
-	
+
 	<span class='kw'>return</span> <span class='id identifier rubyid_groups'>groups</span><span class='period'>.</span><span class='id identifier rubyid_uniq'>uniq</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1597,12 +1595,12 @@ delete all the entities with a certain label.</p>
       <pre class="lines">
 
 
+61
 62
-63
-64</pre>
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 61</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_windows'>get_windows</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_window?'>window?</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rbrace'>}</span>
@@ -1704,6 +1702,7 @@ file.</p>
       <pre class="lines">
 
 
+133
 134
 135
 136
@@ -1728,14 +1727,13 @@ file.</p>
 155
 156
 157
-158
-159</pre>
+158</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 134</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 133</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_group_windows'>group_windows</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='comma'>,</span><span class='id identifier rubyid_g'>g</span><span class='rparen'>)</span>
-		
+
 	<span class='kw'>begin</span>
 		<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
 		<span class='id identifier rubyid_op_name'>op_name</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Group Windows</span><span class='tstring_end'>&quot;</span></span>
@@ -1745,20 +1743,20 @@ file.</p>
 		<span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_window_normals'>check_window_normals</span><span class='lparen'>(</span><span class='id identifier rubyid_windows'>windows</span><span class='rparen'>)</span> <span class='kw'>then</span> <span class='comment'>#if they all have the same normal, then
 </span>				<span class='id identifier rubyid_windows'>windows</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_entity'>entity</span><span class='op'>|</span>
 				<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Win_Group</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_g'>g</span><span class='rparen'>)</span>
-			<span class='kw'>end</span>	
+			<span class='kw'>end</span>
 		<span class='kw'>else</span>
 			<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>All selected windows must have the same normal</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 		<span class='kw'>end</span>
-		
+
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_commit_operation'>commit_operation</span>
 	<span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
 		<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_failed_operation_message'>failed_operation_message</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='rparen'>)</span>
 	<span class='kw'>end</span>
 
-	
-		
-	
+
+
+
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1768,7 +1766,7 @@ file.</p>
       <div class="method_details ">
   <h3 class="signature " id="hide_show_specific-class_method">
   
-    + (<tt>Object</tt>) <strong>hide_show_specific</strong>(a) 
+    + (<tt>Void</tt>) <strong>hide_show_specific</strong>(a) 
   
 
   
@@ -1778,7 +1776,7 @@ file.</p>
   <div class="discussion">
     
 <p>Hides or show a specific label. Shows class if hidden, hides class if
-shown. All according to the  first face that is part of the class</p>
+shown. All according to the first face that is part of the class</p>
 
 
   </div>
@@ -1789,12 +1787,17 @@ shown. All according to the  first face that is part of the class</p>
   
     <li>
       
-        <span class='name'>Label</span>
+        <span class='name'>a</span>
       
       
         <span class='type'>(<tt>String</tt>)</span>
       
       
+      
+        &mdash;
+        <div class='inline'>
+<p>the label to hide/show</p>
+</div>
       
     </li>
   
@@ -1806,14 +1809,9 @@ shown. All according to the  first face that is part of the class</p>
     <li>
       
       
-        <span class='type'></span>
+        <span class='type'>(<tt>Void</tt>)</span>
       
       
-      
-        
-        <div class='inline'>
-<p>void</p>
-</div>
       
     </li>
   
@@ -1841,6 +1839,7 @@ shown. All according to the  first face that is part of the class</p>
       <pre class="lines">
 
 
+244
 245
 246
 247
@@ -1870,22 +1869,21 @@ shown. All according to the  first face that is part of the class</p>
 271
 272
 273
-274
-275</pre>
+274</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 245</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 244</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_hide_show_specific'>hide_show_specific</span><span class='lparen'>(</span><span class='id identifier rubyid_a'>a</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_faces'>faces</span><span class='op'>=</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_faces'>get_faces</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
-	
+
 	<span class='id identifier rubyid_hide'>hide</span><span class='op'>=</span><span class='kw'>true</span>
 	<span class='id identifier rubyid_is_first'>is_first</span><span class='op'>=</span><span class='kw'>true</span>
-	
+
 	<span class='kw'>begin</span>
 		<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_start_operation'>start_operation</span><span class='lparen'>(</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Hide/Show Specific</span><span class='tstring_end'>&quot;</span></span> <span class='comma'>,</span><span class='kw'>true</span><span class='rparen'>)</span>
- 
+
 		<span class='id identifier rubyid_faces'>faces</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ent'>ent</span><span class='op'>|</span> <span class='comment'>#For all faces in the model
 </span>			<span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_is?'>is?</span><span class='lparen'>(</span><span class='id identifier rubyid_ent'>ent</span><span class='comma'>,</span><span class='id identifier rubyid_a'>a</span><span class='rparen'>)</span> <span class='kw'>then</span> <span class='comment'>#if they are part of the class
 </span>				<span class='comment'>#We need to know if we have to hide or show
@@ -1893,19 +1891,19 @@ shown. All according to the  first face that is part of the class</p>
 </span>					<span class='kw'>if</span> <span class='id identifier rubyid_ent'>ent</span><span class='period'>.</span><span class='id identifier rubyid_hidden?'>hidden?</span> <span class='kw'>then</span> <span class='comment'>#is hidden
 </span>						<span class='id identifier rubyid_hide'>hide</span><span class='op'>=</span><span class='kw'>false</span> <span class='comment'>#we have to show
 </span>					<span class='kw'>end</span>
-					<span class='id identifier rubyid_is_first'>is_first</span><span class='op'>=</span><span class='kw'>false</span> <span class='comment'>#and then, it is not the first one... 
+					<span class='id identifier rubyid_is_first'>is_first</span><span class='op'>=</span><span class='kw'>false</span> <span class='comment'>#and then, it is not the first one...
 </span>				<span class='kw'>end</span>
-		
+
 				<span class='comment'>#Then, we hide or show all of them.
 </span>				<span class='id identifier rubyid_ent'>ent</span><span class='period'>.</span><span class='id identifier rubyid_hidden'>hidden</span><span class='op'>=</span><span class='id identifier rubyid_hide'>hide</span>
 			<span class='kw'>end</span>
-		<span class='kw'>end</span>				
+		<span class='kw'>end</span>
 
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_commit_operation'>commit_operation</span>
 	<span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
 		<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_failed_operation_message'>failed_operation_message</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='rparen'>)</span>
-	<span class='kw'>end</span>	
+	<span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1987,12 +1985,12 @@ shown. All according to the  first face that is part of the class</p>
       <pre class="lines">
 
 
+289
 290
-291
-292</pre>
+291</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 290</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 289</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_is_horizontal?'>is_horizontal?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Face</span> <span class='kw'>and</span> <span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_normal'>normal</span><span class='period'>.</span><span class='id identifier rubyid_parallel?'>parallel?</span><span class='lparen'>(</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Vector3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='int'>0</span><span class='comma'>,</span><span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -2092,6 +2090,7 @@ Radiance as non-planars when building the octree.</p>
       <pre class="lines">
 
 
+204
 205
 206
 207
@@ -2123,16 +2122,15 @@ Radiance as non-planars when building the octree.</p>
 233
 234
 235
-236
-237</pre>
+236</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 205</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 204</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_planar?'>planar?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_vertices'>vertices</span><span class='op'>=</span><span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_vertices'>vertices</span>
 	<span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_vertices'>vertices</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span><span class='op'>&lt;=</span><span class='int'>3</span>
-		
+
 	<span class='comment'># This section is from Radiance source code.
 </span>	<span class='id identifier rubyid_v1'>v1</span><span class='op'>=</span><span class='id identifier rubyid_vertices'>vertices</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='period'>.</span><span class='op'>-</span><span class='id identifier rubyid_vertices'>vertices</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span>
 	<span class='id identifier rubyid_norm'>norm</span><span class='op'>=</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Vector3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -2141,12 +2139,12 @@ Radiance as non-planars when building the octree.</p>
 		<span class='id identifier rubyid_v3'>v3</span><span class='op'>=</span><span class='id identifier rubyid_v1'>v1</span><span class='period'>.</span><span class='id identifier rubyid_cross'>cross</span><span class='lparen'>(</span><span class='id identifier rubyid_v2'>v2</span><span class='rparen'>)</span>
 		<span class='id identifier rubyid_norm'>norm</span><span class='op'>=</span><span class='id identifier rubyid_norm'>norm</span><span class='period'>.</span><span class='op'>+</span><span class='lparen'>(</span><span class='id identifier rubyid_v3'>v3</span><span class='rparen'>)</span>
 	<span class='kw'>end</span>
-		
+
 	<span class='id identifier rubyid_badvert'>badvert</span><span class='op'>=</span><span class='int'>0</span>
 	<span class='id identifier rubyid_offset'>offset</span><span class='op'>=</span><span class='id identifier rubyid_norm'>norm</span><span class='period'>.</span><span class='id identifier rubyid_dot'>dot</span><span class='lparen'>(</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Vector3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_vertices'>vertices</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='period'>.</span><span class='id identifier rubyid_x'>x</span><span class='comma'>,</span><span class='id identifier rubyid_vertices'>vertices</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='period'>.</span><span class='id identifier rubyid_y'>y</span><span class='comma'>,</span><span class='id identifier rubyid_vertices'>vertices</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='period'>.</span><span class='id identifier rubyid_z'>z</span><span class='rparen'>)</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_verteps'>verteps</span><span class='op'>=</span><span class='float'>0.0000015</span>
 	<span class='id identifier rubyid_smalloff'>smalloff</span><span class='op'>=</span><span class='id identifier rubyid_offset'>offset</span><span class='period'>.</span><span class='id identifier rubyid_abs'>abs</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_verteps'>verteps</span>
-		
+
 	<span class='kw'>for</span> <span class='id identifier rubyid_i'>i</span> <span class='kw'>in</span> <span class='int'>1</span><span class='op'>..</span><span class='id identifier rubyid_vertices'>vertices</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span><span class='op'>-</span><span class='int'>1</span>
 		<span class='id identifier rubyid_d1'>d1</span><span class='op'>=</span><span class='id identifier rubyid_norm'>norm</span><span class='period'>.</span><span class='id identifier rubyid_dot'>dot</span><span class='lparen'>(</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Vector3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_vertices'>vertices</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='period'>.</span><span class='id identifier rubyid_x'>x</span><span class='comma'>,</span><span class='id identifier rubyid_vertices'>vertices</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='period'>.</span><span class='id identifier rubyid_y'>y</span><span class='comma'>,</span><span class='id identifier rubyid_vertices'>vertices</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='period'>.</span><span class='id identifier rubyid_z'>z</span><span class='rparen'>)</span><span class='rparen'>)</span>
 		<span class='kw'>if</span> <span class='id identifier rubyid_smalloff'>smalloff</span> <span class='kw'>then</span>
@@ -2159,7 +2157,7 @@ Radiance as non-planars when building the octree.</p>
 
 		<span class='id identifier rubyid_offset'>offset</span><span class='op'>+=</span><span class='id identifier rubyid_d1'>d1</span>
 	<span class='kw'>end</span>
-		
+
 	<span class='kw'>return</span> <span class='kw'>true</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -2242,6 +2240,7 @@ Radiance as non-planars when building the octree.</p>
       <pre class="lines">
 
 
+98
 99
 100
 101
@@ -2249,20 +2248,19 @@ Radiance as non-planars when building the octree.</p>
 103
 104
 105
-106
-107</pre>
+106</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 98</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reverseFaces'>reverseFaces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>		
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reverseFaces'>reverseFaces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_faces'>faces</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_faces'>get_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
-	
+
 	<span class='id identifier rubyid_faces'>faces</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='op'>|</span>
 		<span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_face?'>face?</span><span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span><span class='rparen'>)</span>
 			<span class='id identifier rubyid_k'>k</span><span class='period'>.</span><span class='id identifier rubyid_reverse!'>reverse!</span>
 		<span class='kw'>end</span>
-	<span class='kw'>end</span>	
+	<span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2274,7 +2272,7 @@ Radiance as non-planars when building the octree.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Jul  2 18:49:40 2015 by
+  Generated on Sat Jul  4 14:46:46 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

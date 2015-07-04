@@ -5,8 +5,8 @@ module IGD
 
 			# Calculates the UDI using the simplest DC matrix
 			# @author German Molina
-			# @param bins [Integer] The sky subdivition
-			# @return success [Boolean]
+			# @param options [Hash] The options
+			# @return [Boolean] Success
 			def self.calc_UDI(options)
 				return false if not OS.ask_about_Radiance
 				return false if not self.calc_annual_illuminance(options)
@@ -17,7 +17,7 @@ module IGD
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						array=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", 200, 2000)
+						array=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["lower_threshold"], options["upper_threshold"])
 						return if not array #if the format was wrong, for example
 
 						uv=Results.get_UV(array)
@@ -33,7 +33,7 @@ module IGD
 			# Calculates the annual illuminance using a chosen method
 			# @author German Molina
 			# @param options [Hash] A hash with the options (method, bins)
-			# @return success [Boolean]
+			# @return [Boolean] Success
 			def self.calc_annual_illuminance(options)
 				return false if not OS.ask_about_Radiance
 
@@ -91,7 +91,7 @@ module IGD
 			# Calculates the simplest DC matrix
 			# @author German Molina
 			# @param bins [Integer] The sky subdivition
-			# @return success [Boolean]
+			# @return [Boolean] Success
 			def self.calc_DC(bins)
 				return false if not OS.ask_about_Radiance
 
@@ -133,7 +133,7 @@ module IGD
 
 			# Calculates the illuminance in the workplanes in the scene with the sun in the current position
 			# @author German Molina
-			# @param void
+			# @return [Boolean] Success
 			def self.actual_illuminance
 				return false if not OS.ask_about_Radiance
 				path=OS.tmp_groundhog_path
@@ -183,11 +183,12 @@ module IGD
 
 					OS.clear_actual_path
 				end
+				return true
 			end
 
 			# Calculates the daylight factor for the workplanes in the scene
 			# @author German Molina
-			# @param void
+			# @return [Boolean] Success
 			def self.daylight_factor
 				return false if not OS.ask_about_Radiance
 				path=OS.tmp_groundhog_path
@@ -236,12 +237,12 @@ module IGD
 
 					OS.clear_actual_path
 				end
+				return true
 			end
 
 			# Calls RVU for previewing the actual scene from the current view and sky.
-			# @author German Molina
-			# @param void
-			# @return success [Boolean]
+			# @author German Molina			
+			# @return [Boolean] Success
 			def self.rvu
 				return false if not OS.ask_about_Radiance
 

@@ -8,7 +8,6 @@ module IGD
 			# Gets the path where the SketchUp model is saved. If it is not saved, it will return false.
 			# @author German Molina
 			# @version 1.0
-			# @param [Void]
 			# @return [String] Path where the model is saved.
 			# @example Get the path
 			#   path=Exporter.getpath
@@ -100,7 +99,7 @@ module IGD
 			#
 			# This method exists because SketchUp allows interior loops, but Radiance does not.
 			#
-			# This method is called within {#get_rad_string}
+			# This method is called within #get_rad_string
 			# @author German Molina
 			# @version 1.0.5
 			# @param lines [Array] Should be empty
@@ -164,11 +163,11 @@ module IGD
 			#
 			# Each layer is exported on a different file with the name of the layer, and the
 			# "illums" of each layer are also exported on a separate file. To make a different organization,
-			# {#exportFaces} method should be modified.
+			# #exportFaces method should be modified.
 			# @author German Molina
 			# @version 1.0
-			# @param path_to_save [String] The path where the model will be exported
-			# @return succes [boolean]
+			# @param path [String] The path where the model will be exported
+			# @return [Boolean] Success
 			# @note this method used to be called 'do_multiphase'
 			def self.export(path)
 				OS.clear_path(path)
@@ -321,7 +320,7 @@ module IGD
 			# @author German Molina
 			# @version 0.3
 			# @param path [String] Directory to export the View.
-			# @return success [Boolean]
+			# @return [Boolean] Success
 			# @example Export the actual view
 			#   Exporter.exportView(path)
 			def self.export_views(path)
@@ -345,12 +344,12 @@ module IGD
 
 			end
 
-			# Export the window groups. This method is called from #{exportFaces}. Creates a Window folder within the directory.
+			# Export the window groups. This method is called from #exportFaces. Creates a Window folder within the directory.
 			# @author German Molina
 			# @version 1.1
 			# @param path [String] Directory to export the Window Groups.
-			# @param windows [faces] An array with windows, selected during #{exportFaces}.
-			# @return success [Boolean]
+			# @param windows [faces] An array with windows, selected during #exportFaces.
+			# @return [Boolean] Success
 			def self.write_window_groups(path,windows)
 
 				return true if windows.length < 1 #it did success... but there were not any windows
@@ -422,7 +421,7 @@ module IGD
 			# @version 1.1
 			# @param path [String] Directory to export the Window Groups.
 			# @param entities [entities] Array of workplanes.
-			# @return success [Boolean]
+			# @return [Boolean] Success
 			# @note This method assumes that it receives workplanes (which are horizontal surfaces). If there is a not-horizontal
 			#   surface in the array, sensors and spacing will make no sense.
 			# @todo Allow non-horizontal workplanes?
@@ -496,8 +495,8 @@ module IGD
 			# @author German Molina
 			# @version 1.0
 			# @param path [String] Directory to export the Window Groups.
-			# @param Illums [faces] An array with illums, selected during #{exportFaces}.
-			# @return success [Boolean]
+			# @param entities [faces] An array with illums, selected during exportFaces.
+			# @return [Boolean] Success
 			def self.write_illums(path,entities)
 
 				return true if entities.length<1  #success... did not export, though.
@@ -526,10 +525,8 @@ module IGD
 			# @author German Molina
 			# @version 1.0
 			# @param path [String] Directory to export the Window Groups.
-			# @param windows [faces] An array with windows, selected during #{exportFaces}.
-			# @return success[Boolean]
-			# @example Export the actual view
-			#   Exporter.exportView(path)
+			# @param mat_array [faces] An array with the materials to export
+			# @return [Boolean] Success
 			def self.export_modifiers(path,mat_array)
 
 				OS.mkdir("#{path}/Materials")
@@ -547,7 +544,7 @@ module IGD
 			# @author German Molina
 			# @version 0.8
 			# @param path [String] Directory to export the scene file
-			# @return success [Bolean]
+			# @return [Boolean] success
 			def self.write_scene_file(path)
 				File.open("#{path}/scene.rad",'w+'){ |f| #The file is opened
 					f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
@@ -589,7 +586,7 @@ module IGD
 			# @author German Molina
 			# @version 0.8
 			# @param path [String] Directory to export the scene file
-			# @return success [Bolean]
+			# @return [Boolean] Success
 			def self.write_sky(path)
 
 				OS.mkdir("#{path}/Skies")
@@ -616,8 +613,7 @@ module IGD
 			#
 			# @author German Molina
 			# @version 1.0
-			# @param void
-			# @return sky_complement [String]
+			# @return [String] the needed Sky and Ground semi-hemispheres
 			def self.sky_complement
 				return 	"skyfunc\tglow\tskyglow\n0\n0\n4\t0.99\t0.99\t1.1\t0\n\nskyglow\tsource\tskyball\n0\n0\n4\t0\t0\t1\t360\n\n"
 			end
@@ -627,7 +623,7 @@ module IGD
 			# @author German Molina
 			# @version 1.0
 			# @param bins [Integer] The number of reinhart subdivitions of the sky
-			# @return white_sky [String]
+			# @return  [String] white sky definition
 			def self.white_sky(bins)
 				return 	"\#@rfluxmtx h=u u=Y\nvoid glow ground_glow\n0\n0\n4 1 1 1 0\n\nground_glow source ground\n0\n0\n4 0 0 -1 180\n\n\#@rfluxmtx h=r#{bins} u=Y\nvoid glow sky_glow\n0\n0\n4 1 1 1 0\n\nsky_glow source sky\n0\n0\n4 0 0 1 180"
 			end
@@ -637,7 +633,7 @@ module IGD
 			# @author German Molina
 			# @version 0.4
 			# @param path [String] Directory to export the model (scene file)
-			# @return success [Boolean]
+			# @return [Boolean] Success
 			def self.export_component_definitions(path)
 				defi=Sketchup.active_model.definitions.select{|x| x.instances.count!=0}
 
@@ -699,7 +695,7 @@ module IGD
 			# @author German Molina
 			# @version 0.4
 			# @param comp [Sketchup::ComponentInstance]
-			# @return xform comand [string]
+			# @return [string] xform comand
 			def self.get_component_string(path,comp,name)
 
 				t=comp.transformation.to_a
@@ -725,7 +721,7 @@ module IGD
 			# @author German Molina
 			# @version 0.3
 			# @param path [String] Directory to export the RIF file
-			# @return success [Boolean]
+			# @return [Boolean] Success
 			# @note It assumes that the relevant zone is interior.
 			def self.write_rif_file(path, illums, windows)
 				model=Sketchup.active_model
@@ -800,9 +796,9 @@ module IGD
 			#  the inputted value. This is useful for exporting components.
 			# @author German Molina
 			# @version 0.4
-			# @param SketchUp material, [string] name
-			# @return [string]
-			# @note: forcing the name is not used yet, since the surface still is modified by the original name... complicated.
+			# @param material [Sketchup::Material] SketchUp material
+			# @param name [String] The desired name for the final Radiance material
+			# @return [String] Radiance primivite definition for the material
 			def self.get_mat_string(material,name)
 				matName=material.name.tr(" ","_").tr("#","_")
 				matName=name if name #if inputted a name, overwrite.
