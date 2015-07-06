@@ -49,7 +49,7 @@ end
 
 On an e-mail conversation, Greg Ward helped me define illum surfaces as:
 
->Illum surfaces, also known as "impostors" or "proxies," are light-emitting surfaces whose luminous 
+>Illum surfaces, also known as "impostors" or "proxies," are light-emitting surfaces whose luminous
 distributions are equivalent to the distribution transmitted through them as the consequence of the existence of other
 (direct and indirect) light sources. <a href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/mkillum.pdf">Mkillum</a>
 is the program that allows creating illum surfaces in a convenient way <a href="http://radsite.lbl.gov/radiance/book/">(Ward & Shakespeare, 1998).

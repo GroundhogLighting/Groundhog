@@ -7,15 +7,14 @@
 
 ##Including illum surfaces in Groundhog
 
-As was mentioned in the <a href="file.GettingStarted.hml">Getting Started</a> 
+As was mentioned in the [Getting Started](file.GettingStarted.hml)
 section, illum surfaces are useful for rendering and modeling luminaires. Even though they are not
 an easy-to-understand concept, Greg Ward helped me define illum surfaces as:
 
 >Illum surfaces, also known as "impostors" or "proxies," are light-emitting surfaces whose luminous 
 distributions are equivalent to the distribution transmitted through them as the consequence of the existence of other 
-(direct and indirect) light sources. <a href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/mkillum.pdf">Mkillum</a> 
-is the program that allows creating illum surfaces in a convenient way <a href="http://radsite.lbl.gov/radiance/book/">(Ward & Shakespeare, 1998)
-</a>. For example, the daylight distribution transmitted through a window, which can be considered a consequence of the existence of the sun and sky, 
+(direct and indirect) light sources. [Mkillum](http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/mkillum.pdf)
+is the program that allows creating illum surfaces in a convenient way [(Ward & Shakespeare, 1998)](http://radsite.lbl.gov/radiance/book/). For example, the daylight distribution transmitted through a window, which can be considered a consequence of the existence of the sun and sky, 
 can be summarized into an illum surface.
 
 Although I have not used illum surfaces too much, I understand this might be a useful feature 

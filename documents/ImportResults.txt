@@ -6,8 +6,8 @@
 
 
 
-After exporting a model and performing a simulation or calculation, it is often very important to see the results you 
-generated (i.e. Daylight factor, lux, or other) within the model, so you and people who are going to 
+After exporting a model and performing a simulation or calculation, it is often very important to see the results you
+generated (i.e. Daylight factor, lux, or other) within the model, so you and people who are going to
 see your analysis can visualize the spacial lighting distribution. This can lead to diagnostics and enhancement of the design.
 
 
@@ -33,13 +33,13 @@ and the value calculated for such sensor. This value can correspond to whatever 
 
 Below is an example of a file
 
-<p style="font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;">
-0.0	0.0	0.8	2.3<br>
-0.0	0.5	0.8	2.1<br>
-0.0	1.0	0.8	1.8<br>
-0.0	1.5	0.8	1.5<br>
+```
+0.0	0.0	0.8	2.3
+0.0	0.5	0.8	2.1
+0.0	1.0	0.8	1.8
+0.0	1.5	0.8	1.5
 ...
-
+```
 
 
 All kind of results may be obtained with RTRACE and RCONTRIB programs, and the format may be arranged by using RCALC.
@@ -60,11 +60,11 @@ Go to the menu Plugins (Extensions)--> Groundhog --> Import Results, and look fo
 
 ###Step 4: Analyse results
 
-Groundhog allows importing results from multiple workplanes in the same model, so an entire space can be analyzed easily. However, 
+Groundhog allows importing results from multiple workplanes in the same model, so an entire space can be analyzed easily. However,
 the only way of comparing results from different workplanes is to have one single scale for the entire model.
 
-Accordingly, every time a set of results is imported, the scale is reset in order to cover from 
-the minimum result value to the maximum. That means that when you import a second workplane, the colors 
+Accordingly, every time a set of results is imported, the scale is reset in order to cover from
+the minimum result value to the maximum. That means that when you import a second workplane, the colors
 of the first one will probably change.
 
 <figure align="center">
@@ -72,7 +72,7 @@ of the first one will probably change.
 <figcaption>Figure 2: Fourth step - See the results</figcaption>
 </figure>
 
-However, in some cases, it might be useful to choose your own scale. 
+However, in some cases, it might be useful to choose your own scale.
 This can be done by going to Plugins –> Groundhog –> Results –> Scale handler.
 
 <figure align="center">

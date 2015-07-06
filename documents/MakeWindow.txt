@@ -3,20 +3,20 @@
 # @author German Molina
 #Making windows in Groundhog
 
-The whole idea here is to make a window that Groundhog actually identifies as a window. This, as explained in 
-the <a href="file.GettingStarted.html">Getting Started</a> section, will be important when exporting the model to Radiance.
+The whole idea here is to make a window that Groundhog actually identifies as a window. This, as explained in
+the [Getting Started](file.GettingStarted.html) section, will be important when exporting the model to Radiance.
 
 There are two ways of creating windows:
 
 
 ##Using the Right Click -> "make window" method
 
-The make window tool is in the Groundhog Toolbar (for now, we do not have icons there, 
+The make window tool is in the Groundhog Toolbar (for now, we do not have icons there,
 but if you put your mouse over them, a message with what they do will appear). It allows making a window through
 a thick wall. This is a characteristic that we wanted to add to Groundhog from the beginning.
 
 It is important to notice that this tool creates a window on the exterior side (which you can move to the
-interior, if you want) and an illum surface on the inside (shown in semi-transparent green). If you do not want the illum 
+interior, if you want) and an illum surface on the inside (shown in semi-transparent green). If you do not want the illum
 surface to exist, you can delete it. *All windows have to be drawn from the exterior side of the wall.*
 On the other hand, this tool can be used for generating multiple windows at once, by selecting multiple
 polygons at once.
@@ -31,7 +31,7 @@ So, using it is very simple, you just have to:
 </figure>
 
 ###Step 2: Draw a shape that will represents the window
-This shape has to point outside (i.e. front of the surface pointing out of the wall, 
+This shape has to point outside (i.e. front of the surface pointing out of the wall,
 as shown in Figure 2). In case is not like that, you can right-click on it, and reverse it.
 
 <figure align="center">
@@ -64,7 +64,7 @@ This might be useful for many situations. For example, designing a greenhouse, a
 or some other structure with extremely thin walls.
 
 In this case we can select the surface (or multiple surfaces) and right-click on it. Then, we must
-choose "Transform into Window". After doing that the color will change to a semi-transparent blue, but remember you 
+choose "Transform into Window". After doing that the color will change to a semi-transparent blue, but remember you
 can assign different materials to it. You should take care of the normal of the surface you transform. This affects
 the Three and Five phase method implementations.
 
@@ -77,16 +77,16 @@ This way of creating windows does not generate any illum surfaces.
 
 ##Window groups
 When performing annual daylighting simulations, it might be very useful and efficient to
-group windows and treat them as if they were only one. This is a feature that was planned from the beginning 
+group windows and treat them as if they were only one. This is a feature that was planned from the beginning
 of Groundhog development and is now a reality.
 
 This can be easily done by right-clicking two or more selected windows. Groundhog will ask
-for a name for the group (i.e. 'Kitchen south-facing windows' or 'First floor east windows'), which will be 
+for a name for the group (i.e. 'Kitchen south-facing windows' or 'First floor east windows'), which will be
 lately used for naming the files when exporting in "Groundhog distribution". Windows without groups will be exported
-in files using their names (assigned by right-click --> assign name). It a window does not have a group or a name, 
-it will be exported by assigning a generic name. This is not recommended, since it is difficult to recognize 
+in files using their names (assigned by right-click --> assign name). It a window does not have a group or a name,
+it will be exported by assigning a generic name. This is not recommended, since it is difficult to recognize
 different windows by the content of the .rad file.
 
 There is a button in the Groundhog Toolbar that allows seeing the groups. This button assigns
-random colors to each group, and is deactivated like any other tool (i.e. by pressing the space-bar). When deactivated, 
+random colors to each group, and is deactivated like any other tool (i.e. by pressing the space-bar). When deactivated,
 everything goes back to normal and the previous materials are assigned.
