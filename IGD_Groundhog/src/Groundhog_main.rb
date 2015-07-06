@@ -177,17 +177,22 @@ module IGD
 					MkWindow.make_window(Utilities.get_faces(Sketchup.active_model.selection))
 				}
 
-				GH_tools_menu.add_item("Preview"){
-					Rad.rvu
+				#GH_tools_menu.add_item("Preview"){
+				#	Rad.rvu
+				#}
+
+				#GH_tools_menu.add_item("Calculate Daylight Factor"){
+				#	Rad.daylight_factor
+				#}
+
+				#GH_tools_menu.add_item("Calculate actual illuminance"){
+				#	Rad.actual_illuminance
+				#}
+
+				GH_tools_menu.add_item("Simulation Wizard"){
+					Rad.show_sim_wizard
 				}
 
-				GH_tools_menu.add_item("Calculate Daylight Factor"){
-					Rad.daylight_factor
-				}
-
-				GH_tools_menu.add_item("Calculate actual illuminance"){
-					Rad.actual_illuminance
-				}
 
 			### MATERIALS SUBMENU
 

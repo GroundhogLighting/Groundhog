@@ -17,10 +17,10 @@ module IGD
 
 			# Gets the path where the weather files are supposed to be stored... must be configured by the user.
 			# @author German Molina
-			# @return [String] The radiance bin path
+			# @return [Depends] The radiance bin path if successful, false if not.
 			def self.weather_path
 				return @@rad_config["WEATHER_PATH"] if @@rad_config["WEATHER_PATH"]!= nil
-				return "c:/"
+				return false
 			end
 
 			# Sets the path where the weather files are supposed to be stored... must be configured by the user.
@@ -91,7 +91,7 @@ module IGD
 
 			# Opens the configuration web dialog and adds the appropriate action_callback
 			#
-			# @author German Molina			
+			# @author German Molina
 			# @return [Boolean] success
 			# @version 0.4
 			def self.show_config
@@ -103,8 +103,6 @@ module IGD
 					530, 450, 100, 100, false )
 
 				wd.set_file("#{OS.main_groundhog_path}/src/html/preferences.html" )
-
-				wd.execute_script("document.getElementById('rvu').value='-ab 3';")
 				wd.show
 
 				wd.add_action_callback("onLoad") do |web_dialog,msg|
@@ -114,7 +112,7 @@ module IGD
 						script=""
 						script+="document.getElementById('rad_path').value='#{d['RADIANCE_PATH']}';" if d["RADIANCE_PATH"] != ""
 						old_path=d["RADIANCE_PATH"] if d["RADIANCE_PATH"] != nil
-						script+="document.getElementById('weather_path').value=' #{d['WEATHER_PATH']}';" if d["WEATHER_PATH"] != ""
+						script+="document.getElementById('weather_path_input').innerHTML=' #{d['WEATHER_PATH']}';" if d["WEATHER_PATH"] != "" and d["WEATHER_PATH"] != nil
 						script+="document.getElementById('rvu').value='#{d['RVU']}';" if d["RVU"] != ""
 						script+="document.getElementById('rcontrib').value='#{d['RCONTRIB']}';" if d["RCONTRIB"] != ""
 						script+="document.getElementById('rtrace').value='#{d['RTRACE']}';" if d["RTRACE"] != ""
@@ -180,6 +178,22 @@ module IGD
 						f.write(@@rad_config.to_json)
 					}
 					UI.messagebox("Preferences saved")
+				end
+
+				wd.add_action_callback("set_weather_path") do |web_dialog,msg|
+					path = @@rad_config["WEATHER_PATH"]
+					if(path!=nil) then
+						path=path.split("/")
+						path.pop
+						path=path.join("/")
+					else
+						path="c:/"
+					end
+					path = UI.openpanel("Choose a weather file", path, "*.epw | *.wea")
+					if path then
+						self.set_weather_path(path)
+						web_dialog.execute_script("document.getElementById('weather_path_input').innerHTML='#{path}'")
+					end
 				end
 
 			end

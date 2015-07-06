@@ -41,7 +41,7 @@ module IGD
 			end
 
 			# Converts a very long file of annual results into a 2d array for
-			# plotting as a heatmap
+			# plotting as a heatmap of UDI.
 			#
 			# It reads the workplane path for getting the position of each sensor.
 			#
@@ -84,15 +84,50 @@ module IGD
 					end
 				end
 
-			#	#assuming they alternate sensor
-			#	for i in 1..8760
-			#		ret.each do |sensor|
-			#			ill=results.shift
-			#			next if ill > max
-			#			next if ill < min
-			#			sensor[3]+=100.0/8760.0
-			#		end
-			#	end
+				return ret
+			end
+
+			# Converts a very long file of annual results into a 2d array for
+			# plotting as a heatmap for plotting DA>
+			#
+			# It reads the workplane path for getting the position of each sensor.
+			#
+			# The positions are assumed to be in meters.
+			#
+			# @author German Molina
+			# @param results_path [String] the path to the results file
+			# @param workplane_file [String] the path to the workplane file
+			# @param min [Float] The minimum acceptable illuminance
+			# @return [Depends] An array with the values when succesful, "false" if not.
+			# @version 0.1
+			def self.annual_to_DA(results_path, workplane_file, min)
+
+				return false if not File.exist?(results_path)
+				return false if not File.exist?(workplane_file)
+
+				results=File.open(results_path).read.split("\n").collect!{|x| x.to_f}
+				n_results=results.length
+
+				sensors=File.open(workplane_file).read.split("\n")
+				n_sensors=sensors.length
+
+				warn "Weather file does not seem to have 8760 hours!!" if n_results/n_sensors != 8760
+
+				ret=[]
+				sensors.each do |line|
+					line.strip!
+					sensor=line.split("\t")
+					ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
+				end
+
+				#assuming they alternate hour
+				ret.each do |sensor|
+					for i in 1..8760
+						ill=results.shift
+						next if ill < min
+						sensor[3]+=100.0/8760.0
+					end
+				end
 
 				return ret
 			end

@@ -4,6 +4,7 @@
 		<title>Materials wizard</title>
 		<meta charset="UTF-8">
 	</head>
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 	<link rel="stylesheet" type="text/css" href="css/general.css">
 	<link rel="stylesheet" type="text/css" href="css/tabs.css">
 	<body>
@@ -27,86 +28,86 @@
 					</li>
 					<li>
 						<a href="#trans">Trans</a>
-					</li>		
+					</li>
 					<li>
 						<a href="#dielectric">Dielectric</a>
-					</li>				
+					</li>
 					<li>
 						<a href="#glass">Glass</a>
-					</li>									
+					</li>
 				</ul>
- 
- 
- 
- 
+
+
+
+
 			   <div id="light" class="tabContent">
 					<h2>Light</h2>
-					<p>Light is the basic material for self-luminous surfaces (i.e., light sources). It works best when the faces are rectangular.</p>										
-					<h3>Required inputs</h3>	
-					
+					<p>Light is the basic material for self-luminous surfaces (i.e., light sources). It works best when the faces are rectangular.</p>
+					<h3>Required inputs</h3>
+
 					<table>
 					  <tr>
 						<td>Name</td>
-						<td><input type="text" id="light_name"></td>		
+						<td><input type="text" id="light_name"></td>
 					  </tr>
 					  <tr>
 						<td>Red</td>
-						<td><input type="text" id="light_red"></td>		
+						<td><input type="text" id="light_red"></td>
 					  </tr>
 					  <tr>
 						<td>Green</td>
-						<td><input type="text" id="light_green"></td>		
+						<td><input type="text" id="light_green"></td>
 					  </tr>
 					  <tr>
 						<td>Blue</td>
-						<td><input type="text" id="light_blue"></td>		
+						<td><input type="text" id="light_blue"></td>
 					  </tr>
 					</table>
 					 <p align="center"> <button onclick='calcLight()'> Input </button></p>
 				</div>
-				
-				
-				
-				
+
+
+
+
 				<div id="glow" class="tabContent hide">
 					<h2>Glow</h2>
-					<p>Glow is used for surfaces that are self-luminous, but limited in their effect. In addition to the radiance value, a maximum radius for shadow testing is given.</p>					
+					<p>Glow is used for surfaces that are self-luminous, but limited in their effect. In addition to the radiance value, a maximum radius for shadow testing is given.</p>
 					<div class="more_info">
 						More info
 						<div class="tooltip">
 							<p>If Maxrad is zero, then the surface will never be tested for shadow, although it may participate in an interreflection calculation. If Maxrad is negative, then the surface will never contribute to scene illumination.</p>
 							<p>Glow sources will never illuminate objects on the other side of an illum surface. This provides a convenient way to illuminate local light fixture geometry without overlighting nearby objects.</p>
-						</div>	
+						</div>
 					</div>
-					
-					<h3>Required inputs</h3>	
+
+					<h3>Required inputs</h3>
 					<table>
 					  <tr>
 						<td>Name</td>
-						<td><input type="text" id="glow_name"></td>		
+						<td><input type="text" id="glow_name"></td>
 					  </tr>
 					  <tr>
 						<td>Red</td>
-						<td><input type="text" id="glow_red"></td>		
+						<td><input type="text" id="glow_red"></td>
 					  </tr>
 					  <tr>
 						<td>Green</td>
-						<td><input type="text" id="glow_green"></td>		
+						<td><input type="text" id="glow_green"></td>
 					  </tr>
 					  <tr>
 						<td>Blue</td>
-						<td><input type="text" id="glow_blue"></td>		
+						<td><input type="text" id="glow_blue"></td>
 					  </tr>
 					  <tr>
 						<td>Max. radius</td>
-						<td><input type="text" id="glow_maxrad"></td>		
+						<td><input type="text" id="glow_maxrad"></td>
 					  </tr>
 					</table>
-					<p align="center"> <button onclick='calcGlow()'> Input </button></p>		   
-				</div>		
-				
-				
-						   
+					<p align="center"> <button onclick='calcGlow()'> Input </button></p>
+				</div>
+
+
+
 				 <div id="spotlight" class="tabContent hide">
 					<h2>Spotlight</h2>
 					<p>Spotlight is used for self-luminous surfaces having directed output.</p>
@@ -114,46 +115,46 @@
 						More info
 						<div class="tooltip">
 							<p>As well as radiance, the full cone angle (in degrees) and orientation (output direction) vector are given. The length of the orientation vector is the distance of the effective focus behind the source center (i.e., the focal length).</p>
-						</div>			   
+						</div>
 					</div>
-					<h3>Required inputs</h3>	
+					<h3>Required inputs</h3>
 					<table>
 					  <tr>
 						<td>Name</td>
-						<td><input type="text" id="spotlight_name"></td>		
-					  </tr>					
+						<td><input type="text" id="spotlight_name"></td>
+					  </tr>
 					  <tr>
 						<td>Red</td>
-						<td><input type="text" id="spotlight_red"></td>		
+						<td><input type="text" id="spotlight_red"></td>
 					  </tr>
 					  <tr>
 						<td>Green</td>
-						<td><input type="text" id="spotlight_green"></td>		
+						<td><input type="text" id="spotlight_green"></td>
 					  </tr>
 					  <tr>
 						<td>Blue</td>
-						<td><input type="text" id="spotlight_blue"></td>		
+						<td><input type="text" id="spotlight_blue"></td>
 					  </tr>
 					  <tr>
 						<td>Angle</td>
-						<td><input type="text" id="spotlight_angle"></td>		
+						<td><input type="text" id="spotlight_angle"></td>
 					  </tr>
 					  <tr>
 						<td>X Dir.</td>
-						<td><input type="text" id="spotlight_x"></td>		
+						<td><input type="text" id="spotlight_x"></td>
 					  </tr>
 					  <tr>
 						<td>Y Dir.</td>
-						<td><input type="text" id="spotlight_y"></td>		
+						<td><input type="text" id="spotlight_y"></td>
 					  </tr>
 					  <tr>
 						<td>Z Dir.</td>
-						<td><input type="text" id="spotlight_z"></td>		
+						<td><input type="text" id="spotlight_z"></td>
 					  </tr>
 
-					</table>	
-					<p align="center"> <button onclick='calcSpotLight()'> Input </button></p>		   
-				</div>	
+					</table>
+					<p align="center"> <button onclick='calcSpotLight()'> Input </button></p>
+				</div>
 
 				 <div id="plastic" class="tabContent hide">
 					<h2>Plastic</h2>
@@ -162,37 +163,37 @@
 						More info
 						<div class="tooltip">
 							<p>Plastic is a material with uncolored highlights. It is given by its RGB reflectance, its fraction of specularity, and its roughness value. Roughness is specified as the rms slope of surface facets. A value of 0 corresponds to a perfectly smooth surface, and a value of 1 would be a very rough surface. Specularity fractions greater than 0.1 and roughness values greater than 0.2 are not very realistic.</p>
-						</div>			   
+						</div>
 					</div>
-					<h3>Required inputs</h3>	
+					<h3>Required inputs</h3>
 					<table>
 					  <tr>
 						<td>Name</td>
-						<td><input type="text" id="plastic_name"></td>		
-					  </tr>					
+						<td><input type="text" id="plastic_name"></td>
+					  </tr>
 					  <tr>
 						<td>Red</td>
-						<td><input type="text" id="plastic_red"></td>		
+						<td><input type="text" id="plastic_red"></td>
 					  </tr>
 					  <tr>
 						<td>Green</td>
-						<td><input type="text" id="plastic_green"></td>		
+						<td><input type="text" id="plastic_green"></td>
 					  </tr>
 					  <tr>
 						<td>Blue</td>
-						<td><input type="text" id="plastic_blue"></td>		
+						<td><input type="text" id="plastic_blue"></td>
 					  </tr>
 					  <tr>
 						<td>Specularity</td>
-						<td><input type="text" id="plastic_specularity"></td>		
+						<td><input type="text" id="plastic_specularity"></td>
 					  </tr>
 					  <tr>
 						<td>Roughness</td>
-						<td><input type="text" id="plastic_roughness"></td>		
+						<td><input type="text" id="plastic_roughness"></td>
 					  </tr>
-					</table>	
-					<p align="center"> <button onclick='calcPlastic()'> Input </button></p>		   
-				</div>	
+					</table>
+					<p align="center"> <button onclick='calcPlastic()'> Input </button></p>
+				</div>
 
 
 			 	<div id="metal" class="tabContent hide">
@@ -202,37 +203,37 @@
 						More info
 						<div class="tooltip">
 							<p>Metal is a material with colored highlights. It is given by its RGB reflectance, its fraction of specularity, and its roughness value. Roughness is specified as the rms slope of surface facets. A value of 0 corresponds to a perfectly smooth surface, and a value of 1 would be a very rough surface. Specularity of metals is usually over 0.9. Roughness values greater than 0.2 are uncommon.</p>
-						</div>			   
+						</div>
 					</div>
-					<h3>Required inputs</h3>	
+					<h3>Required inputs</h3>
 					<table>
 					  <tr>
 						<td>Name</td>
-						<td><input type="text" id="metal_name"></td>		
-					  </tr>					
+						<td><input type="text" id="metal_name"></td>
+					  </tr>
 					  <tr>
 						<td>Red</td>
-						<td><input type="text" id="metal_red"></td>		
+						<td><input type="text" id="metal_red"></td>
 					  </tr>
 					  <tr>
 						<td>Green</td>
-						<td><input type="text" id="metal_green"></td>		
+						<td><input type="text" id="metal_green"></td>
 					  </tr>
 					  <tr>
 						<td>Blue</td>
-						<td><input type="text" id="metal_blue"></td>		
+						<td><input type="text" id="metal_blue"></td>
 					  </tr>
 					  <tr>
 						<td>Specularity</td>
-						<td><input type="text" id="metal_specularity"></td>		
+						<td><input type="text" id="metal_specularity"></td>
 					  </tr>
 					  <tr>
 						<td>Roughness</td>
-						<td><input type="text" id="metal_roughness"></td>		
+						<td><input type="text" id="metal_roughness"></td>
 					  </tr>
-					</table>	
-					<p align="center"> <button onclick='calcMetal()'> Input </button></p>		   
-				</div>	
+					</table>
+					<p align="center"> <button onclick='calcMetal()'> Input </button></p>
+				</div>
 
 
 			 	<div id="trans" class="tabContent hide">
@@ -242,45 +243,45 @@
 						More info
 						<div class="tooltip">
 							<p>This is a translucent material, similar to plastic. The transmissivity is the fraction of penetrating light that travels all the way through the material. The transmitted specular component is the fraction of transmitted light that is not diffusely scattered. Transmitted and diffusely reflected light is modified by the material color. Translucent objects are infinitely thin.</p>
-						</div>			   
+						</div>
 					</div>
-					<h3>Required inputs</h3>	
+					<h3>Required inputs</h3>
 					<table>
 					  <tr>
 						<td>Name</td>
-						<td><input type="text" id="trans_name"></td>		
-					  </tr>					
+						<td><input type="text" id="trans_name"></td>
+					  </tr>
 					  <tr>
 						<td>Red</td>
-						<td><input type="text" id="trans_red"></td>		
+						<td><input type="text" id="trans_red"></td>
 					  </tr>
 					  <tr>
 						<td>Green</td>
-						<td><input type="text" id="trans_green"></td>		
+						<td><input type="text" id="trans_green"></td>
 					  </tr>
 					  <tr>
 						<td>Blue</td>
-						<td><input type="text" id="trans_blue"></td>		
+						<td><input type="text" id="trans_blue"></td>
 					  </tr>
 					  <tr>
 						<td>Specularity</td>
-						<td><input type="text" id="trans_specularity"></td>		
+						<td><input type="text" id="trans_specularity"></td>
 					  </tr>
 					  <tr>
 						<td>Roughness</td>
-						<td><input type="text" id="trans_roughness"></td>		
+						<td><input type="text" id="trans_roughness"></td>
 					  </tr>
 					  <tr>
 						<td>Transmissivity</td>
-						<td><input type="text" id="trans_trans"></td>		
+						<td><input type="text" id="trans_trans"></td>
 					  </tr>
 					  <tr>
 						<td>Specular trans.</td>
-						<td><input type="text" id="trans_tspec"></td>		
+						<td><input type="text" id="trans_tspec"></td>
 					  </tr>
-					</table>	
-					<p align="center"> <button onclick='calcTrans()'> Input </button></p>		   
-				</div>	
+					</table>
+					<p align="center"> <button onclick='calcTrans()'> Input </button></p>
+				</div>
 
 
 			 	<div id="dielectric" class="tabContent hide">
@@ -290,39 +291,39 @@
 						More info
 						<div class="tooltip">
 							<p>A dielectric material is transparent, and it refracts light as well as reflecting it. Its behavior is determined by the index of refraction and transmission coefficient in each wavelength band per unit length. Common glass has a index of refraction (n) around 1.5, and a transmission coefficient of roughly 0.92 over an inch. An additional number, the Hartmann constant, describes how the index of refraction changes as a function of wavelength. It is usually zero.</p>
-						</div>			   
+						</div>
 					</div>
-					<h3>Required inputs</h3>	
+					<h3>Required inputs</h3>
 					<table>
 					  <tr>
 						<td>Name</td>
-						<td><input type="text" id="dielectric_name"></td>		
-					  </tr>					
+						<td><input type="text" id="dielectric_name"></td>
+					  </tr>
 					  <tr>
 						<td>Red transmission</td>
-						<td><input type="text" id="dielectric_red"></td>		
+						<td><input type="text" id="dielectric_red"></td>
 					  </tr>
 					  <tr>
 						<td>Green transmission</td>
-						<td><input type="text" id="dielectric_green"></td>		
+						<td><input type="text" id="dielectric_green"></td>
 					  </tr>
 					  <tr>
 						<td>Blue transmission</td>
-						<td><input type="text" id="dielectric_blue"></td>		
+						<td><input type="text" id="dielectric_blue"></td>
 					  </tr>
 					  <tr>
 						<td>Index of refraction</td>
-						<td><input type="text" id="dielectric_refraction" value="1.52"></td>		
+						<td><input type="text" id="dielectric_refraction" value="1.52"></td>
 					  </tr>
 					  <tr>
 						<td>Hartmann constant</td>
-						<td><input type="text" id="dielectric_hartmann" value="0"></td>		
+						<td><input type="text" id="dielectric_hartmann" value="0"></td>
 					  </tr>
-					</table>	
-					<p align="center"> <button onclick='calcDielectric()'> Input </button></p>		   
-				</div>	
-				
-				
+					</table>
+					<p align="center"> <button onclick='calcDielectric()'> Input </button></p>
+				</div>
+
+
 				<div id="glass" class="tabContent hide">
 					<h2>Glass</h2>
 					<p>Glass is similar to dielectric, but it is optimized for thin glass surfaces.</p>
@@ -330,36 +331,36 @@
 						More info
 						<div class="tooltip">
 							<p>Glass is similar to dielectric, but it is optimized for thin glass surfaces (n = 1.52). One transmitted ray and one reflected ray is produced. By using a single surface is in place of two, internal reflections are avoided. The surface orientation is irrelevant. The only specification required is the transmissivity at normal incidence. (Transmissivity is the amount of light not absorbed in one traversal of the material. Transmittance -- the value usually measured -- is the total light transmitted through the pane including multiple reflections.)</p>
-						</div>			   
+						</div>
 					</div>
-					<h3>Required inputs</h3>	
+					<h3>Required inputs</h3>
 					<table>
 					  <tr>
 						<td>Name</td>
-						<td><input type="text" id="glass_name"></td>		
-					  </tr>					
+						<td><input type="text" id="glass_name"></td>
+					  </tr>
 					  <tr>
 						<td>Red transmissivity</td>
-						<td><input type="text" id="glass_red"></td>		
+						<td><input type="text" id="glass_red"></td>
 					  </tr>
 					  <tr>
 						<td>Green transmissivity</td>
-						<td><input type="text" id="glass_green"></td>		
+						<td><input type="text" id="glass_green"></td>
 					  </tr>
 					  <tr>
 						<td>Blue transmissivity</td>
-						<td><input type="text" id="glass_blue"></td>		
+						<td><input type="text" id="glass_blue"></td>
 					  </tr>
 					  <tr>
 					</table>
 
-					<p align="center"> <button onclick='calcGlass()'> Input </button></p>		   
-				</div>					
+					<p align="center"> <button onclick='calcGlass()'> Input </button></p>
+				</div>
 
 	</body>
-	
-	 <script src="js/tabs.js"></script> 
-	 <script src="js/material_wizard.js"></script> 
-				
+
+	 <script src="js/tabs.js"></script>
+	 <script src="js/material_wizard.js"></script>
+
 
 </html>
