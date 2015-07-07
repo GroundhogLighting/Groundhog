@@ -26,6 +26,7 @@ table.columns p {
     margin:auto;
     font-size: 100%;
     width:80%;
+    margin-bottom: 30px;
 }
 
 a:active,
@@ -232,7 +233,7 @@ a:hover {
 }
 
 #home_github_button::before{
-    background-image: url("images/github_icon.png");
+    background-image: url("images/github_icon_2.png");
 }
 
 #home_download_button::before{
@@ -243,14 +244,14 @@ a:hover {
     background-image: url("images/sketchup_icon.gif");
 }
 
-#github_button{
-    background: #6E6CB1 url("images/github_icon.png") no-repeat;
+#github_button, #resources_github{
+    background: #6cb16e url("images/github_icon_2.png") no-repeat;
 }
 #sketchup_button{
     background: #b16e6c url("images/sketchup_icon.gif") no-repeat; //#939598
 }
 #download_button{
-    background: #6cb16e url("images/download_icon.png") no-repeat; //#b16e6c  #6CB16E
+    background: #6E6CB1 url("images/download_icon.png") no-repeat; //#b16e6c  #6CB16E
 }
 
 #training{
@@ -270,25 +271,49 @@ a:hover {
     border-radius: 50%;
     margin-left: auto;
     margin-right: auto;
-    background-size: 60%;
+    background-size: 54%;
     background-position: center;
 }
 
 
+#contribute_twitter, #resources_twitter{
+    background: #55acee url("images/twitter_icon.png") no-repeat;
+}
+
 #contribute_button{
+    background: #6cb16e url("images/github_icon_2.png") no-repeat;
+}
+
+#contribute_button, #contribute_twitter {
     margin-top:50px;
-    max-width: 320px;
-    max-height: 320px;
+    max-width: 220px;
+    max-height: 220px;
     width: 30vw;
     height: 30vw;
     display: block;
     border-radius: 50%;
-    background: #6E6CB1 url("images/github_icon.png") no-repeat;
-    background-size: 60%;
+    background-size: 54%;
     background-position: center;
     margin-left: auto;
     margin-right: auto;
+}
 
+#resources_igd{
+    background: #6E6CB1 url("images/isoIGD.png") no-repeat;
+}
+
+#resources_igd, #resources_twitter, #resources_github {
+    margin-top:50px;
+    max-width: 220px;
+    max-height: 220px;
+    width: 30vw;
+    height: 30vw;
+    display: block;
+    border-radius: 50%;
+    background-size: 54%;
+    background-position: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /*MENU */
