@@ -114,7 +114,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_rad_config-class_method" title="get_rad_config (class method)">+ (Object) <strong>get_rad_config</strong> </a>
+      <a href="#ask_for_weather_file-class_method" title="ask_for_weather_file (class method)">+ (String) <strong>ask_for_weather_file</strong>(check) </a>
     
 
     
@@ -128,7 +128,33 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Asks for a EPW or WEA file to be inputed.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_rad_config-class_method" title="get_rad_config (class method)">+ (Hash) <strong>get_rad_config</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the HASH with the Configurations…</p>
+</div></span>
   
 </li>
 
@@ -360,26 +386,199 @@ action_callback.</p>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="get_rad_config-class_method">
+  <h3 class="signature first" id="ask_for_weather_file-class_method">
   
-    + (<tt>Object</tt>) <strong>get_rad_config</strong> 
-  
-
+    + (<tt>String</tt>) <strong>ask_for_weather_file</strong>(check) 
   
 
   
-</h3><table class="source_code">
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Asks for a EPW or WEA file to be inputed.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>check</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>check for extension.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The weather file path</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-7
-8
-9</pre>
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 7</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 18</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ask_for_weather_file'>ask_for_weather_file</span><span class='lparen'>(</span><span class='id identifier rubyid_check'>check</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WEATHER_PATH</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+	<span class='kw'>if</span> <span class='id identifier rubyid_path'>path</span> <span class='kw'>then</span>
+		<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
+		<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='kw'>else</span>
+		<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>c:/</span><span class='tstring_end'>&quot;</span></span>
+	<span class='kw'>end</span>
+	<span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_openpanel'>openpanel</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Choose a weather file</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>*.epw; *.wea</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='kw'>return</span> <span class='id identifier rubyid_path'>path</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_check'>check</span>
+
+	<span class='kw'>while</span> <span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span><span class='op'>!=</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>epw</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>and</span> <span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span><span class='op'>!=</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>wea</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>do</span>
+		<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Invalid file extension. Please input a WEA or EPW file</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_openpanel'>openpanel</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Choose a weather file</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>*.epw; *.wea</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='kw'>end</span>
+
+	<span class='kw'>return</span> <span class='id identifier rubyid_path'>path</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_rad_config-class_method">
+  
+    + (<tt>Hash</tt>) <strong>get_rad_config</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the HASH with the Configurations… this is meant to be accessed by
+other modules</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The configuration</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+10
+11
+12</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 10</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_rad_config'>get_rad_config</span>
 	<span class='cvar'>@@rad_config</span>
@@ -450,20 +649,20 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90</pre>
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 80</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 106</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_config'>load_config</span>
 	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/config</span><span class='tstring_end'>&quot;</span></span>
@@ -542,12 +741,12 @@ by the user.</p>
       <pre class="lines">
 
 
-14
-15
-16</pre>
+41
+42
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 14</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 41</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_radiance_path'>radiance_path</span>
 	<span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>RADIANCE_PATH</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -617,12 +816,12 @@ by the user.</p>
       <pre class="lines">
 
 
-58
-59
-60</pre>
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 84</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rcontrib_options'>rcontrib_options</span>
 	<span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>RCONTRIB</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -692,12 +891,12 @@ by the user.</p>
       <pre class="lines">
 
 
-51
-52
-53</pre>
+77
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 51</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 77</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rtrace_options'>rtrace_options</span>
 	<span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>RTRACE</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -767,12 +966,12 @@ by the user.</p>
       <pre class="lines">
 
 
-44
-45
-46</pre>
+70
+71
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 44</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 70</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rvu_options'>rvu_options</span>
 	<span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>RVU</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -842,17 +1041,17 @@ by the user.</p>
       <pre class="lines">
 
 
-66
-67
-68
-69
-70
-71
-72
-73</pre>
+92
+93
+94
+95
+96
+97
+98
+99</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 66</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 92</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_sensor_spacing'>sensor_spacing</span>
 	<span class='kw'>return</span> <span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SENSOR_SPACING</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SENSOR_SPACING</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>!=</span> <span class='kw'>nil</span>
@@ -948,16 +1147,16 @@ configured by the user.</p>
       <pre class="lines">
 
 
-30
-31
-32
-33
-34
-35
-36</pre>
+56
+57
+58
+59
+60
+61
+62</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 30</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 56</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_set_weather_path'>set_weather_path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	 <span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WEATHER_PATH</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_path'>path</span>
@@ -1047,32 +1246,6 @@ configured by the user.</p>
       <pre class="lines">
 
 
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
 123
 124
 125
@@ -1149,10 +1322,28 @@ configured by the user.</p>
 196
 197
 198
-199</pre>
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 97</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 123</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_show_config'>show_config</span>
 
@@ -1223,7 +1414,7 @@ configured by the user.</p>
 
 			<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Preferences saved</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 		<span class='kw'>else</span>
-			<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Radiance does not seem to be where you told us, or maybe such directory does not even exist.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+			<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Radiance does not seem to be where you told us. Your preferences were NOT SAVED.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 		<span class='kw'>end</span>
 	<span class='kw'>end</span>
 
@@ -1241,15 +1432,7 @@ configured by the user.</p>
 	<span class='kw'>end</span>
 
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>set_weather_path</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
-		<span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WEATHER_PATH</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-		<span class='kw'>if</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='op'>!=</span><span class='kw'>nil</span><span class='rparen'>)</span> <span class='kw'>then</span>
-			<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-			<span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
-			<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-		<span class='kw'>else</span>
-			<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>c:/</span><span class='tstring_end'>&quot;</span></span>
-		<span class='kw'>end</span>
-		<span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_openpanel'>openpanel</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Choose a weather file</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>*.epw | *.wea</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ask_for_weather_file'>ask_for_weather_file</span><span class='lparen'>(</span><span class='kw'>false</span><span class='rparen'>)</span>
 		<span class='kw'>if</span> <span class='id identifier rubyid_path'>path</span> <span class='kw'>then</span>
 			<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_set_weather_path'>set_weather_path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 			<span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>document.getElementById(&#39;weather_path_input&#39;).innerHTML=&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1294,7 +1477,7 @@ configured by the user.</p>
       
         &mdash;
         <div class='inline'>
-<p>The radiance bin path if successful, false if not.</p>
+<p>The radiance bin path if successful, nil (false) if not.</p>
 </div>
       
     </li>
@@ -1323,17 +1506,15 @@ configured by the user.</p>
       <pre class="lines">
 
 
-21
-22
-23
-24</pre>
+48
+49
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 48</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_weather_path'>weather_path</span>
-	<span class='kw'>return</span> <span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WEATHER_PATH</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WEATHER_PATH</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>!=</span> <span class='kw'>nil</span>
-	<span class='kw'>return</span> <span class='kw'>false</span>
+	<span class='kw'>return</span> <span class='cvar'>@@rad_config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WEATHER_PATH</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1345,7 +1526,7 @@ configured by the user.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon Jul  6 18:37:49 2015 by
+  Generated on Wed Jul  8 11:35:35 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

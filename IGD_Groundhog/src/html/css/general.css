@@ -6,6 +6,40 @@ table, th, td {
    font-size: 100%;
 }
 
+h2{
+    color: rgb(40,40,40);
+}
+
+input{
+    margin-right: 10px;
+}
+
+fieldset{
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(150,150,150);
+}
+
+fieldset p{
+    margin:0;
+}
+
+fieldset input{
+    width: 60px;
+}
+fieldset > p > label{
+    display: inline-block;
+    width: 40px;
+    text-align: left;
+    padding: 0px;
+}
+
+
+fieldset > legend{
+    color: rgb(40,40,40);
+    font-weight: bold;
+}
+
 table td{
     height: 15px;
 }
@@ -13,15 +47,18 @@ table td{
 .option_info {
   cursor: help;
   font-weight: bolder;
-  padding-left: 10px;
+ // padding-left: 10px;
+  display: inline;
+}
+
+select {
+    margin-right:10px;
+    margin-left:10px;
 }
 
 
 
-td > select{
-    width:100%;
-    font-size: 100%;    
-}
+
 
 .more_info {
   cursor: help;

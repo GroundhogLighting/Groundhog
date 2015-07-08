@@ -4,8 +4,35 @@ module IGD
 
 			@@rad_config=Hash.new()
 
+			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
+			# @author German Molina
+			# @return [Hash] The configuration
 			def self.get_rad_config
 				@@rad_config
+			end
+
+			# Asks for a EPW or WEA file to be inputed.
+			# @author German Molina
+			# @param check [Boolean] check for extension.
+			# @return [String] The weather file path
+			def self.ask_for_weather_file(check)
+				path = @@rad_config["WEATHER_PATH"]
+				if path then
+					path=path.split("/")
+					path.pop
+					path=path.join("/")
+				else
+					path="c:/"
+				end
+				path = UI.openpanel("Choose a weather file", path, "*.epw; *.wea")
+				return path if not check
+
+				while path.split('.').pop!='epw' and path.split('.').pop!='wea' do
+					UI.messagebox("Invalid file extension. Please input a WEA or EPW file")
+					path = UI.openpanel("Choose a weather file", path, "*.epw; *.wea")
+				end
+
+				return path
 			end
 
 			# Gets the path where the Radiance programs are installed... must be configured by the user.
@@ -17,10 +44,9 @@ module IGD
 
 			# Gets the path where the weather files are supposed to be stored... must be configured by the user.
 			# @author German Molina
-			# @return [Depends] The radiance bin path if successful, false if not.
+			# @return [Depends] The radiance bin path if successful, nil (false) if not.
 			def self.weather_path
-				return @@rad_config["WEATHER_PATH"] if @@rad_config["WEATHER_PATH"]!= nil
-				return false
+				return @@rad_config["WEATHER_PATH"]
 			end
 
 			# Sets the path where the weather files are supposed to be stored... must be configured by the user.
@@ -163,7 +189,7 @@ module IGD
 
 						UI.messagebox("Preferences saved")
 					else
-						UI.messagebox("Radiance does not seem to be where you told us, or maybe such directory does not even exist.")
+						UI.messagebox("Radiance does not seem to be where you told us. Your preferences were NOT SAVED.")
 					end
 				end
 
@@ -181,15 +207,7 @@ module IGD
 				end
 
 				wd.add_action_callback("set_weather_path") do |web_dialog,msg|
-					path = @@rad_config["WEATHER_PATH"]
-					if(path!=nil) then
-						path=path.split("/")
-						path.pop
-						path=path.join("/")
-					else
-						path="c:/"
-					end
-					path = UI.openpanel("Choose a weather file", path, "*.epw | *.wea")
+					path = self.ask_for_weather_file(false)
 					if path then
 						self.set_weather_path(path)
 						web_dialog.execute_script("document.getElementById('weather_path_input').innerHTML='#{path}'")

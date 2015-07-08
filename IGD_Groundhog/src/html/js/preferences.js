@@ -6,6 +6,10 @@ function set_radiance_preferences(){
 	var rtrace=document.getElementById("rtrace").value;
 
 
+	var extension = weather_path.split('.').pop();
+	if(weather_path != "c:/" && (extension !="epw" && extension!="wea")){
+		alert('You did not choose a valid weather file (i.e. EPW or WEA). Preferences will be saved, but you will be bothered when trying to perform annual simulations.');
+	}
 
 	var query = 'skp:set_radiance_preferences@{"RADIANCE_PATH":"'+rad_path+'","WEATHER_PATH":"'+weather_path+'","RVU":"'+rvu+'","RCONTRIB":"'+rcontrib+'","RTRACE":"'+rtrace+'"}';
 
@@ -23,6 +27,7 @@ function set_general_preferences(){
 		return;
 	}
 	var query = 'skp:set_general_preferences@{"SENSOR_SPACING":'+sensor_spacing+'}';
+
 	window.location.href = query;
 }
 

@@ -54,7 +54,7 @@ module IGD
 			# @param max [Float] The maximum acceptable illuminance
 			# @return [Depends] An array with the values when succesful, "false" if not.
 			# @version 0.1
-			def self.annual_to_UDI(results_path, workplane_file, min, max)
+			def self.annual_to_UDI(results_path, workplane_file, min, max, early, late)
 
 				return false if not File.exist?(results_path)
 				return false if not File.exist?(workplane_file)
@@ -65,7 +65,10 @@ module IGD
 				sensors=File.open(workplane_file).read.split("\n")
 				n_sensors=sensors.length
 
-				warn "Weather file does not seem to have 8760 hours!!" if n_results/n_sensors != 8760
+				n_samples = n_results/n_sensors
+				warn "Weather file does not seem to have 8760 hours!!" if n_samples != 8760
+
+				timestep=8760.0/n_samples
 
 				ret=[]
 				sensors.each do |line|
@@ -74,14 +77,20 @@ module IGD
 					ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
 				end
 
-				#assuming they alternate hour
+				#they alternate hour
 				ret.each do |sensor|
-					for i in 1..8760
+					time=0.0
+					ac=0.0
+					for i in 1..n_samples
+						time+=(timestep/2.0)
 						ill=results.shift
+						next if (time%24.0) < early or (time%24.0) > late
+						ac+=1.0
 						next if ill > max
 						next if ill < min
-						sensor[3]+=100.0/8760.0
-					end
+						sensor[3]+=100.0
+					end					
+					sensor[3]/=ac
 				end
 
 				return ret
@@ -100,7 +109,7 @@ module IGD
 			# @param min [Float] The minimum acceptable illuminance
 			# @return [Depends] An array with the values when succesful, "false" if not.
 			# @version 0.1
-			def self.annual_to_DA(results_path, workplane_file, min)
+			def self.annual_to_DA(results_path, workplane_file, min, early, late)
 
 				return false if not File.exist?(results_path)
 				return false if not File.exist?(workplane_file)
@@ -111,7 +120,10 @@ module IGD
 				sensors=File.open(workplane_file).read.split("\n")
 				n_sensors=sensors.length
 
-				warn "Weather file does not seem to have 8760 hours!!" if n_results/n_sensors != 8760
+				n_samples = n_results/n_sensors
+				warn "Weather file does not seem to have 8760 hours!!" if n_samples != 8760
+
+				timestep=8760.0/n_samples
 
 				ret=[]
 				sensors.each do |line|
@@ -120,13 +132,19 @@ module IGD
 					ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
 				end
 
-				#assuming they alternate hour
+				#they alternate hour
 				ret.each do |sensor|
-					for i in 1..8760
+					time=0.0
+					ac=0.0
+					for i in 1..n_samples
+						time+=(timestep/2.0)
 						ill=results.shift
+						next if (time%24.0) < early or (time%24.0) > late
+						ac+=1.0
 						next if ill < min
-						sensor[3]+=100.0/8760.0
+						sensor[3]+=100.0
 					end
+					sensor[3]/=ac
 				end
 
 				return ret

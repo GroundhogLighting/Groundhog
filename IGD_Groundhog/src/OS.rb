@@ -116,7 +116,7 @@ module IGD
 			# @author German Molina
 			# @param cmd [String] The command to execute.
 			def self.run_command(cmd)
-				UI.messagebox("Either your Radiance configuration is incorrect or inexistent.\n\nPlease reconfigure.") if Config.radiance_path == nil
+				UI.messagebox("Either your Radiance configuration is incorrect or inexistent.\n\nPlease reconfigure.") if not Config.radiance_path
 				return false if Config.radiance_path == nil
 
 				exit_status=""
@@ -142,6 +142,7 @@ module IGD
 			# @param script [Array] The script
 			def self.execute_script(script)
 				script.each  do |cmd|
+					puts "\t --> #{cmd}"
 					return false if not self.run_command(cmd)
 				end
 				return true

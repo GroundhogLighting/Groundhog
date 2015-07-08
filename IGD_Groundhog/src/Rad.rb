@@ -17,7 +17,7 @@ module IGD
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						array=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["lower_threshold"], options["upper_threshold"])
+						array=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["lower_threshold"], options["upper_threshold"], options["early"], options["late"])
 						return if not array #if the format was wrong, for example
 
 						uv=Results.get_UV(array)
@@ -43,7 +43,7 @@ module IGD
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						array=Results.annual_to_DA("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["threshold"])
+						array=Results.annual_to_DA("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["threshold"], options["early"], options["late"])
 						return if not array #if the format was wrong, for example
 
 						uv=Results.get_UV(array)
@@ -69,8 +69,10 @@ module IGD
 					script=[]
 
 					file=Config.weather_path
-					if not file then
-						return false
+
+					#if it is nil or (not epw and not wea)
+					if not file or (file.split(".").pop!='wea' and file.split(".").pop != 'epw') then
+						file = Config.ask_for_weather_file(true)
 					end
 
 					extension = file.split(".").pop
@@ -299,7 +301,7 @@ module IGD
 			def self.show_sim_wizard
 				wd=UI::WebDialog.new(
 					"Simulation wizard", false, "",
-					580, 450, 100, 100, false )
+					580, 470, 100, 100, false )
 
 				wd.set_file("#{OS.main_groundhog_path}/src/html/simulation.html" )
 
