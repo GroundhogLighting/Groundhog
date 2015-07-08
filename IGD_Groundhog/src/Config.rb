@@ -24,15 +24,15 @@ module IGD
 				else
 					path="c:/"
 				end
-				path = UI.openpanel("Choose a weather file", path, "*.epw; *.wea")
-				return path if not check
+				path = UI.openpanel("Choose a weather file", path, "weather file (.epw, .wea) | *.epw; *.wea ||")
+				return path.tr("\\","/") if not check
 
 				while path.split('.').pop!='epw' and path.split('.').pop!='wea' do
 					UI.messagebox("Invalid file extension. Please input a WEA or EPW file")
 					path = UI.openpanel("Choose a weather file", path, "*.epw; *.wea")
 				end
 
-				return path
+				return path.tr("\\","/")
 			end
 
 			# Gets the path where the Radiance programs are installed... must be configured by the user.
@@ -167,7 +167,7 @@ module IGD
 
 					old_path=@@rad_config["RADIANCE_PATH"]
 
-					@@rad_config["RADIANCE_PATH"]=config["RADIANCE_PATH"]
+					@@rad_config["RADIANCE_PATH"]=config["RADIANCE_PATH"].tr("\\","/")
 					@@rad_config["WEATHER_PATH"]=config["WEATHER_PATH"]
 					@@rad_config["RVU"]=config["RVU"]
 					@@rad_config["RCONTRIB"]=config["RCONTRIB"]

@@ -29,7 +29,7 @@ module IGD
 				return true
 			end
 
-			# Calculates and plots the Daylight Automnomy
+			# Calculates and plots the Daylight Autonomy
 			# @author German Molina
 			# @param options [Hash] The options
 			# @return [Boolean] Success
@@ -91,7 +91,6 @@ module IGD
 
 					#Simulate
 					wps=Dir["Workplanes/*"]
-
 
 					OS.mkdir("Results")
 					wps.each do |workplane|
@@ -301,9 +300,9 @@ module IGD
 			def self.show_sim_wizard
 				wd=UI::WebDialog.new(
 					"Simulation wizard", false, "",
-					580, 470, 100, 100, false )
+					595, 490, 100, 100, false )
 
-				wd.set_file("#{OS.main_groundhog_path}/src/html/simulation.html" )
+				wd.set_file("#{IGD::Groundhog::OS.main_groundhog_path}/src/html/simulation.html" )
 
 				wd.add_action_callback("rvu") do |web_dialog,msg|
 					self.rvu

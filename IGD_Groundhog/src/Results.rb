@@ -89,7 +89,7 @@ module IGD
 						next if ill > max
 						next if ill < min
 						sensor[3]+=100.0
-					end					
+					end
 					sensor[3]/=ac
 				end
 
@@ -414,7 +414,7 @@ module IGD
 
 					Results.update_pixel_colors(min,max)
 
-					web_dialog.execute_script("document.getElementById('min').value="+min.to_s+";document.getElementById('max').value="+max.to_s+";");
+					web_dialog.execute_script("document.getElementById('min').value="+min.to_i.to_s+";document.getElementById('max').value="+max.to_i.to_s+";");
 				end
 
 				wd.show()

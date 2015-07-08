@@ -719,7 +719,7 @@ module IGD
 
 			# Export the RIF file, for creating renders
 			# @author German Molina
-			# @version 0.3
+			# @version 0.4
 			# @param path [String] Directory to export the RIF file
 			# @return [Boolean] Success
 			# @note It assumes that the relevant zone is interior.
@@ -738,6 +738,7 @@ module IGD
 					f.write("scene=./scene.rad\n")
 					f.write("materials=./Materials/materials.mat\n")
 					f.write("QUAL=LOW\n")
+					f.write("DETAIL=LOW\n")
 					f.write("VAR=High\n")
 					f.write("RESOLUTION=560 560\n")
 					f.write("AMBFILE=ambient.amb\n")

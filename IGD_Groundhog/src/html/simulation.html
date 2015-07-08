@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Groundhog Simulation</title>
@@ -21,7 +21,7 @@
 						<a href="#actual_illuminance" style="width:135px">Actual illuminance</a>
 					</li>
 					<li>
-						<a href="#da" style="width:135px">Daylight Authonomy</a>
+						<a href="#da" style="width:135px">Day. Authonomy</a>
 					</li>
 					<li>
 						<a href="#udi" style="width:135px">U.D.I.</a>
@@ -31,7 +31,7 @@
 
 
 
-				<div id="rvu" class="tabContent" style="height: 450px; margin-left: 145px">
+				<div id="rvu" class="tabContent" style="height: 480px; margin-left: 145px">
 					<h2>Review model</h2>
 					<p>This calculation method allows previewing the SketchUp model in Radiance.</p>
 					<div class="more_info">
@@ -46,7 +46,7 @@
 				</div>
 
 
-			   <div id="daylight_factor" class="tabContent" style="height: 450px; margin-left: 145px">
+			   <div id="daylight_factor" class="tabContent" style="height: 480px; margin-left: 145px">
 					<h2>Daylight Factor</h2>
 					<p>The Daylight Factor is an old static metric defined as the ratio of internal light level to external light level under a CIE Overcast Sky.</p>
 					<div class="more_info">
@@ -64,7 +64,7 @@
 
 
 
-				<div id="actual_illuminance" class="tabContent hide" style="height: 450px; margin-left: 145px">
+				<div id="actual_illuminance" class="tabContent hide" style="height: 480px; margin-left: 145px">
 					<h2>Actual Illuminance</h2>
 					<p>This option calculates the illuminance over the workplanes of the model using a CIE sky with the model's date, time and location.</p>
 					<div class="more_info">
@@ -101,7 +101,7 @@
 					<p align="center"> <button onclick='calc_actual_illuminance()'> Calculate </button></p>
 				</div>
 
-				<div id="da" class="tabContent hide" style="height: 450px; margin-left: 145px">
+				<div id="da" class="tabContent hide" style="height: 480px; margin-left: 145px">
 					<h2>Daylight Authonomy</h2>
 					<p>Calculates the DA over the workplanes defined in the model.</p>
 					<div class="more_info">
@@ -119,16 +119,12 @@
 
 						<fieldset>
 							<legend>Target illuminance</legend>
-							<p>
 								<label>Min:</label><input id='da_threshold' type='number' value='300' step='1' min='0'></input>
-							</p>
 						</fieldset>
 						<fieldset>
 							<legend>Working hours</legend>
-							<p>
 								<label>From:</label> <input id='da_early' type='number' value='9.5' step='0.5' min='0' max='24'></input>
 								<label>To:</label><input id='da_late' type='number' value='17.5' step='0.5' min='0' max='24'></input>
-							</p>
 						</fieldset>
 						<fieldset>
 							<legend>Sky subdivition</legend>
@@ -157,7 +153,7 @@
 
 
 
-				<div id="udi" class="tabContent hide" style="height: 450px; margin-left: 145px">
+				<div id="udi" class="tabContent hide" style="height: 480px; margin-left: 145px">
 					<h2>Useful Daylight Illuminance</h2>
 					<p>Calculates the UDI over the workplanes defined in the model.</p>
 					<div class="more_info">
@@ -175,17 +171,13 @@
 
 						<fieldset>
 							<legend>Target illuminance</legend>
-							<p>
 								<label>Min:</label><input id='udi_lower_threshold' type='number' value='300' step='1' min='0'></input>
 								<label>Max:</label><input id='udi_upper_threshold' type='number' value='2000' step='1' min='0'></input>
-							</p>
 						</fieldset>
 						<fieldset>
 							<legend>Working hours</legend>
-							<p>
 								<label>From:</label> <input id='udi_early' type='number' value='9.5' step='0.5' min='0' max='24'></input>
 								<label>To:</label><input id='udi_late' type='number' value='17.5' step='0.5' min='0' max='24'></input>
-							</p>
 						</fieldset>
 						<fieldset>
 							<legend>Sky subdivition</legend>
