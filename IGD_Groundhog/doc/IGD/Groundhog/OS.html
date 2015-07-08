@@ -211,6 +211,30 @@ Radiance.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#examples_groundhog_path-class_method" title="examples_groundhog_path (class method)">+ (Void) <strong>examples_groundhog_path</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Gets the path where the Examples are stored.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#execute_script-class_method" title="execute_script (class method)">+ (Object) <strong>execute_script</strong>(script) </a>
     
 
@@ -283,7 +307,7 @@ Radiance.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#main_groundhog_path-class_method" title="main_groundhog_path (class method)">+ (Void) <strong>main_groundhog_path</strong> </a>
+      <a href="#main_groundhog_path-class_method" title="main_groundhog_path (class method)">+ (String) <strong>main_groundhog_path</strong> </a>
     
 
     
@@ -377,7 +401,7 @@ Radiance.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#tmp_groundhog_path-class_method" title="tmp_groundhog_path (class method)">+ (Void) <strong>tmp_groundhog_path</strong> </a>
+      <a href="#tmp_groundhog_path-class_method" title="tmp_groundhog_path (class method)">+ (String) <strong>tmp_groundhog_path</strong> </a>
     
 
     
@@ -470,16 +494,16 @@ false</p>
       <pre class="lines">
 
 
-167
-168
-169
-170
-171
-172
-173</pre>
+177
+178
+179
+180
+181
+182
+183</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 167</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 177</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ask_about_Radiance'>ask_about_Radiance</span>
 	<span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_Radiance_Path'>check_Radiance_Path</span><span class='lparen'>(</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_radiance_path'>radiance_path</span><span class='rparen'>)</span> <span class='comment'>#return true if it is installed
@@ -574,17 +598,17 @@ Radiance</p>
       <pre class="lines">
 
 
-155
-156
-157
-158
-159
-160
-161
-162</pre>
+165
+166
+167
+168
+169
+170
+171
+172</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 155</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 165</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_Radiance_Path'>check_Radiance_Path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_path'>path</span><span class='op'>==</span><span class='kw'>nil</span>
@@ -657,25 +681,25 @@ Radiance</p>
       <pre class="lines">
 
 
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
 108
 109
 110
 111
 112
-113</pre>
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 98</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 108</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_clear_actual_path'>clear_actual_path</span>
 	<span class='id identifier rubyid_dirs'>dirs</span><span class='op'>=</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Workplanes</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Materials</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Geometry</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Illums</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Results</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Skies</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Views</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Components</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DC</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -760,16 +784,16 @@ Radiance</p>
       <pre class="lines">
 
 
-86
-87
-88
-89
-90
-91
-92</pre>
+96
+97
+98
+99
+100
+101
+102</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 86</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 96</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_clear_path'>clear_path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span> <span class='kw'>do</span>
@@ -777,6 +801,89 @@ Radiance</p>
 	<span class='kw'>end</span>
 
 	<span class='kw'>return</span> <span class='kw'>true</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="examples_groundhog_path-class_method">
+  
+    + (<tt>Void</tt>) <strong>examples_groundhog_path</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Gets the path where the Examples are stored</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Void</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The tmp groundhog path</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+75
+76
+77
+78
+79
+80
+81</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 75</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_examples_groundhog_path'>examples_groundhog_path</span>
+
+	<span class='id identifier rubyid_dir'>dir</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span>
+	<span class='id identifier rubyid_array'>array</span><span class='op'>=</span><span class='id identifier rubyid_dir'>dir</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_array'>array</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Examples</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='kw'>return</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_array'>array</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -846,16 +953,16 @@ within SketchUp. The commands need to be strings.</p>
       <pre class="lines">
 
 
-143
-144
-145
-146
-147
-148
-149</pre>
+153
+154
+155
+156
+157
+158
+159</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 143</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 153</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_script'>script</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span>  <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_cmd'>cmd</span><span class='op'>|</span>
@@ -931,12 +1038,12 @@ within SketchUp. The commands need to be strings.</p>
       <pre class="lines">
 
 
-77
-78
-79</pre>
+87
+88
+89</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 77</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 87</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_failed_operation_message'>failed_operation_message</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='rparen'>)</span>
 	<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>There was an error while performing </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_op_name'>op_name</span><span class='embexpr_end'>}</span><span class='tstring_content'> operation.\n\nPlease contact </span><span class='embexpr_beg'>#{</span><span class='const'>Groundhog</span><span class='period'>.</span><span class='id identifier rubyid_creator'>creator</span><span class='embexpr_end'>}</span><span class='tstring_content'> to tell us what happened.\n\nTHANKS!</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1034,7 +1141,7 @@ German Molina</p>
       <div class="method_details ">
   <h3 class="signature " id="main_groundhog_path-class_method">
   
-    + (<tt>Void</tt>) <strong>main_groundhog_path</strong> 
+    + (<tt>String</tt>) <strong>main_groundhog_path</strong> 
   
 
   
@@ -1056,7 +1163,7 @@ German Molina</p>
     <li>
       
       
-        <span class='type'>(<tt>Void</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
@@ -1269,16 +1376,6 @@ if everything went well, and false if it did not.</p>
       <pre class="lines">
 
 
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
 128
 129
 130
@@ -1288,10 +1385,20 @@ if everything went well, and false if it did not.</p>
 134
 135
 136
-137</pre>
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 118</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 128</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_run_command'>run_command</span><span class='lparen'>(</span><span class='id identifier rubyid_cmd'>cmd</span><span class='rparen'>)</span>
 	<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Either your Radiance configuration is incorrect or inexistent.\n\nPlease reconfigure.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_radiance_path'>radiance_path</span>
@@ -1411,7 +1518,7 @@ if everything went well, and false if it did not.</p>
       <div class="method_details ">
   <h3 class="signature " id="tmp_groundhog_path-class_method">
   
-    + (<tt>Void</tt>) <strong>tmp_groundhog_path</strong> 
+    + (<tt>String</tt>) <strong>tmp_groundhog_path</strong> 
   
 
   
@@ -1434,7 +1541,7 @@ analysis</p>
     <li>
       
       
-        <span class='type'>(<tt>Void</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
@@ -1474,14 +1581,12 @@ analysis</p>
 67
 68
 69
-70
-71</pre>
+70</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 65</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span>
-
 	<span class='id identifier rubyid_dir'>dir</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span>
 	<span class='id identifier rubyid_array'>array</span><span class='op'>=</span><span class='id identifier rubyid_dir'>dir</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_array'>array</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>tmp</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1497,7 +1602,7 @@ analysis</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Jul  8 16:43:13 2015 by
+  Generated on Wed Jul  8 18:22:54 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
