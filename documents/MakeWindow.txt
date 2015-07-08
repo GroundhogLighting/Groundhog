@@ -1,93 +1,92 @@
-# @markup html
+# @markup markdown
 # @title TUTORIAL: Windows
 # @author German Molina
+#Making windows in Groundhog
 
-<h1>Making windows in Groundhog</h1>
+The whole idea here is to make a window that Groundhog actually identifies as a window. This, as explained in
+the [Getting Started](file.GettingStarted.html) section, will be important when exporting the model to Radiance.
 
-<p align="justify">The whole idea here is to make a window that Groundhog actually identifies as a window. This, as explained in 
-the <a href="file.GettingStarted.html">Getting Started</a> section, will be important when exporting the model to Radiance.</p>
-
-<p align="justify">There are two ways of creating windows:</p>
+There are two ways of creating windows:
 
 
-<h2>Using the "make window" tool</h2>
+##Using the Right Click -> "make window" method
 
-<p align="justify">The make window tool is in the Groundhog Toolbar (for now, we do not have icons there, 
+The make window tool is in the Groundhog Toolbar (for now, we do not have icons there,
 but if you put your mouse over them, a message with what they do will appear). It allows making a window through
-a thick wall. This is a characteristic that we wanted to add to Groundhog from the beginning.</p>
+a thick wall. This is a characteristic that we wanted to add to Groundhog from the beginning.
+
+It is important to notice that this tool creates a window on the exterior side (which you can move to the
+interior, if you want) and an illum surface on the inside (shown in semi-transparent green). If you do not want the illum
+surface to exist, you can delete it. *All windows have to be drawn from the exterior side of the wall.*
+On the other hand, this tool can be used for generating multiple windows at once, by selecting multiple
+polygons at once.
 
 
-<p align="justify">It is important to notice that this tool creates a window on the exterior side (which you can move to the
-interior, if you want) and an illum surface on the inside (shown in semi-transparent green). If you do not want the illum 
-surface to exist, you can delete it. <b>All windows have to be drawn from the exterior side of the wall.</b></p>
-<p align="justify">On the other hand, this tool can be used for generating multiple windows at once, by selecting multiple
-polygons at once.</p>
+So, using it is very simple, you just have to:
 
-
-<p align="justify">So, using it is very simple, you just have to:</p>
-
-<h3>Step 1: Draw a wall that have some thickness.</h3>
+###Step 1: Draw a wall that have some thickness
 <figure align="center">
 <img src="MakeWindow/fig1.png" alt="Draw a wall">
 <figcaption>Figure 1: First step - Draw a thick wall</figcaption>
 </figure>
 
-<h3>Step 2: Draw a shape that will represents the window.</h3>
-<p align="justify">This shape has to point outside (i.e. front of the surface pointing out of the wall, 
-as shown in Figure 2). In case is not like that, you can right-click on it, and reverse it.</p>
+###Step 2: Draw a shape that will represents the window
+This shape has to point outside (i.e. front of the surface pointing out of the wall,
+as shown in Figure 2). In case is not like that, you can right-click on it, and reverse it.
+
 <figure align="center">
 <img src="MakeWindow/fig2.png" alt="Draw the window">
-<figcaption>Figure 2: Second step - Draw a shape that will represents the window</figcaption>
+<figcaption>Figure 2: Second step - Draw a face that will represents the window</figcaption>
 </figure>
 
-<h3>Step 3: Select the shape (it does not matter if you select a line).</h3>
+###Step 3: Select the face or multiple faces (it does not matter if you select a line)
 <figure align="center">
 <img src="MakeWindow/fig3.png" alt="Select the polygon">
 <figcaption>Figure 3: Third step - Select shape that will represents the window</figcaption>
 </figure>
 
-<h3>Step 4: Press the "make window" button on the Toolbar.</h3>
+###Step 4: Right click on one of the selected faces, and click “make window”
 <figure align="center">
 <img src="MakeWindow/fig4.png" alt="Select the polygon">
 <figcaption>Figure 4: Fourth step - Press the "make window" button on the Toolbar</figcaption>
 </figure>
 
-<h3>Step 5: Press the spacebar to quit the tool.</h3>
-<p align="justify">This should be done automatically... soon.</p>
-
-<h3>Notes</h3>
-<li align="justify">Windows are created a little bit inside the wall. This allows moving them, and you will not
-be forced to put the windows on the outer side of the facade.</li>
-<li align="justify">This tool will try to mercilessly go though the wall. Take care of windows too close
-to wall borders, they can cause trouble.</li>
 
 
-<h2>Labeling an existing surface as a window</h2>
-<p align="justify">This might be useful for many situations. For example, designing a greenhouse, a curtain wall,
-or some other structure with extremely thin walls.</p>
-<p align="justify">In this case we can select the surface (or multiple surfaces) and right-click on it. Then, we must
-choose "Transform into Window". After doing that the color will change to a semi-transparent blue, but remember you 
+###Notes
+* Windows are created a little bit inside the wall. This allows moving them, and you will not be forced to put the windows on the outer side of the facade.
+*This tool will try to mercilessly go though the wall. Take care of windows too close
+to wall borders, they can cause trouble.
+
+
+##Labeling an existing surface as a window
+This might be useful for many situations. For example, designing a greenhouse, a curtain wall,
+or some other structure with extremely thin walls.
+
+In this case we can select the surface (or multiple surfaces) and right-click on it. Then, we must
+choose "Transform into Window". After doing that the color will change to a semi-transparent blue, but remember you
 can assign different materials to it. You should take care of the normal of the surface you transform. This affects
-the Three and Five phase method implementations.</p>
-<p align="justify">This way of creating windows does not generate any illum surfaces.</p>
+the Three and Five phase method implementations.
+
+This way of creating windows does not generate any illum surfaces.
 <figure align="center">
 <img src="MakeWindow/fig5.png" alt="Transform into window">
 <figcaption>Figure 5: Transform a surface into a window.</figcaption>
 </figure>
 
 
-<h2>Window groups</h2>
-<p align="justify">When performing annual daylighting simulations, it might be very useful and efficient to
-group windows and treat them as if they were only one. This is a feature that was planned from the beginning 
-of Groundhog development and is now a reality.</p>
+##Window groups
+When performing annual daylighting simulations, it might be very useful and efficient to
+group windows and treat them as if they were only one. This is a feature that was planned from the beginning
+of Groundhog development and is now a reality.
 
-<p align="justify">This can be easily done by right-clicking two or more selected windows. Groundhog will ask
-for a name for the group (i.e. 'Kitchen south-facing windows' or 'First floor east windows'), which will be 
+This can be easily done by right-clicking two or more selected windows. Groundhog will ask
+for a name for the group (i.e. 'Kitchen south-facing windows' or 'First floor east windows'), which will be
 lately used for naming the files when exporting in "Groundhog distribution". Windows without groups will be exported
-in files using their names (assigned by right-click --> assign name). It a window does not have a group or a name, 
-it will be exported by assigning a generic name. This is not recommended, since it is difficult to recognize 
-different windows by the content of the .rad file.</p>
+in files using their names (assigned by right-click --> assign name). It a window does not have a group or a name,
+it will be exported by assigning a generic name. This is not recommended, since it is difficult to recognize
+different windows by the content of the .rad file.
 
-<p align="justify">There is a button in the Groundhog Toolbar that allows seeing the groups. This button assigns
-random colors to each group, and is deactivated like any other tool (i.e. by pressing the space-bar). When deactivated, 
-everything goes back to normal and the previous materials are assigned.</p>
+There is a button in the Groundhog Toolbar that allows seeing the groups. This button assigns
+random colors to each group, and is deactivated like any other tool (i.e. by pressing the space-bar). When deactivated,
+everything goes back to normal and the previous materials are assigned.

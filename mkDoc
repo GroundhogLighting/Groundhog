@@ -23,6 +23,3 @@ cp -rf doc IGD_Groundhog/doc
 
 #create RBZ
 zip -r Groundhog.rbz IGD_Groundhog IGD_Groundhog.rb -x *yardoc* *.DS_Store
-
-
-

@@ -62,52 +62,77 @@
     <iframe id="search_frame"></iframe>
 
     <div id="content"><div id='filecontents'>
-<h1>Exporting and saving views in Groundhog</h1>
+<h1 id="label-Exporting+and+saving+views+in+Groundhog">Exporting and saving views in Groundhog</h1>
 
-<p align="justify">When rendering or performing simulations, it is useful to save views from a certain model.
-Although the features that I will present now are not fully functional (I think I need to understand better 
-how SketchUp and Radiance model cameras), it works for "normal" field of views.</p>
+<p>When rendering or performing simulations, it is useful to save views from a
+certain model.
+Although the features that I will present now are not fully
+functional (I think I need to understand better
+how SketchUp and Radiance
+model cameras), it works for &quot;normal&quot; field of views.</p>
 
-<p align="justify">SketchUp allows saving 'scenes' (called '<a href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/page.php">pages</a>' 
-within the API). These scenes can be easily added to the model, and they store a camera that has a certain
-view point, view direction and a field of view. It also allows having a perspective view and a parallel view.</p> 
+<p>SketchUp allows saving &#39;scenes&#39; (called &#39;&lt;a href=“<a
+href="http://www.sketchup.com/intl/en/developer/docs/ourdoc/page.php">pages</a">www.sketchup.com/intl/en/developer/docs/ourdoc/page.php”>pages</a</a>&gt;&#39;
+within
+the API). These scenes can be easily added to the model, and they store a
+camera that has a certain
+view point, view direction and a field of view.
+It also allows having a perspective view and a parallel view.</p>
 
-<p align="justify">Although Radiance has more 'camera' options than SketchUp (panoramic, hemispherical, etc), 
-these two options are still very valuable, and can be exported from SketchUp to Radiance. The file with
-the view will be saved in the 'Views' directory, with the name of the scene in SketchUp. Also, along with all the 
-saved views, the 'current views' will be saved as 'view.vf'.</p> 
+<p>Although Radiance has more &#39;camera&#39; options than SketchUp
+(panoramic, hemispherical, etc),
+these two options are still very valuable,
+and can be exported from SketchUp to Radiance. The file with
+the view will
+be saved in the &#39;Views&#39; directory, with the name of the scene in
+SketchUp. Also, along with all the
+saved views, the &#39;current views&#39;
+will be saved as &#39;view.vf&#39;.</p>
 
+<h2 id="label-Saving+a+view%2C+and+exporting+it">Saving a view, and exporting it</h2>
 
+<h3 id="label-Step+1%3A+Open+the+%27Scenes%27+menu">Step 1: Open the &#39;Scenes&#39; menu</h3>
 
-<h2>Saving a view, and exporting it</h2>
+<p>This is done on the &#39;Window&#39; –&gt; &#39;Scenes&#39;
+menu.
+&lt;figure align=&quot;center&quot;&gt;
+&lt;img
+src=&quot;Views/fig1.png&quot;&gt;
+&lt;figcaption&gt;Figure 1: First step -
+Open the &#39;Scenes&#39; menu.&lt;/figcaption&gt;
+&lt;/figure&gt;</p>
 
-<h3>Step 1: Open the 'Scenes' menu</h3>
-<p align="justify">This is done on the 'Window' --> 'Scenes' menu.</p>
-<figure align="center">
-<img src="Views/fig1.png">
-<figcaption>Figure 1: First step - Open the 'Scenes' menu.</figcaption>
-</figure>
+<h3 id="label-Step+2%3A+Save+a+Scene">Step 2: Save a Scene</h3>
 
-<h3>Step 2: Save a Scene</h3>
-<p align="justify">This is done in the 'Scenes' menu.</p>
-<figure align="center">
-<img src="Views/fig2.png">
-<figcaption>Figure 2: Second step - Save a Scene.</figcaption>
-</figure>
+<p>This is done in the &#39;Scenes&#39; menu.
+&lt;figure
+align=&quot;center&quot;&gt;
+&lt;img
+src=&quot;Views/fig2.png&quot;&gt;
+&lt;figcaption&gt;Figure 2: Second step
+- Save a Scene.&lt;/figcaption&gt;
+&lt;/figure&gt;</p>
 
-<h3>Step 3: Put a name to the Scene</h3>
-<p align="justify">This is also done in the 'Scenes' menu.</p>
-<figure align="center">
-<img src="Views/fig3.png">
-<figcaption>Figure 3: Third step - Put a name to the Scene.</figcaption>
-</figure>
+<h3 id="label-Step+3%3A+Put+a+name+to+the+Scene">Step 3: Put a name to the Scene</h3>
 
-<h3>Step 4: Export and look for it on the Views directory</h3>
-<p align="justify">It should be saved on the Views directory, along with the actual view file
-and the other Scenes. The blank spaces are replaced by an underscore.</p></div></div>
+<p>This is also done in the &#39;Scenes&#39; menu.
+&lt;figure
+align=&quot;center&quot;&gt;
+&lt;img
+src=&quot;Views/fig3.png&quot;&gt;
+&lt;figcaption&gt;Figure 3: Third step -
+Put a name to the Scene.&lt;/figcaption&gt;
+&lt;/figure&gt;</p>
+
+<h3 id="label-Step+4%3A+Export+and+look+for+it+on+the+Views+directory">Step 4: Export and look for it on the Views directory</h3>
+
+<p>It should be saved on the Views directory, along with the actual view
+file
+and the other Scenes. The blank spaces are replaced by an underscore.</p>
+</div></div>
 
     <div id="footer">
-  Generated on Tue Jun  2 10:11:53 2015 by
+  Generated on Wed Jul  8 16:43:11 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

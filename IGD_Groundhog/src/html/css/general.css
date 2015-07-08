@@ -4,12 +4,63 @@ button {font-size: 100%;}
 table, th, td {
    border: 0px solid black;
    font-size: 100%;
-} 
+}
+
+h2{
+    color: rgb(40,40,40);
+}
+
+input{
+    margin-right: 10px;
+}
+
+fieldset{
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(150,150,150);
+    padding: 10px 10px 5px 10px;
+}
+
+fieldset p{
+    margin:0;
+}
+
+fieldset input{
+    width: 60px;
+}
+fieldset > label{
+    display: inline-block;
+    width: 45px;
+    text-align: left;
+    padding: 0px;
+    margin:auto;
+}
+
+
+fieldset > legend{
+    color: rgb(40,40,40);
+    font-weight: bold;
+}
+
+table td{
+    height: 15px;
+}
+
+.option_info {
+  cursor: help;
+  font-weight: bolder;
+  display: inline;
+}
+
+select {
+    margin-right:10px;
+}
+
+
+
 
 
 .more_info {
-
-
   cursor: help;
   background: #dedbde; /*#ececec;*/
   color: #555;
@@ -17,6 +68,7 @@ table, th, td {
   padding: 5px 5px;
   position: relative;
   text-align: center;
+  margin-bottom: 20px;
   width: 80px;
   -webkit-transform: translateZ(0); /* webkit flicker fix */
   -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
@@ -24,19 +76,27 @@ table, th, td {
 
 .tooltip {
 	font-size: 90%;
-	width: 400%; 
+	width: 400%;
 	text-align: justify;
 	background:#ffffff;
   	margin-bottom: -105px;
   	left: 25px;
 }
 
-.more_info .tooltip {
-  
+.option_info .tooltip {
+	width: 80%;
+}
+
+
+
+.more_info .tooltip, .option_info .tooltip {
+
+    font-weight: normal;
   bottom: 100%;
-  display: block;
+  display: none;
 
   opacity: 0;
+  filter: alpha(opacity=0);
   pointer-events: none;
   position: absolute;
 
@@ -67,7 +127,7 @@ table, th, td {
 }
 
 /* This bridges the gap so you can mouse into the tooltip without it disappearing */
-.more_info .tooltip:before {
+.more_info .tooltip:before, .option_info .tooltip:before {
   bottom: -20px;
   content: " ";
   display: block;
@@ -75,24 +135,13 @@ table, th, td {
   left: 0;
   position: absolute;
   width: 100%;
-}  
-
-/* CSS Triangles - see Trevor's post 
-.more_info .tooltip:after {
-  border-left: solid transparent 10px;
-  border-right: solid transparent 10px;
-  border-top: solid #1496bb 10px;
-  bottom: -10px;
-  content: " ";
-  height: 0;
-  left: 50%;
-  margin-left: -13px;
-  position: absolute;
-  width: 0;
 }
-  */
-.more_info:hover .tooltip {
+
+
+.more_info:hover .tooltip, .option_info:hover .tooltip {
+  display: block;
   opacity: 1;
+  filter: alpha(opacity=100);
   pointer-events: auto;
   -webkit-transform: translateY(0px);
      -moz-transform: translateY(0px);
@@ -102,10 +151,10 @@ table, th, td {
 }
 
 /* IE can just show/hide with no transition */
-.lte8 .more_info .tooltip {
+.lte8 .more_info .tooltip, .lte8 .option_info .tooltip {
   display: none;
 }
 
-.lte8 .more_info:hover .tooltip {
+.lte8 .more_info:hover .tooltip, .lte8 .option_info:hover .tooltip {
   display: block;
 }

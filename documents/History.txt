@@ -7,9 +7,11 @@
 This just intends to show a little bit of how Groundhog has been developed.
 
 ## Groundhog 0.7 (in development)
+- Annual simulation is provided by using simple DC method
+- Simulation GUI incorporated
+- Enhanced Configuration
 
-
-## Groundhog 0.6 
+## Groundhog 0.6
 
 - Exporting distributions were unified into a unique one that places illums of each layer in a separate file and window groups in other files.
 - Groups are now exported as if they were components.
@@ -17,7 +19,7 @@ This just intends to show a little bit of how Groundhog has been developed.
 - Added a RIF file exporter to simplify rendering.
 - Workplanes now need to be rectangular and have no holes.
 - Importing results for visualizing them within SketchUp.
-- The concept of "value" was incorporated. 
+- The concept of "value" was incorporated.
 - All tools, features and functions are now grouped under the same menu: Plugins (extensions) --> Groundhog
 - Local materials were introduced. These are materials that contain their whole Radiance definition as their value
 - Eliminated duplicity of materials. Now the same material may be exported a number of times (one for each component or group on which is used), but every time with different names.
@@ -54,17 +56,17 @@ This just intends to show a little bit of how Groundhog has been developed.
 
 - Change of paradigm. Groundhog intends to export well, for now. In the future we might simulate within SketchUp.
 - Grouping of windows option was added, as well as showing them in different colors.
-- "Winfo" and "SimFile" files do not exist any more. 
+- "Winfo" and "SimFile" files do not exist any more.
 - Groundhog is now an extension, that can be turned on or off inside SketchUp.
 
 ## Groundhog 0.1
 
-- Project started as part of Germán Molina´s MSc. thesis, under the advice of Sergio Vera 
+- Project started as part of Germán Molina´s MSc. thesis, under the advice of Sergio Vera
 Ph.D and Waldo Bustamante, Ph.D, at the school of Engineering of Pontificia Universidad Catolica de Chile.
 - Exports into Radiance and 3phase method formats.
 - Calculations have to be done from a "Window Information File" and a "Simulation File", using perl scripts outside SketchUp.
 - Materials are not supported at all. The program exports a list of assigned modifiers, and they have to be filled by the user.
 - Sensor location is done over the workplane... the location is shown by drawing two lines forming an X.
-- Sensor location involves ray-casting... which is very inefficient. 
+- Sensor location involves ray-casting... which is very inefficient.
 - Materials are treated separated from CFS.
 - Grouping windows was not yet supported.
