@@ -13,6 +13,7 @@ td{
     text-align: center;
     width: 20%;
     vertical-align: top;
+    padding:10px;
 }
 
 table.columns h2 {
@@ -58,6 +59,8 @@ a:hover {
     background-position: center;
     border-radius: 50%;
     margin:auto;
+    margin-left: 1vw;
+    margin-right:1vw;
 }
 
 
@@ -196,7 +199,7 @@ a:hover {
 }
 /*BUTTONS*/
 
-#home_download_button, #home_github_button, #home_sketchup_button {
+#home_download_latest, #home_download_button, #home_github_button, #home_sketchup_button {
   width: 134px;
   height: 58px;
   padding-top: 11px;
@@ -213,12 +216,12 @@ a:hover {
   border-color: white;
 }
 
-#home_download_button small, #home_github_button small, #home_sketchup_button small{
+#home_download_latest small, #home_download_button small, #home_github_button small, #home_sketchup_button small{
   display: block;
   font-size: 50%;
 }
 
-#home_github_button::before, #home_download_button::before, #home_sketchup_button::before{
+#home_github_button::before, #home_download_latest::before,  #home_download_button::before, #home_sketchup_button::before{
     content: "";
     position:relative;
     width: 60px;
@@ -236,7 +239,7 @@ a:hover {
     background-image: url("images/github_icon_2.png");
 }
 
-#home_download_button::before{
+#home_download_button::before, #home_download_latest::before {
     background-image: url("images/download_icon.png");
 }
 
@@ -254,6 +257,10 @@ a:hover {
     background: #6E6CB1 url("images/download_icon.png") no-repeat; //#b16e6c  #6CB16E
 }
 
+#download_latest{
+    background: #6CAFB1 url("images/download_icon.png") no-repeat; //#b16e6c  #6CB16E
+}
+
 #training{
     background: #b16e6c url("images/personnel.png") no-repeat; //#939598
 }
@@ -262,15 +269,14 @@ a:hover {
     background: #6cb16e  url("images/RD.png") no-repeat; //#b16e6c  #6CB16E
 }
 
-#download_button, #sketchup_button, #github_button, #training, #customization{
+#download_latest, #download_button, #sketchup_button, #github_button, #training, #customization{
     max-height:220px;
     max-width:220px;
-    width: 27vw;
-    height:27vw;
+    width: 20vw;
+    height:20vw;
     display: block;
     border-radius: 50%;
-    margin-left: auto;
-    margin-right: auto;
+    margin:auto;
     background-size: 54%;
     background-position: center;
 }
