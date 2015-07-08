@@ -49,7 +49,7 @@ module IGD
 
 			# Gets the path where the plugin is installed
 			# @author German Molina
-			# @return [Void] The main groundhog path
+			# @return [String] The main groundhog path
 			def self.main_groundhog_path
 
 				files = Sketchup.find_support_file "IGD_Groundhog.rb" ,"Plugins"
@@ -61,12 +61,22 @@ module IGD
 
 			# Gets the path where a temporal Radiance project will be exported for analysis
 			# @author German Molina
-			# @return [Void] The tmp groundhog path
+			# @return [String] The tmp groundhog path
 			def self.tmp_groundhog_path
-
 				dir=self.main_groundhog_path
 				array=dir.split("/")
 				array.push("tmp")
+				return File.join(array)
+			end
+
+			# Gets the path where the Examples are stored
+			# @author German Molina
+			# @return [Void] The tmp groundhog path
+			def self.examples_groundhog_path
+
+				dir=self.main_groundhog_path
+				array=dir.split("/")
+				array.push("Examples")
 				return File.join(array)
 			end
 

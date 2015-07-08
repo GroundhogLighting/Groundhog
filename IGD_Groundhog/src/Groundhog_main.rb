@@ -264,6 +264,13 @@ module IGD
 				Config.show_config
 			}
 
+			### EXAMPLES MENU
+			GH_examples_menu=groundhog_menu.add_submenu("Example files")
+				GH_examples_menu.add_item("University Hall") {
+					path = "#{OS.examples_groundhog_path}/UniversityHall.skp"
+					UI.messagebox("Unable to open Example File.") if not Sketchup.open_file path
+				}
+
 			### HELP MENU
 
 			GH_help_menu=groundhog_menu.add_submenu("Help")
