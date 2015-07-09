@@ -33,9 +33,14 @@ module IGD
 
 
 		#########################################
-		if File.exists?("#{OS.main_groundhog_path}/config") then #if Radiance was once configured
+		# LOAD CONFIG FILE
+		#########################################
+		if File.exists?("#{OS.main_groundhog_path}/config") then #if a configuration file was one created
 			Config.load_config
 		end
+
+		
+
 
 		#########################################
 		model=Sketchup.active_model

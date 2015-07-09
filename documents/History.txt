@@ -6,7 +6,10 @@
 
 This just intends to show a little bit of how Groundhog has been developed.
 
-## Groundhog 0.7 (in development)
+## Groundhog 0.8
+- Add-on environment is initiated (0.7.1)
+
+## Groundhog 0.7
 - Annual simulation is provided by using simple DC method
 - Simulation GUI incorporated
 - Enhanced Configuration

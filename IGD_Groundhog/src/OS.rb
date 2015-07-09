@@ -29,15 +29,15 @@ module IGD
 			# @author German Molina
 			# @return [String] The corresponding Slash ("\\" for WIN and "/" for MAC or OTHER).
 			# @deprecated
-			def self.slash
-				os=self.getsystem
+			#def self.slash
+			#	os=self.getsystem
 
-				if os=="WIN"
-					return "\\" #This was correct in Windows XP, when tried
-				else
-					return "/" #it is assumed that OTHER OS will work as MAC...???
-				end
-			end
+			#	if os=="WIN"
+			#		return "\\" #This was correct in Windows XP, when tried
+			#	else
+			#		return "/" #it is assumed that OTHER OS will work as MAC...???
+			#	end
+			#end
 
 			# Creates a directory in the selected path
 			# @author German Molina
@@ -73,10 +73,19 @@ module IGD
 			# @author German Molina
 			# @return [Void] The tmp groundhog path
 			def self.examples_groundhog_path
-
 				dir=self.main_groundhog_path
 				array=dir.split("/")
 				array.push("Examples")
+				return File.join(array)
+			end
+
+			# Gets the path where the Add-ons are stored
+			# @author German Molina
+			# @return [Void] The add-on groundhog path
+			def self.addons_groundhog_path
+				dir=self.main_groundhog_path
+				array=dir.split("/")
+				array.push("Addons")
 				return File.join(array)
 			end
 
@@ -125,11 +134,13 @@ module IGD
 			# Runs a command, printing the Stoud and Stderr on the console. Returns True if everything went well, and false if it did not.
 			# @author German Molina
 			# @param cmd [String] The command to execute.
+			# @return [Boolean] success
 			def self.run_command(cmd)
 				UI.messagebox("Either your Radiance configuration is incorrect or inexistent.\n\nPlease reconfigure.") if not Config.radiance_path
 				return false if Config.radiance_path == nil
 
 				exit_status=""
+				warn ">> #{cmd}"
 				Open3.popen3(cmd){ |stdin, stdout, stderr, wait_thr|
 					pid = wait_thr.pid # pid of the started process.
 
@@ -150,9 +161,9 @@ module IGD
 			# The commands need to be strings.
 			# @author German Molina
 			# @param script [Array] The script
+			# @return [Boolean] success
 			def self.execute_script(script)
 				script.each  do |cmd|
-					puts "\t --> #{cmd}"
 					return false if not self.run_command(cmd)
 				end
 				return true
