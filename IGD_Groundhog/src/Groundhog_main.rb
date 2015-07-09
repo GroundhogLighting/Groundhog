@@ -12,7 +12,6 @@ module IGD
 						". Since it seems that you are using an older version, some features might not work correctly."+
 						"\n\n You can upgrade SketchUp going to "+
 						"www.SketchUp.com")
-
 		end
 
 		#################################
@@ -39,7 +38,14 @@ module IGD
 			Config.load_config
 		end
 
-		
+		#########################################
+		# LOAD ADD-ONS
+		#########################################
+		addons=Dir["#{IGD::Groundhog::OS.addons_groundhog_path}/*"]
+		addons.map! {|z| z.split("/").pop}
+		addons.each { |a|
+			Sketchup::require "IGD_Groundhog/Addons/#{a}/#{a}.rb"
+		}
 
 
 		#########################################
