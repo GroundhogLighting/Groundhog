@@ -25,6 +25,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Results'
 		Sketchup::require 'IGD_Groundhog/src/Materials'
 		Sketchup::require 'IGD_Groundhog/src/Rad'
+		Sketchup::require 'IGD_Groundhog/src/Addons'
 
 		require 'json'
 		require 'Open3'
@@ -37,16 +38,6 @@ module IGD
 		if File.exists?("#{OS.main_groundhog_path}/config") then #if a configuration file was one created
 			Config.load_config
 		end
-
-		#########################################
-		# LOAD ADD-ONS
-		#########################################
-		addons=Dir["#{IGD::Groundhog::OS.addons_groundhog_path}/*"]
-		addons.map! {|z| z.split("/").pop}
-		addons.each { |a|
-			Sketchup::require "IGD_Groundhog/Addons/#{a}/#{a}.rb"
-		}
-
 
 		#########################################
 		model=Sketchup.active_model
@@ -188,18 +179,6 @@ module IGD
 					MkWindow.make_window(Utilities.get_faces(Sketchup.active_model.selection))
 				}
 
-				#GH_tools_menu.add_item("Preview"){
-				#	Rad.rvu
-				#}
-
-				#GH_tools_menu.add_item("Calculate Daylight Factor"){
-				#	Rad.daylight_factor
-				#}
-
-				#GH_tools_menu.add_item("Calculate actual illuminance"){
-				#	Rad.actual_illuminance
-				#}
-
 				GH_tools_menu.add_item("Simulation Wizard"){
 					Rad.show_sim_wizard
 				}
@@ -267,7 +246,11 @@ module IGD
 				end
 			}
 
+			### ADDONS MENU
 
+			groundhog_menu.add_item("Add-ons") {
+				Addons.show_addons_manager
+			}
 
 			### PREFERENCES MENU
 
