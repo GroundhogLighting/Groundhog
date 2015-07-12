@@ -46,6 +46,9 @@
                     <td valign="top"><b>SUPPORT:</b></td><td><p align='justify' style="margin:0; font-size: 95%;" id='support'></p></td>
                 </tr>
                 <tr>
+                    <td valign="top"><b>LICENSE:</b></td><td><p align='justify' style="margin:0; font-size: 95%;" id='license'></p></td>
+                </tr>
+                <tr>
                     <td valign="top"><b>INFO:</b></td><td><textarea readonly align='justify' rows="6" cols="40" style="margin:0; font-size: 95%;" id='info'></textarea></td>
                 </tr>
             </table>
@@ -64,6 +67,7 @@
             document.getElementById('developer').innerHTML=e.options[e.selectedIndex].getAttribute('developer');
             document.getElementById('version').innerHTML=e.options[e.selectedIndex].getAttribute('version');
             document.getElementById('support').innerHTML=e.options[e.selectedIndex].getAttribute('support');
+            document.getElementById('license').innerHTML=e.options[e.selectedIndex].getAttribute('license');
             document.getElementById('info').innerHTML=e.options[e.selectedIndex].getAttribute('info');
         }
 

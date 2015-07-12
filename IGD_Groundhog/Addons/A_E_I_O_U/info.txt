@@ -1,7 +1,0 @@
-{
-	"name":"A E I O U Add-on",
-	"developer":"IGD",
-	"support":"www.igd.cl",
-	"version":"0.7.1",
-	"info":"This addon is an example of what can be done using the Groundhog API features.... the idea is to show a long description to check how it looks on the UI This would be a next paragraph. And this a third… looooooooooooAnd this a third looooooooooooAnd this a third. looooooooooooAnd this a third… looooooooooooAnd this a third. looooooooooooAnd this a third… looooooooooooAnd this a third… looooooooooooAnd this a third looooooooooooAnd this a third… looooooooooooAnd this a third… looooooooooooAnd this a third… loooooooooooo"
-}

@@ -6,10 +6,14 @@ module IGD
             # @param addons [String <Array>] An array of Strings that contains the names of the addons.
     		# @author German Molina
             def self.load_addons(addons)
-                available= Dir["#{OS.addons_groundhog_path}/*"]
+                available= Dir["#{OS.addons_groundhog_path}/*.rb"]
+                available.map!{|x| x.tr("\\","/").split("/").pop}
+
                 addons.each do |a|
-                    #next if not available.include? a #if may still be in the list, although it may have been removed.
-                    UI.messagebox "Module '#{a}' could not be loaded.\n\nYou can deactivate it to avoid seeing this message again." if not Sketchup.load "#{OS.addons_groundhog_path}/#{a}/#{a}"
+                    next if not available.include? a #if may still be in the list, although it may have been removed.
+                    if not Sketchup.load "#{OS.addons_groundhog_path}/#{a}" then
+                        UI.messagebox "Module '#{a}' could not be loaded.\n\nYou can deactivate it to avoid seeing this message again."
+                    end
                 end
             end
 
@@ -43,10 +47,12 @@ module IGD
                         info_file="#{OS.addons_groundhog_path}/#{dir}/info.txt"
                         if File.exist? info_file then #if there is an info file
                             info=JSON.parse(File.open(info_file).read)
+
                             str+="opt.setAttribute('name','#{info["name"]}');" if info["name"] != nil
                             str+="opt.setAttribute('developer','#{info["developer"]}');" if info["developer"] != nil
                             str+="opt.setAttribute('version','#{info["version"]}');" if info["version"] != nil
                             str+="opt.setAttribute('support','#{info["support"]}');" if info["support"] != nil
+                            str+="opt.setAttribute('info','#{info["license"]}');" if info["license"] != nil
                             str+="opt.setAttribute('info','#{info["info"]}');" if info["info"] != nil
                             str+="opt.innerHTML='#{info["name"]}';"
                         else
@@ -70,7 +76,7 @@ module IGD
                 wd.add_action_callback("save_addon_conf") do |web_dialog,msg|
 					#the message is the list of active addon names separated by commas
                     Config.set_active_addons(msg)
-                    UI.messagebox "Please restart SketchUp for the new configuration to take effect.\n\nTHANKS"
+                    UI.messagebox "Preferences saved succesfully!\n\nPlease restart SketchUp for the new configuration to take effect."
 				end
 
                 wd.add_action_callback("install_addon") do |web_dialog,msg|
@@ -105,7 +111,7 @@ module IGD
                         next if UI.messagebox('There were no support files found. Is that OK?', MB_YESNO) != IDYES
                     end
 
-                    #begin
+                    begin
                         FileUtils.cp("#{path}/#{addon_name}",final_addon)
                         FileUtils.cp_r("#{path}/#{support_name}",final_support) if support
                         UI.messagebox "Add-on installed succesfully"
@@ -120,9 +126,9 @@ module IGD
                         str+="opt.innerHTML='#{shown_name}';"
                         str+="inactive.appendChild(opt);"
                         web_dialog.execute_script(str)
-                    #rescue
-                    #    UI.messagebox("There was a problem trying to install your Add-on.")
-                    #end
+                    rescue
+                        UI.messagebox("There was a problem trying to install your Add-on.")
+                    end
 
                 end
 

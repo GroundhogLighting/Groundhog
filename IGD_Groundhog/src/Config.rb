@@ -127,7 +127,7 @@ module IGD
 			# @author German Molina
 			# @return void
 			def self.load_config
-				path="#{OS.main_groundhog_path}/config"
+				path=self.config_path
 				UI.messagebox("It seems that you have not configured Groundhog yet.\nPlease do it.") if not File.exist?(path)
 				if not File.exist?(path) then
 					return false if not self.show_config
@@ -137,7 +137,7 @@ module IGD
 				@@rad_config=JSON.parse(File.open(path).read)
 				ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"] if Config.radiance_path
 
-				#include add-ons
+				#include add-ons				
 				Addons.load_addons(self.active_addons)
 
 				return true
