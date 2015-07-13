@@ -23,7 +23,7 @@ module IGD
 			# Asks for a EPW or WEA file to be inputed.
 			# @author German Molina
 			# @param check [Boolean] check for extension.
-			# @return [String] The weather file path
+			# @return [String] The weather file path, False if not
 			def self.ask_for_weather_file(check)
 				path = @@rad_config["WEATHER_PATH"]
 				if path then
@@ -34,11 +34,13 @@ module IGD
 					path="c:/"
 				end
 				path = UI.openpanel("Choose a weather file", path, "weather file (.epw, .wea) | *.epw; *.wea ||")
+				return false if not path
 				return path.tr("\\","/") if not check
 
 				while path.split('.').pop!='epw' and path.split('.').pop!='wea' do
 					UI.messagebox("Invalid file extension. Please input a WEA or EPW file")
 					path = UI.openpanel("Choose a weather file", path, "*.epw; *.wea")
+					return false if not path
 				end
 
 				return path.tr("\\","/")
@@ -118,6 +120,7 @@ module IGD
 				defaults=[0.5]
 				sys=UI.inputbox prompts, defaults, "Spacing of the sensors on workplanes?"
 				return false if not sys
+				@@rad_config["SENSOR_SPACING"]=sys[0]
 				return sys[0]
 			end
 
@@ -137,7 +140,7 @@ module IGD
 				@@rad_config=JSON.parse(File.open(path).read)
 				ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"] if Config.radiance_path
 
-				#include add-ons				
+				#include add-ons
 				Addons.load_addons(self.active_addons)
 
 				return true

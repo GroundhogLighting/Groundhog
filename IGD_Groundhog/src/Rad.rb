@@ -10,7 +10,6 @@ module IGD
 			def self.calc_UDI(options)
 				path=OS.tmp_groundhog_path
 				FileUtils.cd(path) do
-					return false if not OS.ask_about_Radiance
 					return false if not OS.execute_script(self.calc_annual_illuminance(options))
 					wps=Dir["Workplanes/*"]
 
@@ -61,8 +60,6 @@ module IGD
 			# @param options [Hash] A hash with the options (method, bins)
 			# @return [Boolean] Success
 			def self.calc_annual_illuminance(options)
-				return false if not OS.ask_about_Radiance
-
 				path=OS.tmp_groundhog_path
 				script=[]
 
@@ -72,6 +69,7 @@ module IGD
 					#if it is nil or (not epw and not wea)
 					if not file or (file.split(".").pop!='wea' and file.split(".").pop != 'epw') then
 						file = Config.ask_for_weather_file(true)
+						return false if not file
 					end
 
 					extension = file.split(".").pop
@@ -112,10 +110,7 @@ module IGD
 			# @param bins [Integer] The sky subdivition
 			# @return [Array<String>] The Script if success, false if not.
 			def self.calc_DC(bins)
-				return false if not OS.ask_about_Radiance
-
 				path=OS.tmp_groundhog_path
-				return false if not Exporter.export(path)
 
 				FileUtils.cd(path) do
 					if not File.directory?("Workplanes")
@@ -155,9 +150,7 @@ module IGD
 			# @param options [Hash] A Hash with the sky type and the ground reflectance
 			# @return [Array<String>] Script if succesfull, false if not.
 			def self.actual_illuminance(options)
-				return false if not OS.ask_about_Radiance
 				path=OS.tmp_groundhog_path
-				Exporter.export(path)
 				script=[]
 
 				FileUtils.cd(path) do
@@ -204,9 +197,7 @@ module IGD
 			# @author German Molina
 			# @return [Array<String>] Script... FALSE if not success
 			def self.daylight_factor
-				return false if not OS.ask_about_Radiance
 				path=OS.tmp_groundhog_path
-				Exporter.export(path)
 				script=[]
 				FileUtils.cd(path) do
 					if not File.directory?("Workplanes")
@@ -244,8 +235,6 @@ module IGD
 			# @author German Molina
 			# @return [Array<String>] Script
 			def self.rvu
-				return false if not OS.ask_about_Radiance
-
 				path=OS.tmp_groundhog_path
 				Exporter.export(path)
 
@@ -270,9 +259,11 @@ module IGD
 					"Simulation wizard", false, "",
 					595, 490, 100, 100, false )
 
-				wd.set_file("#{IGD::Groundhog::OS.main_groundhog_path}/src/html/simulation.html" )
+				wd.set_file("#{OS.main_groundhog_path}/src/html/simulation.html" )
 
 				wd.add_action_callback("rvu") do |web_dialog,msg|
+					next if not OS.ask_about_Radiance
+					next if not Exporter.export(OS.tmp_groundhog_path)
 					FileUtils.cd(OS.tmp_groundhog_path) do
 						begin
 							OS.execute_script(self.rvu)
@@ -285,6 +276,8 @@ module IGD
 				end
 
 				wd.add_action_callback("calc_DF") do |web_dialog,msg|
+					next if not OS.ask_about_Radiance
+					next if not Exporter.export(OS.tmp_groundhog_path)
 					FileUtils.cd(OS.tmp_groundhog_path) do
 						begin
 							OS.mkdir("Results")
@@ -311,6 +304,8 @@ module IGD
 				end
 
 				wd.add_action_callback("calc_actual_illuminance") do |web_dialog,msg|
+					next if not OS.ask_about_Radiance
+					next if not Exporter.export(OS.tmp_groundhog_path)
 					options=JSON.parse(msg)
 					FileUtils.cd(OS.tmp_groundhog_path) do
 						begin
@@ -336,11 +331,15 @@ module IGD
 				end
 
 				wd.add_action_callback("calc_DA") do |web_dialog,msg|
+					next if not OS.ask_about_Radiance
+					next if not Exporter.export(OS.tmp_groundhog_path)
 					options=JSON.parse(msg)
 					self.calc_DA(options)
 				end
 
 				wd.add_action_callback("calc_UDI") do |web_dialog,msg|
+					next if not OS.ask_about_Radiance
+					next if not Exporter.export(OS.tmp_groundhog_path)
 					options=JSON.parse(msg)
 					self.calc_UDI(options)
 				end

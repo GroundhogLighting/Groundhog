@@ -22,7 +22,7 @@ module IGD
             def self.show_addons_manager
                 wd=UI::WebDialog.new(
                     "Addons manager", false, "",
-                    450, 530, 100, 100, false )
+                    450, 550, 100, 100, false )
 
                 wd.set_file("#{IGD::Groundhog::OS.main_groundhog_path}/src/html/addons.html" )
 
