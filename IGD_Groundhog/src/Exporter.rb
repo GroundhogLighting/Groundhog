@@ -177,7 +177,7 @@ module IGD
 					model.start_operation( op_name,true )
 
 					#Export the faces and obtain the modifiers
-					mod_list=self.export_layers(path, Sketchup.active_model.entities)
+					mod_list=self.export_layers(path)
 					return false if not mod_list #return right away
 					return false if not self.export_modifiers(path,mod_list)
 					return false if not self.export_views(path)
@@ -210,11 +210,11 @@ module IGD
 			# @return false if not succss or cancelled
 			# @example Export the whole model.
 			#   mat_list=Exporter.exportFaces(path, SketchUp.active_model.entities)
-			def self.export_layers(path, entities)
+			def self.export_layers(path)
 
 				OS.mkdir("#{path}/Geometry")
 
-				mat_list=[] #This will become the name of the modifiers (materials) of each face.
+				mat_list=[] #This will store the modifiers (materials) of each face.
 				model=Sketchup.active_model
 				entities=model.entities
 

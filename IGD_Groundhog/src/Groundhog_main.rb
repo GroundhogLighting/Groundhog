@@ -20,7 +20,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Config'
 		Sketchup::require 'IGD_Groundhog/src/Labeler'
 		Sketchup::require 'IGD_Groundhog/src/OS'
-		Sketchup::require 'IGD_Groundhog/src/Tools/MkWindow'
+		#Sketchup::require 'IGD_Groundhog/src/Tools/MkWindow' #deprecated for a while, at least.
 		Sketchup::require 'IGD_Groundhog/src/Exporter'
 		Sketchup::require 'IGD_Groundhog/src/Results'
 		Sketchup::require 'IGD_Groundhog/src/Materials'
@@ -51,9 +51,9 @@ module IGD
 		UI.add_context_menu_handler do |context_menu|
 		   faces=Utilities.get_faces(Sketchup.active_model.selection)
 			if faces.length>=1 then
-				context_menu.add_item("Make Window") {
-					MkWindow.make_window(faces)
-				}
+				#context_menu.add_item("Make Window") {
+				#	MkWindow.make_window(faces)
+				#}
 				context_menu.add_item("Label as Illum") {
 					begin
 						op_name = "Label as illum"
@@ -169,9 +169,9 @@ module IGD
 
 			gh_tools_menu=groundhog_menu.add_submenu("Tools")
 
-				gh_tools_menu.add_item("Make Window"){
-					MkWindow.make_window(Utilities.get_faces(Sketchup.active_model.selection))
-				}
+				#gh_tools_menu.add_item("Make Window"){
+				#	MkWindow.make_window(Utilities.get_faces(Sketchup.active_model.selection))
+				#}
 
 				gh_tools_menu.add_item("Simulation Wizard"){
 					Rad.show_sim_wizard
