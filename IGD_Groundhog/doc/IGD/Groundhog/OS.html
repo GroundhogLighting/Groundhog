@@ -114,6 +114,30 @@ Operating Systems, and system calls</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#addons_groundhog_path-class_method" title="addons_groundhog_path (class method)">+ (Void) <strong>addons_groundhog_path</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Gets the path where the Add-ons are stored.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#ask_about_Radiance-class_method" title="ask_about_Radiance (class method)">+ (Boolean) <strong>ask_about_Radiance</strong> </a>
     
 
@@ -235,7 +259,7 @@ Radiance.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#execute_script-class_method" title="execute_script (class method)">+ (Object) <strong>execute_script</strong>(script) </a>
+      <a href="#execute_script-class_method" title="execute_script (class method)">+ (Boolean) <strong>execute_script</strong>(script) </a>
     
 
     
@@ -355,7 +379,7 @@ Radiance.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#run_command-class_method" title="run_command (class method)">+ (Object) <strong>run_command</strong>(cmd) </a>
+      <a href="#run_command-class_method" title="run_command (class method)">+ (Boolean) <strong>run_command</strong>(cmd) </a>
     
 
     
@@ -372,28 +396,6 @@ Radiance.</p>
     <span class="summary_desc"><div class='inline'>
 <p>Runs a command, printing the Stoud and Stderr on the console.</p>
 </div></span>
-  
-</li>
-
-      
-        <li class="public deprecated">
-  <span class="summary_signature">
-    
-      <a href="#slash-class_method" title="slash (class method)">+ (String) <strong>slash</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  <span class="deprecated note title">deprecated</span>
-  
-
-  
-    <span class="summary_desc"><strong>Deprecated.</strong> <div class='inline'></div></span>
   
 </li>
 
@@ -433,7 +435,88 @@ analysis.</p>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="ask_about_Radiance-class_method">
+  <h3 class="signature first" id="addons_groundhog_path-class_method">
+  
+    + (<tt>Void</tt>) <strong>addons_groundhog_path</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Gets the path where the Add-ons are stored</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Void</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The add-on groundhog path</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+85
+86
+87
+88
+89
+90</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 85</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_addons_groundhog_path'>addons_groundhog_path</span>
+	<span class='id identifier rubyid_dir'>dir</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span>
+	<span class='id identifier rubyid_array'>array</span><span class='op'>=</span><span class='id identifier rubyid_dir'>dir</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_array'>array</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Addons</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='kw'>return</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_array'>array</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="ask_about_Radiance-class_method">
   
     + (<tt>Boolean</tt>) <strong>ask_about_Radiance</strong> 
   
@@ -494,16 +577,16 @@ false</p>
       <pre class="lines">
 
 
-177
-178
-179
-180
-181
-182
-183</pre>
+189
+190
+191
+192
+193
+194
+195</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 177</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 189</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ask_about_Radiance'>ask_about_Radiance</span>
 	<span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_Radiance_Path'>check_Radiance_Path</span><span class='lparen'>(</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_radiance_path'>radiance_path</span><span class='rparen'>)</span> <span class='comment'>#return true if it is installed
@@ -598,17 +681,17 @@ Radiance</p>
       <pre class="lines">
 
 
-165
-166
-167
-168
-169
-170
-171
-172</pre>
+177
+178
+179
+180
+181
+182
+183
+184</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 165</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 177</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_Radiance_Path'>check_Radiance_Path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_path'>path</span><span class='op'>==</span><span class='kw'>nil</span>
@@ -681,25 +764,25 @@ Radiance</p>
       <pre class="lines">
 
 
-108
-109
-110
-111
-112
-113
-114
-115
-116
 117
 118
 119
 120
 121
 122
-123</pre>
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 117</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_clear_actual_path'>clear_actual_path</span>
 	<span class='id identifier rubyid_dirs'>dirs</span><span class='op'>=</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Workplanes</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Materials</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Geometry</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Illums</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Results</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Skies</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Views</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Components</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DC</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -784,16 +867,16 @@ Radiance</p>
       <pre class="lines">
 
 
-96
-97
-98
-99
-100
-101
-102</pre>
+105
+106
+107
+108
+109
+110
+111</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 96</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 105</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_clear_path'>clear_path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span> <span class='kw'>do</span>
@@ -872,14 +955,12 @@ Radiance</p>
 77
 78
 79
-80
-81</pre>
+80</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 75</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_examples_groundhog_path'>examples_groundhog_path</span>
-
 	<span class='id identifier rubyid_dir'>dir</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span>
 	<span class='id identifier rubyid_array'>array</span><span class='op'>=</span><span class='id identifier rubyid_dir'>dir</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_array'>array</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Examples</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -893,7 +974,7 @@ Radiance</p>
       <div class="method_details ">
   <h3 class="signature " id="execute_script-class_method">
   
-    + (<tt>Object</tt>) <strong>execute_script</strong>(script) 
+    + (<tt>Boolean</tt>) <strong>execute_script</strong>(script) 
   
 
   
@@ -930,6 +1011,24 @@ within SketchUp. The commands need to be strings.</p>
   
 </ul>
 
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>success</p>
+</div>
+      
+    </li>
+  
+</ul>
 <p class="tag_title">Author:</p>
 <ul class="author">
   
@@ -953,20 +1052,20 @@ within SketchUp. The commands need to be strings.</p>
       <pre class="lines">
 
 
-153
-154
-155
-156
-157
-158
-159</pre>
+165
+166
+167
+168
+169
+170
+171</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 153</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 165</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
+	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_script'>script</span>
 	<span class='id identifier rubyid_script'>script</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span>  <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_cmd'>cmd</span><span class='op'>|</span>
-		<span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\t --&gt; </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cmd'>cmd</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
 		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_run_command'>run_command</span><span class='lparen'>(</span><span class='id identifier rubyid_cmd'>cmd</span><span class='rparen'>)</span>
 	<span class='kw'>end</span>
 	<span class='kw'>return</span> <span class='kw'>true</span>
@@ -1038,12 +1137,12 @@ within SketchUp. The commands need to be strings.</p>
       <pre class="lines">
 
 
-87
-88
-89</pre>
+96
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 87</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 96</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_failed_operation_message'>failed_operation_message</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='rparen'>)</span>
 	<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>There was an error while performing </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_op_name'>op_name</span><span class='embexpr_end'>}</span><span class='tstring_content'> operation.\n\nPlease contact </span><span class='embexpr_beg'>#{</span><span class='const'>Groundhog</span><span class='period'>.</span><span class='id identifier rubyid_creator'>creator</span><span class='embexpr_end'>}</span><span class='tstring_content'> to tell us what happened.\n\nTHANKS!</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1316,7 +1415,7 @@ German Molina</p>
       <div class="method_details ">
   <h3 class="signature " id="run_command-class_method">
   
-    + (<tt>Object</tt>) <strong>run_command</strong>(cmd) 
+    + (<tt>Boolean</tt>) <strong>run_command</strong>(cmd) 
   
 
   
@@ -1353,6 +1452,24 @@ if everything went well, and false if it did not.</p>
   
 </ul>
 
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>success</p>
+</div>
+      
+    </li>
+  
+</ul>
 <p class="tag_title">Author:</p>
 <ul class="author">
   
@@ -1376,16 +1493,6 @@ if everything went well, and false if it did not.</p>
       <pre class="lines">
 
 
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
 138
 139
 140
@@ -1395,16 +1502,28 @@ if everything went well, and false if it did not.</p>
 144
 145
 146
-147</pre>
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 128</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 138</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_run_command'>run_command</span><span class='lparen'>(</span><span class='id identifier rubyid_cmd'>cmd</span><span class='rparen'>)</span>
 	<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Either your Radiance configuration is incorrect or inexistent.\n\nPlease reconfigure.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_radiance_path'>radiance_path</span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_radiance_path'>radiance_path</span> <span class='op'>==</span> <span class='kw'>nil</span>
 
 	<span class='id identifier rubyid_exit_status'>exit_status</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
+	<span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&gt;&gt; </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cmd'>cmd</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
 	<span class='const'>Open3</span><span class='period'>.</span><span class='id identifier rubyid_popen3'>popen3</span><span class='lparen'>(</span><span class='id identifier rubyid_cmd'>cmd</span><span class='rparen'>)</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_stdin'>stdin</span><span class='comma'>,</span> <span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='comma'>,</span> <span class='id identifier rubyid_wait_thr'>wait_thr</span><span class='op'>|</span>
 		<span class='id identifier rubyid_pid'>pid</span> <span class='op'>=</span> <span class='id identifier rubyid_wait_thr'>wait_thr</span><span class='period'>.</span><span class='id identifier rubyid_pid'>pid</span> <span class='comment'># pid of the started process.
 </span>
@@ -1419,96 +1538,6 @@ if everything went well, and false if it did not.</p>
 		<span class='id identifier rubyid_exit_status'>exit_status</span> <span class='op'>=</span> <span class='id identifier rubyid_wait_thr'>wait_thr</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_success?'>success?</span>
 	<span class='rbrace'>}</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_exit_status'>exit_status</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="slash-class_method">
-  
-    + (<tt>String</tt>) <strong>slash</strong> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    <div class="note deprecated"><strong>Deprecated.</strong> <div class='inline'></div></div>
-
-<p>Returns the “slash” required for each O.S.</p>
-
-<p>Window 7 and Mac use different “slashes”.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The corresponding Slash (“\” for WIN and “/” for MAC or OTHER).</p>
-</div>
-      
-    </li>
-  
-</ul>
-<p class="tag_title">Author:</p>
-<ul class="author">
-  
-    <li>
-      
-      
-      
-      
-        
-        <div class='inline'>
-<p>German Molina</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-32
-33
-34
-35
-36
-37
-38
-39
-40</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 32</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_slash'>slash</span>
-	<span class='id identifier rubyid_os'>os</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_getsystem'>getsystem</span>
-
-	<span class='kw'>if</span> <span class='id identifier rubyid_os'>os</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WIN</span><span class='tstring_end'>&quot;</span></span>
-		<span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\\</span><span class='tstring_end'>&quot;</span></span> <span class='comment'>#This was correct in Windows XP, when tried
-</span>	<span class='kw'>else</span>
-		<span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span> <span class='comment'>#it is assumed that OTHER OS will work as MAC...???
-</span>	<span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1602,7 +1631,7 @@ analysis</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Jul  8 18:22:54 2015 by
+  Generated on Tue Jul 21 17:30:42 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

@@ -1,4 +1,6 @@
-body { font-size: 80%; font-family: 'Open Sans', Verdana, Arial, Sans-Serif; 	text-align: justify; }
+
+
+body { margin:auto; font-size: 80%; font-family: 'Open Sans', Verdana, Arial, Sans-Serif; 	text-align: justify; background-color: #f1f0ee;}
 button {font-size: 100%;}
 
 table, th, td {
@@ -8,6 +10,12 @@ table, th, td {
 
 h2{
     color: rgb(40,40,40);
+}
+
+h1 {
+    font-size: 160%;
+    margin:auto;
+    margin-left:10px;    
 }
 
 input{
@@ -70,6 +78,7 @@ select {
   text-align: center;
   margin-bottom: 20px;
   width: 80px;
+  height: 20px;
   -webkit-transform: translateZ(0); /* webkit flicker fix */
   -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
 }

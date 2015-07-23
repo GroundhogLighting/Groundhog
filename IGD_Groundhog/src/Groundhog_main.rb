@@ -12,7 +12,6 @@ module IGD
 						". Since it seems that you are using an older version, some features might not work correctly."+
 						"\n\n You can upgrade SketchUp going to "+
 						"www.SketchUp.com")
-
 		end
 
 		#################################
@@ -21,25 +20,17 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Config'
 		Sketchup::require 'IGD_Groundhog/src/Labeler'
 		Sketchup::require 'IGD_Groundhog/src/OS'
-		Sketchup::require 'IGD_Groundhog/src/Tools/MkWindow'
+		#Sketchup::require 'IGD_Groundhog/src/Tools/MkWindow' #deprecated for a while, at least.
 		Sketchup::require 'IGD_Groundhog/src/Exporter'
 		Sketchup::require 'IGD_Groundhog/src/Results'
 		Sketchup::require 'IGD_Groundhog/src/Materials'
 		Sketchup::require 'IGD_Groundhog/src/Rad'
+		Sketchup::require 'IGD_Groundhog/src/Addons'
 
 		require 'json'
 		require 'Open3'
 		require 'fileutils'
 
-
-		#########################################
-		# LOAD CONFIG FILE
-		#########################################
-		if File.exists?("#{OS.main_groundhog_path}/config") then #if a configuration file was one created
-			Config.load_config
-		end
-
-		
 
 
 		#########################################
@@ -59,10 +50,27 @@ module IGD
 
 		UI.add_context_menu_handler do |context_menu|
 		   faces=Utilities.get_faces(Sketchup.active_model.selection)
+		   namables = Utilities.get_namables(Sketchup.active_model.selection)
+		   if namables.length >= 1 then
+			   context_menu.add_item("Assign Name") {
+					begin
+						op_name = "Assign name"
+						model.start_operation(op_name,true)
+						name=Utilities.get_name
+						model.abort_operation if not name
+						Labeler.set_name(Sketchup.active_model.selection,name)
+						model.commit_operation
+					rescue => e
+						model.abort_operation
+						OS.failed_operation_message(op_name)
+					end
+			   }
+	   		end
+
 			if faces.length>=1 then
-				context_menu.add_item("Make Window") {
-					MkWindow.make_window(faces)
-				}
+				#context_menu.add_item("Make Window") {
+				#	MkWindow.make_window(faces)
+				#}
 				context_menu.add_item("Label as Illum") {
 					begin
 						op_name = "Label as illum"
@@ -139,20 +147,6 @@ module IGD
 						end
 				   }
 				end
-			   context_menu.add_item("Assign name") {
-					begin
-						op_name = "Assign name"
-						model.start_operation(op_name,true)
-						name=Utilities.get_name
-						model.abort_operation if not name
-						Labeler.set_name(Sketchup.active_model.selection,name)
-
-						model.commit_operation
-					rescue => e
-						model.abort_operation
-						OS.failed_operation_message(op_name)
-					end
-			   }
 
 			end
 		end
@@ -176,43 +170,31 @@ module IGD
 
 			### TOOLS SUBMENU
 
-			GH_tools_menu=groundhog_menu.add_submenu("Tools")
+			gh_tools_menu=groundhog_menu.add_submenu("Tools")
 
-				GH_tools_menu.add_item("Make Window"){
-					MkWindow.make_window(Utilities.get_faces(Sketchup.active_model.selection))
-				}
-
-				#GH_tools_menu.add_item("Preview"){
-				#	Rad.rvu
+				#gh_tools_menu.add_item("Make Window"){
+				#	MkWindow.make_window(Utilities.get_faces(Sketchup.active_model.selection))
 				#}
 
-				#GH_tools_menu.add_item("Calculate Daylight Factor"){
-				#	Rad.daylight_factor
-				#}
-
-				#GH_tools_menu.add_item("Calculate actual illuminance"){
-				#	Rad.actual_illuminance
-				#}
-
-				GH_tools_menu.add_item("Simulation Wizard"){
+				gh_tools_menu.add_item("Simulation Wizard"){
 					Rad.show_sim_wizard
 				}
 
 
 			### MATERIALS SUBMENU
 
-			GH_materials_menu=groundhog_menu.add_submenu("Materials")
+			gh_materials_menu=groundhog_menu.add_submenu("Materials")
 
-				GH_materials_menu.add_item("Add Materials"){
+				gh_materials_menu.add_item("Add Materials"){
 					Materials.show_material_wizard
 				}
 
 
 			### RESULTS SUBMENU
 
-			GH_results_menu=groundhog_menu.add_submenu("Results")
+			gh_results_menu=groundhog_menu.add_submenu("Results")
 
-				GH_results_menu.add_item("Import results"){
+				gh_results_menu.add_item("Import results"){
 
 					path=Exporter.getpath #it returns false if not successful
 					path="c:/" if not path
@@ -222,7 +204,7 @@ module IGD
 
 				}
 
-				GH_results_menu.add_item("Scale handler"){
+				gh_results_menu.add_item("Scale handler"){
 					Results.show_scale_handler
 
 				}
@@ -231,16 +213,16 @@ module IGD
 
 
 			### VIEW
-			GH_view_menu=groundhog_menu.add_submenu("View")
+			gh_view_menu=groundhog_menu.add_submenu("View")
 
-				GH_view_menu.add_item("Show/Hide illums"){
+				gh_view_menu.add_item("Show/Hide illums"){
 					Utilities.hide_show_specific("illum")
 				}
-				GH_view_menu.add_item("Show/Hide Workplanes"){
+				gh_view_menu.add_item("Show/Hide Workplanes"){
 					Utilities.hide_show_specific("workplane")
 				}
-				GH_view_menu.add_item("Show/Hide window groups"){
-					Sketchup.active_model.select_tool GH_Render.new
+				gh_view_menu.add_item("Show/Hide window groups"){
+					Sketchup.active_model.select_tool gh_Render.new
 				}
 
 
@@ -264,22 +246,31 @@ module IGD
 
 
 			### PREFERENCES MENU
-
 			groundhog_menu.add_item("Preferences") {
 				Config.show_config
 			}
 
+			### ADD-ONS MENU
+			@gh_addons_menu=groundhog_menu.add_submenu("Add-ons")
+				@gh_addons_menu.add_item("Add-on manager") {
+					Addons.show_addons_manager
+				}
+
+			def self.addon_menu
+				return @gh_addons_menu
+			end
+
 			### EXAMPLES MENU
-			GH_examples_menu=groundhog_menu.add_submenu("Example files")
-				GH_examples_menu.add_item("University Hall") {
+			gh_examples_menu=groundhog_menu.add_submenu("Example files")
+				gh_examples_menu.add_item("University Hall") {
 					path = "#{OS.examples_groundhog_path}/UniversityHall.skp"
 					UI.messagebox("Unable to open Example File.") if not Sketchup.open_file path
 				}
 
 			### HELP MENU
 
-			GH_help_menu=groundhog_menu.add_submenu("Help")
-				GH_help_menu.add_item("Full Groundhog documentation") {
+			gh_help_menu=groundhog_menu.add_submenu("Help")
+				gh_help_menu.add_item("Full Groundhog documentation") {
 					wd=UI::WebDialog.new(
 						"Full doc", true, "",
 						700, 700, 100, 100, true )
@@ -288,43 +279,43 @@ module IGD
 				}
 
 				## Tutorials
-				GH_tutorials_menu=GH_help_menu.add_submenu("Tutorials")
-					GH_tutorials_menu.add_item("Getting Started") {
+				gh_tutorials_menu=gh_help_menu.add_submenu("Tutorials")
+					gh_tutorials_menu.add_item("Getting Started") {
 						wd=UI::WebDialog.new(
 							"Tutorials", true, "",
 							700, 700, 100, 100, true )
 						wd.set_file( "#{OS.main_groundhog_path}/doc/file.GettingStarted.html" )
 						wd.show()
 					}
-					GH_tutorials_menu.add_item("Adding windows") {
+					gh_tutorials_menu.add_item("Adding windows") {
 						wd=UI::WebDialog.new(
 							"Tutorials", true, "",
 							700, 700, 100, 100, true )
 						wd.set_file("#{OS.main_groundhog_path}/doc/file.MakeWindow.html" )
 						wd.show()
 					}
-					GH_tutorials_menu.add_item("Adding workplanes") {
+					gh_tutorials_menu.add_item("Adding workplanes") {
 						wd=UI::WebDialog.new(
 							"Tutorials", true, "",
 							700, 700, 100, 100, true )
 						wd.set_file("#{OS.main_groundhog_path}/doc/file.MakeWorkplane.html" )
 						wd.show()
 					}
-					GH_tutorials_menu.add_item("Adding illums") {
+					gh_tutorials_menu.add_item("Adding illums") {
 						wd=UI::WebDialog.new(
 							"Tutorials", true, "",
 							700, 700, 100, 100, true )
 						wd.set_file("#{OS.main_groundhog_path}/doc/file.MakeIllum.html" )
 						wd.show()
 					}
-					GH_tutorials_menu.add_item("Exporting views") {
+					gh_tutorials_menu.add_item("Exporting views") {
 						wd=UI::WebDialog.new(
 							"Tutorials", true, "",
 							700, 700, 100, 100, true )
 						wd.set_file("#{OS.main_groundhog_path}/doc/file.Views.html" )
 						wd.show()
 					}
-					GH_tutorials_menu.add_item("Visualizing results") {
+					gh_tutorials_menu.add_item("Visualizing results") {
 						wd=UI::WebDialog.new(
 							"Tutorials", true, "",
 							700, 700, 100, 100, true )
@@ -342,6 +333,17 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 Go to GNU's website for more information about this license."
 				UI.messagebox str
 			}
+
+
+
+
+			#########################################
+			# LOAD CONFIG FILE
+			#########################################
+			if File.exists? Config.config_path then #if a configuration file was once created
+				Config.load_config
+			end
+
 
 	end #end module
 end

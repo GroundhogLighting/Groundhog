@@ -6,6 +6,16 @@ module IGD
 		# entities with a certain label.
 		module Utilities
 
+
+			# Fix the name, eliminating complex symbols
+			# @author German Molina
+			# @param name [String] The name to fix
+			# @return [String] The fixed name
+			def self.fix_name(name)
+				return name.tr(" ","_").tr("#","_")
+			end
+
+
 			# Ask the user for a name
 			# @author German Molina
 			# @return [String] The asigned name
@@ -296,6 +306,44 @@ module IGD
 			# @return [Array <SketchUp::ComponentInstances>] An array with the component instances
 			def self.get_component_instances(entities)
 				return entities.select{|x| x.is_a? Sketchup::ComponentInstance or x.is_a? Sketchup::Group}
+			end
+
+			# Tells if a Sketchup::Entity can be assigned a name.
+			# @author German Molina
+			# @param entity [Array<SketchUp::Entities>]
+			# @return [Boolean]
+			def self.namable?(entity)
+				entity.is_a? Sketchup::ComponentInstance or entity.is_a? Sketchup::Group or entity.is_a? Sketchup::Face
+			end
+
+			# Gets the entities in an array that can be named
+			# @author German Molina
+			# @param entities [Array<SketchUp::Entities>]
+			# @return [Array <SketchUp::Entities>] An array with the entities that can be named
+			def self.get_namables(entities)
+				return entities.select{|x| self.namable?(x)}
+			end
+
+			# Returns an array with the transformations that lead to the global position of the entity
+			# @author German Molina
+			# @param entity [SketchUp::Entities]
+			# @return [Array <SketchUp::Transformation>] An array with the transformations
+			# @note This method is not used, and it is not working... the idea was to enable
+			#    exporting illums and workplanes within groups and components, but I could not
+			#    find a way of geting the global coordinates of them.
+			def self.get_global_transformations(entity)
+				tr=[]
+				if entity.is_a? Sketchup::Face
+					until entity.parent.is_a? Sketchup::Model
+						tr << entity.parent.transformation
+						entity = entity.parent
+					end
+				else
+					until entity.is_a? Sketchup::Model
+						tr << entity.transformation
+						entity = entity.parent
+					end
+				end
 			end
 
 
