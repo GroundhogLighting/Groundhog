@@ -50,6 +50,23 @@ module IGD
 
 		UI.add_context_menu_handler do |context_menu|
 		   faces=Utilities.get_faces(Sketchup.active_model.selection)
+		   namables = Utilities.get_namables(Sketchup.active_model.selection)
+		   if namables.length >= 1 then
+			   context_menu.add_item("Assign Name") {
+					begin
+						op_name = "Assign name"
+						model.start_operation(op_name,true)
+						name=Utilities.get_name
+						model.abort_operation if not name
+						Labeler.set_name(Sketchup.active_model.selection,name)
+						model.commit_operation
+					rescue => e
+						model.abort_operation
+						OS.failed_operation_message(op_name)
+					end
+			   }
+	   		end
+
 			if faces.length>=1 then
 				#context_menu.add_item("Make Window") {
 				#	MkWindow.make_window(faces)
@@ -130,20 +147,6 @@ module IGD
 						end
 				   }
 				end
-			   context_menu.add_item("Assign name") {
-					begin
-						op_name = "Assign name"
-						model.start_operation(op_name,true)
-						name=Utilities.get_name
-						model.abort_operation if not name
-						Labeler.set_name(Sketchup.active_model.selection,name)
-
-						model.commit_operation
-					rescue => e
-						model.abort_operation
-						OS.failed_operation_message(op_name)
-					end
-			   }
 
 			end
 		end

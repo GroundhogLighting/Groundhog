@@ -29,23 +29,14 @@ module IGD
 			# @author German Molina
 			# @version 1.3
 			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
-			# @param tr [Boolean] Option for transforming the polygon with the parent(s).
+			# @param trans [Array <Sketchup::Transformation>] list of transformations to apply to the face.
 			# @return [<Array>] The string to be written in the .rad file, and the material
 			# @note tr=True is used for exporting layers, and tr=False is for exporting Components, that are located
 			#   in the Scene.rad file using Radiance's !xform program.
-			def self.get_rad_string(face,tr)
+			def self.get_rad_string(face,trans)
 
 				self.close_face([], 1, 4, face)
 
-				trans=[]
-				if tr then #If we want to transform everything.
-					par=face.parent
-					until par.is_a? Sketchup::Model
-						par=par.instances[0]
-						trans=trans+[par.transformation]
-						par=par.parent
-					end
-				end
 
 				mat=face.material
 				if mat==nil then # If the face does not have a front material
@@ -171,7 +162,7 @@ module IGD
 			# @note this method used to be called 'do_multiphase'
 			def self.export(path)
 				OS.clear_path(path)
-				begin
+				#begin
 					model=Sketchup.active_model
 					op_name = "Export"
 					model.start_operation( op_name,true )
@@ -188,11 +179,11 @@ module IGD
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 
 					model.commit_operation
-				rescue => e
-					model.abort_operation
-					OS.failed_operation_message(op_name)
-					return false
-				end
+				#rescue => e
+				#	model.abort_operation
+				#	OS.failed_operation_message(op_name)
+				#	return false
+				#end
 				return true
 			end
 
@@ -205,7 +196,6 @@ module IGD
 			# @author German Molina
 			# @version 1.0.5
 			# @param path [String] Directory where the Geometry folder is.
-			# @param entities [Array<faces>] Array with the entities to export.
 			# @return [Array<Material>] Array of all the unique materials assigned to the exported faces.
 			# @return false if not succss or cancelled
 			# @example Export the whole model.
@@ -229,13 +219,13 @@ module IGD
 				#we open one file per each layer
 				writers=[] #this is an array of writers
 				layers.each do |lay|
-					writers=writers+[File.open("#{path}/Geometry/#{lay.name.tr(" ","_")}.rad",'w+')]
+					writers=writers+[File.open("#{path}/Geometry/#{Utilities.fix_name(lay.name)}.rad",'w+')]
 				end
 
 
 				#now we loop over the faces, and write them were they belong
 				faces.each do |fc| #for each face
-					info=self.get_rad_string(fc,true) #get the information
+					info=self.get_rad_string(fc,[]) #get the information
 
 					if Labeler.window?(fc)
 						#Window groups will be exported separatedly
@@ -250,7 +240,7 @@ module IGD
 						layers.each do |ly| #we look for the correct layer
 							if fc.layer.==ly then
 								#write the information
-								writers[i].write(info[1].name.tr(" ","_")+info[0])
+								writers[i].write(Utilities.fix_name(info[1].name)+info[0])
 								#store the material
 								mat_list=mat_list+[info[1]]
 								#and purge the list
@@ -273,8 +263,8 @@ module IGD
 				#Write windows
 				return false if not self.write_window_groups(path,windows)
 
-				#Write windows
-				return false if not self.write_illums(path,illums)
+				#Write illums
+				return false if not self.write_illums(path,illums,[],false)
 
 				#write rif
 				return false if not self.write_rif_file(path, illums, windows)
@@ -289,11 +279,11 @@ module IGD
 			# @return [String]
 			# @example Export the actual view
 			#   File.open("/Certain/Directory/view.vf",'w'){|f|
-			#		f.write(self.getViewString(Sketchup.active_model.active_view.camera))
+			#		f.write(self.get_view_string(Sketchup.active_model.active_view.camera))
 			#	}
 			# @todo This is not a good method actually... there are much more options for views on Radiance.
 			#   some work should be done here in order to get it working correctly.
-			def self.getViewString(camera)
+			def self.get_view_string(camera)
 				vp=camera.eye
 				vd=camera.direction
 				vu=camera.up
@@ -329,14 +319,14 @@ module IGD
 				path="#{path}/Views"
 				#Export the actual view
 				File.open("#{path}/view.vf",'w+'){|f|
-					f.write(self.getViewString(Sketchup.active_model.active_view.camera))
+					f.write(self.get_view_string(Sketchup.active_model.active_view.camera))
 				}
 				#then the scenes
 				pages=Sketchup.active_model.pages
 				if pages.count>=1 then
 					pages.each do |page|
 						File.open("#{path}/#{page.name.tr(" ","_")}.vf",'w+'){|f|
-							f.write(self.getViewString(page.camera))
+							f.write(self.get_view_string(page.camera))
 						}
 					end
 				end
@@ -363,7 +353,7 @@ module IGD
 
 				windows.each do |win|
 					c=Labeler.get_win_group(win)
-					info=self.get_rad_string(win,true)
+					info=self.get_rad_string(win,[])
 					if c!=nil then # if the window has a group
 						# We write using the writer of that group
 						i=0
@@ -491,13 +481,16 @@ module IGD
 
 			end
 
+
 			# Exports illum surfaces
 			# @author German Molina
 			# @version 1.0
 			# @param path [String] Directory to export the Window Groups.
-			# @param entities [faces] An array with illums, selected during exportFaces.
+			# @param entities [Array <Sketchup::Face>] An array with illums, selected during exportFaces.
+			# @param trans [Array <Sketchup::Transformation>] An array with transformations to apply to the face.
+			# @param ext [String] An extension that will be assigned to the file.
 			# @return [Boolean] Success
-			def self.write_illums(path,entities)
+			def self.write_illums(path,entities,trans,ext)
 
 				return true if entities.length<1  #success... did not export, though.
 
@@ -507,9 +500,11 @@ module IGD
 				entities.each do |ent| #for all the entities (which are faces)
 					if Labeler.illum?(ent) then #Only illums
 						name=Labeler.get_name(ent) #Get the name of the surface
-						info=self.get_rad_string(ent,true)
+						name="#{Utilities.fix_name(ent.parent.name)}_#{name}" if ent.parent.is_a? Sketchup::ComponentDefinition
+						name+="_#{ext}" if ext
+						info=self.get_rad_string(ent,trans)
 
-						File.open("#{path}/#{name.tr(" ","_")}.rad",'w+'){ |f| #The file is opened
+						File.open("#{path}/#{Utilities.fix_name(name)}.rad",'w+'){ |f| #The file is opened
 							f.write("void "+info[0])
 						}
 
@@ -517,7 +512,6 @@ module IGD
 				end
 
 				return true
-
 			end
 
 
@@ -566,12 +560,11 @@ module IGD
 						next if h.instances.count==0
 						if h.is_a? Sketchup::ComponentDefinition then
 							next if Labeler.solved_workplane?(h)
-							hName=h.name.tr(" ","_").tr("#","_") # The "#" symbol starts comments in Radiance.
+							hName=Utilities.fix_name(h.name)
 							instances=h.instances
 							instances.each do |inst|
-								if inst.parent.is_a? Sketchup::Model then #write only "first level" components
-									f.write(self.get_component_string(" ./Components/",inst,hName))
-								end
+								next if not inst.parent.is_a? Sketchup::Model
+								f.write(self.get_component_string(" ./Components/",inst,hName))
 							end
 						end
 					end
@@ -584,8 +577,8 @@ module IGD
 
 			# Writes the standard Clear Sky
 			# @author German Molina
-			# @version 0.8
-			# @param path [String] Directory to export the scene file
+			# @version 0.9
+			# @param path [String] Directory to export the sky file
 			# @return [Boolean] Success
 			def self.write_sky(path)
 
@@ -636,6 +629,7 @@ module IGD
 			# @return [Boolean] Success
 			def self.export_component_definitions(path)
 				defi=Sketchup.active_model.definitions.select{|x| x.instances.count!=0}
+				comp_path="#{path}/Components"
 
 				return true if defi.length == 0 #dont do anything if there are no components
 
@@ -646,13 +640,11 @@ module IGD
 					next if Labeler.solved_workplane?(h)
 
 					if first_exported then #create directories if there is actually something to export
-
-						OS.mkdir("#{path}/Components")
-						path="#{path}/Components"
+						OS.mkdir("#{comp_path}")
 						first_exported=false
 					end
 
-					hName=h.name.tr(" ","_").tr("#","_")
+					hName=Utilities.fix_name(h.name)
 					entities=h.entities
 #					faces=Utilities.get_all_layer_faces(entities,[])
 					faces=Utilities.get_faces(entities)
@@ -661,30 +653,54 @@ module IGD
 
 					geom_string=""
 					instances.each do |inst| #include the nested components
-						geom_string=geom_string+self.get_component_string(" ./",inst,inst.definition.name.tr(" ","_").tr("#","_"))
+						geom_string=geom_string+self.get_component_string(" ./",inst,Utilities.fix_name(inst.definition.name.tr(" ","_").tr("#","_")))
 					end
 					geom_string+="\n\n"
 
 					mat_array=[]
+					#wp_array=[]
+					#ill_array=[]
+					#window_array=[]
 					faces.each do |fc| #then the rest of the faces
-						next if Labeler.workplane? (fc) or Labeler.illum? (fc) or Labeler.window? (fc)
-
-						info=self.get_rad_string(fc,false)
-						matName=info[1].name.tr(" ","_")+"__"+hName
-						geom_string=geom_string+matName+info[0]
-						mat_array=mat_array+[info[1]]
+						if Labeler.workplane? (fc) then
+						#	wp_array << fc
+						elsif Labeler.illum? (fc) then
+						#	ill_array << fc
+						elsif Labeler.window? (fc) then
+						#	window_array << fc
+						else #common surfaces
+							info=self.get_rad_string(fc,[])
+							matName=Utilities.fix_name(info[1].name)+"_"+hName
+							geom_string=geom_string+matName+info[0]
+							mat_array=mat_array+[info[1]]
+						end
 					end
+
+					#h.instances.each do |inst|
+						#write illums
+					#	self.write_illums(path,ill_array,[],Labeler.get_name(inst))
+
+						#write windows
+						#return false if not self.write_illums(path,ill_array)
+
+						#write workplanes
+						#return false if not self.write_illums(path,ill_array)
+					#end
+
+
+					#Write materials and geometry
 					mat_array.uniq!
 					mat_string=""
 
 					mat_array.each do |mat|
-						mat_string=mat_string+self.get_mat_string(mat, mat.name.tr(" ","_")+"__"+hName)+"\n\n"
+						mat_string+=self.get_mat_string(mat, Utilities.fix_name(mat.name)+"_"+hName)+"\n\n"
 					end
 
-
-					File.open("#{path}/#{hName}.rad",'w+'){ |f|
+					File.open("#{comp_path}/#{hName}.rad",'w+'){ |f|
 						f.write mat_string+geom_string
 					}
+
+
 
 				end	#end for each
 

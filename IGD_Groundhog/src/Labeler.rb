@@ -182,20 +182,20 @@ module IGD
 			#    # The resulting names will be "MyName_1" and "MyName_2".
 			def self.set_name(entities,name)
 
-				faces=Utilities.get_faces(entities)
+				entities = Utilities.get_namables(entities)
 
-				if faces.length==0 then
-					UI.messagebox("No faces selected")
+				if entities.length==0 then
+					UI.messagebox("No selected entities can be named")
 				else
 					#return false if not name
 
-					if faces.length==1 then
-						faces[0].set_attribute("Groundhog","Name",name)
+					if entities.length==1 then
+						entities[0].set_attribute("Groundhog","Name",name)
 					else
 						n=0
-						faces.each do |face|
+						entities.each do |ent|
 							n+=1
-							face.set_attribute("Groundhog","Name",name+"_#{n.to_s}")
+							ent.set_attribute("Groundhog","Name",name+"_#{n.to_s}")
 						end
 					end
 				end

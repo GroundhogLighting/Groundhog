@@ -289,7 +289,10 @@
 156
 157
 158
-159</pre>
+159
+160
+161
+162</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Tools/mkWindow.rb', line 15</span>
@@ -299,42 +302,45 @@
 	<span class='id identifier rubyid_winArray'>winArray</span><span class='op'>=</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_windows'>get_windows</span><span class='lparen'>(</span><span class='id identifier rubyid_faces'>faces</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_faces'>faces</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>==</span> <span class='id identifier rubyid_winArray'>winArray</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='comment'># Do this only if there are faces that are not windows selected.
 </span>	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
-	<span class='id identifier rubyid_entities'>entities</span><span class='op'>=</span><span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span>
-	<span class='kw'>begin</span>
-		<span class='id identifier rubyid_op_name'>op_name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Make Windows</span><span class='tstring_end'>&quot;</span></span>
-		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_start_operation'>start_operation</span><span class='lparen'>(</span> <span class='id identifier rubyid_op_name'>op_name</span><span class='comma'>,</span><span class='kw'>true</span> <span class='rparen'>)</span>
-	
+
+	<span class='comment'>#begin
+</span>	<span class='comment'>#	op_name = &quot;Make Windows&quot;
+</span>	<span class='comment'>#	model.start_operation( op_name,true )
+</span>
 		<span class='id identifier rubyid_some_were_far'>some_were_far</span><span class='op'>=</span><span class='kw'>false</span>
 		<span class='id identifier rubyid_some_were_close'>some_were_close</span><span class='op'>=</span><span class='kw'>false</span>
 		<span class='id identifier rubyid_some_did_not_hit'>some_did_not_hit</span><span class='op'>=</span><span class='kw'>false</span>
-	
+
 		<span class='id identifier rubyid_close'>close</span><span class='op'>=</span><span class='float'>0.01</span><span class='period'>.</span><span class='id identifier rubyid_m'>m</span>
 		<span class='id identifier rubyid_far'>far</span><span class='op'>=</span><span class='float'>0.7</span><span class='period'>.</span><span class='id identifier rubyid_m'>m</span>
-	
+
 		<span class='id identifier rubyid_every_window'>every_window</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
 		<span class='id identifier rubyid_every_illum'>every_illum</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
 		<span class='id identifier rubyid_every_thickness'>every_thickness</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
 		<span class='id identifier rubyid_every_face'>every_face</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
 		<span class='id identifier rubyid_every_transformed_window'>every_transformed_window</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
-	
-		<span class='id identifier rubyid_faces'>faces</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_face'>face</span><span class='op'>|</span>	
+
+		<span class='id identifier rubyid_faces'>faces</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_face'>face</span><span class='op'>|</span>
 			<span class='kw'>next</span> <span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_window?'>window?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
 			<span class='kw'>next</span> <span class='kw'>if</span> <span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_loops'>loops</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span><span class='op'>!=</span><span class='int'>1</span> <span class='comment'>#windows with wholes
-</span>		
+</span>
+			<span class='comment'>#entities=model.entities
+</span>			<span class='id identifier rubyid_entities'>entities</span> <span class='op'>=</span> <span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span>
+
 			<span class='id identifier rubyid_did_not_hit'>did_not_hit</span><span class='op'>=</span><span class='kw'>false</span> <span class='comment'>#in case the ray-test does not hit anything.
 </span>			<span class='id identifier rubyid_too_far'>too_far</span><span class='op'>=</span><span class='kw'>false</span> <span class='comment'>#in case the ray-test hits something too far.
 </span>			<span class='id identifier rubyid_too_close'>too_close</span><span class='op'>=</span><span class='kw'>false</span>
-		
+
 			<span class='id identifier rubyid_dir'>dir</span><span class='op'>=</span><span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_normal'>normal</span><span class='period'>.</span><span class='id identifier rubyid_reverse'>reverse</span><span class='period'>.</span><span class='id identifier rubyid_normalize'>normalize</span>
 			<span class='id identifier rubyid_dir2'>dir2</span><span class='op'>=</span><span class='id identifier rubyid_dir'>dir</span>
 			<span class='id identifier rubyid_dir2'>dir2</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span><span class='op'>=</span><span class='id identifier rubyid_close'>close</span>
 			<span class='id identifier rubyid_edges'>edges</span><span class='op'>=</span><span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_edges'>edges</span>
-		
-		
+
+
 			<span class='id identifier rubyid_thickness'>thickness</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span> <span class='comment'>#the border of the window.
 </span>			<span class='id identifier rubyid_window'>window</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
 			<span class='id identifier rubyid_illum'>illum</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
-		
+
 			<span class='id identifier rubyid_edges'>edges</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_edge'>edge</span><span class='op'>|</span>
 				<span class='id identifier rubyid_vertices'>vertices</span><span class='op'>=</span><span class='id identifier rubyid_edge'>edge</span><span class='period'>.</span><span class='id identifier rubyid_vertices'>vertices</span>
 				<span class='id identifier rubyid_a'>a</span><span class='op'>=</span><span class='id identifier rubyid_vertices'>vertices</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span>
@@ -347,37 +353,37 @@
 				<span class='kw'>end</span>
 				<span class='id identifier rubyid_b'>b</span><span class='op'>=</span><span class='id identifier rubyid_b'>b</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
 				<span class='id identifier rubyid_c'>c</span><span class='op'>=</span><span class='id identifier rubyid_c'>c</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
-			
+
 				<span class='comment'>#notices that there are walls that are too thick, or an error
-</span>				<span class='id identifier rubyid_too_far'>too_far</span><span class='op'>=</span><span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_a'>a</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span><span class='lparen'>(</span><span class='id identifier rubyid_b'>b</span><span class='rparen'>)</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_far'>far</span> <span class='kw'>or</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span><span class='lparen'>(</span><span class='id identifier rubyid_d'>d</span><span class='rparen'>)</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_far'>far</span> 
+</span>				<span class='id identifier rubyid_too_far'>too_far</span><span class='op'>=</span><span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_a'>a</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span><span class='lparen'>(</span><span class='id identifier rubyid_b'>b</span><span class='rparen'>)</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_far'>far</span> <span class='kw'>or</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span><span class='lparen'>(</span><span class='id identifier rubyid_d'>d</span><span class='rparen'>)</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_far'>far</span>
 				<span class='id identifier rubyid_too_close'>too_close</span> <span class='op'>=</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_a'>a</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span><span class='lparen'>(</span><span class='id identifier rubyid_b'>b</span><span class='rparen'>)</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_close'>close</span> <span class='kw'>or</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span><span class='lparen'>(</span><span class='id identifier rubyid_d'>d</span><span class='rparen'>)</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_close'>close</span>
-			
+
 				<span class='comment'>#build illum and window
-</span>				<span class='id identifier rubyid_illum'>illum</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_b'>b</span><span class='rparen'>)</span> 
+</span>				<span class='id identifier rubyid_illum'>illum</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_b'>b</span><span class='rparen'>)</span>
 				<span class='id identifier rubyid_window'>window</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_a'>a</span><span class='period'>.</span><span class='op'>+</span><span class='id identifier rubyid_dir2'>dir2</span><span class='rparen'>)</span>
-			
+
 				<span class='comment'>#add the thickness
-</span>				<span class='id identifier rubyid_thickness'>thickness</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='id identifier rubyid_a'>a</span><span class='comma'>,</span><span class='id identifier rubyid_b'>b</span><span class='comma'>,</span><span class='id identifier rubyid_c'>c</span><span class='comma'>,</span><span class='id identifier rubyid_d'>d</span><span class='rbracket'>]</span><span class='rparen'>)</span> 
-						
+</span>				<span class='id identifier rubyid_thickness'>thickness</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='id identifier rubyid_a'>a</span><span class='comma'>,</span><span class='id identifier rubyid_b'>b</span><span class='comma'>,</span><span class='id identifier rubyid_c'>c</span><span class='comma'>,</span><span class='id identifier rubyid_d'>d</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+
 			<span class='kw'>end</span>
-		
+
 			<span class='comment'>#notice that at least one hit was far
 </span>			<span class='id identifier rubyid_some_were_far'>some_were_far</span> <span class='op'>=</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_too_far'>too_far</span>
 			<span class='id identifier rubyid_some_were_close'>some_were_close</span> <span class='op'>=</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_too_close'>too_close</span>
 			<span class='id identifier rubyid_some_did_not_hit'>some_did_not_hit</span> <span class='op'>=</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_did_not_hit'>did_not_hit</span>
-		
+
 			<span class='comment'>#store for transformation, not for building
 </span>			<span class='kw'>if</span> <span class='id identifier rubyid_too_far'>too_far</span> <span class='kw'>or</span> <span class='id identifier rubyid_too_close'>too_close</span> <span class='kw'>or</span> <span class='id identifier rubyid_did_not_hit'>did_not_hit</span> <span class='kw'>then</span>
 				<span class='id identifier rubyid_every_transformed_window'>every_transformed_window</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
 				<span class='kw'>next</span>
-			<span class='kw'>end</span>	
-		
+			<span class='kw'>end</span>
+
 			<span class='comment'>#add everything to the &quot;to do&quot; list
 </span>			<span class='id identifier rubyid_every_face'>every_face</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
 			<span class='id identifier rubyid_every_thickness'>every_thickness</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_thickness'>thickness</span><span class='rparen'>)</span>
 			<span class='id identifier rubyid_every_window'>every_window</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_window'>window</span><span class='rparen'>)</span>
 			<span class='id identifier rubyid_every_illum'>every_illum</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_illum'>illum</span><span class='rparen'>)</span>
-		
+
 		<span class='kw'>end</span>
 
 		<span class='kw'>if</span> <span class='id identifier rubyid_some_were_far'>some_were_far</span> <span class='kw'>or</span> <span class='id identifier rubyid_some_were_close'>some_were_close</span> <span class='kw'>or</span> <span class='id identifier rubyid_some_did_not_hit'>some_did_not_hit</span> <span class='kw'>then</span>
@@ -390,10 +396,10 @@
 			<span class='kw'>if</span> <span class='id identifier rubyid_input'>input</span><span class='op'>==</span><span class='const'>IDYES</span> <span class='kw'>then</span>
 				<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You might want to look into the Right-Click --&gt; &#39;Label as window&#39; alternative.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 			<span class='kw'>else</span>
-				<span class='kw'>return</span> 
+				<span class='kw'>return</span>
 			<span class='kw'>end</span>
 		<span class='kw'>end</span>
-		
+
 		<span class='comment'>#delete original face
 </span>		<span class='id identifier rubyid_every_face'>every_face</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_fc'>fc</span><span class='op'>|</span>
 			<span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_erase_entities'>erase_entities</span><span class='lparen'>(</span><span class='id identifier rubyid_fc'>fc</span><span class='rparen'>)</span>
@@ -405,27 +411,27 @@
 				<span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_add_face'>add_face</span><span class='lparen'>(</span><span class='id identifier rubyid_thick'>thick</span><span class='rparen'>)</span>
 			<span class='kw'>end</span>
 		<span class='kw'>end</span>
-						
+
 		<span class='comment'>#add window
 </span>		<span class='id identifier rubyid_every_window'>every_window</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_wn'>wn</span><span class='op'>|</span>
 			<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_to_window'>to_window</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_add_face'>add_face</span><span class='lparen'>(</span><span class='id identifier rubyid_wn'>wn</span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='rparen'>)</span>
 		<span class='kw'>end</span>
-	
+
 		<span class='comment'>#add illum
 </span>		<span class='id identifier rubyid_every_illum'>every_illum</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ill'>ill</span><span class='op'>|</span>
 			<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_to_illum'>to_illum</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_add_face'>add_face</span><span class='lparen'>(</span><span class='id identifier rubyid_ill'>ill</span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-		<span class='kw'>end</span>	
-	
+		<span class='kw'>end</span>
+
 		<span class='comment'>#transform some windows
 </span>		<span class='id identifier rubyid_every_transformed_window'>every_transformed_window</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_wn'>wn</span><span class='op'>|</span>
 			<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_to_window'>to_window</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='id identifier rubyid_wn'>wn</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-		<span class='kw'>end</span>		
+		<span class='kw'>end</span>
 
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_commit_operation'>commit_operation</span>
-	<span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
-		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
-		<span class='const'>OS</span><span class='period'>.</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_failed_operation_message'>failed_operation_message</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='rparen'>)</span>
-	<span class='comment'>#else
+	<span class='comment'>#rescue =&gt; e
+</span>	<span class='comment'>#	model.abort_operation
+</span>	<span class='comment'>#	OS.failed_operation_message(op_name)
+</span>	<span class='comment'>#else
 </span>	  <span class='comment'>#
 </span>	  <span class='comment'># Do code here ONLY if NO errors occur.
 </span>	  <span class='comment'>#
@@ -433,10 +439,10 @@
 </span>	  <span class='comment'>#
 </span>	  <span class='comment'># ALWAYS do code here errors or not.
 </span>	  <span class='comment'>#
-</span>	<span class='kw'>end</span>
+</span>	<span class='comment'>#end
+</span>
 
 
-		
 
 <span class='kw'>end</span></pre>
     </td>
@@ -449,7 +455,7 @@
 </div>
 
     <div id="footer">
-  Generated on Wed Jul  8 18:22:55 2015 by
+  Generated on Tue Jul 21 17:30:42 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
