@@ -162,9 +162,6 @@ module IGD
 					OS.failed_operation_message(op_name)
 				end
 
-
-
-
 			end
 
 			# Get the Window Groups of the windows within an array.
@@ -185,25 +182,6 @@ module IGD
 			end
 
 
-
-			# Recursively gets all the faces that have to be exported with layers (i.e. simple faces and faces within groups).
-			# @author German Molina
-			# @param entities [Sketchup::DefinitionList] Basically an array of definitions
-			# @param faces [empty array] Needed for the recursion
-			# @return [Array <Sketchup::ComponentDefinition>] Array with the unique component definitions
-			#def self.get_all_layer_faces(entities,faces)
-			#	faces=faces+self.get_faces(entities)
-			#	groups=self.get_groups(entities)
-		#
-		#		return faces if groups.length < 1
-#
-#				entities=[]
-#				groups.each do |gr|
-#					gr.make_unique
-#					entities=entities+self.get_groups(gr.entities)+self.get_faces(gr.entities)
-#				end
-#				self.get_all_layer_faces(entities,faces)
-#			end
 
 
 			# Checks if the face is planar. For some reason some faces were recognized in Radiance as non-planars when building the octree.
@@ -249,33 +227,25 @@ module IGD
 			# Shows class if hidden, hides class if shown. All according to the
 			# first face that is part of the class
 			# @author German Molina
-			# @param a [String] the label to hide/show
+			# @param label [String] the label to hide/show
 			# @return [Void]
-			def self.hide_show_specific(a)
+			def self.hide_show_specific(label)
 				faces=Utilities.get_faces(Sketchup.active_model.entities)
+				faces = faces.select{|x| Labeler.is?(x,label)}
 
+				return if faces.length == 0
+				
 				hide=true
-				is_first=true
+				hide = false if faces[0].hidden?
 
 				begin
 					model=Sketchup.active_model
 					model.start_operation( "Hide/Show Specific" ,true)
-
-					faces.each do |ent| #For all faces in the model
-						if Labeler.is?(ent,a) then #if they are part of the class
-							#We need to know if we have to hide or show
-							if is_first then #So, if the first element
-								if ent.hidden? then #is hidden
-									hide=false #we have to show
-								end
-								is_first=false #and then, it is not the first one...
-							end
-
-							#Then, we hide or show all of them.
-							ent.hidden=hide
-						end
-					end
-
+					faces.map{|x|
+						x.hidden = hide
+						edges = x.edges
+						edges.map{|y| y.hidden = hide}
+					}
 					model.commit_operation
 				rescue => e
 					model.abort_operation

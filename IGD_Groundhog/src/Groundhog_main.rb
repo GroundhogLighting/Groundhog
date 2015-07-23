@@ -221,10 +221,6 @@ module IGD
 				gh_view_menu.add_item("Show/Hide Workplanes"){
 					Utilities.hide_show_specific("workplane")
 				}
-				gh_view_menu.add_item("Show/Hide window groups"){
-					Sketchup.active_model.select_tool gh_Render.new
-				}
-
 
 
 
