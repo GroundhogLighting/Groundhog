@@ -79,10 +79,10 @@ module IGD
 
 				#they alternate hour
 				ret.each do |sensor|
-					time=0.0
+					time=timestep/2.0
 					ac=0.0
 					for i in 1..n_samples
-						time+=(timestep/2.0)
+						time+=timestep
 						ill=results.shift
 						next if (time%24.0) < early or (time%24.0) > late
 						ac+=1.0
@@ -134,10 +134,10 @@ module IGD
 
 				#they alternate hour
 				ret.each do |sensor|
-					time=0.0
+					time=timestep/2.0
 					ac=0.0
 					for i in 1..n_samples
-						time+=(timestep/2.0)
+						time+=timestep
 						ill=results.shift
 						next if (time%24.0) < early or (time%24.0) > late
 						ac+=1.0
@@ -176,7 +176,7 @@ module IGD
 				u=v
 				i=2
 				#Now, for getting U, we need to check the moment when we shift one "U"
-				while u.parallel? v do
+				while u.parallel?(v) do
 					data=array[i]
 					pt=Geom::Point3d.new(data[0],data[1],data[2])
 					u=pt0.vector_to(pt)
