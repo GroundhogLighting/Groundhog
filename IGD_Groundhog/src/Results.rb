@@ -1,12 +1,12 @@
 module IGD
 	module Groundhog
 		# This class is meant to help importing results from a grid into a Workplane.
-		
+
 		module Results
-	
-	
+
+
 			# Converts sensor results into a 2D array
-			# 
+			#
 			# It expects the grid be in format "Px Py Pz Value"
 			# where the first three terms are the position in space,
 			# and the 4th value is the actual value to be put in the grid.
@@ -14,15 +14,15 @@ module IGD
 			# The positions are assumed to be in meters.
 			#
 			# @author German Molina
-			# @param path [String] the path to the results file
-			# @return An array with the values when succesful, "false" if not.
+			# @param results_path [String] the path to the results file
+			# @return [Depends] An array with the values when succesful, "false" if not.
 			# @version 0.2
 			def self.results_to_array(results_path)
-				if not File.exist?(results_path) then 
+				if not File.exist?(results_path) then
 					UI.messagebox("Results file not found.")
 					return false
 				end
-		
+
 				ret=[]
 				line_num=1
 				File.open(results_path, "r").each_line do |line|
@@ -35,68 +35,121 @@ module IGD
 						return false
 					end
 					line_num+=1
-				end	
-		
+				end
+
 				return ret
 			end
-			
+
 			# Converts a very long file of annual results into a 2d array for
-			# plotting as a heatmap
-			# 
+			# plotting as a heatmap of UDI.
+			#
 			# It reads the workplane path for getting the position of each sensor.
 			#
 			# The positions are assumed to be in meters.
 			#
 			# @author German Molina
-			# @param path [String] the path to the results file
-			# @param workplane_file [String] the path to the workplane file			
+			# @param results_path [String] the path to the results file
+			# @param workplane_file [String] the path to the workplane file
 			# @param min [Float] The minimum acceptable illuminance
 			# @param max [Float] The maximum acceptable illuminance
-			# @return An array with the values when succesful, "false" if not.
+			# @return [Depends] An array with the values when succesful, "false" if not.
 			# @version 0.1
-			def self.annual_to_UDI(results_path, workplane_file, min, max)
-				
+			def self.annual_to_UDI(results_path, workplane_file, min, max, early, late)
+
 				return false if not File.exist?(results_path)
 				return false if not File.exist?(workplane_file)
-	
+
 				results=File.open(results_path).read.split("\n").collect!{|x| x.to_f}
 				n_results=results.length
-	
-				sensors=File.open(workplane_file).read.split("\n")	
+
+				sensors=File.open(workplane_file).read.split("\n")
 				n_sensors=sensors.length
-	
-				warn "Weather file does not seem to have 8760 hours!!" if n_results/n_sensors != 8760
-			
+
+				n_samples = n_results/n_sensors
+				warn "Weather file does not seem to have 8760 hours!!" if n_samples != 8760
+
+				timestep=8760.0/n_samples
+
 				ret=[]
 				sensors.each do |line|
 					line.strip!
-					sensor=line.split("\t")					
+					sensor=line.split("\t")
 					ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
-				end	
+				end
 
-				#assuming they alternate hour
+				#they alternate hour
 				ret.each do |sensor|
-					for i in 1..8760
+					time=0.0
+					ac=0.0
+					for i in 1..n_samples
+						time+=(timestep/2.0)
 						ill=results.shift
+						next if (time%24.0) < early or (time%24.0) > late
+						ac+=1.0
 						next if ill > max
 						next if ill < min
-						sensor[3]+=100.0/8760.0
+						sensor[3]+=100.0
 					end
+					sensor[3]/=ac
 				end
-			
-			#	#assuming they alternate sensor
-			#	for i in 1..8760
-			#		ret.each do |sensor|
-			#			ill=results.shift						
-			#			next if ill > max
-			#			next if ill < min
-			#			sensor[3]+=100.0/8760.0
-			#		end
-			#	end		
 
 				return ret
 			end
-	
+
+			# Converts a very long file of annual results into a 2d array for
+			# plotting as a heatmap for plotting DA>
+			#
+			# It reads the workplane path for getting the position of each sensor.
+			#
+			# The positions are assumed to be in meters.
+			#
+			# @author German Molina
+			# @param results_path [String] the path to the results file
+			# @param workplane_file [String] the path to the workplane file
+			# @param min [Float] The minimum acceptable illuminance
+			# @return [Depends] An array with the values when succesful, "false" if not.
+			# @version 0.1
+			def self.annual_to_DA(results_path, workplane_file, min, early, late)
+
+				return false if not File.exist?(results_path)
+				return false if not File.exist?(workplane_file)
+
+				results=File.open(results_path).read.split("\n").collect!{|x| x.to_f}
+				n_results=results.length
+
+				sensors=File.open(workplane_file).read.split("\n")
+				n_sensors=sensors.length
+
+				n_samples = n_results/n_sensors
+				warn "Weather file does not seem to have 8760 hours!!" if n_samples != 8760
+
+				timestep=8760.0/n_samples
+
+				ret=[]
+				sensors.each do |line|
+					line.strip!
+					sensor=line.split("\t")
+					ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
+				end
+
+				#they alternate hour
+				ret.each do |sensor|
+					time=0.0
+					ac=0.0
+					for i in 1..n_samples
+						time+=(timestep/2.0)
+						ill=results.shift
+						next if (time%24.0) < early or (time%24.0) > late
+						ac+=1.0
+						next if ill < min
+						sensor[3]+=100.0
+					end
+					sensor[3]/=ac
+				end
+
+				return ret
+			end
+
 			# Calculates the u and v vectors for drawing the "pixels" in the solved workplanes.
 			#
 			# This method was thought to be used along with "results_to_array"
@@ -107,19 +160,19 @@ module IGD
 			# shift one U to the side, and again all sensors in direction V.
 			#
 			# @author German Molina
-			# @param Array a 2d array with 4 columns
-			# @return UV [array] an array of Geom::Vector3d objects
+			# @param array [Array<Float>] a 2d array with 4 columns
+			# @return [Array<Geom::Vector3d>] an array of Geom::Vector3d objects
 			# @version 0.1
 			def self.get_UV(array)
 				#Start with the first two points
 				data0=array[0]
 				data=array[1]
-		
+
 				#get V... easy. Two sequencial points
 				pt0=Geom::Point3d.new(data0[0],data0[1],data0[2])
 				pt=Geom::Point3d.new(data[0],data[1],data[2])
 				v=pt0.vector_to(pt)
-		
+
 				u=v
 				i=2
 				#Now, for getting U, we need to check the moment when we shift one "U"
@@ -129,18 +182,18 @@ module IGD
 					u=pt0.vector_to(pt)
 					i+=1
 				end
-		
-		
+
+
 				return [u,v]
 			end
-	
-	
-	
-	
+
+
+
+
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model.
 			#
-			# The normal of the plane as well as the dimension of the pixels 
+			# The normal of the plane as well as the dimension of the pixels
 			# are calculated from the position of the sensors. It is assumed that
 			# all the sensors lie in the same plane point in the same direction.
 			#
@@ -149,24 +202,24 @@ module IGD
 			# @param v [vector3d] V vector
 			# @param array [array] The array (2D, 4 columns) with the data to show.
 			# @param name [String] The name that will be given to the group that contains the pixels
-			# @return void
+			# @return [Void]
 			# @version 0.2
 			def self.draw_pixels(u,v,array,name)
 				model=Sketchup.active_model
 				begin
 					op_name="Draw pixels"
 					model.start_operation(op_name,true)
-			
+
 					group = Sketchup.active_model.entities.add_group
 					group.name=name
 					Labeler.to_solved_workplane(group.definition)
 					entities=group.entities
-			
-			
+
+
 					#we move half step to each side.
 					u.transform!(0.5)
 					v.transform!(0.5)
-		
+
 					max=0
 					min=9999999999999
 					array.each do |data|
@@ -174,7 +227,7 @@ module IGD
 						max=data[3] if max<data[3]
 					end
 					Labeler.set_workplane_value(group.definition,min,max)
-			
+
 					#draw every line. Each pixel is a quadrilateral.
 					array.each do |data|
 						pt=Geom::Point3d.new(data[0],data[1],data[2])
@@ -182,14 +235,14 @@ module IGD
 						vertex4=pt.offset(v.transform(-1)).offset(u)
 						vertex3=pt.offset(v.transform(-1)).offset(u.transform(-1))
 						vertex2=pt.offset(v).offset(u.transform(-1))
-			
+
 						pixel=entities.add_face(vertex1,vertex2,vertex3,vertex4)
 						Labeler.to_result_pixel(pixel)
 						Labeler.set_pixel_value(pixel,data[3])
 
 					end
-		
-		
+
+
 					model.commit_operation
 				rescue => e
 					model.abort_operation
@@ -203,10 +256,10 @@ module IGD
 				  # ALWAYS do code here errors or not.
 				  #
 				end
-		
+
 			end
-	
-	
+
+
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model.
 			#
@@ -214,7 +267,7 @@ module IGD
 			# @param value  [float] The value to be assigned a color
 			# @param max [float] The maximum value, the one that saturates the color scale.
 			# @param min [float] The min value, the one that saturates the color scale.
-			# @return color [Array] with Red, Green and Blue components
+			# @return [Array<Float>] with Red, Green and Blue components
 			# @version 0.3
 			def self.get_pixel_color(value,max,min)
 
@@ -222,23 +275,23 @@ module IGD
 				green=[0.0009766,2.35501e-05,0.0008966244,0.0264977,0.1256843,0.2865799,0.4247083,0.4739468,0.4402732,0.3671876,0.2629843,0.1725325,0.1206819,0.07316644,0.03761026,0.01612362,0.004773749,6.830967e-06,0.00803605,0.1008085,0.3106831,0.6447838,0.9707]
 				blue=[0.2666,0.3638662,0.4770437,0.5131397,0.5363797,0.5193677,0.4085123,0.1702815,0.05314236,0.05194055,0.08564082,0.09881395,0.08324373,0.06072902,0.0391076,0.02315354,0.01284458,0.005184709,0.001691774,2.432735e-05,1.212949e-05,0.006659406,0.02539]
 				nbins=red.length-1 #the number of color bins
-		
+
 				return [red[0],green[0],blue[0]] if value <= min
 				return [red[nbins],green[nbins],blue[nbins]] if value >= max or (max-min)<1e-3
-		
+
 				max=max-min
 				value=value-min
 				min=0
-		
+
 				norm_value=value/max
 				bin_value=norm_value*nbins
 				under_bin=bin_value.floor
 				upper_bin=bin_value.ceil
-		
+
 				r=red[under_bin]+(bin_value-under_bin)*(red[upper_bin]-red[under_bin])
 				g=green[under_bin]+(bin_value-under_bin)*(green[upper_bin]-green[under_bin])
 				b=blue[under_bin]+(bin_value-under_bin)*(blue[upper_bin]-blue[under_bin])
-		
+
 				return [r,g,b]
 			end
 
@@ -254,29 +307,29 @@ module IGD
 				begin
 					op_name="Update pixels"
 					model.start_operation(op_name,true)
-		
+
 					definitions=Sketchup.active_model.definitions
-		
+
 					definitions.each do |defi|
-						next if not Labeler.solved_workplane?(defi) 
+						next if not Labeler.solved_workplane?(defi)
 						#now we are sure this is a solved_workplane
-			
+
 						entities=defi.entities
 						entities.each do |pixel|
 							next if not Labeler.face?(pixel) or not Labeler.result_pixel?(pixel)
 							# now we are sure ent is a pixel.
-				
+
 							value=Labeler.get_value(pixel)
-				
-							color=self.get_pixel_color(value,max,min) 
+
+							color=self.get_pixel_color(value,max,min)
 							pixel.material=color
 							pixel.back_material=color
-					
+
 						end
-			
+
 					end
 					model.commit_operation
-					
+
 				rescue => e
 					model.abort_operation
 					OS.failed_operation_message(op_name)
@@ -288,32 +341,31 @@ module IGD
 				  #
 				  # ALWAYS do code here errors or not.
 				  #
-				end		
+				end
 			end
-	
+
 			# Checks all the solved workplanes in the model
 			# and gets the minimum and maximum values from all of them
 			#
 			# @author German Molina
-			# @param void
-			# @return min_max [array] An array with the minimum and maximum values
+			# @return [Array<Float>] An array with the minimum and maximum values
 			# @version 0.1
-			def self.get_min_max_from_model()
+			def self.get_min_max_from_model
 				definitions=Sketchup.active_model.definitions
 				#Get the maximum and minimum in the whole model
 				max=-1
 				min=9999999999999
 				definitions.each do |defi|
-					next if not Labeler.solved_workplane?(defi) 
+					next if not Labeler.solved_workplane?(defi)
 					#now we are sure this is a solved_workplane
 					min_max=Labeler.get_value(defi)
-			
+
 					min=min_max[0] if min > min_max[0]
 					max=min_max[1] if max < min_max[1]
 				end
 				return [min,max]
 			end
-	
+
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model.
 			#
@@ -322,33 +374,32 @@ module IGD
 			# @return void
 			# @version 0.1
 			def self.import_results(path)
-				
+
 				model=Sketchup.active_model
 				name=path.tr("\\","/").split("/").pop.split(".")[0]
 				array=self.results_to_array(path)
 				return if not array #if the format was wrong, for example
-	
+
 				uv=self.get_UV(array)
 				self.draw_pixels(uv[0],uv[1],array,name)
 				min_max=self.get_min_max_from_model
 				self.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
-	
+
 			end
-	
+
 			# Opens the "Scale Handler" web dialog and adds the appropriate action_callback
 			#
 			# @author German Molina
-			# @param void
-			# @return void
-			# @version 0.1	
+			# @return [Void]
+			# @version 0.1
 			def self.show_scale_handler
-			
-				wd=UI::WebDialog.new( 
-					"Scale handler", false, "", 
+
+				wd=UI::WebDialog.new(
+					"Scale handler", false, "",
 					180, 380, 100, 100, false )
 
-				wd.set_file("#{OS.main_groundhog_path}/src/html/scale.html" )		
-		
+				wd.set_file("#{OS.main_groundhog_path}/src/html/scale.html" )
+
 				wd.add_action_callback("update_scale") do |web_dialog,msg|
 					scale=JSON.parse(msg)
 					min=scale["min"]
@@ -360,16 +411,16 @@ module IGD
 						max=min_max[1] if max<0
 					end
 
-			
+
 					Results.update_pixel_colors(min,max)
-			
-					web_dialog.execute_script("document.getElementById('min').value="+min.to_s+";document.getElementById('max').value="+max.to_s+";");
+
+					web_dialog.execute_script("document.getElementById('min').value="+min.to_i.to_s+";document.getElementById('max').value="+max.to_i.to_s+";");
 				end
-		
+
 				wd.show()
 
 			end
-	
+
 
 
 

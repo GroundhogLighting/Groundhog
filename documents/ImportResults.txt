@@ -1,79 +1,79 @@
-# @markup html
+# @markup markdown
 # @title TUTORIAL: Import Results
 # @author German Molina
 
-<h1>Importing results for data visualization</h1>
+#Importing results for data visualization
 
 
-<p align="justify">
-After exporting a model and performing a simulation or calculation, it is often very important to see the results you 
-generated (i.e. Daylight factor, lux, or other) within the model, so you and people who are going to 
+
+After exporting a model and performing a simulation or calculation, it is often very important to see the results you
+generated (i.e. Daylight factor, lux, or other) within the model, so you and people who are going to
 see your analysis can visualize the spacial lighting distribution. This can lead to diagnostics and enhancement of the design.
-</p>
-<p align="justify">
+
+
 Groundhog, even if it does not allow (yet) performing calculations, it helps you visualize the results on the space.
-</p>
 
-<h2>Import results</h2>
 
-<h3>Step 1: Include workplanes in the model</h3>
-<p align="justify">See that specific tutorial. It is easy.</p>
+##Import results
+
+###Step 1: Include workplanes in the model
+See that specific tutorial. It is easy.
 <figure align="center">
 <img src="ImportResults/fig1.png" alt="Create workplanes">
 <figcaption>Figure 1: First step - Include Workplanes in the model</figcaption>
 </figure>
 
-<h3>Step 2: Export the model and perform some calculations</h2>
-<p align="justify">
+###Step 2: Export the model and perform some calculations
+
 The file that contains the results needs to be a four-column list of tab-separated parameters, without any header.
 Each line (row) will be the result for one sensor, and the four values correspond to the X,Y,Z position
 and the value calculated for such sensor. This value can correspond to whatever you want (Lux, Daylight factor or other)
-</p>
 
-<p align="justify">
+
+
 Below is an example of a file
-</p>
-<p style="font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;">
-0.0	0.0	0.8	2.3<br>
-0.0	0.5	0.8	2.1<br>
-0.0	1.0	0.8	1.8<br>
-0.0	1.5	0.8	1.5<br>
+
+```
+0.0	0.0	0.8	2.3
+0.0	0.5	0.8	2.1
+0.0	1.0	0.8	1.8
+0.0	1.5	0.8	1.5
 ...
-</p>
+```
 
-<p align="justify">
+
 All kind of results may be obtained with RTRACE and RCONTRIB programs, and the format may be arranged by using RCALC.
-</p>
-<p align="justify">
+
+
 An example, getting the Lux of a certain scene:
-</p>
 
-<p style="font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;">
+
+```
 rtrace -h -oov [options] octree < Workplanes/Grid.pts | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results.txt
-</p>
+```
 
 
-<h3>Step 3: Import results</h3>
-<p align="justify">Go to the menu Plugins (Extensions)--> Groundhog --> Import Results, and look for the file you want to import.</p>
+###Step 3: Import results
+Go to the menu Plugins (Extensions)--> Groundhog --> Import Results, and look for the file you want to import.
 
 
 
-<h3>Step 4: Analyse results</h3>
+###Step 4: Analyse results
 
-<p>Groundhog allows importing results from multiple workplanes in the same model, so an entire space can be analyzed easily. However, 
-the only way of comparing results from different workplanes is to have one single scale for the entire model.</p>
+Groundhog allows importing results from multiple workplanes in the same model, so an entire space can be analyzed easily. However,
+the only way of comparing results from different workplanes is to have one single scale for the entire model.
 
-<p>Accordingly, every time a set of results is imported, the scale is reset in order to cover from 
-the minimum result value to the maximum. That means that when you import a second workplane, the colors 
-of the first one will probably change.</p>
+Accordingly, every time a set of results is imported, the scale is reset in order to cover from
+the minimum result value to the maximum. That means that when you import a second workplane, the colors
+of the first one will probably change.
 
 <figure align="center">
 <img src="ImportResults/fig4.png" alt="Import Results">
 <figcaption>Figure 2: Fourth step - See the results</figcaption>
 </figure>
 
-<p>However, in some cases, it might be useful to choose your own scale. 
-This can be done by going to Plugins –> Groundhog –> Results –> Scale handler.</p>
+However, in some cases, it might be useful to choose your own scale.
+This can be done by going to Plugins –> Groundhog –> Results –> Scale handler.
 
 <figure align="center">
 <img src="ImportResults/fig5.png" alt="Import Results">

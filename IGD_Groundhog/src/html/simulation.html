@@ -1,9 +1,10 @@
-
+<!DOCTYPE html>
 <html>
 	<head>
-		<title>Groundhog Preferences</title>
+		<title>Groundhog Simulation</title>
 		<meta charset="UTF-8">
 	</head>
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 	<link rel="stylesheet" type="text/css" href="css/general.css">
 	<link rel="stylesheet" type="text/css" href="css/tabs.css">
 	<body>
@@ -11,84 +12,202 @@
 
 				<ul id="tabs">
 					<li>
-						<a class="selected" href="#static">Static</a>
+						<a class="selected" href="#rvu" style="width:135px">Review</a>
 					</li>
 					<li>
-						<a href="#dynamic">Dynamic</a>
+						<a href="#daylight_factor" style="width:135px">Daylight Factor</a>
 					</li>
-													
+					<li>
+						<a href="#actual_illuminance" style="width:135px">Actual illuminance</a>
+					</li>
+					<li>
+						<a href="#da" style="width:135px">Day. Authonomy</a>
+					</li>
+					<li>
+						<a href="#udi" style="width:135px">U.D.I.</a>
+					</li>
+
 				</ul>
- 
- 
- 
- 
-			   <div id="static" class="tabContent">
-					<h2>Static simulation wizad</h2>
-					<p>Please set up Groundhog.</p>
+
+
+
+				<div id="rvu" class="tabContent" style="margin-left: 145px">
+					<h2>Review model</h2>
+					<p>This calculation method allows previewing the SketchUp model in Radiance.</p>
 					<div class="more_info">
 						More info
 						<div class="tooltip">
-							<p>Sensor spacing is the desired distance between measurement points in workplanes, in meters.</p>
-						</div>	
+							<p> The calculation program for this is RVU. You can change the parameters in the Configuration panel.</p>
+						</div>
 					</div>
 					<br>
-					<table>										
-					  <tr>
-						<td>Sensor spacing (m)</td>
-						<td><input type="text" size="5" id="sensor_spacing"></td>		
-					  </tr>					 
-					</table>
-					<p align="center"> <button onclick='set_general_preferences()'> Save general preferences </button></p>		
+
+					<p align="center"> <button onclick='rvu()'>Calculate </button></p>
 				</div>
-				
-				
-				
-				
-				<div id="dynamic" class="tabContent hide">
-					<h2>Dynamic simulation wizard</h2>
-					<p>Please set up Radiance simulation parameters, paths and others.</p>
+
+
+			   <div id="daylight_factor" class="tabContent" style="margin-left: 145px">
+					<h2>Daylight Factor</h2>
+					<p>The Daylight Factor is an old static metric defined as the ratio of internal light level to external light level under a CIE Overcast Sky.</p>
 					<div class="more_info">
 						More info
 						<div class="tooltip">
-							<p>Rvu is the programs that allows previewing.</p>
-							<p>Rcontrib is used for annual simulations.</p>
-							<p>Rtrace is used for 'Daylight Factor' and 'Actual Illuminance' calculations.</p>							
-						</div>	
+							<p> It does not differentiate between climates or orientations.</p>
+							<p> The calculation program for this is RTrace. You can change the parameters in the Configuration panel.</p>
+						</div>
 					</div>
-					<br>	
-					<table>
-	
-										
-					  <tr>
-						<td>Radiance path</td>
-						<td><input type="text" size="42" id="rad_path"></td>		
-					  </tr>
-					  <tr>
-						<td>Weathers path</td>
-						<td><input type="text" size="42" id="weather_path"></td>		
-					  </tr>
-					  <tr>
-						<td>Rvu options</td>
-						<td><input type="text" size="42" id="rvu"></td>		
-					  </tr>
-					  <tr>
-						<td>Rcontrib options</td>
-						<td><input type="text" size="42" id="rcontrib"></td>		
-					  </tr>
-					  <tr>
-						<td>Rtrace options</td>
-						<td><input type="text" size="42" id="rtrace"></td>		
-					  </tr>
-					</table>
-					<p align="center"> <button onclick='set_radiance_preferences()'> Save Radiance preferences </button></p>		   
-				</div>		
-				
-				
-						   
-					
+					<br>
+
+					<p align="center"> <button onclick='calc_DF()'> Calculate </button></p>
+				</div>
+
+
+
+
+				<div id="actual_illuminance" class="tabContent hide" style="margin-left: 145px">
+					<h2>Actual Illuminance</h2>
+					<p>This option calculates the illuminance over the workplanes of the model using a CIE sky with the model's date, time and location.</p>
+					<div class="more_info">
+						More info
+						<div class="tooltip">
+							<p>This is a Static metric that is meant to be used for date/time specific analysis.</p>
+						</div>
+					</div>
+
+					<form>
+						<fieldset>
+							<legend>Ground Reflectance</legend>
+							<input id='actual_illuminance_rho' type='number' value='0.2' step='0.02' min='0' max='1'></input>
+						</fieldset>
+						<fieldset>
+							<legend>Sky model</legend>
+								<select id='actual_illuminance_sky'>
+
+									<option value="-u">CIE Uniform</option>
+									<option value="-c">CIE Overcast</option>
+									<option value="+i">CIE Intermediate</option>
+									<option value="+s">CIE Clear</option>
+								</select>
+								<div class='option_info'>
+									?<div class="tooltip">
+										<p>The sun position (time, date, latitude and longitude) are obtained from the SketchUp model.</p>
+									</div></div>
+						</fieldset>
+
+						</table>
+					</form>
+
+
+					<p align="center"> <button onclick='calc_actual_illuminance()'> Calculate </button></p>
+				</div>
+
+				<div id="da" class="tabContent hide" style="margin-left: 145px">
+					<h2>Daylight Authonomy</h2>
+					<p>Calculates the DA over the workplanes defined in the model.</p>
+					<div class="more_info">
+						More info
+						<div class="tooltip">
+							<p>The calculation program for this is RContrib. You can change the parameters in the Configuration panel.</p>
+						</div>
+					</div>
+
+					<form>
+						<fieldset>
+							<legend>Ground reflectance</legend>
+								<input id='da_rho' type='number' value='0.2' step='0.02' min='0' max='1'></input>
+						</fieldset>
+
+						<fieldset>
+							<legend>Target illuminance</legend>
+								<label>Min:</label><input id='da_threshold' type='number' value='300' step='1' min='0'></input>
+						</fieldset>
+						<fieldset>
+							<legend>Working hours</legend>
+								<label>From:</label> <input id='da_early' type='number' value='9.5' step='0.5' min='0' max='24'></input>
+								<label>To:</label><input id='da_late' type='number' value='17.5' step='0.5' min='0' max='24'></input>
+						</fieldset>
+						<fieldset>
+							<legend>Sky subdivition</legend>
+							<input id='da_bins' type='number' value='1' step='1' min='1'></input>
+								<div class='option_info'>
+									?<div class="tooltip">
+										<p>The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305..</p>
+									</div>
+								</div>
+						</fieldset>
+						<fieldset>
+							<legend>Method</legend>
+							<select id='da_method'>
+								<option value="DC">Simple Daylight Coefficients</option>
+							</select>
+								<div class='option_info'>
+									?<div class="tooltip">
+										<p>The simple daylight coefficients is the simplest and the fastest method within Groundhog. However, it handles the direct solar component together with the sky and inter-reflected solar components, which may lead to errors. </p>
+									</div>
+								</div>
+						</fieldset>
+					</form>
+					<p align="center"> <button onclick='calc_DA()'> Calculate </button></p>
+				</div>
+
+
+
+
+				<div id="udi" class="tabContent hide" style="margin-left: 145px">
+					<h2>Useful Daylight Illuminance</h2>
+					<p>Calculates the UDI over the workplanes defined in the model.</p>
+					<div class="more_info">
+						More info
+						<div class="tooltip">
+							<p>The calculation program for this is RContrib. You can change the parameters in the Configuration panel.</p>
+						</div>
+					</div>
+
+					<form>
+						<fieldset>
+							<legend>Ground reflectance</legend>
+							<input id='udi_rho' type='number' value='0.2' step='0.02' min='0' max='1'></input>
+						</fieldset>
+
+						<fieldset>
+							<legend>Target illuminance</legend>
+								<label>Min:</label><input id='udi_lower_threshold' type='number' value='300' step='1' min='0'></input>
+								<label>Max:</label><input id='udi_upper_threshold' type='number' value='2000' step='1' min='0'></input>
+						</fieldset>
+						<fieldset>
+							<legend>Working hours</legend>
+								<label>From:</label> <input id='udi_early' type='number' value='9.5' step='0.5' min='0' max='24'></input>
+								<label>To:</label><input id='udi_late' type='number' value='17.5' step='0.5' min='0' max='24'></input>
+						</fieldset>
+						<fieldset>
+							<legend>Sky subdivition</legend>
+							<input id='udi_bins' type='number' value='1' step='1' min='1'></input>
+								<div class='option_info'>
+									?<div class="tooltip">
+										<p>The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305..</p>
+									</div>
+								</div>
+						</fieldset>
+						<fieldset>
+							<legend>Method</legend>
+							<select id='udi_method'>
+								<option value="DC">Simple Daylight Coefficients</option>
+							</select>
+								<div class='option_info'>
+									?<div class="tooltip">
+										<p>The simple daylight coefficients is the simplest and the fastest method within Groundhog. However, it handles the direct solar component together with the sky and inter-reflected solar components, which may lead to errors. </p>
+									</div>
+								</div>
+						</fieldset>
+					</form>
+					<p align="center"> <button onclick='calc_UDI()'> Calculate </button></p>
+				</div>
+
+
+
 
 	</body>
-	
-	 <script src="js/tabs.js"></script> 
-	 <script src="js/simulation.js"></script> 
+
+	 <script src="js/tabs.js"></script>
+	 <script src="js/simulation.js"></script>
 </html>

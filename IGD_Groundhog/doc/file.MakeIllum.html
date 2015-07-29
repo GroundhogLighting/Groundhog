@@ -62,62 +62,99 @@
     <iframe id="search_frame"></iframe>
 
     <div id="content"><div id='filecontents'>
-<h1>Including illum surfaces in Groundhog</h1>
+<h1 id="label-Including+illum+surfaces+in+Groundhog">Including illum surfaces in Groundhog</h1>
 
+<h2 id="label-Including+illum+surfaces+in+Groundhog">Including illum surfaces in Groundhog</h2>
 
-<h2>Including illum surfaces in Groundhog</h2>
+<p>As was mentioned in the <a href="http://file.GettingStarted.hml">Getting
+Started</a>
+section, illum surfaces are useful for rendering and modeling
+luminaires. Even though they are not
+an easy-to-understand concept, Greg
+Ward helped me define illum surfaces as:</p>
 
-<p align="justify">As was mentioned in the <a href="file.GettingStarted.hml">Getting Started</a> 
-section, illum surfaces are useful for rendering and modeling luminaires. Even though they are not
-an easy-to-understand concept, Greg Ward helped me define illum surfaces as:</p>
+<blockquote>
+<p>Illum surfaces, also known as “impostors” or “proxies,” are light-emitting
+surfaces whose luminous
+distributions are equivalent to the distribution
+transmitted through them as the consequence of the existence of
+other
+(direct and indirect) light sources. <a
+href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/mkillum.pdf">Mkillum</a>
+is
+the program that allows creating illum surfaces in a convenient way <a
+href="http://radsite.lbl.gov/radiance/book/">(Ward & Shakespeare,
+1998)</a>. For example, the daylight distribution transmitted through a
+window, which can be considered a consequence of the existence of the sun
+and sky,
+can be summarized into an illum surface.</p>
+</blockquote>
 
-<blockquote align="justify"><i>Illum surfaces, also known as "impostors" or "proxies," are light-emitting surfaces whose luminous 
-distributions are equivalent to the distribution transmitted through them as the consequence of the existence of other 
-(direct and indirect) light sources. <a href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/mkillum.pdf">Mkillum</a> 
-is the program that allows creating illum surfaces in a convenient way <a href="http://radsite.lbl.gov/radiance/book/">(Ward & Shakespeare, 1998)
-</a>. For example, the daylight distribution transmitted through a window, which can be considered a consequence of the existence of the sun and sky, 
-can be summarized into an illum surface.</i></blockquote>
-
-<p align="justify">Although I have not used illum surfaces too much, I understand this might be a useful feature 
+<p>Although I have not used illum surfaces too much, I understand this might
+be a useful feature
 for some people.</p>
 
-<p align="justify">It is important to notice that every time we make a window opening in Radiance, an
-illum surface is created on the interior side of the wall. However, there might be times when we want to create
-others. The only way of doing this is to Label a surface as an illum.</p>
+<p>It is important to notice that every time we make a window opening in
+Radiance, an
+illum surface is created on the interior side of the wall.
+However, there might be times when we want to create
+others. The only way
+of doing this is to Label a surface as an illum.</p>
 
-<h3>Step 1: Build a model where you need an illum.</h3>
-<p align="justify">It can be a space with a skylight, like the model shown in Figure 1.</p>
-<figure align="center">
-<img src="MakeIllum/fig1.png" alt="Existing model">
-<figcaption>Figure 1: First step - Build a model where you need an illum.</figcaption>
-</figure>
+<h3 id="label-Step+1%3A+Build+a+model+where+you+need+an+illum.">Step 1: Build a model where you need an illum.</h3>
 
-<h3>Step 2: Draw a surface where you want the illum</h3>
-<p align="justify">You can take advantage of SketchUp tools for that.</p>
-<figure align="center">
-<img src="MakeIllum/fig2.png" alt="Draw surface">
-<figcaption>Figure 2: Second step - Draw a surface where you want the illum</figcaption>
-</figure>
+<p>It can be a space with a skylight, like the model shown in Figure
+1.
+&lt;figure align=&quot;center&quot;&gt;
+&lt;img
+src=&quot;MakeIllum/fig1.png&quot; alt=&quot;Existing
+model&quot;&gt;
+&lt;figcaption&gt;Figure 1: First step - Build a model
+where you need an illum.&lt;/figcaption&gt;
+&lt;/figure&gt;</p>
 
-<h3>Step 3: Right-click it and label it as an illum surface</h3>
-<figure align="center">
-<img src="MakeIllum/fig3.png" alt="Draw surface">
-<figcaption>Figure 3: Third step - Right-click it and label it as an illum surface</figcaption>
-</figure>
+<h3 id="label-Step+2%3A+Draw+a+surface+where+you+want+the+illum">Step 2: Draw a surface where you want the illum</h3>
 
-<h3>Step 4: See it transformed</h3>
-<p align="justify">Although illum surfaces in SketchUp have a material, they are exported in Radiance format without
-any modifier ("void"). The semi-transparent green material is a way of recognizing it.</p>
-<figure align="center">
-<img src="MakeIllum/fig4.png" alt="Draw surface">
-<figcaption>Figure 4: Fourth step - An illum surface in the SketchUp model.</figcaption>
-</figure>
+<p>You can take advantage of SketchUp tools for that.
+&lt;figure
+align=&quot;center&quot;&gt;
+&lt;img src=&quot;MakeIllum/fig2.png&quot;
+alt=&quot;Draw surface&quot;&gt;
+&lt;figcaption&gt;Figure 2: Second step -
+Draw a surface where you want the illum&lt;/figcaption&gt;
+&lt;/figure&gt;</p>
 
-<h3>Notes</h3>
-<p align="justify">None, yet.</p></div></div>
+<h3 id="label-Step+3%3A+Right-click+it+and+label+it+as+an+illum+surface">Step 3: Right-click it and label it as an illum surface</h3>
+
+<p>&lt;figure align=“center”&gt;
+&lt;img src=&quot;MakeIllum/fig3.png&quot;
+alt=&quot;Draw surface&quot;&gt;
+&lt;figcaption&gt;Figure 3: Third step -
+Right-click it and label it as an illum
+surface&lt;/figcaption&gt;
+&lt;/figure&gt;</p>
+
+<h3 id="label-Step+4%3A+See+it+transformed">Step 4: See it transformed</h3>
+
+<p>Although illum surfaces in SketchUp have a material, they are exported in
+Radiance format without
+any modifier (&quot;void&quot;). The
+semi-transparent green material is a way of recognizing it.
+&lt;figure
+align=&quot;center&quot;&gt;
+&lt;img src=&quot;MakeIllum/fig4.png&quot;
+alt=&quot;Draw surface&quot;&gt;
+&lt;figcaption&gt;Figure 4: Fourth step -
+An illum surface in the SketchUp model.&lt;/figcaption&gt;
+&lt;/figure&gt;</p>
+
+<h3 id="label-Notes">Notes</h3>
+
+<p>None, yet.</p>
+</div></div>
 
     <div id="footer">
-  Generated on Tue Jun  2 10:11:52 2015 by
+  Generated on Tue Jul 21 17:30:40 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

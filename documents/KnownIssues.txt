@@ -12,4 +12,3 @@
 - Radiance multithreading is not supported on Windows
 
 ##Creating materials problems
-- Issues may be found when inputing an incomplete numbers on forms. That is, ".7" instead of "0.7".

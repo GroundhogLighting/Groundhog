@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Groundhog 'ExportScript' Add-on</title>
+		<meta charset="UTF-8">
+	</head>
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+	<link rel="stylesheet" type="text/css" href="../../src/html/css/general.css">
+	<link rel="stylesheet" type="text/css" href="../../src/html/css/tabs.css">
+	<body>
+
+
+				<ul id="tabs">
+					<li>
+						<a href="#daylight_factor" style="width:135px">Daylight Factor</a>
+					</li>
+					<li>
+						<a href="#actual_illuminance" style="width:135px">Actual illuminance</a>
+					</li>
+					<li>
+						<a href="#annual_illuminance" style="width:135px">Annual illuminance</a>
+					</li>
+				</ul>
+
+
+
+
+			   <div id="daylight_factor" class="tabContent" style="margin-left: 145px">
+					<h2>Daylight Factor</h2>
+					<p>The Daylight Factor is an old static metric defined as the ratio of internal light level to external light level under a CIE Overcast Sky.</p>
+					<div class="more_info">
+						More info
+						<div class="tooltip">
+							<p> It does not differentiate between climates or orientations.</p>
+							<p> The calculation program for this is RTrace. You can change the parameters in the Configuration panel.</p>
+						</div>
+					</div>
+					<br>
+
+					<p align="center"> <button onclick='calc_DF()'> Calculate </button></p>
+				</div>
+
+
+
+
+				<div id="actual_illuminance" class="tabContent hide" style="margin-left: 145px">
+					<h2>Actual Illuminance</h2>
+					<p>This option calculates the illuminance over the workplanes of the model using a CIE sky with the model's date, time and location.</p>
+					<div class="more_info">
+						More info
+						<div class="tooltip">
+							<p>This is a Static metric that is meant to be used for date/time specific analysis.</p>
+						</div>
+					</div>
+
+					<form>
+						<fieldset>
+							<legend>Ground Reflectance</legend>
+							<input id='actual_illuminance_rho' type='number' value='0.2' step='0.02' min='0' max='1'></input>
+						</fieldset>
+						<fieldset>
+							<legend>Sky model</legend>
+								<select id='actual_illuminance_sky'>
+
+									<option value="-u">CIE Uniform</option>
+									<option value="-c">CIE Overcast</option>
+									<option value="+i">CIE Intermediate</option>
+									<option value="+s">CIE Clear</option>
+								</select>
+								<div class='option_info'>
+									?<div class="tooltip">
+										<p>The sun position (time, date, latitude and longitude) are obtained from the SketchUp model.</p>
+									</div></div>
+						</fieldset>
+
+						</table>
+					</form>
+
+
+					<p align="center"> <button onclick='calc_actual_illuminance()'> Calculate </button></p>
+				</div>
+
+
+				<div id="annual_illuminance" class="tabContent hide" style="margin-left: 145px">
+					<h2>Daylight Authonomy</h2>
+					<p>Calculates the DA over the workplanes defined in the model.</p>
+					<div class="more_info">
+						More info
+						<div class="tooltip">
+							<p>The calculation program for this is RContrib. You can change the parameters in the Configuration panel.</p>
+						</div>
+					</div>
+
+					<form>
+						<fieldset>
+							<legend>Ground reflectance</legend>
+								<input id='da_rho' type='number' value='0.2' step='0.02' min='0' max='1'></input>
+						</fieldset>
+
+						<fieldset>
+							<legend>Sky subdivition</legend>
+							<input id='da_bins' type='number' value='1' step='1' min='1'></input>
+								<div class='option_info'>
+									?<div class="tooltip">
+										<p>The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305..</p>
+									</div>
+								</div>
+						</fieldset>
+
+						<fieldset>
+							<legend>Method</legend>
+							<select id='da_method'>
+								<option value="DC">Simple Daylight Coefficients</option>
+							</select>
+								<div class='option_info'>
+									?<div class="tooltip">
+										<p>The simple daylight coefficients is the simplest and the fastest method within Groundhog. However, it handles the direct solar component together with the sky and inter-reflected solar components, which may lead to errors. </p>
+									</div>
+								</div>
+						</fieldset>
+					</form>
+					<p align="center"> <button onclick='calc_annual_illuminance()'> Calculate </button></p>
+				</div>
+
+
+
+	</body>
+
+	 <script src="../../src/html/js/tabs.js"></script>
+	 <script src="js.js"></script>
+</html>
