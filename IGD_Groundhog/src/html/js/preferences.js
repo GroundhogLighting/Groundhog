@@ -35,4 +35,6 @@ function set_weather_path(){
 	window.location.href = 'skp:set_weather_path@msg';
 }
 
-window.location.href = 'skp:onLoad@message';
+//document.onload = function(){
+	window.location.href = 'skp:onLoad@message';
+//}

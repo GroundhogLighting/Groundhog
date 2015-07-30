@@ -325,7 +325,7 @@ module IGD
 				pages=Sketchup.active_model.pages
 				if pages.count>=1 then
 					pages.each do |page|
-						File.open("#{path}/#{page.name.tr(" ","_")}.vf",'w+'){|f|
+						File.open("#{path}/#{Utilities.fix_name(page.name)}.vf",'w+'){|f|
 							f.write(self.get_view_string(page.camera))
 						}
 					end

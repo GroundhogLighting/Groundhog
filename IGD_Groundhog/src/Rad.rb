@@ -233,8 +233,11 @@ module IGD
 
 			# Creates the script for calling RVU and previewing the model
 			# @author German Molina
+			# @param msg [String] json with the options
 			# @return [Array<String>] Script
-			def self.rvu
+			def self.rvu(msg)
+				options=JSON.parse(msg)
+				scene = options["scene"]
 				path=OS.tmp_groundhog_path
 				Exporter.export(path)
 
@@ -248,8 +251,7 @@ module IGD
 					winstring="./Windows/#{winstring}" if winstring.length > 0
 					winstring="" if winstring.length==0
 					script << "oconv ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
-
-					script << "rvu #{Config.rvu_options} -vf Views/view.vf octree.oct"
+					script << "rvu #{Config.rvu_options} -vf Views/#{scene}.vf octree.oct"
 				end
 				return script
 			end
@@ -261,12 +263,30 @@ module IGD
 
 				wd.set_file("#{OS.main_groundhog_path}/src/html/simulation.html" )
 
+				wd.add_action_callback("load_views") do |web_dialog,msg|
+					script = "var select = document.getElementById('rvu_scene');"
+					script += "var option =  document.createElement('option');"
+					script += "option.value = 'view';"
+					script += "option.text = 'actual view';"
+					script += "select.add(option);"
+
+					Sketchup.active_model.pages.each do |page|
+						name = page.name
+						value = Utilities.fix_name(name)
+						script += "var option =  document.createElement('option');"
+						script += "option.value = '#{value}';"
+						script += "option.text = '#{name}';"
+						script += "select.add(option);"
+					end
+					web_dialog.execute_script(script)
+				end
+
 				wd.add_action_callback("rvu") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
 					next if not Exporter.export(OS.tmp_groundhog_path)
 					FileUtils.cd(OS.tmp_groundhog_path) do
 						begin
-							OS.execute_script(self.rvu)
+							OS.execute_script(self.rvu(msg))
 							OS.clear_actual_path
 						rescue
 							UI.messagebox "There was a problem when trying to RVU your model."
