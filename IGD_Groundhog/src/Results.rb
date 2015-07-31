@@ -206,13 +206,13 @@ module IGD
 			# @version 0.2
 			def self.draw_pixels(u,v,array,name)
 				model=Sketchup.active_model
+				op_name="Draw pixels"
 				begin
-					op_name="Draw pixels"
 					model.start_operation(op_name,true)
 
 					group = Sketchup.active_model.entities.add_group
 					group.name=name
-					Labeler.to_solved_workplane(group.definition)
+
 					entities=group.entities
 
 
@@ -242,7 +242,7 @@ module IGD
 
 					end
 
-
+					Labeler.to_solved_workplane(group)
 					model.commit_operation
 				rescue => e
 					model.abort_operation
@@ -304,18 +304,18 @@ module IGD
 			# @version 0.1
 			def self.update_pixel_colors(min,max)
 				model=Sketchup.active_model
+				op_name="Update pixels"
 				begin
-					op_name="Update pixels"
 					model.start_operation(op_name,true)
 
-					definitions=Sketchup.active_model.definitions
+					entities=Sketchup.active_model.entities
 
-					definitions.each do |defi|
-						next if not Labeler.solved_workplane?(defi)
+					entities.each do |ent|
+						next if not Labeler.solved_workplane?(ent)
 						#now we are sure this is a solved_workplane
 
-						entities=defi.entities
-						entities.each do |pixel|
+						ents=ent.entities
+						ents.each do |pixel|
 							next if not Labeler.face?(pixel) or not Labeler.result_pixel?(pixel)
 							# now we are sure ent is a pixel.
 
