@@ -59,4 +59,4 @@ function calc_UDI(){
 
 }
 
-//load_rvu_views();
+load_rvu_views();
