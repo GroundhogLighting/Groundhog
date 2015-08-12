@@ -230,20 +230,21 @@ module IGD
 			# @param label [String] the label to hide/show
 			# @return [Void]
 			def self.hide_show_specific(label)
-				faces=Utilities.get_faces(Sketchup.active_model.entities)
-				faces = faces.select{|x| Labeler.is?(x,label)}
+				entities=Sketchup.active_model.entities
+				entities = entities.select{|x| Labeler.is?(x,label)}
 
-				return if faces.length == 0
-				
+				return if entities.length == 0
+
 				hide=true
-				hide = false if faces[0].hidden?
-
+				hide = false if entities[0].hidden?
+				op_name = "Hide/Show Specific"
 				begin
 					model=Sketchup.active_model
-					model.start_operation( "Hide/Show Specific" ,true)
-					faces.map{|x|
+					model.start_operation( op_name ,true)
+					entities.map{|x|
 						x.hidden = hide
-						edges = x.edges
+						edges = []
+						edges = x.edges if x.class.method_defined? :edges
 						edges.map{|y| y.hidden = hide}
 					}
 					model.commit_operation

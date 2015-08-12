@@ -40,9 +40,13 @@
 							<p> The calculation program for this is RVU. You can change the parameters in the Configuration panel.</p>
 						</div>
 					</div>
-					<br>
+					<fieldset>
+						<legend>Scene to review</legend>
+						<select id='rvu_scene'></select>
+					</fieldset>
 
-					<p align="center"> <button onclick='rvu()'>Calculate </button></p>
+
+					<p align="center"><button onclick='load_rvu_views()'>Refresh views</button> <button onclick='rvu()'>Calculate </button></p>
 				</div>
 
 
@@ -56,7 +60,6 @@
 							<p> The calculation program for this is RTrace. You can change the parameters in the Configuration panel.</p>
 						</div>
 					</div>
-					<br>
 
 					<p align="center"> <button onclick='calc_DF()'> Calculate </button></p>
 				</div>
@@ -96,7 +99,6 @@
 
 						</table>
 					</form>
-
 
 					<p align="center"> <button onclick='calc_actual_illuminance()'> Calculate </button></p>
 				</div>

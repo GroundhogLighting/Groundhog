@@ -53,7 +53,7 @@ module IGD
 			# @param max [Float] Maximum value
 			# @return [Void]
 			def self.set_workplane_value(workplane,min,max)
-				return false if not self.solved_workplane?(workplane)
+				return false if not self.solved_workplane?(workplane)				
 				workplane.set_attribute("Groundhog","Value",[min,max])
 			end
 

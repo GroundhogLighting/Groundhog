@@ -206,13 +206,13 @@ module IGD
 			# @version 0.2
 			def self.draw_pixels(u,v,array,name)
 				model=Sketchup.active_model
+				op_name="Draw pixels"
 				begin
-					op_name="Draw pixels"
 					model.start_operation(op_name,true)
 
 					group = Sketchup.active_model.entities.add_group
 					group.name=name
-					Labeler.to_solved_workplane(group.definition)
+
 					entities=group.entities
 
 
@@ -226,7 +226,6 @@ module IGD
 						min=data[3] if min>data[3]
 						max=data[3] if max<data[3]
 					end
-					Labeler.set_workplane_value(group.definition,min,max)
 
 					#draw every line. Each pixel is a quadrilateral.
 					array.each do |data|
@@ -242,7 +241,8 @@ module IGD
 
 					end
 
-
+					Labeler.to_solved_workplane(group)
+					Labeler.set_workplane_value(group,min,max)
 					model.commit_operation
 				rescue => e
 					model.abort_operation
@@ -304,21 +304,19 @@ module IGD
 			# @version 0.1
 			def self.update_pixel_colors(min,max)
 				model=Sketchup.active_model
+				op_name="Update pixels"
 				begin
-					op_name="Update pixels"
 					model.start_operation(op_name,true)
 
-					definitions=Sketchup.active_model.definitions
+					entities=Sketchup.active_model.entities
 
-					definitions.each do |defi|
-						next if not Labeler.solved_workplane?(defi)
+					entities.each do |ent|
+						next if not Labeler.solved_workplane?(ent)
 						#now we are sure this is a solved_workplane
 
-						entities=defi.entities
-						entities.each do |pixel|
+						ent.entities.each do |pixel|
 							next if not Labeler.face?(pixel) or not Labeler.result_pixel?(pixel)
 							# now we are sure ent is a pixel.
-
 							value=Labeler.get_value(pixel)
 
 							color=self.get_pixel_color(value,max,min)
@@ -356,12 +354,14 @@ module IGD
 				max=-1
 				min=9999999999999
 				definitions.each do |defi|
-					next if not Labeler.solved_workplane?(defi)
-					#now we are sure this is a solved_workplane
-					min_max=Labeler.get_value(defi)
+					defi.instances.each do |inst|
+						next if not Labeler.solved_workplane?(inst)
+						#now we are sure this is a solved_workplane
+						min_max=Labeler.get_value(inst)
 
-					min=min_max[0] if min > min_max[0]
-					max=min_max[1] if max < min_max[1]
+						min=min_max[0] if min > min_max[0]
+						max=min_max[1] if max < min_max[1]
+					end
 				end
 				return [min,max]
 			end
