@@ -221,6 +221,12 @@ a:hover {
   font-size: 50%;
 }
 
+#home_download_latest p, #home_download_button p, #home_github_button p, #home_sketchup_button p{
+    color: white;
+    display: block;
+    font-size: 50%;
+}
+
 #home_github_button::before, #home_download_latest::before,  #home_download_button::before, #home_sketchup_button::before{
     content: "";
     position:relative;

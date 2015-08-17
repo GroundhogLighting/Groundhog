@@ -20,8 +20,8 @@
               <p>Groundhog</p>
               <small>Lighting analysis within SketchUp</small>
               <div id='home_downloads'>
-                  <a href="https://github.com/IGD-Labs/Groundhog/raw/master/Groundhog.rbz" id="home_download_button"><small>Download</small>Stable</a>
-                  <a href="https://github.com/IGD-Labs/Groundhog/raw/latest/Groundhog.rbz" id="home_download_latest"><small>Download</small>Latest</a>
+                  <a href="https://github.com/IGD-Labs/Groundhog/raw/Stable/Groundhog.rbz" id="home_download_button"><small>Download</small>Stable<p id='stable_date'></p></a>
+                  <a href="https://github.com/IGD-Labs/Groundhog/raw/master/Groundhog.rbz" id="home_download_latest"><small>Download</small>Latest<p id='latest_date'></p></a>
                   <a href="http://extensions.sketchup.com/en/content/groundhog" id="home_sketchup_button"><small>view on</small>SketchUp</a>
                   <a href="https://github.com/IGD-Labs/Groundhog" id="home_github_button"><small>View project on</small>GitHub</a>
               </div>
@@ -56,7 +56,7 @@
           <div class='slider_frame' id="features_slider">
                   <div class='slider'>
                   <ul>
-                      <li><img src="images/scene_2_slider.jpg"><p>Export complex surfaces</p></li>
+                      <li><img src="images/scene_2_slider.jpg"></li>
                       <li><img src="images/home3_slider.jpg"><p>Export Groups and Components</p></li>
                       <li><img src="images/JPV_view.png"><p>Export saved views</p></li>
                       <li><img src="images/preview.png"><p>Preview your model without leaving SketchUp</p></li>
@@ -316,5 +316,17 @@
 
         }   } ,4200);
 
+        function get_date(url){
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", url, false );
+            xmlHttp.send( null );
+            var text = JSON.parse(xmlHttp.responseText);
+            var date = text['commit']['commit']['author']['date'];
+            date = date.split('T')[0];
+            return date;
+        }
+
+        document.getElementById('latest_date').innerHTML = get_date("https://api.github.com/repos/IGD-Labs/Groundhog/branches/master");
+        document.getElementById('stable_date').innerHTML = get_date("https://api.github.com/repos/IGD-Labs/Groundhog/branches/Stable");
 
   </script>
