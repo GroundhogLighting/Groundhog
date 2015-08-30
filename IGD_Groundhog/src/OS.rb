@@ -115,8 +115,9 @@ module IGD
 			# @version 0.3
 			# @author German Molina
 			def self.clear_actual_path
-				dirs=["Workplanes","Materials","Windows","Geometry","Illums","Results","Skies","Views", "Components", "DC"]
-				files=["scene.rad","scene.rif","*.amb","*.wea","*.epw"] #,"*.oct"] #hack for windows...? .oct generated trouble. It will be re-written anyway
+				FileUtils.rm_rf(Dir.glob('./*'))
+=begin				dirs=["Workplanes","Materials","Windows","Geometry","Illums","Results","Skies","Views", "Components", "DC"]
+				files=["scene.rad","scene.rif","*.amb","*.wea","*.epw","*.oct"]
 
 				dirs.each do |dir|
 					FileUtils.rm_rf(dir) if File.directory?(dir)
@@ -127,7 +128,7 @@ module IGD
 						File.delete(fd) #this double loop allows using wildcards
 					end
 				end
-
+=end
 				return true
 			end
 
