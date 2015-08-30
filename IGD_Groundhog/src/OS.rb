@@ -116,7 +116,7 @@ module IGD
 			# @author German Molina
 			def self.clear_actual_path
 				dirs=["Workplanes","Materials","Windows","Geometry","Illums","Results","Skies","Views", "Components", "DC"]
-				files=["*.oct","scene.rad","scene.rif","*.amb","*.wea","*.epw"]
+				files=["scene.rad","scene.rif","*.amb","*.wea","*.epw"] #,"*.oct"] #hack for windows...? .oct generated trouble. It will be re-written anyway
 
 				dirs.each do |dir|
 					FileUtils.rm_rf(dir) if File.directory?(dir)
