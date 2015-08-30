@@ -207,7 +207,7 @@ module IGD
 					config=JSON.parse(msg)
 
 					old_path=@@rad_config["RADIANCE_PATH"]
-puts config["RADIANCE_PATH"]
+					puts config["RADIANCE_PATH"]
 					@@rad_config["RADIANCE_PATH"]=config["RADIANCE_PATH"].tr("\\","/")
 					@@rad_config["WEATHER_PATH"]=config["WEATHER_PATH"]
 					@@rad_config["RVU"]=config["RVU"]
