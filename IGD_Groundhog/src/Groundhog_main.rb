@@ -19,8 +19,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Utilities'
 		Sketchup::require 'IGD_Groundhog/src/Config'
 		Sketchup::require 'IGD_Groundhog/src/Labeler'
-		Sketchup::require 'IGD_Groundhog/src/OS'
-		#Sketchup::require 'IGD_Groundhog/src/Tools/MkWindow' #deprecated for a while, at least.
+		Sketchup::require 'IGD_Groundhog/src/OS'		
 		Sketchup::require 'IGD_Groundhog/src/Exporter'
 		Sketchup::require 'IGD_Groundhog/src/Results'
 		Sketchup::require 'IGD_Groundhog/src/Materials'

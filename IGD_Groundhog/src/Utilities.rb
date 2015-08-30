@@ -137,6 +137,7 @@ module IGD
 			# Assigns the same "Groundhog","Win_Group" attribute to a set of windows.
 			# @author German Molina
 			# @param entities [Array <entities>] Array of entities
+			# @param g [String] Name of the group
 			# @return [Void]
 			# @note The number does not actually matter... it comes from the Main "Groundhog.rb" file.
 			# @todo Maybe create a better/more-formal way of doing this? new class?
@@ -149,7 +150,7 @@ module IGD
 
 					windows=self.get_windows(entities)
 					if self.check_window_normals(windows) then #if they all have the same normal, then
-							windows.each do |entity|
+						windows.each do |entity|
 							entity.set_attribute("Groundhog","Win_Group",g)
 						end
 					else

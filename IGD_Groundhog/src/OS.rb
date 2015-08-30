@@ -115,19 +115,7 @@ module IGD
 			# @version 0.3
 			# @author German Molina
 			def self.clear_actual_path
-				dirs=["Workplanes","Materials","Windows","Geometry","Illums","Results","Skies","Views", "Components", "DC"]
-				files=["*.oct","scene.rad","scene.rif","*.amb","*.wea","*.epw"]
-
-				dirs.each do |dir|
-					FileUtils.rm_rf(dir) if File.directory?(dir)
-				end
-
-				files.each do |fl|
-					Dir[fl].each do |fd|
-						File.delete(fd) #this double loop allows using wildcards
-					end
-				end
-
+				FileUtils.rm_rf(Dir.glob('./*'))
 				return true
 			end
 
