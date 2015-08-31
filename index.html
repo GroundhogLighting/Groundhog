@@ -21,7 +21,7 @@
               <small>Lighting analysis within SketchUp</small>
               <div id='home_downloads'>
                   <a onclick="ga('send','event','Download','Download_Stable','Stable',1)" href="https://github.com/IGD-Labs/Groundhog/raw/Stable/Groundhog.rbz" id="home_download_button"><small>Download</small>Stable<p id='stable_date'></p></a>
-                  <a onclick="ga('send','event','Download','Download_Latest','Latest',1)" href="https://github.com/IGD-Labs/Groundhog/raw/master/Groundhog.rbz" id="home_download_latest"><small>Download</small>Latest<p id='latest_date'></p></a>
+                  <a onclick="ga('send','event','Download','Download_Latest','Latest',1)" href="https://github.com/IGD-Labs/Groundhog/raw/Latest/Groundhog.rbz" id="home_download_latest"><small>Download</small>Latest<p id='latest_date'></p></a>
                   <a onclick="ga('send','event','Visit','Visit_SketchUp','SketchUp',1)" href="http://extensions.sketchup.com/en/content/groundhog" id="home_sketchup_button"><small>view on</small>SketchUp</a>
                   <a onclick="ga('send','event','Visit','Visit_Github','Github',1)" href="https://github.com/IGD-Labs/Groundhog" id="home_github_button"><small>View project on</small>GitHub</a>
               </div>
@@ -76,7 +76,7 @@
           <p>There are four options available.</p>
           <table class = 'columns'>
            <tr>
-             <td><a onclick="ga('send','event','Download','Download_Latest','Latest',1)" href="https://github.com/IGD-Labs/Groundhog/raw/master/Groundhog.rbz" id="download_latest"></a></td>
+             <td><a onclick="ga('send','event','Download','Download_Latest','Latest',1)" href="https://github.com/IGD-Labs/Groundhog/raw/Latest/Groundhog.rbz" id="download_latest"></a></td>
              <td><a onclick="ga('send','event','Download','Download_Stable','Stable',1)" href="https://github.com/IGD-Labs/Groundhog/raw/Stable/Groundhog.rbz" id="download_button"></a></td>
              <td><a onclick="ga('send','event','Visit','Visit_SketchUp','SketchUp',1)" href="http://extensions.sketchup.com/en/content/groundhog" id="sketchup_button"></a></td>
              <td><a onclick="ga('send','event','Visit','Visit_Github','Github',1)" href="https://github.com/IGD-Labs/Groundhog" id="github_button"></a></td>
@@ -326,7 +326,7 @@
             return date;
         }
 
-        document.getElementById('latest_date').innerHTML = get_date("https://api.github.com/repos/IGD-Labs/Groundhog/branches/master");
+        document.getElementById('latest_date').innerHTML = get_date("https://api.github.com/repos/IGD-Labs/Groundhog/branches/Latest");
         document.getElementById('stable_date').innerHTML = get_date("https://api.github.com/repos/IGD-Labs/Groundhog/branches/Stable");
 
   </script>
