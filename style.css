@@ -451,6 +451,20 @@ a:hover {
     width:auto;
 }
 
+.slider > ul > li > .credit{
+    padding: 10px;
+    max-width: 50%;
+    background-color: rgba(0,0,0,0.0);
+    color: white;
+    z-index: 1000;
+    position: absolute;
+    font-size: 80%;
+    bottom: -35px;
+    right: -49%;
+    text-align: right;
+    width:auto;
+}
+
 
 
 .slider_frame input[type=radio] {
