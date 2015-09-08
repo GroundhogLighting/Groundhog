@@ -5,6 +5,24 @@ html {
   background-image: url(../images/bg/back_4.jpg);
 }
 
+
+@media screen and (min-width:1000){
+
+    html {
+      background-image: url(../images/bg/back_4_medium.jpg);
+    }
+
+}
+
+@media screen and (min-width:2000){
+
+    html {
+      background-image: url(../images/bg/back_4_large.jpg);
+    }
+
+}
+
+
 #home_logo {
     width: 25vw;
     height:14vw;
