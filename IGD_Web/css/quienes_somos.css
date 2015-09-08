@@ -1,0 +1,11 @@
+
+html {
+  background-image: url(../images/bg/back_1_BW.jpg);
+}
+
+.general_content{
+    top: 20vh;
+    position:relative;
+    width:50%;
+    min-width: 300px;
+}

@@ -1,0 +1,208 @@
+html, body{
+    margin: 0px;
+    padding:0px;
+    font-family: Open Sans;
+    overflow: hidden;
+    height: 100vh;
+}
+
+html {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+
+}
+
+a {
+    color: #6C6DB2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.general_content{
+    position:relative;
+    padding: 30px;
+    background-color: rgba(0,0,0,0.65);
+    text-align:justify;
+    box-sizing: border-box;
+}
+
+.general_content p, .general_content h2{
+    color:white; /*#E7E7E8;*/
+    margin: 0;
+}
+
+.general_content p{
+    margin-bottom: 10px;
+    font-size: 87%;
+}
+
+
+
+/*MENU */
+.with_icon:before{
+    content: '';
+    width: 24px;
+    height: 24px;
+    display: block;
+    float: left;
+    margin-right: 9px;
+    box-sizing: border-box;
+    background: url('../images/Logotipo/ISO3.png') no-repeat 0 0;
+    background-size: 100%;
+
+}
+
+#navigation, #social{
+    position: fixed;
+    margin-top: 0px;
+    width: 100vw;
+    top: 0px;
+    z-index: 9;
+    background: rgba(0,0,0,1);
+    text-align: left;
+    height: 40px;
+}
+
+#social{
+    z-index: 99;
+    width: 178px;
+    right:0;
+    text-align:right;
+}
+
+
+
+#mailto{
+    font-size: 80%;
+    color:#E7E7E8;
+    font-weight: normal;
+}
+
+#linkedin::before{
+    content: "";
+    position:relative;
+    width: 17px;
+    height: 17px;
+    left: 10px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-right: -70px;
+    float: left;
+    background-image: url('../images/Logotipo/In-White-28px-TM.png');
+}
+
+
+.dropDownMenu a, #mobile_menu {
+	color: white;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    text-align:center;
+	font-size: 90%;
+}
+
+
+.dropDownMenu,
+.dropDownMenu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.dropDownMenu li {
+	position: relative;
+}
+.dropDownMenu a, #mobile_menu {
+	padding: 10px 20px;
+	display: block;
+	text-decoration: none;
+    color: #E7E7E8;
+    font-weight: normal;
+}
+.dropDownMenu a:hover {
+	cursor: pointer;
+    color: rgb(250,250,250);
+}
+/* Level 1 Drop Down Menu */
+.dropDownMenu > li {
+	display: inline-block;
+	vertical-align: top;
+	margin-left: -4px; /* solve the 4 pixels spacing between list-items */
+}
+.dropDownMenu > li:first-child {
+	margin-left: 0;
+}
+.dropDownMenu > li > a {}
+.dropDownMenu > li > a:hover {}
+
+#mobile_menu{
+    display:none;
+}
+
+
+
+@media screen and (max-width: 830px) {
+    #mobile_menu{
+        display:block;
+        width: 100px;
+    }
+
+    #home_button:before{
+        content: none;
+    }
+
+    #menu > li {
+        display:block;
+        border-bottom: 1px solid #888;
+        width:100%;
+    }
+
+    #menu > li > a{
+        text-align: left;
+    }
+
+    #menu{
+        background-color: #3C3C3C;
+        width:30%;
+        min-width: 160px;
+        max-width: 300px;
+        position:relative;
+        left: -300px;
+        -webkit-transition: left .8s;
+        -moz-transition: left .8s;
+        -o-transition: left .8s;
+        transition: left .8s;
+        box-shadow: 0px 0px 7px rgba(0,0,0,1);
+    }
+
+
+  .general_content{
+      width: 100%;
+      height:auto;
+      max-height: none;
+      padding: 3%;
+      top: 50px;
+  }
+
+  html, body{
+      margin: 0px;
+      padding:0px;
+      font-family: Open Sans;
+      overflow:scroll;
+      height:auto;
+      min-height:100vh;
+      width:100vw;
+  }
+
+
+
+}
+@media screen and (max-width: 320px){
+    #social{
+        display:none;
+    }
+}

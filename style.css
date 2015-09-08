@@ -157,7 +157,7 @@ a:hover {
     top:10%;
     height:85%;
     text-align: center;
-    background-color: rgba(0,0,0,0.6); //rgba(110,108,177,0.5); //#B16E6C; //#6E6CB1;
+    background-color: rgba(0,0,0,0.6);
     padding-left: 10px;
     padding-right: 10px;
 
@@ -411,7 +411,7 @@ a:hover {
     padding: 0;
     list-style: none;
     height: 100%;
-    //width: 300%;
+    width: 300%;
     overflow: hidden;
     position: relative;
     left: 0px;
@@ -448,7 +448,7 @@ a:hover {
     bottom: 0px;
     left: 0px;
     text-align: left;
-    width:auto;
+    width:auto;    
 }
 
 .slider > ul > li > .credit{
