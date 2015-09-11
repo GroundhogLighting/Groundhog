@@ -1,0 +1,10 @@
+{
+
+	"name":"Accelerad",
+	"developer":"German Molina @ IGD (www.igd.cl)",
+	"version":"0.1.0",
+	"support":"gmolina@igd.cl",
+	"license":"Freeware",
+	"info":"This is an Add-on developed to make Groundhog an Accelerad compatible plugin. However, Accelerad is not distributed along with Groundhog, so please refer to the authors website (http://mit.edu/sustainabledesignlab/projects/Accelerad) for more information.\\n\\nAccelerad is being developed by Nathaniel Jones at the MIT Sustainable Design Lab.\\n\\nAccelerad is Copyright (c) 2013-2014, Massachusetts Institute of Technology (MIT). All Rights Reserved."
+
+}

@@ -23,21 +23,6 @@ module IGD
 				return os
 			end
 
-			# Returns the "slash" required for each O.S.
-			#
-			# Window 7 and Mac use different "slashes".
-			# @author German Molina
-			# @return [String] The corresponding Slash ("\\" for WIN and "/" for MAC or OTHER).
-			# @deprecated
-			#def self.slash
-			#	os=self.getsystem
-
-			#	if os=="WIN"
-			#		return "\\" #This was correct in Windows XP, when tried
-			#	else
-			#		return "/" #it is assumed that OTHER OS will work as MAC...???
-			#	end
-			#end
 
 			# Creates a directory in the selected path
 			# @author German Molina
@@ -129,6 +114,7 @@ module IGD
 
 				exit_status=""
 				warn ">> #{cmd}"
+				Sketchup.set_status_text cmd ,SB_PROMPT
 				Open3.popen3(cmd){ |stdin, stdout, stderr, wait_thr|
 					pid = wait_thr.pid # pid of the started process.
 
@@ -180,6 +166,16 @@ module IGD
 				result = UI.messagebox("Radiance does not seem to be configured with Groundhog.\nWould you like to set it up now?", MB_YESNO)
 				Config.show_config if result==IDYES
 				return false
+			end
+
+			# Receives the name of a program... adds .exe if necessary
+			# @author German Molina
+			# @param program [String] The name of the program to check
+			# @return [String] True if Radiance was installed... if not, it offers to do it, and return false
+			def self.program(program)
+				sys = self.getsystem
+				return program if sys == "MAC"
+				return "#{program}.exe" if sys == "WIN"
 			end
 
 

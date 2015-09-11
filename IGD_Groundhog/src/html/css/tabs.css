@@ -1,4 +1,5 @@
 
+body{padding:0;}
 ul#tabs {position:absolute; list-style-type: none; margin: 0px 0 0 0; padding: 0 0 0.0em 0; z-index: 1;}
 ul#tabs li { height: 18px; width: 57px; margin-bottom: 11px;  }
 ul#tabs li a {display: block; width: 100%; color: #42454a; background-color: #dedbde; border: 1px solid #c9c3ba; border-right: none; padding: 0.3em 0.3em 0.3em 0.3em; text-decoration: none; }

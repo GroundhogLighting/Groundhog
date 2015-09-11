@@ -74,7 +74,7 @@ module IGD
 
 					extension = file.split(".").pop
 					weaname = file.tr("//","/").split("/").pop.split(".").shift
-					script << "epw2wea #{file} #{weaname}.wea" if extension=="epw"
+					script << "#{OS.program("epw2wea")} #{file} #{weaname}.wea" if extension=="epw"
 					FileUtils.cp(file,"#{weaname}.wea") if extension=="wea"
 
 					#Calculate DC matrices
@@ -96,9 +96,9 @@ module IGD
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#OSX
-						script << "gendaymtx -m #{options["bins"]} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("gendaymtx")} -m #{options["bins"]} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
 						#WIN
-						script << "gendaymtx -m #{options["bins"]} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("gendaymtx")} -m #{options["bins"]} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
 					end
 				end
 				return script
@@ -137,7 +137,7 @@ module IGD
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						script << "rfluxmtx -n 1 -I+ #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{winstring} > DC/#{name}.dmx"
+						script << "#{OS.program("rfluxmtx")} -n 1 -I+ #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{winstring} > DC/#{name}.dmx"
 					end
 
 					return script
@@ -177,16 +177,16 @@ module IGD
 					winstring=Dir["Windows/*"].collect{|x| x.tr("\\","/").split("/")[-1]}.join(" ./Windows/")
 					winstring="./Windows/#{winstring}" if winstring.length > 0
 					winstring="" if winstring.length==0
-					script << "oconv ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
+					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
 
 					wps=Dir["Workplanes/*"]
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#for OSX
-						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results/#{name}.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results/#{name}.txt" if OS.getsystem=="MAC"
 						#for Windows
-						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)\" > Results/#{name}.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)\" > Results/#{name}.txt" if OS.getsystem=="WIN"
 					end
 
 				end
@@ -215,16 +215,16 @@ module IGD
 					winstring=Dir["Windows/*"].collect{|x| x.tr("\\","/").split("/")[-1]}.join(" ./Windows/")
 					winstring="./Windows/#{winstring}" if winstring.length > 0
 					winstring="" if winstring.length==0
-					script << "oconv ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
+					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
 
 					wps=Dir["Workplanes/*"]
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#for OSX
-						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100' > Results/#{name}.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100' > Results/#{name}.txt" if OS.getsystem=="MAC"
 						#for Windows
-						script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100\" > Results/#{name}.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100\" > Results/#{name}.txt" if OS.getsystem=="WIN"
 					end
 
 				end
@@ -250,8 +250,8 @@ module IGD
 					winstring=Dir["Windows/*"].collect{|x| x.tr("\\","/").split("/")[-1]}.join(" ./Windows/")
 					winstring="./Windows/#{winstring}" if winstring.length > 0
 					winstring="" if winstring.length==0
-					script << "oconv ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
-					script << "rvu #{Config.rvu_options} -vf Views/#{scene}.vf octree.oct"
+					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
+					script << "#{OS.program("rvu")} #{Config.rvu_options} -vf Views/#{scene}.vf octree.oct"
 				end
 				return script
 			end

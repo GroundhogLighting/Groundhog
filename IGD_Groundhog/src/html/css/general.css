@@ -1,6 +1,6 @@
 
 
-body { margin:auto; font-size: 80%; font-family: 'Open Sans', Verdana, Arial, Sans-Serif; 	text-align: justify; background-color: #f1f0ee;}
+body {margin:0;padding:10px; width: 100%; box-sizing: border-box; font-size: 80%; font-family: 'Open Sans', Verdana, Arial, Sans-Serif; 	text-align: justify; background-color: #f1f0ee;}
 button {font-size: 100%;}
 
 table, th, td {
@@ -15,7 +15,7 @@ h2{
 h1 {
     font-size: 160%;
     margin:auto;
-    margin-left:10px;    
+    margin-left:10px;
 }
 
 input{
@@ -84,23 +84,22 @@ select {
 }
 
 .tooltip {
+    box-sizing: border-box;
 	font-size: 90%;
-	width: 400%;
+	width: 80vw;
 	text-align: justify;
 	background:#ffffff;
   	margin-bottom: -105px;
-  	left: 25px;
+  	left: 5vw;
 }
 
-.option_info .tooltip {
-	width: 80%;
+.tabContent .more_info .tooltip{
+        width: 70vw;
 }
-
 
 
 .more_info .tooltip, .option_info .tooltip {
 
-    font-weight: normal;
   bottom: 100%;
   display: none;
 
