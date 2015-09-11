@@ -36,11 +36,20 @@ module IGD
 			# @author German Molina
 			# @return [String] The main groundhog path
 			def self.main_groundhog_path
-
 				files = Sketchup.find_support_file "IGD_Groundhog.rb" ,"Plugins"
 				array=files.split("/")
 				array.pop
 				array.push("IGD_Groundhog")
+				return File.join(array)
+			end
+
+			# Gets the path where the groundhog's support files are stored
+			# @author German Molina
+			# @return [String] The tmp groundhog path
+			def self.support_files_groundhog_path
+				dir=self.main_groundhog_path
+				array=dir.split("/")
+				array.push("support_files")
 				return File.join(array)
 			end
 
@@ -79,7 +88,7 @@ module IGD
 			# @author German Molina
 			# @param op_name [String] The name of the failed operation
 			def self.failed_operation_message(op_name)
-				UI.messagebox("There was an error while performing #{op_name} operation.\n\nPlease contact #{Groundhog.creator} to tell us what happened.\n\nTHANKS!")
+				UI.messagebox("There was an error while performing '#{op_name}' operation.\n\nPlease contact #{Groundhog.creator} to tell us what happened.\n\nTHANKS!")
 			end
 
 
