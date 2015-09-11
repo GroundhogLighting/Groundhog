@@ -79,8 +79,8 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">IGD_Groundhog/src/Config.rb<span class="defines">,<br />
-  IGD_Groundhog/src/Exporter.rb,<br /> IGD_Groundhog/src/Groundhog_main.rb,<br /> IGD_Groundhog/src/Labeler.rb,<br /> IGD_Groundhog/src/Materials.rb,<br /> IGD_Groundhog/src/OS.rb,<br /> IGD_Groundhog/src/Rad.rb,<br /> IGD_Groundhog/src/Results.rb,<br /> IGD_Groundhog/src/Utilities.rb,<br /> IGD_Groundhog/src/Tools/mkWindow.rb</span>
+    <dd class="r1 last">IGD_Groundhog/src/Addons.rb<span class="defines">,<br />
+  IGD_Groundhog/src/Config.rb,<br /> IGD_Groundhog/src/Exporter.rb,<br /> IGD_Groundhog/src/Groundhog_main.rb,<br /> IGD_Groundhog/src/Labeler.rb,<br /> IGD_Groundhog/src/Materials.rb,<br /> IGD_Groundhog/src/OS.rb,<br /> IGD_Groundhog/src/Rad.rb,<br /> IGD_Groundhog/src/Results.rb,<br /> IGD_Groundhog/src/Utilities.rb,<br /> IGD_Groundhog/src/Tools/mkWindow.rb</span>
 </dd>
   
 </dl>
@@ -90,144 +90,94 @@
 <p class="children">
   
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Groundhog/Config.html" title="IGD::Groundhog::Config (module)">Config</a></span>, <span class='object_link'><a href="Groundhog/Exporter.html" title="IGD::Groundhog::Exporter (module)">Exporter</a></span>, <span class='object_link'><a href="Groundhog/Labeler.html" title="IGD::Groundhog::Labeler (module)">Labeler</a></span>, <span class='object_link'><a href="Groundhog/Materials.html" title="IGD::Groundhog::Materials (module)">Materials</a></span>, <span class='object_link'><a href="Groundhog/MkWindow.html" title="IGD::Groundhog::MkWindow (module)">MkWindow</a></span>, <span class='object_link'><a href="Groundhog/OS.html" title="IGD::Groundhog::OS (module)">OS</a></span>, <span class='object_link'><a href="Groundhog/Rad.html" title="IGD::Groundhog::Rad (module)">Rad</a></span>, <span class='object_link'><a href="Groundhog/Results.html" title="IGD::Groundhog::Results (module)">Results</a></span>, <span class='object_link'><a href="Groundhog/Utilities.html" title="IGD::Groundhog::Utilities (module)">Utilities</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Groundhog/Addons.html" title="IGD::Groundhog::Addons (module)">Addons</a></span>, <span class='object_link'><a href="Groundhog/Config.html" title="IGD::Groundhog::Config (module)">Config</a></span>, <span class='object_link'><a href="Groundhog/Exporter.html" title="IGD::Groundhog::Exporter (module)">Exporter</a></span>, <span class='object_link'><a href="Groundhog/Labeler.html" title="IGD::Groundhog::Labeler (module)">Labeler</a></span>, <span class='object_link'><a href="Groundhog/Materials.html" title="IGD::Groundhog::Materials (module)">Materials</a></span>, <span class='object_link'><a href="Groundhog/MkWindow.html" title="IGD::Groundhog::MkWindow (module)">MkWindow</a></span>, <span class='object_link'><a href="Groundhog/OS.html" title="IGD::Groundhog::OS (module)">OS</a></span>, <span class='object_link'><a href="Groundhog/Rad.html" title="IGD::Groundhog::Rad (module)">Rad</a></span>, <span class='object_link'><a href="Groundhog/Results.html" title="IGD::Groundhog::Results (module)">Results</a></span>, <span class='object_link'><a href="Groundhog/Utilities.html" title="IGD::Groundhog::Utilities (module)">Utilities</a></span>
     
   
     
   
 </p>
 
-  <h2>Constant Summary</h2>
+
+
+
+
+
+
   
-    <dl class="constants">
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
       
-        <dt id="GH_tools_menu-constant" class="">GH_tools_menu =
-          <div class="docstring">
-  <div class="discussion">
+        <li class="public ">
+  <span class="summary_signature">
     
-<p>TOOLS SUBMENU</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-        </dt>
-        <dd><pre class="code"><span class='id identifier rubyid_groundhog_menu'>groundhog_menu</span><span class='period'>.</span><span class='id identifier rubyid_add_submenu'>add_submenu</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Tools</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></pre></dd>
-      
-        <dt id="GH_materials_menu-constant" class="">GH_materials_menu =
-          <div class="docstring">
-  <div class="discussion">
+      <a href="#addon_menu-class_method" title="addon_menu (class method)">+ (Object) <strong>addon_menu</strong> </a>
     
-<p>RESULTS SUBMENU</p>
 
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-        </dt>
-        <dd><pre class="code"><span class='id identifier rubyid_groundhog_menu'>groundhog_menu</span><span class='period'>.</span><span class='id identifier rubyid_add_submenu'>add_submenu</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Materials</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></pre></dd>
-      
-        <dt id="GH_results_menu-constant" class="">GH_results_menu =
-          <div class="docstring">
-  <div class="discussion">
     
-<p>RESULTS SUBMENU</p>
-
-
-  </div>
-</div>
-<div class="tags">
+  </span>
+  
+  
+  
+  
+  
+  
   
 
-</div>
-        </dt>
-        <dd><pre class="code"><span class='id identifier rubyid_groundhog_menu'>groundhog_menu</span><span class='period'>.</span><span class='id identifier rubyid_add_submenu'>add_submenu</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Results</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></pre></dd>
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
       
-        <dt id="GH_view_menu-constant" class="">GH_view_menu =
-          <div class="docstring">
-  <div class="discussion">
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
     
-<p>VIEW</p>
-
-
-  </div>
-</div>
-<div class="tags">
+      <div class="method_details first">
+  <h3 class="signature first" id="addon_menu-class_method">
+  
+    + (<tt>Object</tt>) <strong>addon_menu</strong> 
   
 
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+257
+258
+259</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Groundhog_main.rb', line 257</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_addon_menu'>addon_menu</span>
+	<span class='kw'>return</span> <span class='ivar'>@gh_addons_menu</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
 </div>
-        </dt>
-        <dd><pre class="code"><span class='id identifier rubyid_groundhog_menu'>groundhog_menu</span><span class='period'>.</span><span class='id identifier rubyid_add_submenu'>add_submenu</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>View</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></pre></dd>
-      
-        <dt id="GH_preferences_menu-constant" class="">GH_preferences_menu =
-          <div class="docstring">
-  <div class="discussion">
     
-<p>PREFERENCES MENU</p>
-
-
   </div>
-</div>
-<div class="tags">
-  
-
-</div>
-        </dt>
-        <dd><pre class="code"><span class='id identifier rubyid_groundhog_menu'>groundhog_menu</span><span class='period'>.</span><span class='id identifier rubyid_add_submenu'>add_submenu</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Preferences</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></pre></dd>
-      
-        <dt id="GH_help_menu-constant" class="">GH_help_menu =
-          <div class="docstring">
-  <div class="discussion">
-    
-<p>HELP MENU</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-        </dt>
-        <dd><pre class="code"><span class='id identifier rubyid_groundhog_menu'>groundhog_menu</span><span class='period'>.</span><span class='id identifier rubyid_add_submenu'>add_submenu</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Help</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></pre></dd>
-      
-        <dt id="GH_tutorials_menu-constant" class="">GH_tutorials_menu =
-          <div class="docstring">
-  <div class="discussion">
-    
-<p>Tutorials</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div>
-        </dt>
-        <dd><pre class="code"><span class='const'>GH_help_menu</span><span class='period'>.</span><span class='id identifier rubyid_add_submenu'>add_submenu</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Tutorials</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></pre></dd>
-      
-    </dl>
-  
-
-
-
-
-
-
-
-
 
 </div>
 
     <div id="footer">
-  Generated on Mon May 18 11:22:34 2015 by
+  Generated on Fri Sep 11 10:45:07 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

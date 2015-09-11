@@ -102,7 +102,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#add_default_glass-class_method" title="add_default_glass (class method)">+ (Object) <strong>add_default_glass</strong> </a>
+      <a href="#add_default_glass-class_method" title="add_default_glass (class method)">+ (Void) <strong>add_default_glass</strong> </a>
     
 
     
@@ -126,7 +126,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#add_default_material-class_method" title="add_default_material (class method)">+ (Object) <strong>add_default_material</strong> </a>
+      <a href="#add_default_material-class_method" title="add_default_material (class method)">+ (Void) <strong>add_default_material</strong> </a>
     
 
     
@@ -150,7 +150,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#parse_material_argument-class_method" title="parse_material_argument (class method)">+ (Object) <strong>parse_material_argument</strong>(argument) </a>
+      <a href="#parse_material_argument-class_method" title="parse_material_argument (class method)">+ (String) <strong>parse_material_argument</strong>(argument) </a>
     
 
     
@@ -175,7 +175,7 @@ new lines and tabs…</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#process_material_JSON-class_method" title="process_material_JSON (class method)">+ (Object) <strong>process_material_JSON</strong>(material_JSON) </a>
+      <a href="#process_material_JSON-class_method" title="process_material_JSON (class method)">+ (Boolean) <strong>process_material_JSON</strong>(material_JSON) </a>
     
 
     
@@ -190,8 +190,7 @@ new lines and tabs…</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Receives a material definition with no new lines and makes it nicer, with
-new lines and tabs…</p>
+<p>Adds a material to the model based on a JSON (Hash) inputed.</p>
 </div></span>
   
 </li>
@@ -200,7 +199,7 @@ new lines and tabs…</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#show_material_wizard-class_method" title="show_material_wizard (class method)">+ (Object) <strong>show_material_wizard</strong> </a>
+      <a href="#show_material_wizard-class_method" title="show_material_wizard (class method)">+ (Void) <strong>show_material_wizard</strong> </a>
     
 
     
@@ -234,7 +233,7 @@ action_callback.</p>
       <div class="method_details first">
   <h3 class="signature first" id="add_default_glass-class_method">
   
-    + (<tt>Object</tt>) <strong>add_default_glass</strong> 
+    + (<tt>Void</tt>) <strong>add_default_glass</strong> 
   
 
   
@@ -249,22 +248,20 @@ action_callback.</p>
   </div>
 </div>
 <div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
   
     <li>
       
-        <span class='name'>entities</span>
       
-      
-        <span class='type'>(<tt>Array</tt>)</span>
+        <span class='type'>(<tt>Void</tt>)</span>
       
       
       
     </li>
   
 </ul>
-
 <p class="tag_title">Author:</p>
 <ul class="author">
   
@@ -302,7 +299,7 @@ action_callback.</p>
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_add_default_glass'>add_default_glass</span>
 	<span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH_default_glass</span><span class='tstring_end'>&quot;</span></span>
 	<span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH_default_glass</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_color'>color</span><span class='op'>=</span><span class='lbracket'>[</span><span class='float'>0.0</span><span class='comma'>,</span><span class='float'>0.0</span><span class='comma'>,</span><span class='float'>1.0</span><span class='rbracket'>]</span>
-	<span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH_default_glass</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_alpha'>alpha</span><span class='op'>=</span><span class='float'>0.2</span>	
+	<span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH_default_glass</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_alpha'>alpha</span><span class='op'>=</span><span class='float'>0.2</span>
 	<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_to_local_material'>to_local_material</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH_default_glass</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
 	<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_set_local_material_value'>set_local_material_value</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH_default_glass</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>void\tglass</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n0\n0\n3\t0.86\t0.86\t0.86</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
@@ -314,7 +311,7 @@ action_callback.</p>
       <div class="method_details ">
   <h3 class="signature " id="add_default_material-class_method">
   
-    + (<tt>Object</tt>) <strong>add_default_material</strong> 
+    + (<tt>Void</tt>) <strong>add_default_material</strong> 
   
 
   
@@ -329,22 +326,20 @@ action_callback.</p>
   </div>
 </div>
 <div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
   
     <li>
       
-        <span class='name'>entities</span>
       
-      
-        <span class='type'>(<tt>Array</tt>)</span>
+        <span class='type'>(<tt>Void</tt>)</span>
       
       
       
     </li>
   
 </ul>
-
 <p class="tag_title">Author:</p>
 <ul class="author">
   
@@ -394,7 +389,7 @@ action_callback.</p>
       <div class="method_details ">
   <h3 class="signature " id="parse_material_argument-class_method">
   
-    + (<tt>Object</tt>) <strong>parse_material_argument</strong>(argument) 
+    + (<tt>String</tt>) <strong>parse_material_argument</strong>(argument) 
   
 
   
@@ -415,7 +410,7 @@ new lines and tabs… easier to read.</p>
   
     <li>
       
-        <span class='name'>material_definition</span>
+        <span class='name'>argument</span>
       
       
         <span class='type'>(<tt>String</tt>)</span>
@@ -426,6 +421,24 @@ new lines and tabs… easier to read.</p>
   
 </ul>
 
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Nice material definition</p>
+</div>
+      
+    </li>
+  
+</ul>
 <p class="tag_title">Author:</p>
 <ul class="author">
   
@@ -465,6 +478,7 @@ new lines and tabs… easier to read.</p>
       <pre class="lines">
 
 
+54
 55
 56
 57
@@ -482,18 +496,17 @@ new lines and tabs… easier to read.</p>
 69
 70
 71
-72
-73</pre>
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 55</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 54</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_parse_material_argument'>parse_material_argument</span><span class='lparen'>(</span><span class='id identifier rubyid_argument'>argument</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_ret'>ret</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
 	<span class='id identifier rubyid_arr'>arr</span><span class='op'>=</span><span class='id identifier rubyid_argument'>argument</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 	<span class='comment'>#first line
 </span><span class='comment'>#				ret+=arr.shift+&quot;\t&quot;+arr.shift+&quot;\t&quot;+arr.shift
-</span>	
+</span>
 	<span class='kw'>for</span> <span class='id identifier rubyid_k'>k</span> <span class='kw'>in</span> <span class='int'>0</span><span class='op'>..</span><span class='int'>2</span> <span class='comment'>#three times... one for each line.
 </span>		<span class='id identifier rubyid_ret'>ret</span><span class='op'>+=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span>
 		<span class='id identifier rubyid_n'>n</span><span class='op'>=</span><span class='id identifier rubyid_arr'>arr</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span>
@@ -504,7 +517,7 @@ new lines and tabs… easier to read.</p>
 			<span class='id identifier rubyid_ret'>ret</span><span class='op'>+=</span><span class='id identifier rubyid_arr'>arr</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span>
 		<span class='kw'>end</span>
 	<span class='kw'>end</span>
-			
+
 	<span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -515,7 +528,7 @@ new lines and tabs… easier to read.</p>
       <div class="method_details ">
   <h3 class="signature " id="process_material_JSON-class_method">
   
-    + (<tt>Object</tt>) <strong>process_material_JSON</strong>(material_JSON) 
+    + (<tt>Boolean</tt>) <strong>process_material_JSON</strong>(material_JSON) 
   
 
   
@@ -524,8 +537,9 @@ new lines and tabs… easier to read.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Receives a material definition with no new lines and makes it nicer, with
-new lines and tabs… easier to read.</p>
+<p>Adds a material to the model based on a JSON (Hash) inputed.</p>
+
+<pre class="code ruby"><code class="ruby">This JSON is meant to be sent by a web dialog.</code></pre>
 
 
   </div>
@@ -536,10 +550,10 @@ new lines and tabs… easier to read.</p>
   
     <li>
       
-        <span class='name'>material_definition</span>
+        <span class='name'>material_JSON</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Hash</tt>)</span>
       
       
       
@@ -547,6 +561,24 @@ new lines and tabs… easier to read.</p>
   
 </ul>
 
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Success</p>
+</div>
+      
+    </li>
+  
+</ul>
 <p class="tag_title">Author:</p>
 <ul class="author">
   
@@ -586,6 +618,7 @@ new lines and tabs… easier to read.</p>
       <pre class="lines">
 
 
+81
 82
 83
 84
@@ -617,42 +650,45 @@ new lines and tabs… easier to read.</p>
 110
 111
 112
-113</pre>
+113
+114</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 82</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 81</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_process_material_JSON'>process_material_JSON</span><span class='lparen'>(</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_name'>name</span><span class='op'>=</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>name</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
 	<span class='id identifier rubyid_red'>red</span><span class='op'>=</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>red</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
 	<span class='id identifier rubyid_green'>green</span><span class='op'>=</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>green</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-	<span class='id identifier rubyid_blue'>blue</span><span class='op'>=</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>blue</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>					
-	
+	<span class='id identifier rubyid_blue'>blue</span><span class='op'>=</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>blue</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+	<span class='id identifier rubyid_alpha'>alpha</span><span class='op'>=</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>alpha</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+
 	<span class='comment'>#check if it exists
-</span>	<span class='id identifier rubyid_mat'>mat</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> 
+</span>	<span class='id identifier rubyid_mat'>mat</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
 	<span class='kw'>if</span> <span class='id identifier rubyid_mat'>mat</span><span class='op'>!=</span><span class='kw'>nil</span> <span class='kw'>then</span> <span class='comment'>#error if it exists
 </span>		<span class='id identifier rubyid_answer'>answer</span><span class='op'>=</span><span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>There is already a material with that name in the model.\n\nWould you like to overwrite it?</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='const'>MB_YESNO</span><span class='rparen'>)</span>
 		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_answer'>answer</span> <span class='op'>==</span> <span class='const'>IDNO</span>
 	<span class='kw'>end</span>
-	
+
 	<span class='kw'>begin</span>
 		<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
 		<span class='id identifier rubyid_op_name'>op_name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Add material</span><span class='tstring_end'>&quot;</span></span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_start_operation'>start_operation</span><span class='lparen'>(</span> <span class='id identifier rubyid_op_name'>op_name</span><span class='comma'>,</span><span class='kw'>true</span> <span class='rparen'>)</span>
-		
+
 		<span class='id identifier rubyid_mat'>mat</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span> <span class='id identifier rubyid_name'>name</span> <span class='kw'>if</span> <span class='id identifier rubyid_mat'>mat</span> <span class='op'>==</span> <span class='kw'>nil</span>
 		<span class='id identifier rubyid_mat'>mat</span><span class='period'>.</span><span class='id identifier rubyid_color'>color</span><span class='op'>=</span><span class='lbracket'>[</span><span class='id identifier rubyid_red'>red</span><span class='comma'>,</span><span class='id identifier rubyid_green'>green</span><span class='comma'>,</span><span class='id identifier rubyid_blue'>blue</span><span class='rbracket'>]</span>
-		
+		<span class='id identifier rubyid_mat'>mat</span><span class='period'>.</span><span class='id identifier rubyid_alpha'>alpha</span><span class='op'>=</span><span class='id identifier rubyid_alpha'>alpha</span>
+
 		<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_to_local_material'>to_local_material</span><span class='lparen'>(</span><span class='id identifier rubyid_mat'>mat</span><span class='rparen'>)</span>
-		<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_set_local_material_value'>set_local_material_value</span><span class='lparen'>(</span><span class='id identifier rubyid_mat'>mat</span><span class='comma'>,</span><span class='lbracket'>[</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mod_type</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_parse_material_argument'>parse_material_argument</span><span class='lparen'>(</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>argument</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='rparen'>)</span>					
-		
+		<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_set_local_material_value'>set_local_material_value</span><span class='lparen'>(</span><span class='id identifier rubyid_mat'>mat</span><span class='comma'>,</span><span class='lbracket'>[</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mod_type</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_parse_material_argument'>parse_material_argument</span><span class='lparen'>(</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>argument</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_commit_operation'>commit_operation</span>
 		<span class='kw'>return</span> <span class='kw'>true</span>
 	<span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
 		<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_failed_operation_message'>failed_operation_message</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='rparen'>)</span>
 		<span class='kw'>return</span> <span class='kw'>false</span>
-	<span class='kw'>end</span>		
+	<span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -662,7 +698,7 @@ new lines and tabs… easier to read.</p>
       <div class="method_details ">
   <h3 class="signature " id="show_material_wizard-class_method">
   
-    + (<tt>Object</tt>) <strong>show_material_wizard</strong> 
+    + (<tt>Void</tt>) <strong>show_material_wizard</strong> 
   
 
   
@@ -678,36 +714,16 @@ action_callback</p>
   </div>
 </div>
 <div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
   
-    <li>
-      
-        <span class='name'>void</span>
-      
-      
-        <span class='type'></span>
-      
-      
-      
-    </li>
-  
-</ul>
-
 <p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
       
       
-        <span class='type'></span>
+        <span class='type'>(<tt>Void</tt>)</span>
       
       
-      
-        
-        <div class='inline'>
-<p>void</p>
-</div>
       
     </li>
   
@@ -751,6 +767,7 @@ action_callback</p>
       <pre class="lines">
 
 
+32
 33
 34
 35
@@ -763,15 +780,14 @@ action_callback</p>
 42
 43
 44
-45
-46</pre>
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 33</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 32</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_show_material_wizard'>show_material_wizard</span>
-	<span class='id identifier rubyid_wd'>wd</span><span class='op'>=</span><span class='const'>UI</span><span class='op'>::</span><span class='const'>WebDialog</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span> 
-		<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Materials</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> 
+	<span class='id identifier rubyid_wd'>wd</span><span class='op'>=</span><span class='const'>UI</span><span class='op'>::</span><span class='const'>WebDialog</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+		<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Materials</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
 		<span class='int'>530</span><span class='comma'>,</span> <span class='int'>450</span><span class='comma'>,</span> <span class='int'>100</span><span class='comma'>,</span> <span class='int'>100</span><span class='comma'>,</span> <span class='kw'>false</span> <span class='rparen'>)</span>
 
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_set_file'>set_file</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/src/html/materials_wizard.html</span><span class='tstring_end'>&quot;</span></span> <span class='rparen'>)</span>
@@ -780,7 +796,7 @@ action_callback</p>
 		<span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
 		<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_process_material_JSON'>process_material_JSON</span><span class='lparen'>(</span><span class='id identifier rubyid_material_JSON'>material_JSON</span><span class='rparen'>)</span>
 	<span class='kw'>end</span>
-		
+
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_show'>show</span><span class='lparen'>(</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -793,7 +809,7 @@ action_callback</p>
 </div>
 
     <div id="footer">
-  Generated on Mon May 18 11:22:35 2015 by
+  Generated on Fri Sep 11 10:45:08 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
