@@ -18,10 +18,10 @@ Groundhog, even if it does not allow (yet) performing calculations, it helps you
 
 ###Step 1: Include workplanes in the model
 See that specific tutorial. It is easy.
-<figure align="center">
-<img src="ImportResults/fig1.png" alt="Create workplanes">
-<figcaption>Figure 1: First step - Include Workplanes in the model</figcaption>
-</figure>
+
+![alt text](Images/ImportResults/fig1.png)
+####Figure 1: First step - Include Workplanes in the model
+
 
 ###Step 2: Export the model and perform some calculations
 
@@ -52,10 +52,8 @@ An example, getting the Lux of a certain scene:
 rtrace -h -oov [options] octree < Workplanes/Grid.pts | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results.txt
 ```
 
-
 ###Step 3: Import results
 Go to the menu Plugins (Extensions)--> Groundhog --> Import Results, and look for the file you want to import.
-
 
 
 ###Step 4: Analyse results
@@ -67,15 +65,11 @@ Accordingly, every time a set of results is imported, the scale is reset in orde
 the minimum result value to the maximum. That means that when you import a second workplane, the colors
 of the first one will probably change.
 
-<figure align="center">
-<img src="ImportResults/fig4.png" alt="Import Results">
-<figcaption>Figure 2: Fourth step - See the results</figcaption>
-</figure>
+![alt text](Images/ImportResults/fig4.png)
+####Figure 2: Fourth step - See the results
 
 However, in some cases, it might be useful to choose your own scale.
 This can be done by going to Plugins –> Groundhog –> Results –> Scale handler.
 
-<figure align="center">
-<img src="ImportResults/fig5.png" alt="Import Results">
-<figcaption>Figure 3: Optional - change the scale</figcaption>
-</figure>
+![alt text](Images/ImportResults/fig5.png)
+####Figure 3: Optional - change the scale
