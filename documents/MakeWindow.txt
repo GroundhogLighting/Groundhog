@@ -6,73 +6,10 @@
 The whole idea here is to make a window that Groundhog actually identifies as a window. This, as explained in
 the [Getting Started](file.GettingStarted.html) section, will be important when exporting the model to Radiance.
 
-There are two ways of creating windows:
-
-
-##Using the Right Click -> "make window" method
-
-The make window tool is in the Groundhog Toolbar (for now, we do not have icons there,
-but if you put your mouse over them, a message with what they do will appear). It allows making a window through
-a thick wall. This is a characteristic that we wanted to add to Groundhog from the beginning.
-
-It is important to notice that this tool creates a window on the exterior side (which you can move to the
-interior, if you want) and an illum surface on the inside (shown in semi-transparent green). If you do not want the illum
-surface to exist, you can delete it. *All windows have to be drawn from the exterior side of the wall.*
-On the other hand, this tool can be used for generating multiple windows at once, by selecting multiple
-polygons at once.
-
-
-So, using it is very simple, you just have to:
-
-###Step 1: Draw a wall that have some thickness
-<figure align="center">
-<img src="MakeWindow/fig1.png" alt="Draw a wall">
-<figcaption>Figure 1: First step - Draw a thick wall</figcaption>
-</figure>
-
-###Step 2: Draw a shape that will represents the window
-This shape has to point outside (i.e. front of the surface pointing out of the wall,
-as shown in Figure 2). In case is not like that, you can right-click on it, and reverse it.
-
-<figure align="center">
-<img src="MakeWindow/fig2.png" alt="Draw the window">
-<figcaption>Figure 2: Second step - Draw a face that will represents the window</figcaption>
-</figure>
-
-###Step 3: Select the face or multiple faces (it does not matter if you select a line)
-<figure align="center">
-<img src="MakeWindow/fig3.png" alt="Select the polygon">
-<figcaption>Figure 3: Third step - Select shape that will represents the window</figcaption>
-</figure>
-
-###Step 4: Right click on one of the selected faces, and click “make window”
-<figure align="center">
-<img src="MakeWindow/fig4.png" alt="Select the polygon">
-<figcaption>Figure 4: Fourth step - Press the "make window" button on the Toolbar</figcaption>
-</figure>
-
-
-
-###Notes
-* Windows are created a little bit inside the wall. This allows moving them, and you will not be forced to put the windows on the outer side of the facade.
-*This tool will try to mercilessly go though the wall. Take care of windows too close
-to wall borders, they can cause trouble.
-
-
-##Labeling an existing surface as a window
-This might be useful for many situations. For example, designing a greenhouse, a curtain wall,
-or some other structure with extremely thin walls.
-
-In this case we can select the surface (or multiple surfaces) and right-click on it. Then, we must
-choose "Transform into Window". After doing that the color will change to a semi-transparent blue, but remember you
-can assign different materials to it. You should take care of the normal of the surface you transform. This affects
-the Three and Five phase method implementations.
-
-This way of creating windows does not generate any illum surfaces.
-<figure align="center">
-<img src="MakeWindow/fig5.png" alt="Transform into window">
-<figcaption>Figure 5: Transform a surface into a window.</figcaption>
-</figure>
+For doing this, you have to select the surface (or multiple surfaces) and right-click on it. Then, you must
+choose "Label as Window" option in the context menu. After doing that the color will change to a semi-transparent
+blue, but remember you can assign different materials to it. You should take care of the normal of the surface you
+transform. This affects the Three and Five phase method implementations.
 
 
 ##Window groups

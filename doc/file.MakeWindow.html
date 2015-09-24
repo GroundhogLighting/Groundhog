@@ -70,111 +70,15 @@ the <a
 href="http://file.GettingStarted.html">Getting Started</a> section, will be
 important when exporting the model to Radiance.</p>
 
-<p>There are two ways of creating windows:</p>
-
-<h2 id="label-Using+the+Right+Click+-%3E+%22make+window%22+method">Using the Right Click -&gt; “make window” method</h2>
-
-<p>The make window tool is in the Groundhog Toolbar (for now, we do not have
-icons there,
-but if you put your mouse over them, a message with what they
-do will appear). It allows making a window through
-a thick wall. This is a
-characteristic that we wanted to add to Groundhog from the beginning.</p>
-
-<p>It is important to notice that this tool creates a window on the exterior
-side (which you can move to the
-interior, if you want) and an illum surface
-on the inside (shown in semi-transparent green). If you do not want the
-illum
-surface to exist, you can delete it. <em>All windows have to be drawn
-from the exterior side of the wall.</em>
-On the other hand, this tool can
-be used for generating multiple windows at once, by selecting
-multiple
-polygons at once.</p>
-
-<p>So, using it is very simple, you just have to:</p>
-
-<h3 id="label-Step+1%3A+Draw+a+wall+that+have+some+thickness">Step 1: Draw a wall that have some thickness</h3>
-
-<p>&lt;figure align=“center”&gt;
-&lt;img src=&quot;MakeWindow/fig1.png&quot;
-alt=&quot;Draw a wall&quot;&gt;
-&lt;figcaption&gt;Figure 1: First step -
-Draw a thick wall&lt;/figcaption&gt;
-&lt;/figure&gt;</p>
-
-<h3 id="label-Step+2%3A+Draw+a+shape+that+will+represents+the+window">Step 2: Draw a shape that will represents the window</h3>
-
-<p>This shape has to point outside (i.e. front of the surface pointing out of
-the wall,
-as shown in Figure 2). In case is not like that, you can
-right-click on it, and reverse it.</p>
-
-<p>&lt;figure align=“center”&gt;
-&lt;img src=&quot;MakeWindow/fig2.png&quot;
-alt=&quot;Draw the window&quot;&gt;
-&lt;figcaption&gt;Figure 2: Second step
-- Draw a face that will represents the
-window&lt;/figcaption&gt;
-&lt;/figure&gt;</p>
-
-<h3 id="label-Step+3%3A+Select+the+face+or+multiple+faces+%28it+does+not+matter+if+you+select+a+line%29">Step 3: Select the face or multiple faces (it does not matter if you select a line)</h3>
-
-<p>&lt;figure align=“center”&gt;
-&lt;img src=&quot;MakeWindow/fig3.png&quot;
-alt=&quot;Select the polygon&quot;&gt;
-&lt;figcaption&gt;Figure 3: Third
-step - Select shape that will represents the
-window&lt;/figcaption&gt;
-&lt;/figure&gt;</p>
-
-<h3 id="label-Step+4%3A+Right+click+on+one+of+the+selected+faces%2C+and+click+%E2%80%9Cmake+window%E2%80%9D">Step 4: Right click on one of the selected faces, and click “make window”</h3>
-
-<p>&lt;figure align=“center”&gt;
-&lt;img src=&quot;MakeWindow/fig4.png&quot;
-alt=&quot;Select the polygon&quot;&gt;
-&lt;figcaption&gt;Figure 4: Fourth
-step - Press the &quot;make window&quot; button on the
-Toolbar&lt;/figcaption&gt;
-&lt;/figure&gt;</p>
-
-<h3 id="label-Notes">Notes</h3>
-<ul><li>
-<p>Windows are created a little bit inside the wall. This allows moving them,
-and you will not be forced to put the windows on the outer side of the
-facade.
-*This tool will try to mercilessly go though the wall. Take care of
-windows too close
-to wall borders, they can cause trouble.</p>
-</li></ul>
-
-<h2 id="label-Labeling+an+existing+surface+as+a+window">Labeling an existing surface as a window</h2>
-
-<p>This might be useful for many situations. For example, designing a
-greenhouse, a curtain wall,
-or some other structure with extremely thin
-walls.</p>
-
-<p>In this case we can select the surface (or multiple surfaces) and
-right-click on it. Then, we must
-choose &quot;Transform into Window&quot;.
-After doing that the color will change to a semi-transparent blue, but
-remember you
-can assign different materials to it. You should take care of
-the normal of the surface you transform. This affects
-the Three and Five
-phase method implementations.</p>
-
-<p>This way of creating windows does not generate any illum
-surfaces.
-&lt;figure align=&quot;center&quot;&gt;
-&lt;img
-src=&quot;MakeWindow/fig5.png&quot; alt=&quot;Transform into
-window&quot;&gt;
-&lt;figcaption&gt;Figure 5: Transform a surface into a
-window.&lt;/figcaption&gt;
-&lt;/figure&gt;</p>
+<p>For doing this, you have to select the surface (or multiple surfaces) and
+right-click on it. Then, you must
+choose &quot;Label as Window&quot; option
+in the context menu. After doing that the color will change to a
+semi-transparent
+blue, but remember you can assign different materials to
+it. You should take care of the normal of the surface you
+transform. This
+affects the Three and Five phase method implementations.</p>
 
 <h2 id="label-Window+groups">Window groups</h2>
 
@@ -210,7 +114,7 @@ assigned.</p>
 </div></div>
 
     <div id="footer">
-  Generated on Fri Sep 11 10:46:35 2015 by
+  Generated on Thu Sep 24 10:44:45 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
