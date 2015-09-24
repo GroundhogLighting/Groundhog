@@ -6,25 +6,20 @@
 Including workplanes into the model will be useful for obtaining numerical (quantitative) results such as
 annual simulations, daylight factors and other results.
 
-Workplanes will be shown as a semi-transparent red surface, although this surface is labeled as 
-"Workplane", and will not be exported to the Radiance model as a surface. Actually, at the moment of exporting, you will 
+Workplanes will be shown as a semi-transparent red surface, although this surface is labeled as
+"Workplane", and will not be exported to the Radiance model as a surface. Actually, at the moment of exporting, you will
 be asked for the spacing of the workplane sensors.
 
 Workplanes need to be horizontal and rectangular surfaces with no holes.
 
 
-
-Workplanes are supposed to be horizontal. We are planning on allowing non-horizontal ones soon.
-
 ##Including a workplane
 
 ###Step 1: Draw a surface that you want to be a Workplane
 This surface has to be rectangular, horizontal and cannot have any holes
-<figure align="center">
-<img src="MakeWorkplane/fig1.png" alt="Draw a surface">
-<figcaption>Figure 1: First step - Draw a rectangle that you want to become a Workplane</figcaption>
-</figure>
 
+![alt text](Images/MakeWorkplane/fig1.png)
+####Figure 1: First step - Draw a rectangle that you want to become a Workplane
 
 ###Step 2: Right click the surface.
 When right clicking, look for "Label as workplane" in the Context menu, and click it.
@@ -32,10 +27,9 @@ When right clicking, look for "Label as workplane" in the Context menu, and clic
 
 ###Step 3: Write the name of the workplace
 The idea is to give it a reasonable name as “Office desk” or “hallway”. This name will be used when exporting sensors.
-<figure align="center">
-<img src="MakeWorkplane/fig3.png" alt="Assign a name">
-<figcaption>Figure 3: Third step - Assign a name to the workplane</figcaption>
-</figure>
+![alt text](Images/MakeWorkplane/fig3.png)
+####Figure 3: Third step - Assign a name to the workplane
+
 
 ###Step 4: Move it to choose the final location
 The workplace can be moved and modified. You should notice that rotating it might end in errors.
@@ -50,15 +44,10 @@ This will be done at the moment of exporting the model.
 
 ## Final location of the sensors
 There are a couple of things to know of where will the sensors finally be.
-	
+
 * The sensor spacing you define when exporting will be slightly modified in order to allow an exact division of the workplane and allow a uniform distribution
 * The previous point is done in both directions of the workplane, so the spacing in both direction will be similar, but not exactly the same
 * Margins are left in the border of the workplane. These margin correspond to one half of the spacing on each direction. This allow drawing the results correctly when importing results
 
-<figure align="center">
-<img src="MakeWorkplane/Sensors.png" alt="Sensor position">
-<figcaption>Figure 4: Sensor final position according to the workplane</figcaption>
-</figure>
-
-
-
+![alt text](Images/MakeWorkplane/Sensors.png)
+####Figure 4: Sensor final position according to the workplane
