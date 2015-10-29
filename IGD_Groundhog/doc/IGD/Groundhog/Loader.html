@@ -239,16 +239,34 @@
 52
 53
 54
-55</pre>
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/LoadHandler.rb', line 49</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_illuminance_sensor'>load_illuminance_sensor</span>
-	<span class='id identifier rubyid_sensor'>sensor</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_local_component'>load_local_component</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>illuminance_sensor</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_sensor'>sensor</span>
-	<span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH Illuminance sensor</span><span class='tstring_end'>&quot;</span></span>
-	<span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_description'>description</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>This represents an illumiance sensor.</span><span class='tstring_end'>&quot;</span></span>
+	<span class='id identifier rubyid_sensors'>sensors</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_illuminance_sensor?'>illuminance_sensor?</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+
+	<span class='comment'># Load it if it is not there
+</span>	<span class='kw'>if</span> <span class='id identifier rubyid_sensors'>sensors</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>&lt;</span> <span class='int'>1</span> <span class='kw'>then</span>
+		<span class='id identifier rubyid_sensor'>sensor</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_local_component'>load_local_component</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>illuminance_sensor</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_sensor'>sensor</span>
+		<span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH Illuminance sensor</span><span class='tstring_end'>&quot;</span></span>
+		<span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_description'>description</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>This represents an illumiance sensor.</span><span class='tstring_end'>&quot;</span></span>
+		<span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_casts_shadows'>casts_shadows</span><span class='op'>=</span> <span class='kw'>false</span>
+		<span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_receives_shadows'>receives_shadows</span><span class='op'>=</span> <span class='kw'>false</span>
+		<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_to_illuminance_sensor'>to_illuminance_sensor</span><span class='lparen'>(</span><span class='id identifier rubyid_sensor'>sensor</span><span class='rparen'>)</span><span class='semicolon'>;</span>
+	<span class='kw'>end</span>
+	<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Success!\n\nThe Illuminance sensor has been added to the Model Components.\n\nYou can find it in Window --&gt; Components</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>true</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -293,7 +311,7 @@
 </div>
 
     <div id="footer">
-  Generated on Thu Sep 24 10:44:46 2015 by
+  Generated on Thu Oct 29 13:51:30 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
