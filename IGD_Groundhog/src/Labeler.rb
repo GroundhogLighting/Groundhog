@@ -53,7 +53,7 @@ module IGD
 			# @param max [Float] Maximum value
 			# @return [Void]
 			def self.set_workplane_value(workplane,min,max)
-				return false if not self.solved_workplane?(workplane)				
+				return false if not self.solved_workplane?(workplane)
 				workplane.set_attribute("Groundhog","Value",[min,max])
 			end
 
@@ -165,6 +165,14 @@ module IGD
 				entity.is_a? Sketchup::Image
 			end
 
+			# Checks if an entity is an illuminance_sensor
+			# @author German Molina
+			# @param entity [entity] Entity to test.
+			# @return [Boolean]
+			def self.illuminance_sensor?(entity)
+				entity.get_attribute("Groundhog","Label")=="illuminance_sensor"
+			end
+
 			# Assigns a name to a set of faces.
 			#
 			# If there is only one surface, the name will be the inputted on the prompt. If there
@@ -238,6 +246,14 @@ module IGD
 			# @return [Void]
 			def self.to_result_pixel(face)
 				face.set_attribute("Groundhog","Label","result_pixel")
+			end
+
+			# Label selected entity as an Illuminance Sensor
+			# @author German Molina
+			# @param entity [Sketchup Face] The entity (Component Definition or Component Instance) to be labeled as illuminance_sensor
+			# @return [Void]
+			def self.to_illuminance_sensor(face)
+				face.set_attribute("Groundhog","Label","illuminance_sensor")
 			end
 
 			# Label selected face into as solved_workplane
