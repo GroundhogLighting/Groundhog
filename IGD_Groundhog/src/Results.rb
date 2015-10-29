@@ -243,6 +243,7 @@ module IGD
 
 					Labeler.to_solved_workplane(group)
 					Labeler.set_workplane_value(group,min,max)
+					group.casts_shadows=false
 					model.commit_operation
 				rescue => e
 					model.abort_operation
