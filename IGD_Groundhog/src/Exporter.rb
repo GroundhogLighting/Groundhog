@@ -175,6 +175,7 @@ module IGD
 					return false if not self.write_scene_file(path)
 					return false if not self.export_component_definitions(path)
 					return false if not self.write_sky(path)
+					return false if not self.write_illuminance_sensors(path)
 
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 
@@ -258,7 +259,7 @@ module IGD
 				end
 
 				#write the workplanes
-				return false if not self.write_sensors(path,workplanes)
+				return false if not self.write_workplanes(path,workplanes)
 
 				#Write windows
 				return false if not self.write_window_groups(path,windows)
@@ -415,7 +416,7 @@ module IGD
 			# @note This method assumes that it receives workplanes (which are horizontal surfaces). If there is a not-horizontal
 			#   surface in the array, sensors and spacing will make no sense.
 			# @todo Allow non-horizontal workplanes?
-			def self.write_sensors(path,entities)
+			def self.write_workplanes(path,entities)
 
 
 				return true if entities.length<1 #we export this only if there is any workplane... success
@@ -601,6 +602,36 @@ module IGD
 				return true
 			end
 
+			# Writes the illuminance sensors
+			# @author German Molina
+			# @version 0.1
+			# @param path [String] Directory to export the sky file
+			# @return [Boolean] Success
+			def self.write_illuminance_sensors(path)
+
+				sensors = Sketchup.active_model.definitions.select {|x| Labeler.illuminance_sensor?(x) }
+				return true if sensors.length < 1 #do not do anything, but success
+				sensors = sensors[0].instances
+				return true if sensors.length < 1 #do not do anything, but success
+
+				OS.mkdir("#{path}/Illuminance_Sensors")
+				path="#{path}/Illuminance_Sensors"
+
+				File.open("#{path}/sensors.pts",'w+'){ |f| #The file is opened
+					sensors.each do |sensor|
+						vdir = sensor.transformation.zaxis
+						vx = vdir[0]
+						vy = vdir[1]
+						vz = vdir[2]
+						pos = sensor.transformation.origin
+						px = pos[0].to_m
+						py = pos[1].to_m
+						pz = pos[2].to_m
+						f.write("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}\n")
+					end
+				}
+				return true
+			end
 
 			# Get the sky_complement, defining the sky and ground semi-hemispheres
 			#
@@ -638,6 +669,7 @@ module IGD
 				defi.each do |h|
 					next if h.image?
 					next if Labeler.solved_workplane?(h)
+					next if Labeler.illuminance_sensor?(h)
 
 					if first_exported then #create directories if there is actually something to export
 						OS.mkdir("#{comp_path}")

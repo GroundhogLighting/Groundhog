@@ -19,11 +19,12 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Utilities'
 		Sketchup::require 'IGD_Groundhog/src/Config'
 		Sketchup::require 'IGD_Groundhog/src/Labeler'
-		Sketchup::require 'IGD_Groundhog/src/OS'		
+		Sketchup::require 'IGD_Groundhog/src/OS'
 		Sketchup::require 'IGD_Groundhog/src/Exporter'
 		Sketchup::require 'IGD_Groundhog/src/Results'
 		Sketchup::require 'IGD_Groundhog/src/Materials'
 		Sketchup::require 'IGD_Groundhog/src/Rad'
+		Sketchup::require 'IGD_Groundhog/src/LoadHandler'
 		Sketchup::require 'IGD_Groundhog/src/Addons'
 
 		require 'json'
@@ -167,25 +168,29 @@ module IGD
 		extensions_menu = UI.menu "Plugins"
 		groundhog_menu=extensions_menu.add_submenu("Groundhog")
 
+			groundhog_menu.add_item("Simulation Wizard"){
+				Rad.show_sim_wizard
+			}
+=begin
 			### TOOLS SUBMENU
 
 			gh_tools_menu=groundhog_menu.add_submenu("Tools")
 
-				#gh_tools_menu.add_item("Make Window"){
-				#	MkWindow.make_window(Utilities.get_faces(Sketchup.active_model.selection))
-				#}
-
 				gh_tools_menu.add_item("Simulation Wizard"){
 					Rad.show_sim_wizard
 				}
+=end
 
+			### INSERT SUBMENU
 
-			### MATERIALS SUBMENU
+			gh_insert_menu=groundhog_menu.add_submenu("Insert")
 
-			gh_materials_menu=groundhog_menu.add_submenu("Materials")
-
-				gh_materials_menu.add_item("Add Materials"){
+				gh_insert_menu.add_item("Materials"){
 					Materials.show_material_wizard
+				}
+
+				gh_insert_menu.add_item("Illuminance Sensor"){
+					Loader.load_illuminance_sensor
 				}
 
 

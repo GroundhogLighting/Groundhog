@@ -10,7 +10,7 @@ module IGD
 		Groundhog.creator='Germán Molina (gmolina1@uc.cl)'
 		Groundhog.description = "OpenSource SketchUp extension for creating, exporting and analyzing Radiance Models."
 		Groundhog.name = 'Groundhog'
-		Groundhog.version = '0.7.5'
+		Groundhog.version = '0.8.0'
 
 		Sketchup.register_extension Groundhog, true
 

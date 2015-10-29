@@ -24,7 +24,7 @@ module IGD
                     "Addons manager", false, "",
                     450, 550, 100, 100, false )
 
-                wd.set_file("#{IGD::Groundhog::OS.main_groundhog_path}/src/html/addons.html" )
+                wd.set_file("#{OS.main_groundhog_path}/src/html/addons.html" )
 
 
                 #Load the active and inactive addons
@@ -67,8 +67,7 @@ module IGD
 
                         str+="active.appendChild(opt);" if active.include? addon
                         str+="inactive.appendChild(opt);" if not active.include? addon
-
-
+                        
                     end
                     web_dialog.execute_script(str)
                 end
