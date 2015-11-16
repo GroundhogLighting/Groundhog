@@ -4,34 +4,18 @@
 
 #What is Groundhog?
 
-Groundhog is a SketchUp extension that intends to simplify the creation of geometry, workplanes, 
+Groundhog is a SketchUp extension that intends to simplify the creation of geometry, workplanes,
 views and simulations made in Radiance. Its development started during Germán Molina´s M.Sc. thesis (Molina, 2014), under
-the advice of Sergio Vera Ph.D and Waldo Bustamante Ph.D. The tesis was focused on performing integrated lighting and 
-thermal simulations of spaces with complex fenestration systems using <a href="http://www.radiance-online.org">Radiance</a>
-and <a href="http://apps1.eere.energy.gov/buildings/energyplus/"> EnergyPlus</a>. When starting that thesis, and when trying 
-to learn Radiance, we found it hard to create geometry, add workplanes and assign materials, especially for big scenes. Also, 
-since our intention was to perform these simulations for spaces with Complex Fenestration Systems (CFS), we wanted a “geometry 
-generator” that could not only export all polygons, but also know what polygon was a window, which one as an “illum” and which
+the advice of Sergio Vera Ph.D and Waldo Bustamante Ph.D. The tesis was focused on performing integrated lighting and
+thermal simulations of spaces with complex fenestration systems using [Radiance](http://www.radiance-online.org)
+and [EnergyPlus](http://apps1.eere.energy.gov/buildings/energyplus/). When starting that thesis, and when trying
+to learn Radiance, we found it hard to create geometry, add workplanes and assign materials, especially for big scenes. Also,
+since our intention was to perform these simulations for spaces with Complex Fenestration Systems (CFS), we wanted a “geometry
+generator” that could not only export all polygons, but also know what polygon was a window, which one was an “illum” and which
 one was a workplane, and export them in a distribution that was comfortable to work with later. Accordingly, Groundhog is focused
-on exporting models for implementing methods such as the <a href="http://www.radiance-online.org/learning/tutorials/Tutorial-ThreePhaseMethod.pdf">
-Three-phase</a> and the <a href="http://www.radiance-online.org/learning/tutorials/fivephasetutorialfiles/Tutorial-FivePhaseMethod_v2.pdf">
-Five-phase</a> methods. However, it also exports models for ray-tracing and rendering, allowing using your own materials
-from a library.
-
-That said, Groundhog intends to simplify scene creation and modeling. It, for now, allows:
-
-* Working with thick walls.
-* Exporting complex polygons as one polygon (window openings are not a problem).
-* Assigning materials from a library of auto-contained Radiance Material files.
-* Materials not existing in the library will be “guessed” by defining a plastic material with no specularity or roughness, with the same color. If the material is semi-transparent, a colored glass material will be assigned.
-* Adding workplanes, which will be exported as a set of sensors that can be used by rcontrib and rtrace programs.
-* Adding Illums.
-* Grouping windows in order to make more efficient lighting simulations.
-* Exporting by layers, separating the windows from the rest of the geometry.
-* Export views from Scenes saved within SketchUp.
-* Every exported file comes with a CIE clear sky with the sun located according to the sun direction in the model.
-* Exporting Groups and Components in separated file.
-* Exporting a "RIF" file for rendering
+on exporting models for implementing methods such as the Daylight Coefficients, the [Three-phase](http://www.radiance-online.org/learning/tutorials/Tutorial-ThreePhaseMethod.pdf)
+ and the [Five-phase](http://www.radiance-online.org/learning/tutorials/fivephasetutorialfiles/Tutorial-FivePhaseMethod_v2.pdf)
+ methods.
 
 On the other hand, Groundhog intends to use SketchUp capabilities as much as possible, like its material libraries, scenes (saved views), geolocation, time and date, layers, solar position. Accordingly, "workplanes" and "illums" are just another surface that is labeled, so the user can move them, create them, name them and delete them easily.
 

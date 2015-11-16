@@ -7,31 +7,30 @@
 The following sections reference some [Radiance](http://www.radiance-online.org)
 programs and conceptual elements. It is assumed that you have some (not really advanced) knowledge about those topics.
 
-Groundhog intends to use as much as possible the main SketchUp features. 
-This allows using other SketchUp geometry-generating-plugins and still be able to export to 
-Radiance. You can even download models from the 3D Warehouse (some complex models will include "non planar" faces... 
+Groundhog intends to use as much as possible the main SketchUp features.
+This allows using other SketchUp geometry-generating-plugins and still be able to export to
+Radiance. You can even download models from the 3D Warehouse (some complex models will include "non planar" faces...
 in my experience, I just erase them, and the model is usually not affected).
 
-Internally, Groundhog only analyzes SketchUp surfaces ([faces](http://www.sketchup.com/intl/en/developer/docs/ourdoc/face.php)), 
-and [Groups](http://www.sketchup.com/intl/en/developer/docs/ourdoc/group#definition) and [Components](http://www.sketchup.com/intl/en/developer/docs/ourdoc/componentdefinition), 
-and only exports Radiance polygons (which will not only be triangles, but more complex 
-polygons as well). Groundhog always exports in one distribution (i.e. set of files and folders) 
+Internally, Groundhog only analyzes SketchUp surfaces ([faces](http://www.sketchup.com/intl/en/developer/docs/ourdoc/face.php)),
+and [Groups](http://www.sketchup.com/intl/en/developer/docs/ourdoc/group#definition) and [Components](http://www.sketchup.com/intl/en/developer/docs/ourdoc/componentdefinition),
+and only exports Radiance polygons (which will not only be triangles, but more complex
+polygons as well). Groundhog always exports in one distribution (i.e. set of files and folders)
 making a difference between Windows, Workplanes, Illums and other kinds of surfaces. This distribution
-is the one I use, and keeping it constant helps creating scripts for accelerating Daylight analysis, 
+is the one I use, and keeping it constant helps creating scripts for accelerating Daylight analysis,
 and avoiding errors.
 
-The following section explains what are and how Groundhog identifies different kinds of 
+The following section explains what are and how Groundhog identifies different kinds of
 surfaces in the scene, and how the two different exporting options deal with such components.
 
 ##Different kinds of surfaces: Labels
 As was explained earlier, Groundhog will only export SketchUp's faces (including those within components and groups).
-Such faces may be of different classes, such as illum, window, workplane and "the rest".  
+Such faces may be of different classes, such as illum, window, workplane and "the rest".
 
-In order to be light, fast and easy to use, Groundhog "Labels" the different polygons in the 
+In order to be light, fast and easy to use, Groundhog "Labels" the different polygons in the
 scene by using SketchUp's [set_attribute](http://www.sketchup.com/intl/en/developer/docs/ourdoc/entity.php#set_attribute)
 and [get_attribute](http://www.sketchup.com/intl/en/developer/docs/ourdoc/entity.php#get_attribute)
- API methods. This allows the used to delete, move, create and split workplanes, illums and windows with the tools provided by SketchUp. 
-For example, if a workplane has been define within the model, dividing it (by drawing a line within it) or copying and pasting it
-will result in the existence of two workplanes. In the same way, deleting it will make the workplane desapear without the need
+ API methods. This allows the user to delete, move, create and split workplanes, illums and windows with the tools provided by SketchUp.
+For example, if a workplane has been defined within the model, dividing it (by drawing a line within it) or copying and pasting it
+will result in the existence of two workplanes. In the same way, deleting it will make the workplane disappear without the need
 of going through complex internal data structures.
-

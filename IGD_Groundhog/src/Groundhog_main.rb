@@ -30,6 +30,7 @@ module IGD
 		require 'json'
 		require 'Open3'
 		require 'fileutils'
+		require 'open-uri'
 
 
 
@@ -171,15 +172,7 @@ module IGD
 			groundhog_menu.add_item("Simulation Wizard"){
 				Rad.show_sim_wizard
 			}
-=begin
-			### TOOLS SUBMENU
 
-			gh_tools_menu=groundhog_menu.add_submenu("Tools")
-
-				gh_tools_menu.add_item("Simulation Wizard"){
-					Rad.show_sim_wizard
-				}
-=end
 
 			### INSERT SUBMENU
 
@@ -193,6 +186,9 @@ module IGD
 					Loader.load_illuminance_sensor
 				}
 
+				gh_insert_menu.add_item("Products from Arqhub"){
+					Loader.open_arqhub
+				}
 
 			### RESULTS SUBMENU
 

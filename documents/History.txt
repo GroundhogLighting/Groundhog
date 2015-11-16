@@ -9,6 +9,7 @@ This just intends to show a little bit of how Groundhog has been developed.
 ## Groundhog 0.8
 - Add-on environment is initiated (0.7.1)
 - Bug fixing and enhancements (0.7.2)
+- Started the integration of Support Files. Now you can insert an Irradiance sensor.
 
 
 ## Groundhog 0.7

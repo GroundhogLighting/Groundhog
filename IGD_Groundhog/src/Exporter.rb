@@ -664,26 +664,30 @@ module IGD
 
 				return true if defi.length == 0 #dont do anything if there are no components
 
-				first_exported=true
+				#first_exported=true
 
 				defi.each do |h|
+					#skip the followin
 					next if h.image?
 					next if Labeler.solved_workplane?(h)
 					next if Labeler.illuminance_sensor?(h)
 
-					if first_exported then #create directories if there is actually something to export
+					#if first_exported then #create directories if there is actually something to export
 						OS.mkdir("#{comp_path}")
-						first_exported=false
-					end
+					#	first_exported=false
+					#end
 
 					hName=Utilities.fix_name(h.name)
 					entities=h.entities
-#					faces=Utilities.get_all_layer_faces(entities,[])
 					faces=Utilities.get_faces(entities)
-
 					instances=Utilities.get_component_instances(entities)
 
 					geom_string=""
+
+					#if Labeler.luminaire? (h) then
+					#	geom_string += self.add_illum_to_luminaire(h)
+					#end
+
 					instances.each do |inst| #include the nested components
 						geom_string=geom_string+self.get_component_string(" ./",inst,Utilities.fix_name(inst.definition.name.tr(" ","_").tr("#","_")))
 					end

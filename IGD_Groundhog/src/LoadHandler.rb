@@ -29,7 +29,50 @@ module IGD
 
 		module Loader
 
+			# Open the Arqhub API gui
+			# @author German Molina
+			# @version 0.1
+			def self.open_arqhub
+				wd=UI::WebDialog.new(
+					"Archive", false, "",
+					400, 600, 100, 100, false)
+				wd.set_file("#{OS.main_groundhog_path}/src/html/arqhub.html" )
+				wd.show
 
+				wd.add_action_callback("get_model") do |web_dialog,msg|
+					product = JSON.parse(msg)
+					self.load_from_arqhub(product)
+				end
+			end
+
+			#Loads a product from the Arqhub database
+			# @author German Molina
+			# @version 0.1
+			# @param product [String] a JSON object that contains information about the product, which is used to download and import files.
+			# @return [Boolean] Success
+			def self.load_from_arqhub(product)
+				domain = "http://localhost:8080"
+				ies_destination = "/Users/German/Desktop"
+
+				component = self.load_component("#{domain}/api/products/#{product["_id"]}.skp")
+				return false if not component
+				component.name = "#{product["brand"]} - #{product["name"]}"
+
+				File.open("#{ies_destination}/test.ies", "wb") do |saved_file|
+				  open("#{domain}/api/products/#{product["_id"]}.ies", "rb") do |read_file|
+				    saved_file.write(read_file.read)
+				  end
+				end
+
+				return true
+
+			end
+
+			# Loads a component from a url
+			# @author German Molina
+			# @version 0.1
+			# @param url [String] The url where the component is
+			# @return [Boolean] Sketchup::ComponentDefinition is success, false if not
 			def self.load_component(url)
 				loader=LoadHandler.new
 				Sketchup.active_model.definitions.load_from_url(url,loader)
@@ -41,11 +84,20 @@ module IGD
 				 end
 			end
 
+			# Imports a model from a local url, in the Groundhog path.
+			# @author German Molina
+			# @version 0.1
+			# @param name [String] name of the SKP file
+			# @return [Boolean] Sketchup::ComponentDefinition is success, false if not
 			def self.load_local_component(name)
 				url = "file:#{OS.support_files_groundhog_path}/#{name}.skp"
 				return self.load_component(url)
 			end
 
+			# Loads the Illuminance Sensor component to the model
+			# @author German Molina
+			# @version 0.1			
+			# @return [Boolean] Sketchup::ComponentDefinition is success, false if not
 			def self.load_illuminance_sensor
 				sensors = Sketchup.active_model.definitions.select {|x| Labeler.illuminance_sensor?(x) }
 
