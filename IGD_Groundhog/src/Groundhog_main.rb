@@ -26,6 +26,9 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Rad'
 		Sketchup::require 'IGD_Groundhog/src/LoadHandler'
 		Sketchup::require 'IGD_Groundhog/src/Addons'
+		Sketchup::require 'IGD_Groundhog/src/Color'
+		Sketchup::require 'IGD_Groundhog/src/Luminaires'
+
 
 		require 'json'
 		require 'Open3'
@@ -52,6 +55,8 @@ module IGD
 		UI.add_context_menu_handler do |context_menu|
 		   faces=Utilities.get_faces(Sketchup.active_model.selection)
 		   namables = Utilities.get_namables(Sketchup.active_model.selection)
+		   components = Utilities.get_components(Sketchup.active_model.selection)
+
 		   if namables.length >= 1 then
 			   context_menu.add_item("Assign Name") {
 					begin
@@ -68,10 +73,23 @@ module IGD
 			   }
 	   		end
 
+			if components.length == 1 then
+				context_menu.add_item("Label as luminaire") {
+					begin
+						op_name = "Link IES file"
+						model.start_operation(op_name,true)
+						comp = components[0].definition
+
+						Labeler.to_local_luminaire(comp)
+						model.commit_operation
+					rescue => e
+						model.abort_operation
+						OS.failed_operation_message(op_name)
+					end
+			   }
+			end
+
 			if faces.length>=1 then
-				#context_menu.add_item("Make Window") {
-				#	MkWindow.make_window(faces)
-				#}
 				context_menu.add_item("Label as Illum") {
 					begin
 						op_name = "Label as illum"
@@ -169,6 +187,22 @@ module IGD
 		extensions_menu = UI.menu "Plugins"
 		groundhog_menu=extensions_menu.add_submenu("Groundhog")
 
+
+			### EXPORT
+			groundhog_menu.add_item("Export to Radiance") {
+
+				path=Exporter.getpath #it returns false if not successful
+				path="" if not path
+
+				path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
+
+				if path_to_save then
+					OS.mkdir(path_to_save)
+					Exporter.export(path_to_save)
+				end
+			}
+
+			
 			groundhog_menu.add_item("Simulation Wizard"){
 				Rad.show_sim_wizard
 			}
@@ -225,22 +259,6 @@ module IGD
 					Utilities.hide_show_specific("solved_workplane")
 				}
 
-
-
-
-			### EXPORT
-			groundhog_menu.add_item("Export to Radiance") {
-
-				path=Exporter.getpath #it returns false if not successful
-				path="" if not path
-
-				path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
-
-				if path_to_save then
-					OS.mkdir(path_to_save)
-					Exporter.export(path_to_save)
-				end
-			}
 
 
 

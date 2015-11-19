@@ -168,23 +168,27 @@
   </div>
 </div>
 <div class="tags">
-  
-<p class="tag_title">Author:</p>
-<ul class="author">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
     <li>
       
+        <span class='name'>addons</span>
+      
+      
+        <span class='type'>(<tt>&lt;String&gt;</tt>)</span>
       
       
       
-        
+        &mdash;
         <div class='inline'>
-<p>German Molina</p>
+<p>A list with the names of the active addons (if I remember correctly)</p>
 </div>
       
     </li>
   
 </ul>
+
 
 </div><table class="source_code">
   <tr>
@@ -192,7 +196,6 @@
       <pre class="lines">
 
 
-8
 9
 10
 11
@@ -202,10 +205,11 @@
 15
 16
 17
-18</pre>
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Addons.rb', line 8</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Addons.rb', line 9</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_addons'>load_addons</span><span class='lparen'>(</span><span class='id identifier rubyid_addons'>addons</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_available'>available</span><span class='op'>=</span> <span class='const'>Dir</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_addons_groundhog_path'>addons_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/*.rb</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -263,7 +267,6 @@
       <pre class="lines">
 
 
-22
 23
 24
 25
@@ -377,10 +380,11 @@
 133
 134
 135
-136</pre>
+136
+137</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Addons.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Addons.rb', line 23</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_show_addons_manager'>show_addons_manager</span>
     <span class='id identifier rubyid_wd'>wd</span><span class='op'>=</span><span class='const'>UI</span><span class='op'>::</span><span class='const'>WebDialog</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
@@ -430,7 +434,7 @@
 
             <span class='id identifier rubyid_str'>str</span><span class='op'>+=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>active.appendChild(opt);</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_active'>active</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_addon'>addon</span>
             <span class='id identifier rubyid_str'>str</span><span class='op'>+=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>inactive.appendChild(opt);</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_active'>active</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_addon'>addon</span>
-            
+
         <span class='kw'>end</span>
         <span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_str'>str</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
@@ -507,7 +511,7 @@
 </div>
 
     <div id="footer">
-  Generated on Thu Oct 29 14:03:23 2015 by
+  Generated on Thu Nov 19 14:10:31 2015 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
