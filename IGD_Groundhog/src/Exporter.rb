@@ -800,8 +800,7 @@ module IGD
 					f.write("REPORT=2")
 
 					#then the pages
-					f.write("\n\n#VIEWS\n\n")
-					f.write("view=actual_view -vf Views/view.vf\n")
+					f.write("\n\n#VIEWS\n\n")					
 					pages.each do |page|
 						f.write("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
 					end

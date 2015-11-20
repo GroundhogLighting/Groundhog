@@ -101,6 +101,8 @@ module IGD
 
                 ret = []
 
+                ret << "### BEGINNING OF IES2RAD OUTPUT\n\n"
+
                 name = Utilities.fix_name(definition.name)
 
                 #abort if file is not found
@@ -129,7 +131,7 @@ module IGD
                 #WE STILL DO NOT SUPPORT TILT
                 tilt = text.shift.split("=")[1]
                 if tilt != "NONE" then
-                    warn "\n\nBIG WARNING: tilt is not yet supported... Your luminaire has TILT=#{tilt}\n\n"
+                    UI.messagebox "\n\n SORRY: TILT is not yet supported... Your luminaire has TILT=#{tilt}\n\n"
                     return false
 
                     ### SKIP ALL THIS... WILL INCLUDE PROCESSING SOON
@@ -259,6 +261,7 @@ module IGD
                     ret << "!genbox #{name}_light #{name} #{illum["xdim"]} #{illum["ydim"]} #{illum["zdim"]} | xform -t #{t[0]} #{t[1]} #{t[2]}"
                 end
 
+                ret << "### END OF IES2RAD OUTPUT\n\n"
 
                 return ret.join("\n")
             end
