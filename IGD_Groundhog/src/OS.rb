@@ -147,6 +147,7 @@ module IGD
 			# @return [Boolean] success
 			def self.execute_script(script)
 				return false if not script
+				
 				script.each  do |cmd|
 					return false if not self.run_command(cmd)
 				end

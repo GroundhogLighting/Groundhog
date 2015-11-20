@@ -17,6 +17,10 @@
 					<li>
 						<a href="#radiance">Radiance</a>
 					</li>
+					<li>
+						<a href="#luminaires">Luminaires</a>
+					</li>
+
 
 				</ul>
 
@@ -36,10 +40,10 @@
 					<table>
 					  <tr>
 						<td>Sensor spacing (m)</td>
-						<td><input type="text" size="5" id="sensor_spacing" value='0.5'></td>
+						<td><input type="text" size="5" id="sensor_spacing"></td>
 					  </tr>
 					</table>
-					<p align="center"> <button onclick='set_general_preferences()'> Save general preferences </button></p>
+					<!--p align="center"> <button onclick='set_general_preferences()'> Save general preferences </button></p-->
 				</div>
 
 
@@ -62,11 +66,17 @@
 
 					  <tr>
 						<td>Radiance path</td>
-						<td><input type="text" size="42" id="rad_path"></td>
+						<td><input type="text" size="42" id="radiance_path">
+							<div class='option_info'>
+								?<div class="tooltip">
+									<p>Should be as follows: 'C:/Program Files (x86)/Radiance/bin'. That is, with "/" instead of "\", and without adding any program name (i.e. rad.exe). </p>
+								</div>
+							</div>
+						</td>
 					  </tr>
 					  <tr>
 						<td>Weather path</td>
-						<td><p id='weather_path_input' style='color: gray; cursor: pointer;' onclick='set_weather_path()'>c:/</p></td>
+						<td><input type = "text" id='weather_path' onclick='window.location.href = "skp:set_weather_path@msg"'></td>
 					</tr>
 					  <tr>
 						<td>Rvu options</td>
@@ -80,8 +90,43 @@
 						<td>Rtrace options</td>
 						<td><input type="text" size="42" id="rtrace"></td>
 					  </tr>
+
 					</table>
-					<p align="center"> <button onclick='set_radiance_preferences()'> Save Radiance preferences </button></p>
+
+					<!--p align="center"> <button onclick='set_radiance_preferences()'> Save Radiance preferences </button></p-->
+				</div>
+
+
+
+				<div id="luminaires" class="tabContent hide">
+					<h2>Luminaire Preferences</h2>
+					<p>Please set up how luminaires are exported.</p>
+					<!--div class="more_info">
+						More info
+						<div class="tooltip">
+							<p>Rvu is the programs that allows previewing.</p>
+							<p>Rfluxmtx is used for annual simulations.</p>
+							<p>Rtrace is used for 'Daylight Factor' and 'Actual Illuminance' calculations.</p>
+						</div>
+					</div-->
+					<br>
+					<table>
+
+
+					  <tr>
+						<td>Aspect ratio threshold</td>
+						<td><input type="number" min="1" step="0.1" size="42" id="luminaire_shape_threshold">
+							<div class='option_info'>
+								?<div class="tooltip">
+									<p>This value will decide weather the illum surrounding a luminaire will be a box or a sphere. </p>
+								</div>
+							</div>
+						</td>
+					  </tr>
+
+
+					</table>
+					<!--p align="center"> <button onclick='set_luminaire_preferences()'> Save Luminaire preferences </button></p-->
 				</div>
 
 
@@ -91,5 +136,7 @@
 	</body>
 
 	 <script src="js/tabs.js"></script>
-	 <script src="js/preferences.js"></script>
+	 <script>
+	 	window.location.href = 'skp:onLoad@message';
+	 </script>
 </html>

@@ -7,6 +7,32 @@ module IGD
 		module Utilities
 
 
+			# returns a piece of javascript script (String) that would set the value of
+			#  a certain element in the html in the WebDialog.
+			#  The names of the fields are the UPPERCASE id.
+			#  If there is no hash['ID'] value, or it is empty, the default value will be used.
+			#
+			# @author German Molina
+			# @return [String] the piece of javascript code
+			# @param id [String] the id of the element in the webdialog to set the value
+			# @param hash [Hash] the hash where the values are stored.
+			# @param default [value] the default value used
+			# @version 0.1
+			def self.set_element_value(id, hash, default)
+				value = hash[id.upcase]
+
+				if value == "" or value == nil then
+					#use default if not nil
+					if default == nil then
+						return " "
+					else
+						value = default
+					end
+				end
+
+				return "document.getElementById('#{id}').value='#{value}';"
+			end
+
 			# Fix the name, eliminating complex symbols
 			# @author German Molina
 			# @param name [String] The name to fix

@@ -173,7 +173,7 @@ module IGD
 					return false if not self.export_modifiers(path,mod_list)
 					return false if not self.export_views(path)
 					return false if not self.write_scene_file(path)
-					return false if not self.export_component_definitions(path)					
+					return false if not self.export_component_definitions(path)
 					return false if not self.write_illuminance_sensors(path)
 
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
@@ -662,7 +662,7 @@ module IGD
 			# Export the ComponentDefinitions into separate files into "Components" folder.
 			# Each file is autocontained, although some materials might be repeated in the "materials.mat" file.
 			# @author German Molina
-			# @version 0.4
+			# @version 0.5
 			# @param path [String] Directory to export the model (scene file)
 			# @return [Boolean] Success
 			def self.export_component_definitions(path)
@@ -670,16 +670,13 @@ module IGD
 				comp_path="#{path}/Components"
 
 				return true if defi.length == 0 #dont do anything if there are no components
-
+				OS.mkdir("#{comp_path}")
 
 				defi.each do |h|
-					#skip the followin
+					#skip the following
 					next if h.image?
 					next if Labeler.solved_workplane?(h)
 					next if Labeler.illuminance_sensor?(h)
-
-
-					OS.mkdir("#{comp_path}")
 
 					hName=Utilities.fix_name(h.name)
 					entities=h.entities

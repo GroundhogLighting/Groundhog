@@ -242,6 +242,7 @@ module IGD
 					end
 
 					Labeler.to_solved_workplane(group)
+					Labeler.to_solved_workplane(group.definition)
 					Labeler.set_workplane_value(group,min,max)
 					group.casts_shadows=false
 					model.commit_operation

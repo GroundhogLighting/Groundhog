@@ -83,7 +83,7 @@ module IGD
 
                 aspect = size.max/size.min
 
-                if aspect <= threshold then
+                if aspect <= Config.luminaire_shape_threshold then
                     ret["shape"] = "sphere"
                     ret["radius"] = bounds.diagonal.to_m*0.5
                 else #box

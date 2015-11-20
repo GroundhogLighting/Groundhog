@@ -68,7 +68,7 @@ module IGD
 
 					#if it is nil or (not epw and not wea)
 					if not file or (file.split(".").pop!='wea' and file.split(".").pop != 'epw') then
-						file = Config.ask_for_weather_file(true)
+						file = Config.ask_for_weather_file
 						return false if not file
 					end
 
@@ -159,18 +159,20 @@ module IGD
 						return false
 					end
 
-					File.open("Skies/sky.rad",'w+'){ |f| #The file is opened
-						info=Sketchup.active_model.shadow_info
-						sun=info["SunDirection"]
-						floor=Geom::Vector3d.new(sun.x, sun.y, 0)
-						alt=sun.angle_between(floor).radians
-						azi=floor.angle_between(Geom::Vector3d.new(0,-1,0)).radians
-						azi=-azi if sun.x>0
 
-						f.write("!gensky -ang #{alt} #{azi} #{options["sky"]} -g #{options["ground_rho"]}\n\n")
-						f.write(Exporter.sky_complement)
+					info=Sketchup.active_model.shadow_info
+					sun=info["SunDirection"]
+					floor=Geom::Vector3d.new(sun.x, sun.y, 0)
+					alt=sun.angle_between(floor).radians
+					azi=floor.angle_between(Geom::Vector3d.new(0,-1,0)).radians
+					azi=-azi if sun.x>0
+					if alt >= 3 then
+						File.open("Skies/sky.rad",'w+'){ |f| #The file is opened
+							f.write("!gensky -ang #{alt} #{azi} #{options["sky"]} -g #{options["ground_rho"]}\n\n")
+							f.write(Exporter.sky_complement)
+						}
+					end
 
-					}
 
 
 					#oconv
