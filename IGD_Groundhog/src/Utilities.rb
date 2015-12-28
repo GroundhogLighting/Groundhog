@@ -45,10 +45,8 @@ module IGD
 			# Ask the user for a name
 			# @author German Molina
 			# @return [String] The asigned name
-			def self.get_name
-				prompts = ["Name\n"] #get the name
-				defaults = [""]
-				name = UI.inputbox prompts, defaults, "Assign a name"
+			def self.get_name				
+				name = UI.inputbox ["Name\n"], [""], "Assign a name"
 				return false if not name
 				return name[0]
 			end
