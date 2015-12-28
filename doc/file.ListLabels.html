@@ -87,7 +87,7 @@ identification, Groundhog can internally tell (from its Label) if a surface
 is a window or not,
 and export it separatly.</p>
 
-<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_window?'>window?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span> <span class='kw'>then</span>
+<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_window?'>window?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span> <span class='kw'>then</span>
 	<span class='comment'>#face is a window
 </span><span class='kw'>else</span>
 	<span class='comment'>#face is not a window
@@ -109,7 +109,7 @@ and <a
 href="http://www.radiance-online.org/learning/documentation/manual-pages/pdfs/rtrace.pdf">RTRACE</a>
 programs.</p>
 
-<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_workplane?'>workplane?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span> <span class='kw'>then</span>
+<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_workplane?'>workplane?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span> <span class='kw'>then</span>
 	<span class='comment'>#face is a workplane
 </span><span class='kw'>else</span>
 	<span class='comment'>#face is not a workplane
@@ -150,7 +150,7 @@ invisible, and are supposed to be used for creating illums by running
 mkIllum program in order to create
 the actual illum.</p>
 
-<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_illum?'>illum?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span> <span class='kw'>then</span>
+<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_illum?'>illum?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span> <span class='kw'>then</span>
 	<span class='comment'>#illum is a workplane
 </span><span class='kw'>else</span>
 	<span class='comment'>#illum is not a workplane
@@ -170,7 +170,7 @@ such way that they create a heatmap.
 Each of such pixels is labeled as a
 &quot;result_pixel&quot;.</p>
 
-<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_result_pixel?'>result_pixel?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span> <span class='kw'>then</span>
+<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_result_pixel?'>result_pixel?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span> <span class='kw'>then</span>
 	<span class='comment'>#illum is a result_pixel
 </span><span class='kw'>else</span>
 	<span class='comment'>#illum is not a result_pixel
@@ -191,10 +191,21 @@ squares (result pixels) will be packed in a group.
 Such group will be
 labeled as a Solved Workplane</p>
 
-<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_solved_workplane?'>solved_workplane?</span><span class='lparen'>(</span><span class='id identifier rubyid_component_definition'>component_definition</span><span class='rparen'>)</span> <span class='kw'>then</span>
+<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_solved_workplane?'>solved_workplane?</span><span class='lparen'>(</span><span class='id identifier rubyid_component_definition'>component_definition</span><span class='rparen'>)</span> <span class='kw'>then</span>
 	<span class='comment'>#component_definition is a solved_workplane
 </span><span class='kw'>else</span>
 	<span class='comment'>#component_definition is not a solved_workplane
+</span><span class='kw'>end</span></code></pre>
+
+<h3 id="label-Local+luminaire">Local luminaire</h3>
+
+<p>A component may labeled as Local luminaire, which means that such component
+has been linked with an IES file that is within the computer.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_local_luminaire?'>local_luminaire?</span><span class='lparen'>(</span><span class='id identifier rubyid_component_definition'>component_definition</span><span class='rparen'>)</span> <span class='kw'>then</span>
+	<span class='comment'>#component_definition is a local_luminaire
+</span><span class='kw'>else</span>
+	<span class='comment'>#component_definition is not a local_luminaire
 </span><span class='kw'>end</span></code></pre>
 
 <h2 id="label-Material+Labels">Material Labels</h2>
@@ -206,7 +217,7 @@ definition (i.e. primitive, modifier and arguments)
 stored their
 &quot;value&quot;</p>
 
-<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_local_material?'>local_material?</span><span class='lparen'>(</span><span class='id identifier rubyid_material'>material</span><span class='rparen'>)</span> <span class='kw'>then</span>
+<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_local_material?'>local_material?</span><span class='lparen'>(</span><span class='id identifier rubyid_material'>material</span><span class='rparen'>)</span> <span class='kw'>then</span>
 	<span class='comment'>#material is a local_material
 </span><span class='kw'>else</span>
 	<span class='comment'>#material is not a local_material
@@ -215,9 +226,13 @@ stored their
 
     <div id="footer">
 <<<<<<< HEAD
+<<<<<<< HEAD
   Generated on Thu Oct 29 13:59:57 2015 by
 =======
   Generated on Thu Oct 29 14:03:22 2015 by
+>>>>>>> Supporting-files
+=======
+  Generated on Fri Nov 20 09:19:36 2015 by
 >>>>>>> Supporting-files
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).

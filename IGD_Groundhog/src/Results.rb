@@ -31,7 +31,7 @@ module IGD
 					if data.length==4 then #check the correct format
 						ret=ret+[[data[0].to_f.m, data[1].to_f.m, data[2].to_f.m, data[3].to_f]]
 					else
-						UI.messagebox("Incorrect results file format at line"+line_num.to_s)
+						UI.messagebox("Incorrect results file format at line "+line_num.to_s)
 						return false
 					end
 					line_num+=1
@@ -242,6 +242,7 @@ module IGD
 					end
 
 					Labeler.to_solved_workplane(group)
+					Labeler.to_solved_workplane(group.definition)
 					Labeler.set_workplane_value(group,min,max)
 					group.casts_shadows=false
 					model.commit_operation

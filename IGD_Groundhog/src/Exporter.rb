@@ -174,7 +174,6 @@ module IGD
 					return false if not self.export_views(path)
 					return false if not self.write_scene_file(path)
 					return false if not self.export_component_definitions(path)
-					return false if not self.write_sky(path)
 					return false if not self.write_illuminance_sensors(path)
 
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
@@ -546,7 +545,7 @@ module IGD
 
 					f.write("\n\n\n###### SKY \n\n")
 
-					f.write("!xform ./Skies/sky.rad")
+					f.write(self.write_sky(path))
 
 					f.write("\n\n\n###### GEOMETRY \n\n")
 
@@ -578,7 +577,7 @@ module IGD
 
 			# Writes the standard Clear Sky
 			# @author German Molina
-			# @version 0.9
+			# @version 1.0
 			# @param path [String] Directory to export the sky file
 			# @return [Boolean] Success
 			def self.write_sky(path)
@@ -593,13 +592,21 @@ module IGD
 				azi=floor.angle_between(Geom::Vector3d.new(0,-1,0)).radians
 				azi=-azi if sun.x>0
 
-				File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
-					f.write("\n\n\n###### DEFAULT SKY \n\n")
+				if alt >= 3.0 then
+					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
+						f.write("\n\n\n###### DEFAULT SKY \n\n")
 
-					f.write("!gensky -ang #{alt} #{azi} +s\n\n")
-					f.write(self.sky_complement)
-				}
-				return true
+
+							f.write("!gensky -ang #{alt} #{azi} +s\n\n")
+							f.write(self.sky_complement)
+
+					}
+
+					return "!xform ./Skies/sky.rad"
+				else
+					return "# night-time... No Sky"
+				end
+
 			end
 
 			# Writes the illuminance sensors
@@ -655,7 +662,7 @@ module IGD
 			# Export the ComponentDefinitions into separate files into "Components" folder.
 			# Each file is autocontained, although some materials might be repeated in the "materials.mat" file.
 			# @author German Molina
-			# @version 0.4
+			# @version 0.5
 			# @param path [String] Directory to export the model (scene file)
 			# @return [Boolean] Success
 			def self.export_component_definitions(path)
@@ -663,27 +670,25 @@ module IGD
 				comp_path="#{path}/Components"
 
 				return true if defi.length == 0 #dont do anything if there are no components
-
-				first_exported=true
+				OS.mkdir("#{comp_path}")
 
 				defi.each do |h|
+					#skip the following
 					next if h.image?
 					next if Labeler.solved_workplane?(h)
 					next if Labeler.illuminance_sensor?(h)
 
-					if first_exported then #create directories if there is actually something to export
-						OS.mkdir("#{comp_path}")
-						first_exported=false
-					end
-
 					hName=Utilities.fix_name(h.name)
 					entities=h.entities
-#					faces=Utilities.get_all_layer_faces(entities,[])
 					faces=Utilities.get_faces(entities)
-
 					instances=Utilities.get_component_instances(entities)
 
 					geom_string=""
+
+					if Labeler.local_luminaire? (h) then
+						geom_string += Lamps.ies2rad(Labeler.get_value(h),1.0,h, comp_path)
+					end
+
 					instances.each do |inst| #include the nested components
 						geom_string=geom_string+self.get_component_string(" ./",inst,Utilities.fix_name(inst.definition.name.tr(" ","_").tr("#","_")))
 					end
@@ -795,8 +800,7 @@ module IGD
 					f.write("REPORT=2")
 
 					#then the pages
-					f.write("\n\n#VIEWS\n\n")
-					f.write("view=actual_view -vf Views/view.vf\n")
+					f.write("\n\n#VIEWS\n\n")					
 					pages.each do |page|
 						f.write("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
 					end

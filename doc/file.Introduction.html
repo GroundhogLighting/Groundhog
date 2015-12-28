@@ -72,68 +72,30 @@ under
 the advice of Sergio Vera Ph.D and Waldo Bustamante Ph.D. The tesis
 was focused on performing integrated lighting and
 thermal simulations of
-spaces with complex fenestration systems using &lt;a href=&quot;<a
-href="http://www.radiance-online.org">Radiance</a">www.radiance-online.org">Radiance</a</a>&gt;
-and
-&lt;a href=&quot;<a
-href="http://apps1.eere.energy.gov/buildings/energyplus">apps1.eere.energy.gov/buildings/energyplus</a>/&quot;&gt;
-EnergyPlus&lt;/a&gt;. When starting that thesis, and when trying
-to learn
-Radiance, we found it hard to create geometry, add workplanes and assign
-materials, especially for big scenes. Also,
-since our intention was to
-perform these simulations for spaces with Complex Fenestration Systems
-(CFS), we wanted a “geometry
-generator” that could not only export all
-polygons, but also know what polygon was a window, which one as an “illum”
-and which
-one was a workplane, and export them in a distribution that was
-comfortable to work with later. Accordingly, Groundhog is focused
-on
-exporting models for implementing methods such as the &lt;a href=&quot;<a
-href="http://www.radiance-online.org/learning/tutorials/Tutorial-ThreePhaseMethod.pdf">www.radiance-online.org/learning/tutorials/Tutorial-ThreePhaseMethod.pdf</a>&quot;&gt;
-Three-phase&lt;/a&gt;
-and the &lt;a href=&quot;<a
-href="http://www.radiance-online.org/learning/tutorials/fivephasetutorialfiles/Tutorial-FivePhaseMethod_v2.pdf">www.radiance-online.org/learning/tutorials/fivephasetutorialfiles/Tutorial-FivePhaseMethod_v2.pdf</a>&quot;&gt;
-Five-phase&lt;/a&gt;
-methods. However, it also exports models for ray-tracing and rendering,
-allowing using your own materials
-from a library.</p>
+spaces with complex fenestration systems using <a
+href="http://www.radiance-online.org">Radiance</a>
+and <a
+href="http://apps1.eere.energy.gov/buildings/energyplus/">EnergyPlus</a>.
+When starting that thesis, and when trying
+to learn Radiance, we found it
+hard to create geometry, add workplanes and assign materials, especially
+for big scenes. Also,
+since our intention was to perform these simulations
+for spaces with Complex Fenestration Systems (CFS), we wanted a
+“geometry
+generator” that could not only export all polygons, but also know
+what polygon was a window, which one was an “illum” and which
+one was a
+workplane, and export them in a distribution that was comfortable to work
+with later. Accordingly, Groundhog is focused
+on exporting models for
+implementing methods such as the Daylight Coefficients, the <a
+href="http://www.radiance-online.org/learning/tutorials/Tutorial-ThreePhaseMethod.pdf">Three-phase</a>
 
-<p>That said, Groundhog intends to simplify scene creation and modeling. It,
-for now, allows:</p>
-<ul><li>
-<p>Working with thick walls.</p>
-</li><li>
-<p>Exporting complex polygons as one polygon (window openings are not a
-problem).</p>
-</li><li>
-<p>Assigning materials from a library of auto-contained Radiance Material
-files.</p>
-</li><li>
-<p>Materials not existing in the library will be “guessed” by defining a
-plastic material with no specularity or roughness, with the same color. If
-the material is semi-transparent, a colored glass material will be
-assigned.</p>
-</li><li>
-<p>Adding workplanes, which will be exported as a set of sensors that can be
-used by rcontrib and rtrace programs.</p>
-</li><li>
-<p>Adding Illums.</p>
-</li><li>
-<p>Grouping windows in order to make more efficient lighting simulations.</p>
-</li><li>
-<p>Exporting by layers, separating the windows from the rest of the geometry.</p>
-</li><li>
-<p>Export views from Scenes saved within SketchUp.</p>
-</li><li>
-<p>Every exported file comes with a CIE clear sky with the sun located
-according to the sun direction in the model.</p>
-</li><li>
-<p>Exporting Groups and Components in separated file.</p>
-</li><li>
-<p>Exporting a “RIF” file for rendering</p>
-</li></ul>
+and the <a
+href="http://www.radiance-online.org/learning/tutorials/fivephasetutorialfiles/Tutorial-FivePhaseMethod_v2.pdf">Five-phase</a>
+
+methods.</p>
 
 <p>On the other hand, Groundhog intends to use SketchUp capabilities as much
 as possible, like its material libraries, scenes (saved views),
@@ -154,9 +116,13 @@ to be an interesting name.</p>
 
     <div id="footer">
 <<<<<<< HEAD
+<<<<<<< HEAD
   Generated on Thu Oct 29 13:59:57 2015 by
 =======
   Generated on Thu Oct 29 14:03:22 2015 by
+>>>>>>> Supporting-files
+=======
+  Generated on Fri Nov 20 09:19:35 2015 by
 >>>>>>> Supporting-files
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).

@@ -72,10 +72,23 @@ will end in repeated names… that causes errors when exporting.</p>
 
 <h2 id="label-Simulation+problems">Simulation problems</h2>
 <ul><li>
-<p>Radiance multithreading does not seem to be working on OSX. I think that is
-a problem of compatibility between Radiance and OSX</p>
+<p>Radiance multithreading does not seem to be working on OSX Yosemite. That
+is a problem of compatibility between Radiance and OSX, and has nothing to
+do with Groundhog.</p>
 </li><li>
 <p>Radiance multithreading is not supported on Windows</p>
+</li><li>
+<p>Some windows users have had trouble assigning the Radiance path. I have
+been told that was solved as follows:</p>
+<ol><li>
+<p>Go to &#39;Control Panel&#39; &gt; &#39;System&#39; &gt; &#39;Advanced&#39;
+&gt; &#39;Environmental Variables&#39; and check if the Radiance PATH is
+correct. If not, fix it.</p>
+</li><li>
+<p>Then input the PATH in the Groundhog Preferences menu as follows:
+<strong>C:/Program Files (x86)/Radiance/bin</strong>, that is, with “/”
+(not “&quot;) and without adding any program name.</p>
+</li></ol>
 </li></ul>
 
 <h2 id="label-Creating+materials+problems">Creating materials problems</h2>
@@ -83,9 +96,13 @@ a problem of compatibility between Radiance and OSX</p>
 
     <div id="footer">
 <<<<<<< HEAD
+<<<<<<< HEAD
   Generated on Thu Oct 29 13:59:57 2015 by
 =======
   Generated on Thu Oct 29 14:03:22 2015 by
+>>>>>>> Supporting-files
+=======
+  Generated on Fri Nov 20 09:19:35 2015 by
 >>>>>>> Supporting-files
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).

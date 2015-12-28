@@ -7,6 +7,32 @@ module IGD
 		module Utilities
 
 
+			# returns a piece of javascript script (String) that would set the value of
+			#  a certain element in the html in the WebDialog.
+			#  The names of the fields are the UPPERCASE id.
+			#  If there is no hash['ID'] value, or it is empty, the default value will be used.
+			#
+			# @author German Molina
+			# @return [String] the piece of javascript code
+			# @param id [String] the id of the element in the webdialog to set the value
+			# @param hash [Hash] the hash where the values are stored.
+			# @param default [value] the default value used
+			# @version 0.1
+			def self.set_element_value(id, hash, default)
+				value = hash[id.upcase]
+
+				if value == "" or value == nil then
+					#use default if not nil
+					if default == nil then
+						return " "
+					else
+						value = default
+					end
+				end
+
+				return "document.getElementById('#{id}').value='#{value}';"
+			end
+
 			# Fix the name, eliminating complex symbols
 			# @author German Molina
 			# @param name [String] The name to fix
@@ -19,10 +45,8 @@ module IGD
 			# Ask the user for a name
 			# @author German Molina
 			# @return [String] The asigned name
-			def self.get_name
-				prompts = ["Name\n"] #get the name
-				defaults = [""]
-				name = UI.inputbox prompts, defaults, "Assign a name"
+			def self.get_name				
+				name = UI.inputbox ["Name\n"], [""], "Assign a name"
 				return false if not name
 				return name[0]
 			end
@@ -100,7 +124,7 @@ module IGD
 			def self.count_windows(entities)
 				return self.get_windows(entities).length
 			end
-
+=begin
 			# Reverse all the faces in an array
 			# @author German Molina
 			# @param entities [Array<entities>] Array of entities
@@ -114,7 +138,7 @@ module IGD
 					end
 				end
 			end
-
+=end
 
 			# Checks if all the windows within a set of entities have the same normal (point to the same direction).
 			# @author German Molina
@@ -294,6 +318,14 @@ module IGD
 			# @return [Array <SketchUp::Entities>] An array with the entities that can be named
 			def self.get_namables(entities)
 				return entities.select{|x| self.namable?(x)}
+			end
+
+			# Gets the entities in an array that are SketchUp::ComponentDefinition
+			# @author German Molina
+			# @param entities [Array<SketchUp::Entities>]
+			# @return [Array <SketchUp::Entities>] An array with the entities that are SketchUp::ComponentDefinition
+			def self.get_components(entities)
+				return entities.select{|x| x.is_a? Sketchup::ComponentInstance}
 			end
 
 			# Returns an array with the transformations that lead to the global position of the entity

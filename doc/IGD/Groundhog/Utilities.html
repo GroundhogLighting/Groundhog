@@ -237,6 +237,30 @@ delete all the entities with a certain label.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#get_components-class_method" title="get_components (class method)">+ (Array &lt;SketchUp::Entities&gt;) <strong>get_components</strong>(entities) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Gets the entities in an array that are SketchUp::ComponentDefinition.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#get_faces-class_method" title="get_faces (class method)">+ (Array&lt;Sketchup::Faces&gt;) <strong>get_faces</strong>(entities) </a>
     
 
@@ -566,30 +590,6 @@ of the entity.</p>
   
     <span class="summary_desc"><div class='inline'>
 <p>Checks if the face is planar.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#reverseFaces-class_method" title="reverseFaces (class method)">+ (Void) <strong>reverseFaces</strong>(entities) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Reverse all the faces in an array.</p>
 </div></span>
   
 </li>
@@ -1108,6 +1108,96 @@ of the entity.</p>
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="get_components-class_method">
+  
+    + (<tt>Array &lt;SketchUp::Entities&gt;</tt>) <strong>get_components</strong>(entities) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Gets the entities in an array that are SketchUp::ComponentDefinition</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>entities</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;SketchUp::Entities&gt;</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array &lt;SketchUp::Entities&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An array with the entities that are SketchUp::ComponentDefinition</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+303
+304
+305</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 303</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_components'>get_components</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
+	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>ComponentInstance</span><span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="get_faces-class_method">
   
     + (<tt>Array&lt;Sketchup::Faces&gt;</tt>) <strong>get_faces</strong>(entities) 
@@ -1288,23 +1378,23 @@ of the entity</p>
       <pre class="lines">
 
 
-306
-307
-308
-309
-310
-311
-312
-313
 314
 315
 316
 317
 318
-319</pre>
+319
+320
+321
+322
+323
+324
+325
+326
+327</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 306</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 314</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_global_transformations'>get_global_transformations</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_tr'>tr</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -2651,117 +2741,19 @@ Radiance as non-planars when building the octree.</p>
 </table>
 </div>
     
-      <div class="method_details ">
-  <h3 class="signature " id="reverseFaces-class_method">
-  
-    + (<tt>Void</tt>) <strong>reverseFaces</strong>(entities) 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Reverse all the faces in an array</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
-  
-    <li>
-      
-        <span class='name'>entities</span>
-      
-      
-        <span class='type'>(<tt>Array&lt;entities&gt;</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Array of entities</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>Void</tt>)</span>
-      
-      
-      
-    </li>
-  
-</ul>
-<p class="tag_title">Author:</p>
-<ul class="author">
-  
-    <li>
-      
-      
-      
-      
-        
-        <div class='inline'>
-<p>German Molina</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-108
-109
-110
-111
-112
-113
-114
-115
-116</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 108</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_reverseFaces'>reverseFaces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_faces'>faces</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_faces'>get_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
-
-	<span class='id identifier rubyid_faces'>faces</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='op'>|</span>
-		<span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_face?'>face?</span><span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span><span class='rparen'>)</span>
-			<span class='id identifier rubyid_k'>k</span><span class='period'>.</span><span class='id identifier rubyid_reverse!'>reverse!</span>
-		<span class='kw'>end</span>
-	<span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
   </div>
 
 </div>
 
     <div id="footer">
 <<<<<<< HEAD
+<<<<<<< HEAD
   Generated on Thu Oct 29 14:00:00 2015 by
 =======
   Generated on Thu Oct 29 14:03:24 2015 by
+>>>>>>> Supporting-files
+=======
+  Generated on Fri Nov 20 09:19:38 2015 by
 >>>>>>> Supporting-files
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).

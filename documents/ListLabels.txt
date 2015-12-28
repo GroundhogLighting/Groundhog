@@ -20,7 +20,7 @@ to achieve this identification, Groundhog can internally tell (from its Label) i
 and export it separatly.
 
 ```
-if GH_Labeler.window?(face) then
+if Labeler.window?(face) then
 	#face is a window
 else
 	#face is not a window
@@ -38,7 +38,7 @@ levels. Even though in a Groundhog-created SketchUp model the workplanes will be
 
 
 ```
-if GH_Labeler.workplane?(face) then
+if Labeler.workplane?(face) then
 	#face is a workplane
 else
 	#face is not a workplane
@@ -65,7 +65,7 @@ the actual illum.
 
 
 ```
-if GH_Labeler.illum?(face) then
+if Labeler.illum?(face) then
 	#illum is a workplane
 else
 	#illum is not a workplane
@@ -82,7 +82,7 @@ contains several rectangles that are colored in such way that they create a heat
 Each of such pixels is labeled as a "result_pixel".
 
 ```
-if GH_Labeler.result_pixel?(face) then
+if Labeler.result_pixel?(face) then
 	#illum is a result_pixel
 else
 	#illum is not a result_pixel
@@ -103,10 +103,23 @@ When results are imported back to SketchUp using Groundhog, a number of squares 
 Such group will be labeled as a Solved Workplane
 
 ```
-if GH_Labeler.solved_workplane?(component_definition) then
+if Labeler.solved_workplane?(component_definition) then
 	#component_definition is a solved_workplane
 else
 	#component_definition is not a solved_workplane
+end
+```
+
+
+###Local luminaire
+
+A component may labeled as Local luminaire, which means that such component has been linked with an IES file that is within the computer.
+
+```
+if Labeler.local_luminaire?(component_definition) then
+	#component_definition is a local_luminaire
+else
+	#component_definition is not a local_luminaire
 end
 ```
 
@@ -119,7 +132,7 @@ Local materials are SketchUp materials that contain their Radiance string defini
 stored their "value"
 
 ```
-if GH_Labeler.local_material?(material) then
+if Labeler.local_material?(material) then
 	#material is a local_material
 else
 	#material is not a local_material

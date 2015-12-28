@@ -116,6 +116,15 @@ module IGD
 				entity.get_attribute("Groundhog","Label")=="result_pixel"
 			end
 
+			# Checks if an entity is a local_luminaire
+			# @author German Molina
+			# @param entity [SketchUp::Entity] Entity to test.
+			# @return [Boolean]
+			def self.local_luminaire?(entity)
+				entity.get_attribute("Groundhog","Label")=="local_luminaire"
+			end
+
+
 			# Checks if an entity is a workplane
 			# @author German Molina
 			# @param entity [SketchUp::Entity] Entity to test.
@@ -250,7 +259,7 @@ module IGD
 
 			# Label selected entity as an Illuminance Sensor
 			# @author German Molina
-			# @param entity [Sketchup Face] The entity (Component Definition or Component Instance) to be labeled as illuminance_sensor
+			# @param face [Sketchup::Face] The face to be labeled as illuminance_sensor
 			# @return [Void]
 			def self.to_illuminance_sensor(face)
 				face.set_attribute("Groundhog","Label","illuminance_sensor")
@@ -262,6 +271,19 @@ module IGD
 			# @return [Void]
 			def self.to_solved_workplane(workplane)
 				workplane.set_attribute("Groundhog","Label","solved_workplane")
+			end
+
+			# Label selected face into as local_luminaire
+			# @author German Molina
+			# @param comp [SkecthUp::ComponentDefinition] A SketchUp component definition
+			# @return [Void]
+			def self.to_local_luminaire(comp)
+				UI.messagebox("Only components can be labeled as Local Luminaires") if not comp.is_a? Sketchup::ComponentDefinition
+				return if not comp.is_a? Sketchup::ComponentDefinition
+
+				comp.set_attribute("Groundhog","Label","local_luminaire")
+				lumfile = UI.openpanel("Choose an IES file", "c:/", "IES|*.ies||")
+				comp.set_attribute("Groundhog","Value",lumfile)
 			end
 
 			# Label selected material as local_material

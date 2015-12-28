@@ -19,6 +19,7 @@ h1 {
 }
 
 input{
+    width: 90%;
     margin-right: 10px;
 }
 
@@ -34,7 +35,7 @@ fieldset p{
 }
 
 fieldset input{
-    width: 60px;
+    width: 50px;
 }
 fieldset > label{
     display: inline-block;
@@ -50,7 +51,7 @@ fieldset > legend{
     font-weight: bold;
 }
 
-table td{
+td{    
     height: 15px;
 }
 

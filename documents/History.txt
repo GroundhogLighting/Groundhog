@@ -6,9 +6,15 @@
 
 This just intends to show a little bit of how Groundhog has been developed.
 
+## Groundhog 0.9
+- Integration of Artificial lighting
+- Integration of Arqhub products Started
+- Configuration is now automatically saved when closing the WebDialog.
+
 ## Groundhog 0.8
 - Add-on environment is initiated (0.7.1)
 - Bug fixing and enhancements (0.7.2)
+- Started the integration of Support Files. Now you can insert an Irradiance sensor.
 
 
 ## Groundhog 0.7
@@ -67,7 +73,7 @@ This just intends to show a little bit of how Groundhog has been developed.
 ## Groundhog 0.1
 
 - Project started as part of Germán Molina´s MSc. thesis, under the advice of Sergio Vera
-Ph.D and Waldo Bustamante, Ph.D, at the school of Engineering of Pontificia Universidad Catolica de Chile.
+Ph.D and Waldo Bustamante, Ph.D, at the school of Engineering of Pontificia Universidad Católica de Chile.
 - Exports into Radiance and 3phase method formats.
 - Calculations have to be done from a "Window Information File" and a "Simulation File", using perl scripts outside SketchUp.
 - Materials are not supported at all. The program exports a list of assigned modifiers, and they have to be filled by the user.
