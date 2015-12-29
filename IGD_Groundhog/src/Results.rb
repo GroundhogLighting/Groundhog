@@ -18,7 +18,7 @@ module IGD
 			# @param min [Float] The minimum acceptable illuminance
 			# @param max [Float] The maximum acceptable illuminance
 			# @return [Depends] An array with the values when succesful, "false" if not.
-			# @version 0.1
+			# @version 0.2
 			def self.annual_to_UDI(results_path, workplane_file, min, max, early, late)
 
 				return false if not File.exist?(results_path)
@@ -36,122 +36,32 @@ module IGD
 				timestep=8760.0/n_samples
 
 				ret=[]
-				sensors.each do |line|
-					line.strip!
-					sensor=line.split("\t")
-					ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
-				end
+				#sensors.each do |line|
+				#	line.strip!
+				#	sensor=line.split("\t")
+				#	ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
+				#end
 
 				#they alternate hour
-				ret.each do |sensor|
-					time=timestep/2.0
+				#ret.each do |sensor|
+				sensors.each do |sensor|
+					time=-timestep/2.0 #say, -0.5 is the time
 					ac=0.0
+					good = 0.0
 					for i in 1..n_samples
-						time+=timestep
+						time+=timestep # now it will be 0.5
 						ill=results.shift
 						next if (time%24.0) < early or (time%24.0) > late
 						ac+=1.0
 						next if ill > max
 						next if ill < min
-						sensor[3]+=100.0
+						good+=100.0
 					end
-					sensor[3]/=ac
+					ret.push([good/ac])
 				end
 
 				return ret
 			end
-
-			# Converts a very long file of annual results into a 2d array for
-			# plotting as a heatmap for plotting DA>
-			#
-			# It reads the workplane path for getting the position of each sensor.
-			#
-			# The positions are assumed to be in meters.
-			#
-			# @author German Molina
-			# @param results_path [String] the path to the results file
-			# @param workplane_file [String] the path to the workplane file
-			# @param min [Float] The minimum acceptable illuminance
-			# @return [Depends] An array with the values when succesful, "false" if not.
-			# @version 0.1
-			def self.annual_to_DA(results_path, workplane_file, min, early, late)
-
-				return false if not File.exist?(results_path)
-				return false if not File.exist?(workplane_file)
-
-				results=File.open(results_path).read.split("\n").collect!{|x| x.to_f}
-				n_results=results.length
-
-				sensors=File.open(workplane_file).read.split("\n")
-				n_sensors=sensors.length
-
-				n_samples = n_results/n_sensors
-				warn "Weather file does not seem to have 8760 hours!!" if n_samples != 8760
-
-				timestep=8760.0/n_samples
-
-				ret=[]
-				sensors.each do |line|
-					line.strip!
-					sensor=line.split("\t")
-					ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
-				end
-
-				#they alternate hour
-				ret.each do |sensor|
-					time=timestep/2.0
-					ac=0.0
-					for i in 1..n_samples
-						time+=timestep
-						ill=results.shift
-						next if (time%24.0) < early or (time%24.0) > late
-						ac+=1.0
-						next if ill < min
-						sensor[3]+=100.0
-					end
-					sensor[3]/=ac
-				end
-
-				return ret
-			end
-
-			# Calculates the u and v vectors for drawing the "pixels" in the solved workplanes.
-			#
-			# This method was thought to be used along with "results_to_array"
-			# and, accordingly, that array is the parameter it receives.
-			#
-			# This method assumes that the sensors have a certain order... that is, written
-			# as Groundhog writes them. First, all sensors in direction V, then
-			# shift one U to the side, and again all sensors in direction V.
-			#
-			# @author German Molina
-			# @param array [Array<Float>] a 2d array with 4 columns
-			# @return [Array<Geom::Vector3d>] an array of Geom::Vector3d objects
-			# @version 0.1
-			def self.get_UV(array)
-				#Start with the first two points
-				data0=array[0]
-				data=array[1]
-
-				#get V... easy. Two sequencial points
-				pt0=Geom::Point3d.new(data0[0],data0[1],data0[2])
-				pt=Geom::Point3d.new(data[0],data[1],data[2])
-				v=pt0.vector_to(pt)
-
-				u=v
-				i=2
-				#Now, for getting U, we need to check the moment when we shift one "U"
-				while u.parallel?(v) do
-					data=array[i]
-					pt=Geom::Point3d.new(data[0],data[1],data[2])
-					u=pt0.vector_to(pt)
-					i+=1
-				end
-
-
-				return [u,v]
-			end
-
 
 
 
@@ -215,7 +125,7 @@ module IGD
 					model.commit_operation
 				rescue => e
 					model.abort_operation
-					OS.failed_operation_message(op_name)			
+					OS.failed_operation_message(op_name)
 				end
 
 			end

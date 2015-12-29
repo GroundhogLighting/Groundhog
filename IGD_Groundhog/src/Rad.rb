@@ -16,11 +16,12 @@ module IGD
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						array=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["lower_threshold"], options["upper_threshold"], options["early"], options["late"])
-						return if not array #if the format was wrong, for example
+						values=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["lower_threshold"], options["upper_threshold"], options["early"], options["late"])
+						return if not values #if the format was wrong, for example
 
-						uv=Results.get_UV(array)
-						Results.draw_pixels(uv[0],uv[1],array,name)
+						pixels = Utilities.readTextFile("#{OS.tmp_groundhog_path}/Workplanes/#{name}.pxl",",",0)
+						#uv=Results.get_UV(array)
+						Results.draw_pixels(values,pixels,name)
 						min_max=Results.get_min_max_from_model
 						Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 					end
@@ -33,25 +34,9 @@ module IGD
 			# @param options [Hash] The options
 			# @return [Boolean] Success
 			def self.calc_DA(options)
-				path=OS.tmp_groundhog_path
-				FileUtils.cd(path) do
-					return false if not OS.ask_about_Radiance
-					return false if not OS.execute_script(self.calc_annual_illuminance(options))
-					wps=Dir["Workplanes/*.pts"]
-
-					wps.each do |workplane| #calculate UDI for each workplane
-						info=workplane.split("/")
-						name=info[1].split(".")[0]
-						array=Results.annual_to_DA("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["threshold"], options["early"], options["late"])
-						return if not array #if the format was wrong, for example
-
-						uv=Results.get_UV(array)
-						Results.draw_pixels(uv[0],uv[1],array,name)
-						min_max=Results.get_min_max_from_model
-						Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
-					end
-				end
-				return true
+				options["upper_threshold"] = 9e16
+				options["lower_threshold"] = options["threshold"]
+				return self.calc_UDI(options)
 			end
 
 
