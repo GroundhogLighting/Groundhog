@@ -11,7 +11,7 @@ module IGD
 				path=OS.tmp_groundhog_path
 				FileUtils.cd(path) do
 					return false if not OS.execute_script(self.calc_annual_illuminance(options))
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
@@ -37,7 +37,7 @@ module IGD
 				FileUtils.cd(path) do
 					return false if not OS.ask_about_Radiance
 					return false if not OS.execute_script(self.calc_annual_illuminance(options))
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
@@ -89,7 +89,7 @@ module IGD
 					end
 
 					#Simulate
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 
 					OS.mkdir("Results")
 					wps.each do |workplane|
@@ -133,7 +133,7 @@ module IGD
 					#build the script
 					script=[]
 
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
@@ -159,7 +159,7 @@ module IGD
 						return false
 					end
 
-
+					#sky can change from the wizard
 					info=Sketchup.active_model.shadow_info
 					sun=info["SunDirection"]
 					floor=Geom::Vector3d.new(sun.x, sun.y, 0)
@@ -173,22 +173,20 @@ module IGD
 						}
 					end
 
-
-
 					#oconv
 					winstring=Dir["Windows/*"].collect{|x| x.tr("\\","/").split("/")[-1]}.join(" ./Windows/")
 					winstring="./Windows/#{winstring}" if winstring.length > 0
 					winstring="" if winstring.length==0
 					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
 
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#for OSX
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results/#{name}.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)' >> Results/#{name}.txt" if OS.getsystem=="MAC"
 						#for Windows
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)\" > Results/#{name}.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)\" >> Results/#{name}.txt" if OS.getsystem=="WIN"
 					end
 
 				end
@@ -219,14 +217,14 @@ module IGD
 					winstring="" if winstring.length==0
 					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
 
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#for OSX
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100' > Results/#{name}.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)/100' >> Results/#{name}.txt" if OS.getsystem=="MAC"
 						#for Windows
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100\" > Results/#{name}.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)/100\" >> Results/#{name}.txt" if OS.getsystem=="WIN"
 					end
 
 				end
@@ -305,7 +303,7 @@ module IGD
 							OS.mkdir("Results")
 							OS.execute_script(self.daylight_factor)
 
-							wps=Dir["Workplanes/*"]
+							wps=Dir["Workplanes/*.pts"]
 							results=[]
 							wps.each do |workplane|
 								info=workplane.split("/")
@@ -316,7 +314,7 @@ module IGD
 							results.each do |res|
 								Results.import_results("Results/#{res}.txt")
 							end
-							OS.clear_actual_path
+							#OS.clear_actual_path
 
 						rescue
 							UI.messagebox "There was a problem when trying to calculate the Daylight Factor."
@@ -334,7 +332,7 @@ module IGD
 							Exporter.export(OS.tmp_groundhog_path)
 							OS.mkdir("Results")
 							OS.execute_script(self.actual_illuminance(options))
-							wps=Dir["Workplanes/*"]
+							wps=Dir["Workplanes/*.pts"]
 							results=[]
 							wps.each do |workplane|
 								info=workplane.split("/")

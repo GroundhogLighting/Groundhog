@@ -5,41 +5,6 @@ module IGD
 		module Results
 
 
-			# Converts sensor results into a 2D array
-			#
-			# It expects the grid be in format "Px Py Pz Value"
-			# where the first three terms are the position in space,
-			# and the 4th value is the actual value to be put in the grid.
-			#
-			# The positions are assumed to be in meters.
-			#
-			# @author German Molina
-			# @param results_path [String] the path to the results file
-			# @return [Depends] An array with the values when succesful, "false" if not.
-			# @version 0.2
-			def self.results_to_array(results_path)
-				if not File.exist?(results_path) then
-					UI.messagebox("Results file not found.")
-					return false
-				end
-
-				ret=[]
-				line_num=1
-				File.open(results_path, "r").each_line do |line|
-					line.strip!
-					data=line.split("\t")
-					if data.length==4 then #check the correct format
-						ret=ret+[[data[0].to_f.m, data[1].to_f.m, data[2].to_f.m, data[3].to_f]]
-					else
-						UI.messagebox("Incorrect results file format at line "+line_num.to_s)
-						return false
-					end
-					line_num+=1
-				end
-
-				return ret
-			end
-
 			# Converts a very long file of annual results into a 2d array for
 			# plotting as a heatmap of UDI.
 			#
@@ -198,14 +163,22 @@ module IGD
 			# all the sensors lie in the same plane point in the same direction.
 			#
 			# @author German Molina
-			# @param u [vector3d] U vector
-			# @param v [vector3d] V vector
-			# @param array [array] The array (2D, 4 columns) with the data to show.
+			# @param values [array] The array (2D but 1 columns) with the data to show.
+			# @param pixels [array] The array (2D, 9 columns) with the positions of the vertices of triangles (pixels).
 			# @param name [String] The name that will be given to the group that contains the pixels
 			# @return [Void]
-			# @version 0.2
-			def self.draw_pixels(u,v,array,name)
+			# @version 0.3
+			def self.draw_pixels(values,pixels,name)
 				model=Sketchup.active_model
+				if values.length != pixels.length then
+					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match")
+					return false
+				end
+				if values[0].length != 1 or pixels[0].length != 9 then
+					UI.messagebox("Incorrect format in 'pixels' or 'values' when drawing pixels")
+					return false
+				end
+
 				op_name="Draw pixels"
 				begin
 					model.start_operation(op_name,true)
@@ -215,30 +188,24 @@ module IGD
 
 					entities=group.entities
 
-
-					#we move half step to each side.
-					u.transform!(0.5)
-					v.transform!(0.5)
-
+					#get minimum and maximum
 					max=0
 					min=9999999999999
-					array.each do |data|
-						min=data[3] if min>data[3]
-						max=data[3] if max<data[3]
+					values.each do |data|
+						min=data[0].to_f if min>data[0].to_f
+						max=data[0].to_f if max<data[0].to_f
 					end
 
-					#draw every line. Each pixel is a quadrilateral.
-					array.each do |data|
-						pt=Geom::Point3d.new(data[0],data[1],data[2])
-						vertex1=pt.offset(v).offset(u)
-						vertex4=pt.offset(v.transform(-1)).offset(u)
-						vertex3=pt.offset(v.transform(-1)).offset(u.transform(-1))
-						vertex2=pt.offset(v).offset(u.transform(-1))
+					#draw every line. Each pixel is a triangle.
+					pixels.each do |data|
+						value = values.shift[0].to_f
+						vertex0=Geom::Point3d.new(data[0].to_f.m,data[1].to_f.m,data[2].to_f.m)
+						vertex1=Geom::Point3d.new(data[3].to_f.m,data[4].to_f.m,data[5].to_f.m)
+						vertex2=Geom::Point3d.new(data[6].to_f.m,data[7].to_f.m,data[8].to_f.m)
 
-						pixel=entities.add_face(vertex1,vertex2,vertex3,vertex4)
+						pixel=entities.add_face(vertex0,vertex1,vertex2)
 						Labeler.to_result_pixel(pixel)
-						Labeler.set_pixel_value(pixel,data[3])
-
+						Labeler.set_pixel_value(pixel,value)
 					end
 
 					Labeler.to_solved_workplane(group)
@@ -248,15 +215,7 @@ module IGD
 					model.commit_operation
 				rescue => e
 					model.abort_operation
-					OS.failed_operation_message(op_name)
-				#else
-				  #
-				  # Do code here ONLY if NO errors occur.
-				  #
-				#ensure
-				  #
-				  # ALWAYS do code here errors or not.
-				  #
+					OS.failed_operation_message(op_name)			
 				end
 
 			end
@@ -374,16 +333,22 @@ module IGD
 			# @author German Molina
 			# @param path [String]
 			# @return void
-			# @version 0.1
+			# @version 0.2
 			def self.import_results(path)
 
 				model=Sketchup.active_model
 				name=path.tr("\\","/").split("/").pop.split(".")[0]
-				array=self.results_to_array(path)
-				return if not array #if the format was wrong, for example
+				values = Utilities.readTextFile(path,",",1)
+				return if not values #if the format was wrong, for example
+				pixels_file=File.open(path, &:readline).delete("\n").strip
 
-				uv=self.get_UV(array)
-				self.draw_pixels(uv[0],uv[1],array,name)
+				if not File.exist?(pixels_file) then
+					UI.messagebox("Pixels file '#{pixels_file}' not found.")
+					return false
+				end
+				pixels = Utilities.readTextFile(pixels_file,",",0)
+
+				self.draw_pixels(values,pixels,name)
 				min_max=self.get_min_max_from_model
 				self.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 

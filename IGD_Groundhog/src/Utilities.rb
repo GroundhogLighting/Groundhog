@@ -7,6 +7,36 @@ module IGD
 		module Utilities
 
 
+
+
+			#  Loads a text file (CSV, TSV) into an array of strings.
+			#
+			# @author German Molina
+			# @return [<String>] Array of the items
+			# @param file [String] The file to read
+			# @param del [String] the Delimiter
+			# @param headers [Integer] the number of rows to skip
+			# @version 0.1
+			def self.readTextFile(file,del,headers)
+				if not File.exist?(file) then
+					UI.messagebox("File to read not found when trying to 'loadTextFile'.")
+					return false
+				end
+
+				file = File.open(file, "r").read.squeeze("\n").squeeze("\r\n").lines
+				headers.times do
+					file.shift
+				end
+
+				ret=[]
+				file.each do |line|
+					data = line.strip.split(del)
+					return ret if line == []
+					ret.push(data)
+				end
+				return ret
+			end
+
 			# returns a piece of javascript script (String) that would set the value of
 			#  a certain element in the html in the WebDialog.
 			#  The names of the fields are the UPPERCASE id.
@@ -45,7 +75,7 @@ module IGD
 			# Ask the user for a name
 			# @author German Molina
 			# @return [String] The asigned name
-			def self.get_name				
+			def self.get_name
 				name = UI.inputbox ["Name\n"], [""], "Assign a name"
 				return false if not name
 				return name[0]

@@ -16,6 +16,7 @@ module IGD
 
 		#################################
 
+		Sketchup::require 'IGD_Groundhog/src/Triangle'
 		Sketchup::require 'IGD_Groundhog/src/Utilities'
 		Sketchup::require 'IGD_Groundhog/src/Config'
 		Sketchup::require 'IGD_Groundhog/src/Labeler'
@@ -30,10 +31,11 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Luminaires'
 
 
+
 		require 'json'
 		require 'Open3'
 		require 'fileutils'
-		require 'open-uri'
+		#require 'open-uri'
 
 
 
@@ -74,7 +76,7 @@ module IGD
 	   		end
 
 			if components.length == 1 then
-				context_menu.add_item("Label as luminaire") {
+				context_menu.add_item("Label as Luminaire") {
 					begin
 						op_name = "Link IES file"
 						model.start_operation(op_name,true)
@@ -92,7 +94,7 @@ module IGD
 			if faces.length>=1 then
 				context_menu.add_item("Label as Illum") {
 					begin
-						op_name = "Label as illum"
+						op_name = "Label as Illum"
 						model.start_operation( op_name ,true)
 
 						Labeler.to_illum(faces)
@@ -105,9 +107,9 @@ module IGD
 			   }
 				horizontal=Utilities.get_horizontal_faces(faces)
 				if horizontal.length >=1 then
-				   context_menu.add_item("Label as workplane") {
+				   context_menu.add_item("Label as Workplane") {
 							begin
-								op_name = "Label as workplane"
+								op_name = "Label as Workplane"
 								model.start_operation( op_name,true )
 
 								Labeler.to_workplane(faces)
@@ -121,7 +123,7 @@ module IGD
 				end
 			   context_menu.add_item("Label as Window") {
 					begin
-						op_name = "Label as window"
+						op_name = "Label as Window"
 						model.start_operation( op_name ,true)
 
 						Labeler.to_window(faces)
@@ -135,7 +137,7 @@ module IGD
 
 				context_menu.add_item("Remove Labels") {
 					begin
-						op_name = "Remove labels"
+						op_name = "Remove Labels"
 						model.start_operation( op_name, true)
 
 						Labeler.to_nothing(faces)
@@ -202,7 +204,7 @@ module IGD
 				end
 			}
 
-			
+
 			groundhog_menu.add_item("Simulation Wizard"){
 				Rad.show_sim_wizard
 			}

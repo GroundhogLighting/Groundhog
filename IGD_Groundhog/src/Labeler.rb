@@ -37,9 +37,9 @@ module IGD
 			def self.get_name(entity)
 				name=entity.get_attribute("Groundhog","Name")
 				if name == nil then
-					entity.entityID.to_s
+					Utilities.fix_name(entity.entityID.to_s)
 				else
-					name
+					Utilities.fix_name(name)
 				end
 			end
 
@@ -327,12 +327,7 @@ module IGD
 				name = Utilities.get_name
 				return if not name
 				if faces.length>=1 then
-					faces.each do |i|
-						if i.vertices.count!=4 or i.loops.count!=1 then
-							#not rectangular faces are ignored, as well as those with holes (more than 1 loop)
-							not_sutable=true
-							next
-						end
+					faces.each do |i|						
 						correct=correct+[i]
 						i.set_attribute("Groundhog","Label","workplane")
 						i.material=[1.0,0.0,0.0]
