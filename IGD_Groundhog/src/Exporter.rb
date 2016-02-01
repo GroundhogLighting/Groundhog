@@ -408,15 +408,11 @@ module IGD
 			#
 			# The name of the file will be the name of the entity.
 			# @author German Molina
-			# @version 1.1
+			# @version 1.2
 			# @param path [String] Directory to export the Window Groups.
 			# @param entities [entities] Array of workplanes.
 			# @return [Boolean] Success
-			# @note This method assumes that it receives workplanes (which are horizontal surfaces). If there is a not-horizontal
-			#   surface in the array, sensors and spacing will make no sense.
-			# @todo Allow non-horizontal workplanes?
 			def self.write_workplanes(path,entities)
-
 
 				return true if entities.length<1 #we export this only if there is any workplane... success
 				d=Config.sensor_spacing
@@ -424,56 +420,31 @@ module IGD
 				d=d.m
 
 				OS.mkdir("#{path}/Workplanes")
+				OS.mkdir("#{path}/Results")
+				res_path = "#{path}/Results"
 				path="#{path}/Workplanes"
-
 
 				entities.each do |ent| #for all the entities (which are faces)
 					if Labeler.workplane?(ent) then #Only workplanes
-						name=Labeler.get_name(ent).tr(" ","_") #Get the name of the surface
-						pts=[] #Create an array with all the points
-
-						#get the basis system for moving around the plane seting sensors
-						vertices=ent.vertices
-						v=vertices[0].position.vector_to(vertices[3].position)
-						u=vertices[0].position.vector_to(vertices[1].position)
-
-						#store the length
-						normU=u.length
-						normV=v.length
-
-						#correct the spacing (to provide exact division of the plane)
-						qU=normU/d
-						qU=qU.round
-						dU=normU/qU
-
-						qV=normV/d
-						qV=qV.round
-						dV=normV/qV
-
-						#then, each step will be the same length
-						u.length=dU
-						v.length=dV
-
-						#place the first sensor
-						p0=vertices[0].position.offset!(u.transform(0.5)).offset!(v.transform(0.5))
-
-						for i in 0..qU-1
-							for j in 0..qV-1
-								pts=pts+[p0.offset(u.transform(i)).offset(v.transform(j))]
-							end
-						end
-
-
-						File.open("#{path}/#{name.tr(" ","_")}.pts",'w+'){ |f| #The file is opened
-							pts.each do |p| #and the sensors are written
-								x=p.x.to_m
-								y=p.y.to_m
-								z=p.z.to_m
-								f.write(x.to_s+"\t"+y.to_s+"\t"+z.to_s+"\t0\t0\t1\n")
-								#this will have to change for exporting non horizontal workplanes.
-							end
+						name=Labeler.get_name(ent) #Get the name of the surface
+						mesh = ent.mesh
+						points = mesh.points
+						polygons = mesh.polygons
+						triangles = Triangle.triangulate(points,polygons)
+						File.open("#{path}/#{name}.pxl",'w+'){ |pixels|
+							File.open("#{path}/#{name}.pts",'w+'){ |points|
+								#header in results file
+								File.open("#{res_path}/#{name}.txt",'w+'){ |res| res.puts "#{path}/#{name}.pxl" }
+								#now the triangles
+								triangles.each do |triangle|
+									pos = Triangle.get_center(triangle)
+									n = Triangle.get_normal(triangle)
+									pixels.puts "#{triangle[0].x.to_m},#{triangle[0].y.to_m},#{triangle[0].z.to_m},#{triangle[1].x.to_m},#{triangle[1].y.to_m},#{triangle[1].z.to_m},#{triangle[2].x.to_m},#{triangle[2].y.to_m},#{triangle[2].z.to_m}"
+									#points.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t#{n.x}\t#{n.y}\t#{n.z}"
+									points.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t0\t0\t1"
+								end
+							}
 						}
-
 					end
 				end
 
@@ -595,11 +566,8 @@ module IGD
 				if alt >= 3.0 then
 					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
 						f.write("\n\n\n###### DEFAULT SKY \n\n")
-
-
 							f.write("!gensky -ang #{alt} #{azi} +s\n\n")
 							f.write(self.sky_complement)
-
 					}
 
 					return "!xform ./Skies/sky.rad"
@@ -800,7 +768,7 @@ module IGD
 					f.write("REPORT=2")
 
 					#then the pages
-					f.write("\n\n#VIEWS\n\n")					
+					f.write("\n\n#VIEWS\n\n")
 					pages.each do |page|
 						f.write("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
 					end

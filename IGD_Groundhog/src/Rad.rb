@@ -11,16 +11,17 @@ module IGD
 				path=OS.tmp_groundhog_path
 				FileUtils.cd(path) do
 					return false if not OS.execute_script(self.calc_annual_illuminance(options))
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						array=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["lower_threshold"], options["upper_threshold"], options["early"], options["late"])
-						return if not array #if the format was wrong, for example
+						values=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["lower_threshold"], options["upper_threshold"], options["early"], options["late"])
+						return if not values #if the format was wrong, for example
 
-						uv=Results.get_UV(array)
-						Results.draw_pixels(uv[0],uv[1],array,name)
+						pixels = Utilities.readTextFile("#{OS.tmp_groundhog_path}/Workplanes/#{name}.pxl",",",0)
+						#uv=Results.get_UV(array)
+						Results.draw_pixels(values,pixels,name)
 						min_max=Results.get_min_max_from_model
 						Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 					end
@@ -33,25 +34,9 @@ module IGD
 			# @param options [Hash] The options
 			# @return [Boolean] Success
 			def self.calc_DA(options)
-				path=OS.tmp_groundhog_path
-				FileUtils.cd(path) do
-					return false if not OS.ask_about_Radiance
-					return false if not OS.execute_script(self.calc_annual_illuminance(options))
-					wps=Dir["Workplanes/*"]
-
-					wps.each do |workplane| #calculate UDI for each workplane
-						info=workplane.split("/")
-						name=info[1].split(".")[0]
-						array=Results.annual_to_DA("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["threshold"], options["early"], options["late"])
-						return if not array #if the format was wrong, for example
-
-						uv=Results.get_UV(array)
-						Results.draw_pixels(uv[0],uv[1],array,name)
-						min_max=Results.get_min_max_from_model
-						Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
-					end
-				end
-				return true
+				options["upper_threshold"] = 9e16
+				options["lower_threshold"] = options["threshold"]
+				return self.calc_UDI(options)
 			end
 
 
@@ -89,7 +74,7 @@ module IGD
 					end
 
 					#Simulate
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 
 					OS.mkdir("Results")
 					wps.each do |workplane|
@@ -133,7 +118,7 @@ module IGD
 					#build the script
 					script=[]
 
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
@@ -159,7 +144,7 @@ module IGD
 						return false
 					end
 
-
+					#sky can change from the wizard
 					info=Sketchup.active_model.shadow_info
 					sun=info["SunDirection"]
 					floor=Geom::Vector3d.new(sun.x, sun.y, 0)
@@ -173,22 +158,20 @@ module IGD
 						}
 					end
 
-
-
 					#oconv
 					winstring=Dir["Windows/*"].collect{|x| x.tr("\\","/").split("/")[-1]}.join(" ./Windows/")
 					winstring="./Windows/#{winstring}" if winstring.length > 0
 					winstring="" if winstring.length==0
 					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
 
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#for OSX
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results/#{name}.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)' >> Results/#{name}.txt" if OS.getsystem=="MAC"
 						#for Windows
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)\" > Results/#{name}.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)\" >> Results/#{name}.txt" if OS.getsystem=="WIN"
 					end
 
 				end
@@ -219,14 +202,14 @@ module IGD
 					winstring="" if winstring.length==0
 					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
 
-					wps=Dir["Workplanes/*"]
+					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#for OSX
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100' > Results/#{name}.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)/100' >> Results/#{name}.txt" if OS.getsystem=="MAC"
 						#for Windows
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)/100\" > Results/#{name}.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)/100\" >> Results/#{name}.txt" if OS.getsystem=="WIN"
 					end
 
 				end
@@ -305,7 +288,7 @@ module IGD
 							OS.mkdir("Results")
 							OS.execute_script(self.daylight_factor)
 
-							wps=Dir["Workplanes/*"]
+							wps=Dir["Workplanes/*.pts"]
 							results=[]
 							wps.each do |workplane|
 								info=workplane.split("/")
@@ -316,7 +299,7 @@ module IGD
 							results.each do |res|
 								Results.import_results("Results/#{res}.txt")
 							end
-							OS.clear_actual_path
+							#OS.clear_actual_path
 
 						rescue
 							UI.messagebox "There was a problem when trying to calculate the Daylight Factor."
@@ -334,7 +317,7 @@ module IGD
 							Exporter.export(OS.tmp_groundhog_path)
 							OS.mkdir("Results")
 							OS.execute_script(self.actual_illuminance(options))
-							wps=Dir["Workplanes/*"]
+							wps=Dir["Workplanes/*.pts"]
 							results=[]
 							wps.each do |workplane|
 								info=workplane.split("/")
