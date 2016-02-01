@@ -625,16 +625,16 @@ false</p>
       <pre class="lines">
 
 
-172
 173
 174
 175
 176
 177
-178</pre>
+178
+179</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 172</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 173</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ask_about_Radiance'>ask_about_Radiance</span>
 	<span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_Radiance_Path'>check_Radiance_Path</span><span class='lparen'>(</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_radiance_path'>radiance_path</span><span class='rparen'>)</span> <span class='comment'>#return true if it is installed
@@ -729,17 +729,17 @@ Radiance</p>
       <pre class="lines">
 
 
-160
 161
 162
 163
 164
 165
 166
-167</pre>
+167
+168</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 160</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 161</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_Radiance_Path'>check_Radiance_Path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_path'>path</span><span class='op'>==</span><span class='kw'>nil</span>
@@ -1082,13 +1082,15 @@ within SketchUp. The commands need to be strings.</p>
 151
 152
 153
-154</pre>
+154
+155</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 148</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_script'>script</span>
+	
 	<span class='id identifier rubyid_script'>script</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span>  <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_cmd'>cmd</span><span class='op'>|</span>
 		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_run_command'>run_command</span><span class='lparen'>(</span><span class='id identifier rubyid_cmd'>cmd</span><span class='rparen'>)</span>
 	<span class='kw'>end</span>
@@ -1515,14 +1517,14 @@ false</p>
       <pre class="lines">
 
 
-184
 185
 186
 187
-188</pre>
+188
+189</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 184</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 185</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_program'>program</span><span class='lparen'>(</span><span class='id identifier rubyid_program'>program</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_sys'>sys</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_getsystem'>getsystem</span>
@@ -1836,15 +1838,7 @@ analysis</p>
 </div>
 
     <div id="footer">
-<<<<<<< HEAD
-<<<<<<< HEAD
-  Generated on Thu Oct 29 13:59:59 2015 by
-=======
-  Generated on Thu Oct 29 14:03:24 2015 by
->>>>>>> Supporting-files
-=======
-  Generated on Fri Nov 20 09:19:38 2015 by
->>>>>>> Supporting-files
+  Generated on Mon Feb  1 11:05:37 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
