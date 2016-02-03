@@ -248,13 +248,25 @@ module IGD
 
 				model=Sketchup.active_model
 				name=path.tr("\\","/").split("/").pop.split(".")[0]
-				values = Utilities.readTextFile(path,",",1)
+				values = Utilities.readTextFile(path,",",0)
 				return if not values #if the format was wrong, for example
-				pixels_file=File.open(path, &:readline).delete("\n").strip
+				#pixels_file=File.open(path, &:readline).delete("\n").strip
+				pixels_file = values[0][0]
 
 				if not File.exist?(pixels_file) then
-					UI.messagebox("Pixels file '#{pixels_file}' not found.")
-					return false
+					#Assume there is no file there.
+					#Try to find the probable pixel file in the GH export.
+					pixels_file = path.tr("\\","/").split("/")
+					pixels_file.pop
+					pixels_file.pop
+					pixels_file = "#{pixels_file.join("/")}/Workplanes/#{name}.pxl"
+					if not File.exist?(pixels_file) then
+						#Now... if THIS does not exist, remove.
+						UI.messagebox("Pixels file '#{pixels_file}' not found.")
+						return false
+					end
+				else
+					values.shift #remove the name of the file
 				end
 				pixels = Utilities.readTextFile(pixels_file,",",0)
 

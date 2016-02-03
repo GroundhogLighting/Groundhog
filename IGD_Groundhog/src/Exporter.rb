@@ -420,8 +420,6 @@ module IGD
 				d=d.m
 
 				OS.mkdir("#{path}/Workplanes")
-				OS.mkdir("#{path}/Results")
-				res_path = "#{path}/Results"
 				path="#{path}/Workplanes"
 
 				entities.each do |ent| #for all the entities (which are faces)
@@ -432,9 +430,7 @@ module IGD
 						polygons = mesh.polygons
 						triangles = Triangle.triangulate(points,polygons)
 						File.open("#{path}/#{name}.pxl",'w+'){ |pixels|
-							File.open("#{path}/#{name}.pts",'w+'){ |points|
-								#header in results file
-								File.open("#{res_path}/#{name}.txt",'w+'){ |res| res.puts "#{path}/#{name}.pxl" }
+							File.open("#{path}/#{name}.pts",'w+'){ |points|								
 								#now the triangles
 								triangles.each do |triangle|
 									pos = Triangle.get_center(triangle)
