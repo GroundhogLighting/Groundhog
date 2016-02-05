@@ -12,6 +12,7 @@
 ##Simulation problems
 - Radiance multithreading does not seem to be working on OSX Yosemite. That is a problem of compatibility between Radiance and OSX, and has nothing to do with Groundhog.
 - Radiance multithreading is not supported on Windows
+- The Daylight Factor algorithm adds the contribution of Artificial Lighting.... thus, do not use it if you have luminaires.
 - Some windows users have had trouble assigning the Radiance path. I have been told that was solved as follows:
     1. Go to 'Control Panel' > 'System' > 'Advanced' > 'Environmental Variables' and check if the Radiance PATH is correct. If not, fix it.
     2. Then input the PATH in the Groundhog Preferences menu as follows: **C:/Program Files (x86)/Radiance/bin**, that is, with "/" (not "\") and without adding any program name.
