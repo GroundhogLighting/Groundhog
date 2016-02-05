@@ -162,7 +162,7 @@ module IGD
 					winstring=Dir["Windows/*"].collect{|x| x.tr("\\","/").split("/")[-1]}.join(" ./Windows/")
 					winstring="./Windows/#{winstring}" if winstring.length > 0
 					winstring="" if winstring.length==0
-					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
+					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad ./Skies/sky.rad #{winstring} > octree.oct"
 
 					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
@@ -200,7 +200,7 @@ module IGD
 					winstring=Dir["Windows/*"].collect{|x| x.tr("\\","/").split("/")[-1]}.join(" ./Windows/")
 					winstring="./Windows/#{winstring}" if winstring.length > 0
 					winstring="" if winstring.length==0
-					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
+					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring}  ./Skies/sky.rad  > octree.oct"
 
 					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
@@ -235,7 +235,7 @@ module IGD
 					winstring=Dir["Windows/*"].collect{|x| x.tr("\\","/").split("/")[-1]}.join(" ./Windows/")
 					winstring="./Windows/#{winstring}" if winstring.length > 0
 					winstring="" if winstring.length==0
-					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{winstring} > octree.oct"
+					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{winstring} > octree.oct"
 					script << "#{OS.program("rvu")} #{Config.rvu_options} -vf Views/#{scene}.vf octree.oct"
 				end
 				return script

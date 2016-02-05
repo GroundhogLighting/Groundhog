@@ -171,6 +171,7 @@ module IGD
 					mod_list=self.export_layers(path)
 					return false if not mod_list #return right away
 					return false if not self.export_modifiers(path,mod_list)
+					return false if not self.write_sky(path)
 					return false if not self.export_views(path)
 					return false if not self.write_scene_file(path)
 					return false if not self.export_component_definitions(path)
@@ -430,7 +431,7 @@ module IGD
 						polygons = mesh.polygons
 						triangles = Triangle.triangulate(points,polygons)
 						File.open("#{path}/#{name}.pxl",'w+'){ |pixels|
-							File.open("#{path}/#{name}.pts",'w+'){ |points|								
+							File.open("#{path}/#{name}.pts",'w+'){ |points|
 								#now the triangles
 								triangles.each do |triangle|
 									pos = Triangle.get_center(triangle)
@@ -510,10 +511,6 @@ module IGD
 				File.open("#{path}/scene.rad",'w+'){ |f| #The file is opened
 					f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
 
-					f.write("\n\n\n###### SKY \n\n")
-
-					f.write(self.write_sky(path))
-
 					f.write("\n\n\n###### GEOMETRY \n\n")
 
 					Sketchup.active_model.layers.each do |layer|
@@ -566,9 +563,12 @@ module IGD
 							f.write(self.sky_complement)
 					}
 
-					return "!xform ./Skies/sky.rad"
+					return true
 				else
-					return "# night-time... No Sky"
+					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
+						f.write "#night-time... No Sky"
+					}
+					return true
 				end
 
 			end
