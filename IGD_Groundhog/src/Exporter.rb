@@ -158,9 +158,10 @@ module IGD
 			# @author German Molina
 			# @version 1.0
 			# @param path [String] The path where the model will be exported
+			# @param lights_on [Boolean] The lights will be exported as ON if true, and OFF if false
 			# @return [Boolean] Success
 			# @note this method used to be called 'do_multiphase'
-			def self.export(path)
+			def self.export(path,lights_on)
 				OS.clear_path(path)
 				#begin
 					model=Sketchup.active_model
@@ -174,7 +175,7 @@ module IGD
 					return false if not self.write_sky(path)
 					return false if not self.export_views(path)
 					return false if not self.write_scene_file(path)
-					return false if not self.export_component_definitions(path)
+					return false if not self.export_component_definitions(path, lights_on)
 					return false if not self.write_illuminance_sensors(path)
 
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
@@ -628,8 +629,9 @@ module IGD
 			# @author German Molina
 			# @version 0.5
 			# @param path [String] Directory to export the model (scene file)
+			# @param lights_on [Boolean] Lights will be exported as ON if true and OFF if false.
 			# @return [Boolean] Success
-			def self.export_component_definitions(path)
+			def self.export_component_definitions(path,lights_on)
 				defi=Sketchup.active_model.definitions.select{|x| x.instances.count!=0}
 				comp_path="#{path}/Components"
 
@@ -650,7 +652,9 @@ module IGD
 					geom_string=""
 
 					if Labeler.local_luminaire? (h) then
-						geom_string += Lamps.ies2rad(Labeler.get_value(h),1.0,h, comp_path)
+						mult = 1.0
+						mult = 0 if not lights_on
+						geom_string += Lamps.ies2rad(Labeler.get_value(h),mult,h, comp_path)
 					end
 
 					instances.each do |inst| #include the nested components

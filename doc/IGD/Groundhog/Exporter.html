@@ -137,7 +137,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#export-class_method" title="export (class method)">+ (Boolean) <strong>export</strong>(path) </a>
+      <a href="#export-class_method" title="export (class method)">+ (Boolean) <strong>export</strong>(path, lights_on) </a>
     
 
     
@@ -161,7 +161,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#export_component_definitions-class_method" title="export_component_definitions (class method)">+ (Boolean) <strong>export_component_definitions</strong>(path) </a>
+      <a href="#export_component_definitions-class_method" title="export_component_definitions (class method)">+ (Boolean) <strong>export_component_definitions</strong>(path, lights_on) </a>
     
 
     
@@ -871,7 +871,7 @@ does not.</p>
       <div class="method_details ">
   <h3 class="signature " id="export-class_method">
   
-    + (<tt>Boolean</tt>) <strong>export</strong>(path) 
+    + (<tt>Boolean</tt>) <strong>export</strong>(path, lights_on) 
   
 
   
@@ -913,6 +913,22 @@ different organization, #exportFaces method should be modified.</p>
         &mdash;
         <div class='inline'>
 <p>The path where the model will be exported</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>lights_on</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The lights will be exported as ON if true, and OFF if false</p>
 </div>
       
     </li>
@@ -976,7 +992,6 @@ different organization, #exportFaces method should be modified.</p>
       <pre class="lines">
 
 
-163
 164
 165
 166
@@ -1002,12 +1017,13 @@ different organization, #exportFaces method should be modified.</p>
 186
 187
 188
-189</pre>
+189
+190</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 163</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 164</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_lights_on'>lights_on</span><span class='rparen'>)</span>
 	<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_clear_path'>clear_path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='comment'>#begin
 </span>		<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
@@ -1021,7 +1037,7 @@ different organization, #exportFaces method should be modified.</p>
 		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_sky'>write_sky</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_views'>export_views</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_scene_file'>write_scene_file</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
-		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_component_definitions'>export_component_definitions</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_component_definitions'>export_component_definitions</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_lights_on'>lights_on</span><span class='rparen'>)</span>
 		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_illuminance_sensors'>write_illuminance_sensors</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 
 		<span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='period'>.</span><span class='id identifier rubyid_remove'>remove</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH_default_material</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
@@ -1042,7 +1058,7 @@ different organization, #exportFaces method should be modified.</p>
       <div class="method_details ">
   <h3 class="signature " id="export_component_definitions-class_method">
   
-    + (<tt>Boolean</tt>) <strong>export_component_definitions</strong>(path) 
+    + (<tt>Boolean</tt>) <strong>export_component_definitions</strong>(path, lights_on) 
   
 
   
@@ -1074,6 +1090,22 @@ repeated in the “materials.mat” file.</p>
         &mdash;
         <div class='inline'>
 <p>Directory to export the model (scene file)</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>lights_on</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Lights will be exported as ON if true and OFF if false.</p>
 </div>
       
     </li>
@@ -1137,8 +1169,6 @@ repeated in the “materials.mat” file.</p>
       <pre class="lines">
 
 
-632
-633
 634
 635
 636
@@ -1214,12 +1244,16 @@ repeated in the “materials.mat” file.</p>
 706
 707
 708
-709</pre>
+709
+710
+711
+712
+713</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 632</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 634</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_component_definitions'>export_component_definitions</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_component_definitions'>export_component_definitions</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_lights_on'>lights_on</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_defi'>defi</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_instances'>instances</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span><span class='op'>!=</span><span class='int'>0</span><span class='rbrace'>}</span>
 	<span class='id identifier rubyid_comp_path'>comp_path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Components</span><span class='tstring_end'>&quot;</span></span>
 
@@ -1240,7 +1274,9 @@ repeated in the “materials.mat” file.</p>
 		<span class='id identifier rubyid_geom_string'>geom_string</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
 
 		<span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_local_luminaire?'>local_luminaire?</span> <span class='lparen'>(</span><span class='id identifier rubyid_h'>h</span><span class='rparen'>)</span> <span class='kw'>then</span>
-			<span class='id identifier rubyid_geom_string'>geom_string</span> <span class='op'>+=</span> <span class='const'>Lamps</span><span class='period'>.</span><span class='id identifier rubyid_ies2rad'>ies2rad</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_h'>h</span><span class='rparen'>)</span><span class='comma'>,</span><span class='float'>1.0</span><span class='comma'>,</span><span class='id identifier rubyid_h'>h</span><span class='comma'>,</span> <span class='id identifier rubyid_comp_path'>comp_path</span><span class='rparen'>)</span>
+			<span class='id identifier rubyid_mult'>mult</span> <span class='op'>=</span> <span class='float'>1.0</span>
+			<span class='id identifier rubyid_mult'>mult</span> <span class='op'>=</span> <span class='int'>0</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_lights_on'>lights_on</span>
+			<span class='id identifier rubyid_geom_string'>geom_string</span> <span class='op'>+=</span> <span class='const'>Lamps</span><span class='period'>.</span><span class='id identifier rubyid_ies2rad'>ies2rad</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_h'>h</span><span class='rparen'>)</span><span class='comma'>,</span><span class='id identifier rubyid_mult'>mult</span><span class='comma'>,</span><span class='id identifier rubyid_h'>h</span><span class='comma'>,</span> <span class='id identifier rubyid_comp_path'>comp_path</span><span class='rparen'>)</span>
 		<span class='kw'>end</span>
 
 		<span class='id identifier rubyid_instances'>instances</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_inst'>inst</span><span class='op'>|</span> <span class='comment'>#include the nested components
@@ -1427,7 +1463,6 @@ of each layer.</p>
       <pre class="lines">
 
 
-204
 205
 206
 207
@@ -1497,10 +1532,11 @@ of each layer.</p>
 271
 272
 273
-274</pre>
+274
+275</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 204</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 205</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_layers'>export_layers</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 
@@ -1690,7 +1726,6 @@ of each layer.</p>
       <pre class="lines">
 
 
-492
 493
 494
 495
@@ -1700,10 +1735,11 @@ of each layer.</p>
 499
 500
 501
-502</pre>
+502
+503</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 492</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 493</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_modifiers'>export_modifiers</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_mat_array'>mat_array</span><span class='rparen'>)</span>
 
@@ -1830,7 +1866,6 @@ pages, within the API) in other files with the scene (page)name.</p>
       <pre class="lines">
 
 
-317
 318
 319
 320
@@ -1849,10 +1884,11 @@ pages, within the API) in other files with the scene (page)name.</p>
 333
 334
 335
-336</pre>
+336
+337</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 317</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 318</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_views'>export_views</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 
@@ -1970,10 +2006,6 @@ pages, within the API) in other files with the scene (page)name.</p>
       <pre class="lines">
 
 
-716
-717
-718
-719
 720
 721
 722
@@ -1989,10 +2021,14 @@ pages, within the API) in other files with the scene (page)name.</p>
 732
 733
 734
-735</pre>
+735
+736
+737
+738
+739</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 716</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 720</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_component_string'>get_component_string</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_comp'>comp</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
 
@@ -2135,10 +2171,6 @@ the inputted value. This is useful for exporting components.</code></pre>
       <pre class="lines">
 
 
-819
-820
-821
-822
 823
 824
 825
@@ -2168,10 +2200,14 @@ the inputted value. This is useful for exporting components.</code></pre>
 849
 850
 851
-852</pre>
+852
+853
+854
+855
+856</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 819</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 823</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_mat_string'>get_mat_string</span><span class='lparen'>(</span><span class='id identifier rubyid_material'>material</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_matName'>matName</span><span class='op'>=</span><span class='id identifier rubyid_material'>material</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>#</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -2557,7 +2593,6 @@ Radiance format.
       <pre class="lines">
 
 
-287
 288
 289
 290
@@ -2577,10 +2612,11 @@ Radiance format.
 304
 305
 306
-307</pre>
+307
+308</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 287</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 288</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_view_string'>get_view_string</span><span class='lparen'>(</span><span class='id identifier rubyid_camera'>camera</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_vp'>vp</span><span class='op'>=</span><span class='id identifier rubyid_camera'>camera</span><span class='period'>.</span><span class='id identifier rubyid_eye'>eye</span>
@@ -2802,12 +2838,12 @@ will return false.</p>
       <pre class="lines">
 
 
-612
 613
-614</pre>
+614
+615</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 612</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 613</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_sky_complement'>sky_complement</span>
 	<span class='kw'>return</span> 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>skyfunc\tglow\tskyglow\n0\n0\n4\t0.99\t0.99\t1.1\t0\n\nskyglow\tsource\tskyball\n0\n0\n4\t0\t0\t1\t360\n\n</span><span class='tstring_end'>&quot;</span></span>
@@ -2913,12 +2949,12 @@ will return false.</p>
       <pre class="lines">
 
 
-622
 623
-624</pre>
+624
+625</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 622</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 623</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_white_sky'>white_sky</span><span class='lparen'>(</span><span class='id identifier rubyid_bins'>bins</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\#@rfluxmtx h=u u=Y\nvoid glow ground_glow\n0\n0\n4 1 1 1 0\n\nground_glow source ground\n0\n0\n4 0 0 -1 180\n\n\#@rfluxmtx h=r</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bins'>bins</span><span class='embexpr_end'>}</span><span class='tstring_content'> u=Y\nvoid glow sky_glow\n0\n0\n4 1 1 1 0\n\nsky_glow source sky\n0\n0\n4 0 0 1 180</span><span class='tstring_end'>&quot;</span></span>
@@ -3024,7 +3060,6 @@ will return false.</p>
       <pre class="lines">
 
 
-581
 582
 583
 584
@@ -3048,10 +3083,11 @@ will return false.</p>
 602
 603
 604
-605</pre>
+605
+606</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 581</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 582</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_illuminance_sensors'>write_illuminance_sensors</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 
@@ -3227,7 +3263,6 @@ will return false.</p>
       <pre class="lines">
 
 
-461
 462
 463
 464
@@ -3249,10 +3284,11 @@ will return false.</p>
 480
 481
 482
-483</pre>
+483
+484</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 461</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 462</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_illums'>write_illums</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_entities'>entities</span><span class='comma'>,</span><span class='id identifier rubyid_trans'>trans</span><span class='comma'>,</span><span class='id identifier rubyid_ext'>ext</span><span class='rparen'>)</span>
 
@@ -3386,10 +3422,6 @@ will return false.</p>
       <pre class="lines">
 
 
-743
-744
-745
-746
 747
 748
 749
@@ -3451,10 +3483,14 @@ will return false.</p>
 805
 806
 807
-808</pre>
+808
+809
+810
+811
+812</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 743</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 747</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_rif_file'>write_rif_file</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_illums'>illums</span><span class='comma'>,</span> <span class='id identifier rubyid_windows'>windows</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
@@ -3624,7 +3660,6 @@ files to create the model.</p>
       <pre class="lines">
 
 
-510
 511
 512
 513
@@ -3653,10 +3688,11 @@ files to create the model.</p>
 536
 537
 538
-539</pre>
+539
+540</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 510</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 511</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_scene_file'>write_scene_file</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/scene.rad</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w+</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span> <span class='comment'>#The file is opened
@@ -3789,7 +3825,6 @@ files to create the model.</p>
       <pre class="lines">
 
 
-547
 548
 549
 550
@@ -3816,10 +3851,11 @@ files to create the model.</p>
 571
 572
 573
-574</pre>
+574
+575</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 547</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 548</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_sky'>write_sky</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 
@@ -3967,7 +4003,6 @@ a Window folder within the directory.</p>
       <pre class="lines">
 
 
-344
 345
 346
 347
@@ -4027,10 +4062,11 @@ a Window folder within the directory.</p>
 401
 402
 403
-404</pre>
+404
+405</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 344</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 345</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_window_groups'>write_window_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_windows'>windows</span><span class='rparen'>)</span>
 
@@ -4216,7 +4252,6 @@ path on the Workplanes folder.</p>
       <pre class="lines">
 
 
-416
 417
 418
 419
@@ -4250,10 +4285,11 @@ path on the Workplanes folder.</p>
 447
 448
 449
-450</pre>
+450
+451</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 416</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 417</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_workplanes'>write_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 
@@ -4300,7 +4336,7 @@ path on the Workplanes folder.</p>
 </div>
 
     <div id="footer">
-  Generated on Fri Feb  5 11:33:04 2016 by
+  Generated on Fri Feb  5 16:42:27 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

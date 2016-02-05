@@ -221,7 +221,6 @@ module IGD
 				options=JSON.parse(msg)
 				scene = options["scene"]
 				path=OS.tmp_groundhog_path
-				Exporter.export(path)
 
 				#success=false
 				script=[] #
@@ -262,7 +261,7 @@ module IGD
 
 				wd.add_action_callback("rvu") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
-					next if not Exporter.export(OS.tmp_groundhog_path)
+					next if not Exporter.export(OS.tmp_groundhog_path, true)
 					FileUtils.cd(OS.tmp_groundhog_path) do
 						begin
 							OS.execute_script(self.rvu(msg))
@@ -276,7 +275,7 @@ module IGD
 
 				wd.add_action_callback("calc_DF") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
-					next if not Exporter.export(OS.tmp_groundhog_path)
+					next if not Exporter.export(OS.tmp_groundhog_path,false) #lights off
 					FileUtils.cd(OS.tmp_groundhog_path) do
 						begin
 							OS.mkdir("Results")
@@ -304,11 +303,10 @@ module IGD
 
 				wd.add_action_callback("calc_actual_illuminance") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
-					next if not Exporter.export(OS.tmp_groundhog_path)
+					next if not Exporter.export(OS.tmp_groundhog_path,true)
 					options=JSON.parse(msg)
 					FileUtils.cd(OS.tmp_groundhog_path) do
-						begin
-							Exporter.export(OS.tmp_groundhog_path)
+						begin							
 							OS.mkdir("Results")
 							OS.execute_script(self.actual_illuminance(options))
 							wps=Dir["Workplanes/*.pts"]
@@ -331,14 +329,14 @@ module IGD
 
 				wd.add_action_callback("calc_DA") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
-					next if not Exporter.export(OS.tmp_groundhog_path)
+					next if not Exporter.export(OS.tmp_groundhog_path, false)
 					options=JSON.parse(msg)
 					self.calc_DA(options)
 				end
 
 				wd.add_action_callback("calc_UDI") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
-					next if not Exporter.export(OS.tmp_groundhog_path)
+					next if not Exporter.export(OS.tmp_groundhog_path, false)
 					options=JSON.parse(msg)
 					self.calc_UDI(options)
 				end

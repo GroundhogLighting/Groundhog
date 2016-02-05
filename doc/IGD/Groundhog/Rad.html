@@ -1322,8 +1322,7 @@ illuminance</p>
 232
 233
 234
-235
-236</pre>
+235</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 220</span>
@@ -1332,7 +1331,6 @@ illuminance</p>
 	<span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_scene'>scene</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>scene</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
 	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span>
-	<span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 
 	<span class='comment'>#success=false
 </span>	<span class='id identifier rubyid_script'>script</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span> <span class='comment'>#
@@ -1365,6 +1363,7 @@ illuminance</p>
       <pre class="lines">
 
 
+237
 238
 239
 240
@@ -1472,12 +1471,10 @@ illuminance</p>
 342
 343
 344
-345
-346
-347</pre>
+345</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 238</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 237</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_show_sim_wizard'>show_sim_wizard</span>
 	<span class='id identifier rubyid_wd'>wd</span><span class='op'>=</span><span class='const'>UI</span><span class='op'>::</span><span class='const'>WebDialog</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
@@ -1506,7 +1503,7 @@ illuminance</p>
 
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rvu</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
 		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_ask_about_Radiance'>ask_about_Radiance</span>
-		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='rparen'>)</span>
+		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='comma'>,</span> <span class='kw'>true</span><span class='rparen'>)</span>
 		<span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='rparen'>)</span> <span class='kw'>do</span>
 			<span class='kw'>begin</span>
 				<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rvu'>rvu</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -1520,8 +1517,8 @@ illuminance</p>
 
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>calc_DF</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
 		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_ask_about_Radiance'>ask_about_Radiance</span>
-		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='rparen'>)</span>
-		<span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='rparen'>)</span> <span class='kw'>do</span>
+		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='comma'>,</span><span class='kw'>false</span><span class='rparen'>)</span> <span class='comment'>#lights off
+</span>		<span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='rparen'>)</span> <span class='kw'>do</span>
 			<span class='kw'>begin</span>
 				<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Results</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 				<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_daylight_factor'>daylight_factor</span><span class='rparen'>)</span>
@@ -1548,11 +1545,10 @@ illuminance</p>
 
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>calc_actual_illuminance</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
 		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_ask_about_Radiance'>ask_about_Radiance</span>
-		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='rparen'>)</span>
+		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='comma'>,</span><span class='kw'>true</span><span class='rparen'>)</span>
 		<span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
 		<span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='rparen'>)</span> <span class='kw'>do</span>
-			<span class='kw'>begin</span>
-				<span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='rparen'>)</span>
+			<span class='kw'>begin</span>							
 				<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Results</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 				<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_actual_illuminance'>actual_illuminance</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span><span class='rparen'>)</span>
 				<span class='id identifier rubyid_wps'>wps</span><span class='op'>=</span><span class='const'>Dir</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Workplanes/*.pts</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -1575,14 +1571,14 @@ illuminance</p>
 
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>calc_DA</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
 		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_ask_about_Radiance'>ask_about_Radiance</span>
-		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='rparen'>)</span>
+		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
 		<span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
 		<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_calc_DA'>calc_DA</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 	<span class='kw'>end</span>
 
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>calc_UDI</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
 		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_ask_about_Radiance'>ask_about_Radiance</span>
-		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='rparen'>)</span>
+		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
 		<span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
 		<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_calc_UDI'>calc_UDI</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 	<span class='kw'>end</span>
@@ -1599,7 +1595,7 @@ illuminance</p>
 </div>
 
     <div id="footer">
-  Generated on Fri Feb  5 11:33:05 2016 by
+  Generated on Fri Feb  5 16:42:27 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
