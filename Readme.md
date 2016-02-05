@@ -1,6 +1,6 @@
 
 # Groundhog Readme File
-
+![](http://groundhogproject.org/images/Scene_1.png)
 
 ## License
 
