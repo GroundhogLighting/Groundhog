@@ -4,14 +4,13 @@
 
 #Importing results for data visualization
 
+# THIS SECTION IS NOT UP TO DATE.
 
-
-After exporting a model and performing a simulation or calculation, it is often very important to see the results you
-generated (i.e. Daylight factor, lux, or other) within the model, so you and people who are going to
-see your analysis can visualize the spacial lighting distribution. This can lead to diagnostics and enhancement of the design.
-
-
-Groundhog, even if it does not allow (yet) performing calculations, it helps you visualize the results on the space.
+After exporting a model and performing a simulation or calculation, it is often
+very important to see the results you generated (i.e. Daylight factor, illuminance,
+or other) within the model, so you and people who are going to see your analysis
+can visualize the spacial lighting distribution. This can lead to diagnostics
+and enhancement of the design.
 
 
 ##Import results
@@ -25,31 +24,23 @@ See that specific tutorial. It is easy.
 
 ###Step 2: Export the model and perform some calculations
 
-The file that contains the results needs to be a four-column list of tab-separated parameters, without any header.
-Each line (row) will be the result for one sensor, and the four values correspond to the X,Y,Z position
-and the value calculated for such sensor. This value can correspond to whatever you want (Lux, Daylight factor or other)
-
-
-
-Below is an example of a file
-
-```
-0.0	0.0	0.8	2.3
-0.0	0.5	0.8	2.1
-0.0	1.0	0.8	1.8
-0.0	1.5	0.8	1.5
-...
-```
-
+The file that contains the results needs to be a single-column list of values.
+The first line may be the name of a file (full path) that describe the shape of
+each result pixel (when imported, each value will be represented by a triangle
+with a color). There must be one triangle for each pixel. In case that there is
+no file, a file with the same name will be looked for in the ../Workplanes
+directory, but with the extension .pxl. That is, if we intend to import a file
+that is called 'MyResults.pts', it either needs to have the full path to its
+corresponding pixel file on the first line, or the latter needs to be located
+in the relative '../Workplanes/MyResults.pxl'.
 
 All kind of results may be obtained with RTRACE and RCONTRIB programs, and the format may be arranged by using RCALC.
-
 
 An example, getting the Lux of a certain scene:
 
 
 ```
-rtrace -h -oov [options] octree < Workplanes/Grid.pts | rcalc -e '$1=$1; $2=$2; $3=$3; $4=179*(0.265*$4+0.67*$5+0.065*$6)' > Results.txt
+rtrace -h -oov [options] octree < Workplanes/Grid.pts | rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)' > Results.txt
 ```
 
 ###Step 3: Import results

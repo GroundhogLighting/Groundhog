@@ -200,7 +200,7 @@ module IGD
 
 				if path_to_save then
 					OS.mkdir(path_to_save)
-					Exporter.export(path_to_save)
+					Exporter.export(path_to_save,true) #lights on
 				end
 			}
 
