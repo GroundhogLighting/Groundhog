@@ -68,17 +68,17 @@ module IGD
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model.
 			#
-			# The normal of the plane as well as the dimension of the pixels
-			# are calculated from the position of the sensors. It is assumed that
-			# all the sensors lie in the same plane point in the same direction.
+			# If the metric is set to False, the user will be asked to
+			# define one. This is useful for importing
 			#
 			# @author German Molina
 			# @param values [array] The array (2D but 1 columns) with the data to show.
 			# @param pixels [array] The array (2D, 9 columns) with the positions of the vertices of triangles (pixels).
-			# @param name [String] The name that will be given to the group that contains the pixels
+			# @param workplane [String] The name that will be given to the group that contains the pixels
+			# @param metric [String] The name that will be given to the group that contains the pixels
 			# @return [Void]
-			# @version 0.3
-			def self.draw_pixels(values,pixels,name,metric)
+			# @version 0.4
+			def self.draw_pixels(values,pixels,workplane,metric)
 				model=Sketchup.active_model
 				if values.length != pixels.length then
 					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match")
@@ -130,9 +130,14 @@ module IGD
 					wp_value["min"] = min
 					wp_value["max"] = max
 					wp_value["metric"] = metric
+					wp_value["workplane"] = workplane
 					Labeler.set_workplane_value(group,wp_value.to_json)
 
 					group.casts_shadows=false
+
+					#hide the edges
+					group.entities.select{|x| x.is_a? Sketchup::Edge}.each{|x| x.hidden=true}
+
 					model.commit_operation
 				rescue => e
 					model.abort_operation
@@ -252,9 +257,6 @@ module IGD
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model.
 			#
-			# If the metric is set to False, the user will be asked to
-			# define one. This is useful for importing
-			#
 			# @author German Molina
 			# @param path [String]
 			# @param metric [String]
@@ -276,7 +278,7 @@ module IGD
 					pixels_file.pop
 					pixels_file = "#{pixels_file.join("/")}/Workplanes/#{name}.pxl"
 					if not File.exist?(pixels_file) then
-						#Now... if THIS does not exist, remove.
+						#Now... if THIS does not exist, return.
 						UI.messagebox("Pixels file '#{pixels_file}' not found.")
 						return false
 					end

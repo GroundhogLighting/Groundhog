@@ -56,7 +56,6 @@ function calc_UDI(){
 
     var query = 'skp:calc_UDI@{"ground_rho":"'+gr_rho+'","upper_threshold":'+upper_threshold+',"lower_threshold":'+lower_threshold+',"bins":'+bins+',"method":"'+method+'","early":'+early+',"late":'+late+'}';
     window.location.href = query;
-
 }
 
 load_rvu_views();

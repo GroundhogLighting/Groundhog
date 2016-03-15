@@ -199,7 +199,7 @@ module IGD
 
 					@@default_config.each do |field|
 						id = field[0].downcase
-						@@config[field[0]] = wd.get_element_value(id)
+						@@config[field[0]] = wd.get_element_value(id).strip
 					end
 
 

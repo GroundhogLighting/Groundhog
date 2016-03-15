@@ -430,6 +430,30 @@ of the entity.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#get_solved_workplanes-class_method" title="get_solved_workplanes (class method)">+ (Array &lt;SketchUp::Entities&gt;) <strong>get_solved_workplanes</strong>(entities) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Gets the workplanes.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#get_win_groups-class_method" title="get_win_groups (class method)">+ (Array &lt;Int&gt;) <strong>get_win_groups</strong>(entities) </a>
     
 
@@ -470,6 +494,30 @@ of the entity.</p>
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns all the windows within an array.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_workplanes-class_method" title="get_workplanes (class method)">+ (Array &lt;SketchUp::Entities&gt;) <strong>get_workplanes</strong>(entities) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Gets the workplanes.</p>
 </div></span>
   
 </li>
@@ -1427,23 +1475,23 @@ of the entity</p>
       <pre class="lines">
 
 
-368
-369
-370
-371
-372
-373
-374
-375
-376
-377
-378
-379
-380
-381</pre>
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 368</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 384</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_global_transformations'>get_global_transformations</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_tr'>tr</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -1943,6 +1991,96 @@ of the entity</p>
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="get_solved_workplanes-class_method">
+  
+    + (<tt>Array &lt;SketchUp::Entities&gt;</tt>) <strong>get_solved_workplanes</strong>(entities) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Gets the workplanes</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>entities</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;SketchUp::Entities&gt;</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array &lt;SketchUp::Entities&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An array with the entities that are SketchUp::ComponentDefinition</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+373
+374
+375</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 373</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_solved_workplanes'>get_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
+	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_solved_workplane?'>solved_workplane?</span> <span class='id identifier rubyid_x'>x</span><span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="get_win_groups-class_method">
   
     + (<tt>Array &lt;Int&gt;</tt>) <strong>get_win_groups</strong>(entities) 
@@ -2144,6 +2282,96 @@ of the entity</p>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_windows'>get_windows</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_window?'>window?</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_workplanes-class_method">
+  
+    + (<tt>Array &lt;SketchUp::Entities&gt;</tt>) <strong>get_workplanes</strong>(entities) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Gets the workplanes</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>entities</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;SketchUp::Entities&gt;</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array &lt;SketchUp::Entities&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An array with the entities that are SketchUp::ComponentDefinition</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+365
+366
+367</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 365</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplanes'>get_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
+	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_workplane?'>workplane?</span> <span class='id identifier rubyid_x'>x</span><span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -3135,7 +3363,7 @@ If there is no hash[&#39;ID&#39;] value, or it is empty, the default value will 
 </div>
 
     <div id="footer">
-  Generated on Tue Feb  9 14:24:46 2016 by
+  Generated on Tue Mar 15 18:28:58 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

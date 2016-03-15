@@ -319,7 +319,7 @@ module IGD
 							end
 
 							results.each do |res|
-								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt","Illuminance")
+								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt","Current illuminance")
 							end
 							OS.clear_actual_path
 						rescue

@@ -8,6 +8,20 @@ table, th, td {
    font-size: 100%;
 }
 
+table.with_border{
+  width:100%
+}
+table.with_border, table.with_border th, table.with_border td{
+   border: 1px solid black;
+   font-size: 100%;
+   border-collapse: collapse;
+   text-align: center;
+}
+
+table.with_border tr:first-child,table.with_border td:first-child{
+  font-weight: bold;
+}
+
 h2{
     color: rgb(40,40,40);
 }
@@ -51,7 +65,7 @@ fieldset > legend{
     font-weight: bold;
 }
 
-td{    
+td{
     height: 15px;
 }
 

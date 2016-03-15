@@ -96,46 +96,7 @@ module IGD
 				group=groups[0]
 				if Labeler.solved_workplane?(group) then
 					context_menu.add_item("Export results to CSV") {
-						begin
-							op_name = "Export workplane to CSV"
-							model.start_operation(op_name,true)
-
-							path=Exporter.getpath #it returns false if not successful
-							path="" if not path
-							filename="#{Labeler.get_name(group)}.csv"
-							filename=UI.savepanel("Export CSV file of results",path,filename)
-
-							if filename then
-								File.open(filename,'w'){|csv|
-									statistics = Results.get_workplane_statistics(group)
-									#write statistics
-									statistics.to_a.each{|element|
-										csv.puts "#{element[0]},#{element[1]}"
-									}
-									#Write header
-									csv.puts "Position X, Position Y, Position Z, Value (depends on the metric)"
-									#Write pixels
-									pixels = group.entities.select{|x| Labeler.result_pixel?(x)}
-									pixels.each do |pixel|
-										vertices=pixel.vertices
-										nvertices=vertices.length
-										center=vertices.shift.position.to_a
-										vertices.each{|vert|
-											pos=vert.position.to_a
-											center[0]+=pos[0]
-											center[1]+=pos[1]
-											center[2]+=pos[2]
-										}
-										csv.puts "#{(center[0]/nvertices).to_m},#{(center[1]/nvertices).to_m},#{(center[2]/nvertices).to_m},#{Labeler.get_value(pixel)}"
-									end
-								}
-							end
-
-							model.commit_operation
-						rescue => e
-							model.abort_operation
-							OS.failed_operation_message(op_name)
-						end
+						Report.report_csv(group)
 				   }
 				end
 			end
@@ -269,10 +230,6 @@ module IGD
 
 				gh_insert_menu.add_item("Illuminance Sensor"){
 					Loader.load_illuminance_sensor
-				}
-
-				gh_insert_menu.add_item("Products from Arqhub"){
-					Loader.open_arqhub
 				}
 
 			### RESULTS SUBMENU

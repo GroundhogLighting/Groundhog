@@ -43,6 +43,7 @@ value=JSON.parse(GH_Labeler.get_value(entity)) # 'value' is a Hash
 min_value=value["min"]
 max_value=value["max"]
 metric = value["metric"]
+workplane = value["workplane"]
 ```
 
 ###Local luminaire Value
