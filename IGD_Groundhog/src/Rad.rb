@@ -28,8 +28,9 @@ module IGD
 						return if not values #if the format was wrong, for example
 
 						pixels = Utilities.readTextFile("#{OS.tmp_groundhog_path}/Workplanes/#{name}.pxl",",",0)
-						#uv=Results.get_UV(array)
-						Results.draw_pixels(values,pixels,name)
+						metric = "U.D.I"
+						metric = "Daylight Authonomy" if options["upper_threshold"] > 9e15
+						Results.draw_pixels(values,pixels,name,metric)
 						min_max=Results.get_min_max_from_model
 						Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 					end
@@ -290,7 +291,7 @@ module IGD
 							end
 
 							results.each do |res|
-								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt")
+								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt","Daylight factor")
 							end
 							#OS.clear_actual_path
 
@@ -306,7 +307,7 @@ module IGD
 					next if not Exporter.export(OS.tmp_groundhog_path,true)
 					options=JSON.parse(msg)
 					FileUtils.cd(OS.tmp_groundhog_path) do
-						begin							
+						begin
 							OS.mkdir("Results")
 							OS.execute_script(self.actual_illuminance(options))
 							wps=Dir["Workplanes/*.pts"]
@@ -318,7 +319,7 @@ module IGD
 							end
 
 							results.each do |res|
-								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt")
+								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt","Illuminance")
 							end
 							OS.clear_actual_path
 						rescue

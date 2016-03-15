@@ -49,12 +49,11 @@ module IGD
 			#
 			# @author German Molina
 			# @param workplane [SketchUp::ComponentDefinition] The workplane to be assigned the value
-			# @param min [Float] Minimum value
-			# @param max [Float] Maximum value
+			# @param value [Hash] Hash with minimum, maximum and metric
 			# @return [Void]
-			def self.set_workplane_value(workplane,min,max)
+			def self.set_workplane_value(workplane,value)
 				return false if not self.solved_workplane?(workplane)
-				workplane.set_attribute("Groundhog","Value",[min,max])
+				workplane.set_attribute("Groundhog","Value",value)
 			end
 
 			# Assigns the Radiance definition as the value of a Local Material
@@ -101,10 +100,10 @@ module IGD
 
 			# Checks if a component is a solved_workplane
 			# @author German Molina
-			# @param component_definition [SketchUp::ComponentDefinition] component to test.
+			# @param group [SketchUp::ComponentDefinition] component to test.
 			# @return [Boolean]
-			def self.solved_workplane?(component_definition)
-				component_definition.get_attribute("Groundhog","Label")=="solved_workplane"
+			def self.solved_workplane?(group)
+				group.get_attribute("Groundhog","Label")=="solved_workplane"
 			end
 
 
@@ -221,9 +220,10 @@ module IGD
 			# Assigns a value to a pixel.
 			#
 			# @author German Molina
-			# @param pixel [SketchUp::Face] the pixel to be assigned a value
-			# @param value [Float] the value to be assigned
+			# @param pixel [SketchUp::Face] The pixel to be assigned a value
+			# @param value [Float] The value to be assigned
 			# @return [Void]
+			# @version 0.1
 			def self.set_pixel_value(pixel,value)
 				pixel.set_attribute("Groundhog","Value",value)
 			end
@@ -327,7 +327,7 @@ module IGD
 				name = Utilities.get_name
 				return if not name
 				if faces.length>=1 then
-					faces.each do |i|						
+					faces.each do |i|
 						correct=correct+[i]
 						i.set_attribute("Groundhog","Label","workplane")
 						i.material=[1.0,0.0,0.0]
@@ -336,7 +336,7 @@ module IGD
 						i.back_material.alpha=0.2
 					end
 
-					Labeler.set_name(correct,name)
+					self.set_name(correct,name)
 					UI.messagebox("Non-rectangular faces were ignored, as well as those with holes.") if not_sutable
 				else
 					UI.messagebox("No faces selected")
