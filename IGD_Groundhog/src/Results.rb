@@ -78,7 +78,7 @@ module IGD
 			# @param name [String] The name that will be given to the group that contains the pixels
 			# @return [Void]
 			# @version 0.3
-			def self.draw_pixels(values,pixels,name)
+			def self.draw_pixels(values,pixels,name,metric)
 				model=Sketchup.active_model
 				if values.length != pixels.length then
 					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match")
@@ -89,6 +89,12 @@ module IGD
 					return false
 				end
 
+				if not metric then
+					metric = UI.inputbox ["Metric name\n"], [""], "Set a name for the metric"
+				end
+
+				return false if not metric
+
 				op_name="Draw pixels"
 				begin
 					model.start_operation(op_name,true)
@@ -98,17 +104,17 @@ module IGD
 
 					entities=group.entities
 
-					#get minimum and maximum
+					#initialize minimum and maximum
 					max=0
 					min=9999999999999
-					values.each do |data|
-						min=data[0].to_f if min>data[0].to_f
-						max=data[0].to_f if max<data[0].to_f
-					end
 
 					#draw every line. Each pixel is a triangle.
 					pixels.each do |data|
 						value = values.shift[0].to_f
+						#check minimum and maximum
+						min=value.to_f if min>value.to_f
+						max=value.to_f if max<value.to_f
+
 						vertex0=Geom::Point3d.new(data[0].to_f.m,data[1].to_f.m,data[2].to_f.m)
 						vertex1=Geom::Point3d.new(data[3].to_f.m,data[4].to_f.m,data[5].to_f.m)
 						vertex2=Geom::Point3d.new(data[6].to_f.m,data[7].to_f.m,data[8].to_f.m)
@@ -120,7 +126,12 @@ module IGD
 
 					Labeler.to_solved_workplane(group)
 					Labeler.to_solved_workplane(group.definition)
-					Labeler.set_workplane_value(group,min,max)
+					wp_value = Hash.new
+					wp_value["min"] = min
+					wp_value["max"] = max
+					wp_value["metric"] = metric
+					Labeler.set_workplane_value(group,wp_value.to_json)
+
 					group.casts_shadows=false
 					model.commit_operation
 				rescue => e
@@ -218,41 +229,45 @@ module IGD
 			#
 			# @author German Molina
 			# @return [Array<Float>] An array with the minimum and maximum values
-			# @version 0.1
+			# @version 0.2
 			def self.get_min_max_from_model
 				definitions=Sketchup.active_model.definitions
 				#Get the maximum and minimum in the whole model
 				max=-1
 				min=9999999999999
 				definitions.each do |defi|
+					#now we are sure this is a solved_workplane
+					next if not Labeler.solved_workplane?(defi)
 					defi.instances.each do |inst|
-						next if not Labeler.solved_workplane?(inst)
-						#now we are sure this is a solved_workplane
-						min_max=Labeler.get_value(inst)
-
-						min=min_max[0] if min > min_max[0]
-						max=min_max[1] if max < min_max[1]
+						value=JSON.parse(Labeler.get_value(inst))
+						min=value["min"] if min > value["min"]
+						max=value["max"] if max < value["max"]
 					end
 				end
 				return [min,max]
 			end
 
+
+
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model.
 			#
+			# If the metric is set to False, the user will be asked to
+			# define one. This is useful for importing
+			#
 			# @author German Molina
 			# @param path [String]
+			# @param metric [String]
 			# @return void
-			# @version 0.2
-			def self.import_results(path)
+			# @version 0.3
+			def self.import_results(path,metric)
 
 				model=Sketchup.active_model
-				name=path.tr("\\","/").split("/").pop.split(".")[0]
+				name=path.tr("\\","/").split("/").pop.split(".")[0].tr("_"," ")
 				values = Utilities.readTextFile(path,",",0)
 				return if not values #if the format was wrong, for example
-				#pixels_file=File.open(path, &:readline).delete("\n").strip
-				pixels_file = values[0][0]
 
+				pixels_file = values[0][0]
 				if not File.exist?(pixels_file) then
 					#Assume there is no file there.
 					#Try to find the probable pixel file in the GH export.
@@ -270,7 +285,7 @@ module IGD
 				end
 				pixels = Utilities.readTextFile(pixels_file,",",0)
 
-				self.draw_pixels(values,pixels,name)
+				self.draw_pixels(values,pixels,name,metric)
 				min_max=self.get_min_max_from_model
 				self.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 
@@ -310,7 +325,43 @@ module IGD
 
 			end
 
+			# Calculates statistical data from a solved workplane
+			#
+			# @author German Molina
+			# @return [Hash] A hash with statistics
+			# @param wp [Workplane] The workplane to analyze
+			# @version 0.1
+			def self.get_workplane_statistics(wp)
+				return false if not IGD::Groundhog::Labeler.solved_workplane? wp
+				pixels = wp.entities.select{|x| IGD::Groundhog::Labeler.result_pixel? x}
 
+				count=pixels.length
+				sum=0
+				total_area = 0
+				max=IGD::Groundhog::Labeler.get_value(pixels[0])
+				min=max
+
+				pixels.each do |pixel|
+					value = IGD::Groundhog::Labeler.get_value(pixel)
+					area = pixel.area
+					max = value if value > max
+					min = value if value < min
+					sum += value*area
+					total_area += area
+				end
+				average = sum/total_area
+				ret = Hash.new
+
+				ret["name"] = wp.name
+				ret["min"] = min
+				ret["max"] = max
+				ret["average"]=average
+				ret["min_over_average"] = min/average
+				ret["min_over_max"] = min/max
+				ret["nsensors"] = count
+				ret["total_area"] = total_area/1550.0 #transform into square meters from sqin
+				return ret
+			end
 
 
 		end
