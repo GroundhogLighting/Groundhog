@@ -36,12 +36,19 @@ value=GH_Labeler.get_value(entity) # 'value' is a float
 
 A Solved Workplane is a group of Result Pixels, each of which has its own numeric value stored. The value
 of the Solved Workplane will be a JSON that will contain the Metric that the workplane
-is displaying, the minimum and the maximum value.
+is displaying, the workplane it corresponds to and statistics.
+
+It should be noted that this value is added when drawing the pixels
 
 ```
 value=JSON.parse(GH_Labeler.get_value(entity)) # 'value' is a Hash
-min_value=value["min"]
-max_value=value["max"]
+min = value["min"]
+max = value["max"]
+average = value["average"]
+uniformity1 = value["min_over_average"]
+uniformity2 = value["min_over_max"]
+nsensors = value["nsensors"]
+area = value["total_area"]
 metric = value["metric"]
 workplane = value["workplane"]
 ```

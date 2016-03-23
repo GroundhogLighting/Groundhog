@@ -29,10 +29,8 @@ module IGD
 
 						pixels = Utilities.readTextFile("#{OS.tmp_groundhog_path}/Workplanes/#{name}.pxl",",",0)
 						metric = "U.D.I"
-						metric = "Daylight Authonomy" if options["upper_threshold"] > 9e15
+						metric = "Daylight authonomy" if options["upper_threshold"] > 9e15
 						Results.draw_pixels(values,pixels,name,metric)
-						min_max=Results.get_min_max_from_model
-						Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 					end
 				end
 				return true
@@ -290,11 +288,13 @@ module IGD
 								results << name
 							end
 
+							metric = "Daylight factor"
 							results.each do |res|
-								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt","Daylight factor")
+								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt",metric)
 							end
-							#OS.clear_actual_path
-
+							Utilities.remark_solved_workplanes(metric)
+							min_max=Results.get_min_max_from_model
+							Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 						rescue
 							UI.messagebox "There was a problem when trying to calculate the Daylight Factor."
 						end
@@ -318,10 +318,13 @@ module IGD
 								results << name
 							end
 
+							metric = "Current illuminance"
 							results.each do |res|
-								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt","Current illuminance")
+								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt",metric)
 							end
-							OS.clear_actual_path
+							Utilities.remark_solved_workplanes(metric)
+							min_max=Results.get_min_max_from_model
+							Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 						rescue
 							UI.messagebox "There was a problem when trying to calculate the Actual Illuminance."
 						end
@@ -333,6 +336,10 @@ module IGD
 					next if not Exporter.export(OS.tmp_groundhog_path, false)
 					options=JSON.parse(msg)
 					self.calc_DA(options)
+					metric = "Daylight authonomy"
+					Utilities.remark_solved_workplanes(metric)
+					min_max=Results.get_min_max_from_model
+					Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 				end
 
 				wd.add_action_callback("calc_UDI") do |web_dialog,msg|
@@ -340,6 +347,10 @@ module IGD
 					next if not Exporter.export(OS.tmp_groundhog_path, false)
 					options=JSON.parse(msg)
 					self.calc_UDI(options)
+					metric="U.D.I."
+					Utilities.remark_solved_workplanes(metric)
+					min_max=Results.get_min_max_from_model
+					Results.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 				end
 
 				wd.show()

@@ -29,6 +29,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Addons'
 		Sketchup::require 'IGD_Groundhog/src/Color'
 		Sketchup::require 'IGD_Groundhog/src/Luminaires'
+		Sketchup::require 'IGD_Groundhog/src/Report'
 
 
 
@@ -219,7 +220,15 @@ module IGD
 				Rad.show_sim_wizard
 			}
 
-
+			groundhog_menu.add_item("Report Wizard"){
+				Report.show_report_wizard
+			}
+			groundhog_menu.add_item("Import results"){
+				path=Exporter.getpath #it returns false if not successful
+				path="c:/" if not path
+				path=UI.openpanel("Open results file",path)
+				Results.import_results(path,false) if path
+			}
 			### INSERT SUBMENU
 
 			gh_insert_menu=groundhog_menu.add_submenu("Insert")
@@ -235,17 +244,6 @@ module IGD
 			### RESULTS SUBMENU
 
 			gh_results_menu=groundhog_menu.add_submenu("Results")
-
-				gh_results_menu.add_item("Import results"){
-
-					path=Exporter.getpath #it returns false if not successful
-					path="c:/" if not path
-					path=UI.openpanel("Open results file",path)
-					Results.import_results(path,false) if path
-
-
-				}
-
 				gh_results_menu.add_item("Scale handler"){
 					Results.show_scale_handler
 

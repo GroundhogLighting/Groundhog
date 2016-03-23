@@ -77,7 +77,7 @@ module IGD
 			# @param workplane [String] The name that will be given to the group that contains the pixels
 			# @param metric [String] The name that will be given to the group that contains the pixels
 			# @return [Void]
-			# @version 0.4
+			# @version 0.5
 			def self.draw_pixels(values,pixels,workplane,metric)
 				model=Sketchup.active_model
 				if values.length != pixels.length then
@@ -90,14 +90,25 @@ module IGD
 				end
 
 				if not metric then
-					metric = UI.inputbox ["Metric name\n"], [""], "Set a name for the metric"
+					answer = UI.inputbox(["Metric name","Workplane name"],["",workplane], "What are your results?")
+					return false if not answer
+					workplane=answer[1]
+					metric=answer[0]
 				end
 
-				return false if not metric
 
 				op_name="Draw pixels"
 				begin
 					model.start_operation(op_name,true)
+
+					#delete previous workplane.
+					Utilities.get_solved_workplanes(Sketchup.active_model.entities).select{|x|
+						JSON.parse(Labeler.get_value(x))["metric"]==metric
+					}.select {|x|
+						JSON.parse(Labeler.get_value(x))["workplane"]==workplane
+					}.each{|x|
+						x.erase!
+					}
 
 					group = Sketchup.active_model.entities.add_group
 					group.name=name
@@ -126,9 +137,7 @@ module IGD
 
 					Labeler.to_solved_workplane(group)
 					Labeler.to_solved_workplane(group.definition)
-					wp_value = Hash.new
-					wp_value["min"] = min
-					wp_value["max"] = max
+					wp_value = self.get_workplane_statistics(group)
 					wp_value["metric"] = metric
 					wp_value["workplane"] = workplane
 					Labeler.set_workplane_value(group,wp_value.to_json)
@@ -188,44 +197,29 @@ module IGD
 			# @param max [Float] the maximum value for the scale
 			# @param min [Float] the minimum value for the scale
 			# @return void
-			# @version 0.1
+			# @version 0.2
 			def self.update_pixel_colors(min,max)
 				model=Sketchup.active_model
 				op_name="Update pixels"
 				begin
 					model.start_operation(op_name,true)
-
-					entities=Sketchup.active_model.entities
-
-					entities.each do |ent|
-						next if not Labeler.solved_workplane?(ent)
-						#now we are sure this is a solved_workplane
-
-						ent.entities.each do |pixel|
+					Utilities.get_solved_workplanes(Sketchup.active_model.entities).each do |workplane|
+						next if workplane.hidden?
+						workplane.entities.each do |pixel|
 							next if not Labeler.face?(pixel) or not Labeler.result_pixel?(pixel)
 							# now we are sure ent is a pixel.
 							value=Labeler.get_value(pixel)
-
 							color=self.get_pixel_color(value,max,min)
 							pixel.material=color
 							pixel.back_material=color
-
 						end
-
 					end
+
 					model.commit_operation
 
 				rescue => e
 					model.abort_operation
 					OS.failed_operation_message(op_name)
-				#else
-				  #
-				  # Do code here ONLY if NO errors occur.
-				  #
-				#ensure
-				  #
-				  # ALWAYS do code here errors or not.
-				  #
 				end
 			end
 
@@ -243,6 +237,7 @@ module IGD
 				definitions.each do |defi|
 					#now we are sure this is a solved_workplane
 					next if not Labeler.solved_workplane?(defi)
+					next if defi.instances[0].hidden?
 					defi.instances.each do |inst|
 						value=JSON.parse(Labeler.get_value(inst))
 						min=value["min"] if min > value["min"]
@@ -265,7 +260,7 @@ module IGD
 			def self.import_results(path,metric)
 
 				model=Sketchup.active_model
-				name=path.tr("\\","/").split("/").pop.split(".")[0].tr("_"," ")
+				name=path.tr("\\","/").split("/").pop.split(".")[0]
 				values = Utilities.readTextFile(path,",",0)
 				return if not values #if the format was wrong, for example
 
@@ -286,11 +281,8 @@ module IGD
 					values.shift #remove the name of the file
 				end
 				pixels = Utilities.readTextFile(pixels_file,",",0)
-
-				self.draw_pixels(values,pixels,name,metric)
-				min_max=self.get_min_max_from_model
-				self.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
-
+				name = name.tr("_"," ")
+				self.draw_pixels(values,pixels,name,metric)				
 			end
 
 			# Opens the "Scale Handler" web dialog and adds the appropriate action_callback
@@ -354,7 +346,6 @@ module IGD
 				average = sum/total_area
 				ret = Hash.new
 
-				ret["name"] = wp.name
 				ret["min"] = min
 				ret["max"] = max
 				ret["average"]=average
