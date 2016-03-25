@@ -402,8 +402,11 @@ module IGD
 			# @version 0.1
 			def self.remark_solved_workplanes(metric)
 				#hide them all, except those with the metric we are interested in
+				scale_min=false
+				scale_max=false
 				self.get_solved_workplanes(Sketchup.active_model.entities).each{|x|
-					if JSON.parse(Labeler.get_value(x))["metric"]==metric
+					value=JSON.parse(Labeler.get_value(x))
+					if value["metric"]==metric						
 						x.hidden=false
 					else
 						x.hidden=true

@@ -19,11 +19,22 @@
 					</div-->
 					<p align="center">
 						<select id='metrics' onchange="changeMetric()">
-						</select><button onclick='onLoad()'> Update metrics </button>
+						</select><button onclick='onLoad()'> Refresh </button>
 					</p>
-					<p align="center"><img align="center" src="images/scale_horizontal.png" alt="scale" style="width:200px;height:30px"></p>
+					<table align="center">
+						<tr>
+							<td id="scale_min">
+								--
+							</td>
+							<td>
+								<img align="center" src="images/scale_horizontal.png" alt="scale" style="width:200px;height:30px">
+							</td>
+							<td id="scale_max">
+								--
+							</td>
+						</tr>
+					</table>
 					<h3>Results</h3>
-					<p align="center"><button onclick='changeMetric()'> Refresh Table </button></p>
 					<table id="results" class="with_border"></table>
 
 

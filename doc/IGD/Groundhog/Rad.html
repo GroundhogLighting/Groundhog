@@ -404,8 +404,6 @@ illuminance</p>
       <pre class="lines">
 
 
-140
-141
 142
 143
 144
@@ -442,10 +440,12 @@ illuminance</p>
 175
 176
 177
-178</pre>
+178
+179
+180</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 140</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 142</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_actual_illuminance'>actual_illuminance</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span>
@@ -571,8 +571,6 @@ illuminance</p>
       <pre class="lines">
 
 
-54
-55
 56
 57
 58
@@ -614,10 +612,12 @@ illuminance</p>
 94
 95
 96
-97</pre>
+97
+98
+99</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 54</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 56</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_calc_annual_illuminance'>calc_annual_illuminance</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span>
@@ -748,14 +748,14 @@ illuminance</p>
       <pre class="lines">
 
 
-43
-44
 45
 46
-47</pre>
+47
+48
+49</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 43</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 45</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_calc_DA'>calc_DA</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>upper_threshold</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='float'>9e16</span>
@@ -847,8 +847,6 @@ illuminance</p>
       <pre class="lines">
 
 
-104
-105
 106
 107
 108
@@ -876,10 +874,12 @@ illuminance</p>
 130
 131
 132
-133</pre>
+133
+134
+135</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 104</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 106</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_calc_DC'>calc_DC</span><span class='lparen'>(</span><span class='id identifier rubyid_bins'>bins</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span>
@@ -1015,7 +1015,9 @@ illuminance</p>
 34
 35
 36
-37</pre>
+37
+38
+39</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 18</span>
@@ -1035,8 +1037,10 @@ illuminance</p>
 			<span class='id identifier rubyid_pixels'>pixels</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_readTextFile'>readTextFile</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Workplanes/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.pxl</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='int'>0</span><span class='rparen'>)</span>
 			<span class='id identifier rubyid_metric'>metric</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>U.D.I</span><span class='tstring_end'>&quot;</span></span>
 			<span class='id identifier rubyid_metric'>metric</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Daylight authonomy</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>upper_threshold</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>&gt;</span> <span class='float'>9e15</span>
-			<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_draw_pixels'>draw_pixels</span><span class='lparen'>(</span><span class='id identifier rubyid_values'>values</span><span class='comma'>,</span><span class='id identifier rubyid_pixels'>pixels</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
-		<span class='kw'>end</span>
+			<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_draw_pixels'>draw_pixels</span><span class='lparen'>(</span><span class='id identifier rubyid_values'>values</span><span class='comma'>,</span><span class='id identifier rubyid_pixels'>pixels</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+			<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+			<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
+</span>		<span class='kw'>end</span>
 	<span class='kw'>end</span>
 	<span class='kw'>return</span> <span class='kw'>true</span>
 <span class='kw'>end</span></pre>
@@ -1105,8 +1109,6 @@ illuminance</p>
       <pre class="lines">
 
 
-183
-184
 185
 186
 187
@@ -1135,10 +1137,12 @@ illuminance</p>
 210
 211
 212
-213</pre>
+213
+214
+215</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 183</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 185</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_daylight_factor'>daylight_factor</span>
 	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span>
@@ -1305,8 +1309,6 @@ illuminance</p>
       <pre class="lines">
 
 
-219
-220
 221
 222
 223
@@ -1320,10 +1322,12 @@ illuminance</p>
 231
 232
 233
-234</pre>
+234
+235
+236</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 219</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 221</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rvu'>rvu</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
@@ -1361,8 +1365,6 @@ illuminance</p>
       <pre class="lines">
 
 
-236
-237
 238
 239
 240
@@ -1482,10 +1484,12 @@ illuminance</p>
 354
 355
 356
-357</pre>
+357
+358
+359</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 236</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Rad.rb', line 238</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_show_sim_wizard'>show_sim_wizard</span>
 	<span class='id identifier rubyid_wd'>wd</span><span class='op'>=</span><span class='const'>UI</span><span class='op'>::</span><span class='const'>WebDialog</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
@@ -1547,8 +1551,8 @@ illuminance</p>
 					<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_import_results'>import_results</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Results/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_res'>res</span><span class='embexpr_end'>}</span><span class='tstring_content'>.txt</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
 				<span class='kw'>end</span>
 				<span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_remark_solved_workplanes'>remark_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
-				<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span>
-				<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
+				<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+				<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
 </span>			<span class='kw'>rescue</span>
 				<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>There was a problem when trying to calculate the Daylight Factor.</span><span class='tstring_end'>&quot;</span></span>
 			<span class='kw'>end</span>
@@ -1577,8 +1581,8 @@ illuminance</p>
 					<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_import_results'>import_results</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_tmp_groundhog_path'>tmp_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Results/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_res'>res</span><span class='embexpr_end'>}</span><span class='tstring_content'>.txt</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
 				<span class='kw'>end</span>
 				<span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_remark_solved_workplanes'>remark_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
-				<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span>
-				<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
+				<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+				<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
 </span>			<span class='kw'>rescue</span>
 				<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>There was a problem when trying to calculate the Actual Illuminance.</span><span class='tstring_end'>&quot;</span></span>
 			<span class='kw'>end</span>
@@ -1592,8 +1596,8 @@ illuminance</p>
 		<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_calc_DA'>calc_DA</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 		<span class='id identifier rubyid_metric'>metric</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Daylight authonomy</span><span class='tstring_end'>&quot;</span></span>
 		<span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_remark_solved_workplanes'>remark_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
-		<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span>
-		<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
+		<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+		<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
 </span>	<span class='kw'>end</span>
 
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>calc_UDI</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
@@ -1603,8 +1607,8 @@ illuminance</p>
 		<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_calc_UDI'>calc_UDI</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
 		<span class='id identifier rubyid_metric'>metric</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>U.D.I.</span><span class='tstring_end'>&quot;</span></span>
 		<span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_remark_solved_workplanes'>remark_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
-		<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span>
-		<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
+		<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+		<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
 </span>	<span class='kw'>end</span>
 
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_show'>show</span><span class='lparen'>(</span><span class='rparen'>)</span>
@@ -1619,7 +1623,7 @@ illuminance</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Mar 23 18:41:57 2016 by
+  Generated on Fri Mar 25 11:33:37 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

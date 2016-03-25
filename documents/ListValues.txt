@@ -51,6 +51,8 @@ nsensors = value["nsensors"]
 area = value["total_area"]
 metric = value["metric"]
 workplane = value["workplane"]
+scale_min = value["scale_min"] #This is added or updated when updating pixel colors
+scale_max = value["scale_max"] #This is added or updated when updating pixel colors
 ```
 
 ###Local luminaire Value

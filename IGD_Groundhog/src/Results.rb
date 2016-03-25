@@ -76,7 +76,7 @@ module IGD
 			# @param pixels [array] The array (2D, 9 columns) with the positions of the vertices of triangles (pixels).
 			# @param workplane [String] The name that will be given to the group that contains the pixels
 			# @param metric [String] The name that will be given to the group that contains the pixels
-			# @return [Void]
+			# @return [String] the metric
 			# @version 0.5
 			def self.draw_pixels(values,pixels,workplane,metric)
 				model=Sketchup.active_model
@@ -152,7 +152,7 @@ module IGD
 					model.abort_operation
 					OS.failed_operation_message(op_name)
 				end
-
+				return metric
 			end
 
 
@@ -196,15 +196,17 @@ module IGD
 			# @author German Molina
 			# @param max [Float] the maximum value for the scale
 			# @param min [Float] the minimum value for the scale
+			# @param metric [String] The metric to which we change the color
 			# @return void
 			# @version 0.2
-			def self.update_pixel_colors(min,max)
+			def self.update_pixel_colors(min,max,metric)
 				model=Sketchup.active_model
 				op_name="Update pixels"
 				begin
 					model.start_operation(op_name,true)
-					Utilities.get_solved_workplanes(Sketchup.active_model.entities).each do |workplane|
-						next if workplane.hidden?
+					workplanes=Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+					workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value(x))["metric"]==metric}
+					workplanes.each do |workplane|
 						workplane.entities.each do |pixel|
 							next if not Labeler.face?(pixel) or not Labeler.result_pixel?(pixel)
 							# now we are sure ent is a pixel.
@@ -213,8 +215,12 @@ module IGD
 							pixel.material=color
 							pixel.back_material=color
 						end
+						wp_value=JSON.parse(Labeler.get_value(workplane))
+						wp_value["scale_min"]=min
+						wp_value["scale_max"]=max
+						Labeler.set_workplane_value(workplane,wp_value.to_json)
 					end
-
+					Utilities.remark_solved_workplanes(metric)
 					model.commit_operation
 
 				rescue => e
@@ -223,28 +229,54 @@ module IGD
 				end
 			end
 
-			# Checks all the solved workplanes in the model
+			# Checks all the solved workplanes in the model that correspond to a metric
 			# and gets the minimum and maximum values from all of them
 			#
 			# @author German Molina
 			# @return [Array<Float>] An array with the minimum and maximum values
+			# @param metric [String] The metric that we are getting the min and max from
 			# @version 0.2
-			def self.get_min_max_from_model
-				definitions=Sketchup.active_model.definitions
+			def self.get_min_max_from_model(metric)
+				workplanes = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
 				#Get the maximum and minimum in the whole model
 				max=-1
 				min=9999999999999
-				definitions.each do |defi|
-					#now we are sure this is a solved_workplane
-					next if not Labeler.solved_workplane?(defi)
-					next if defi.instances[0].hidden?
-					defi.instances.each do |inst|
-						value=JSON.parse(Labeler.get_value(inst))
-						min=value["min"] if min > value["min"]
-						max=value["max"] if max < value["max"]
-					end
+				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value x)["metric"]==metric}
+				workplanes.each do |inst|
+					value=JSON.parse(Labeler.get_value(inst))
+					min=value["min"] if min > value["min"]
+					max=value["max"] if max < value["max"]
 				end
 				return [min,max]
+			end
+
+			# Checks all the solved workplanes in the model that correspond to a metric
+			# and gets the minimum and maximum values from their scale
+			#
+			# @author German Molina
+			# @return [Array<Float>] An array with the minimum and maximum values
+			# @param metric [String] The metric that we are getting the min and max from
+			# @version 0.1
+			def self.get_scale_from_model(metric)
+				workplanes = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value x)["metric"]==metric}
+				scale_min=false
+				scale_max=false
+				workplanes.each do |workplane|
+					value=JSON.parse(Labeler.get_value(workplane))
+					if not scale_min then
+						scale_min = value["scale_min"]
+						scale_max = value["scale_max"]
+					else
+						if value["scale_min"] != scale_min or value["scale_max"] != scale_max then
+							UI.messagebox("Workplanes of the same metric have different scales!\nWe will fix that now")
+							min_max=Results.get_min_max_from_model(metric)
+							Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
+							self.get_scale_from_model(metric)
+						end
+					end
+				end
+				return [scale_min,scale_max]
 			end
 
 
@@ -282,42 +314,12 @@ module IGD
 				end
 				pixels = Utilities.readTextFile(pixels_file,",",0)
 				name = name.tr("_"," ")
-				self.draw_pixels(values,pixels,name,metric)				
+				metric = self.draw_pixels(values,pixels,name,metric)				
+				min_max=Results.get_min_max_from_model(metric)
+				Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
+				Utilities.remark_solved_workplanes(metric)
 			end
 
-			# Opens the "Scale Handler" web dialog and adds the appropriate action_callback
-			#
-			# @author German Molina
-			# @return [Void]
-			# @version 0.1
-			def self.show_scale_handler
-
-				wd=UI::WebDialog.new(
-					"Scale handler", false, "",
-					180, 380, 100, 100, false )
-
-				wd.set_file("#{OS.main_groundhog_path}/src/html/scale.html" )
-
-				wd.add_action_callback("update_scale") do |web_dialog,msg|
-					scale=JSON.parse(msg)
-					min=scale["min"]
-					max=scale["max"]
-					#check if there is any auto
-					if(min<0 or max<0) then
-						min_max=Results.get_min_max_from_model
-						min=min_max[0] if min<0
-						max=min_max[1] if max<0
-					end
-
-
-					Results.update_pixel_colors(min,max)
-
-					web_dialog.execute_script("document.getElementById('min').value="+min.to_i.to_s+";document.getElementById('max').value="+max.to_i.to_s+";");
-				end
-
-				wd.show()
-
-			end
 
 			# Calculates statistical data from a solved workplane
 			#

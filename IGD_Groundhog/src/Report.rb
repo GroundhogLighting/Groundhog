@@ -15,7 +15,7 @@ module IGD
 					script += self.refresh_metrics(metrics)
 					script += self.refresh_table(metrics[0])
 					web_dialog.execute_script(script)
-				end				
+				end
 
 				wd.add_action_callback("select_metric") do |web_dialog,msg|
 					metric = web_dialog.get_element_value("metrics")
@@ -50,6 +50,7 @@ module IGD
 			def self.refresh_table(metric)
 				#get all workplanes
 				workplanes = self.get_workplane_list
+				scale=Results.get_scale_from_model(metric)
 				Utilities.remark_solved_workplanes(metric)
 				#select those with the corresponding metric
 				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value(x))["metric"] == metric}
@@ -80,6 +81,9 @@ module IGD
 					script += "cell = row.insertCell(5);"
 					script += "cell.innerHTML='#{data["min_over_max"].round(3)}';"
 				end
+				#update scale
+				script += "document.getElementById('scale_min').innerHTML='#{scale[0.round(0)]}';"
+				script += "document.getElementById('scale_max').innerHTML='#{scale[1].round(0)}';"
 				return script
 			end
 
@@ -118,13 +122,13 @@ module IGD
 
         begin
           op_name = "Export workplane to CSV"
-          model.start_operation(op_name,true)
+
 
           path=Exporter.getpath #it returns false if not successful
           path="" if not path
 
           value=JSON.parse(Labeler.get_value(group))
-          filename="#{Utilities.fix_name(value["name"])}_#{Utilities.fix_name(value["metric"])}.csv"
+          filename="#{Utilities.fix_name(value["workplane"])}_#{Utilities.fix_name(value["metric"])}.csv"
           filename=UI.savepanel("Export CSV file of results",path,filename)
 
           if filename then
@@ -153,7 +157,7 @@ module IGD
             }
           end
 
-          model.commit_operation
+
         rescue => e
           model.abort_operation
           OS.failed_operation_message(op_name)

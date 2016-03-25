@@ -337,12 +337,12 @@ solved-workplanes, obtained from the Solved Workplanes</p>
       <pre class="lines">
 
 
-104
-105
-106</pre>
+108
+109
+110</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Report.rb', line 104</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Report.rb', line 108</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_metrics_list'>get_metrics_list</span>
   <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_solved_workplanes'>get_solved_workplanes</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_uniq'>uniq</span>
@@ -412,12 +412,12 @@ solved-workplanes, obtained from the Solved Workplanes</p>
       <pre class="lines">
 
 
-97
-98
-99</pre>
+101
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Report.rb', line 97</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Report.rb', line 101</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplane_list'>get_workplane_list</span>
 	<span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_solved_workplanes'>get_solved_workplanes</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
@@ -488,12 +488,12 @@ Workplanes</p>
       <pre class="lines">
 
 
-90
-91
-92</pre>
+94
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Report.rb', line 90</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Report.rb', line 94</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplane_name_list'>get_workplane_name_list</span>
   <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_solved_workplanes'>get_solved_workplanes</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplane</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_uniq'>uniq</span>
@@ -709,7 +709,11 @@ table</p>
 81
 82
 83
-84</pre>
+84
+85
+86
+87
+88</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Report.rb', line 50</span>
@@ -717,6 +721,7 @@ table</p>
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_refresh_table'>refresh_table</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
 	<span class='comment'>#get all workplanes
 </span>	<span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplane_list'>get_workplane_list</span>
+	<span class='id identifier rubyid_scale'>scale</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_scale_from_model'>get_scale_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
 	<span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_remark_solved_workplanes'>remark_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
 	<span class='comment'>#select those with the corresponding metric
 </span>	<span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_metric'>metric</span><span class='rbrace'>}</span>
@@ -747,6 +752,9 @@ table</p>
 </span>		<span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>cell = row.insertCell(5);</span><span class='tstring_end'>&quot;</span></span>
 		<span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>cell.innerHTML=&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='lparen'>(</span><span class='int'>3</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;;</span><span class='tstring_end'>&quot;</span></span>
 	<span class='kw'>end</span>
+	<span class='comment'>#update scale
+</span>	<span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>document.getElementById(&#39;scale_min&#39;).innerHTML=&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_scale'>scale</span><span class='lbracket'>[</span><span class='int'>0</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;;</span><span class='tstring_end'>&quot;</span></span>
+	<span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>document.getElementById(&#39;scale_max&#39;).innerHTML=&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_scale'>scale</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;;</span><span class='tstring_end'>&quot;</span></span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_script'>script</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -816,10 +824,6 @@ table</p>
       <pre class="lines">
 
 
-113
-114
-115
-116
 117
 118
 119
@@ -864,10 +868,14 @@ table</p>
 158
 159
 160
-161</pre>
+161
+162
+163
+164
+165</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Report.rb', line 113</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Report.rb', line 117</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_report_csv'>report_csv</span><span class='lparen'>(</span><span class='id identifier rubyid_group'>group</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_solved_workplane?'>solved_workplane?</span> <span class='id identifier rubyid_group'>group</span> <span class='kw'>then</span>
@@ -877,13 +885,13 @@ table</p>
 
   <span class='kw'>begin</span>
     <span class='id identifier rubyid_op_name'>op_name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Export workplane to CSV</span><span class='tstring_end'>&quot;</span></span>
-    <span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_start_operation'>start_operation</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='comma'>,</span><span class='kw'>true</span><span class='rparen'>)</span>
+
 
     <span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_getpath'>getpath</span> <span class='comment'>#it returns false if not successful
 </span>    <span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_path'>path</span>
 
     <span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_group'>group</span><span class='rparen'>)</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_filename'>filename</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>name</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>.csv</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_filename'>filename</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplane</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>.csv</span><span class='tstring_end'>&quot;</span></span>
     <span class='id identifier rubyid_filename'>filename</span><span class='op'>=</span><span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_savepanel'>savepanel</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Export CSV file of results</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
 
     <span class='kw'>if</span> <span class='id identifier rubyid_filename'>filename</span> <span class='kw'>then</span>
@@ -912,7 +920,7 @@ table</p>
       <span class='rbrace'>}</span>
     <span class='kw'>end</span>
 
-    <span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_commit_operation'>commit_operation</span>
+
   <span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
     <span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
     <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_failed_operation_message'>failed_operation_message</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='rparen'>)</span>
@@ -979,7 +987,7 @@ table</p>
 		<span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_refresh_metrics'>refresh_metrics</span><span class='lparen'>(</span><span class='id identifier rubyid_metrics'>metrics</span><span class='rparen'>)</span>
 		<span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_refresh_table'>refresh_table</span><span class='lparen'>(</span><span class='id identifier rubyid_metrics'>metrics</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
 		<span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
-	<span class='kw'>end</span>				
+	<span class='kw'>end</span>
 
 	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>select_metric</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
 		<span class='id identifier rubyid_metric'>metric</span> <span class='op'>=</span> <span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='period'>.</span><span class='id identifier rubyid_get_element_value'>get_element_value</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metrics</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1000,7 +1008,7 @@ table</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Mar 23 18:41:57 2016 by
+  Generated on Fri Mar 25 11:33:37 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

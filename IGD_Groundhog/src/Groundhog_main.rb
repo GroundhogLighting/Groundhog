@@ -241,16 +241,6 @@ module IGD
 					Loader.load_illuminance_sensor
 				}
 
-			### RESULTS SUBMENU
-
-			gh_results_menu=groundhog_menu.add_submenu("Results")
-				gh_results_menu.add_item("Scale handler"){
-					Results.show_scale_handler
-
-				}
-
-
-
 
 			### VIEW
 			gh_view_menu=groundhog_menu.add_submenu("View")
@@ -261,9 +251,10 @@ module IGD
 				gh_view_menu.add_item("Show/Hide Workplanes"){
 					Utilities.hide_show_specific("workplane")
 				}
-				gh_view_menu.add_item("Show/Hide Results"){
+				gh_view_menu.add_item("Show/Hide Solved Workplanes"){
 					Utilities.hide_show_specific("solved_workplane")
 				}
+
 
 
 

@@ -138,7 +138,7 @@ a heatmap of UDI.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#draw_pixels-class_method" title="draw_pixels (class method)">+ (Void) <strong>draw_pixels</strong>(values, pixels, workplane, metric) </a>
+      <a href="#draw_pixels-class_method" title="draw_pixels (class method)">+ (String) <strong>draw_pixels</strong>(values, pixels, workplane, metric) </a>
     
 
     
@@ -163,7 +163,7 @@ in the model.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_min_max_from_model-class_method" title="get_min_max_from_model (class method)">+ (Array&lt;Float&gt;) <strong>get_min_max_from_model</strong> </a>
+      <a href="#get_min_max_from_model-class_method" title="get_min_max_from_model (class method)">+ (Array&lt;Float&gt;) <strong>get_min_max_from_model</strong>(metric) </a>
     
 
     
@@ -178,8 +178,8 @@ in the model.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Checks all the solved workplanes in the model and gets the minimum and
-maximum values from all of them.</p>
+<p>Checks all the solved workplanes in the model that correspond to a metric
+and gets the minimum and maximum values from all of them.</p>
 </div></span>
   
 </li>
@@ -205,6 +205,31 @@ maximum values from all of them.</p>
     <span class="summary_desc"><div class='inline'>
 <p>Reads the results from a grid, and represent them as a heat map in a plane
 in the model.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_scale_from_model-class_method" title="get_scale_from_model (class method)">+ (Array&lt;Float&gt;) <strong>get_scale_from_model</strong>(metric) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Checks all the solved workplanes in the model that correspond to a metric
+and gets the minimum and maximum values from their scale.</p>
 </div></span>
   
 </li>
@@ -262,32 +287,7 @@ in the model.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#show_scale_handler-class_method" title="show_scale_handler (class method)">+ (Void) <strong>show_scale_handler</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Opens the “Scale Handler” web dialog and adds the appropriate
-action_callback.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#update_pixel_colors-class_method" title="update_pixel_colors (class method)">+ (Object) <strong>update_pixel_colors</strong>(min, max) </a>
+      <a href="#update_pixel_colors-class_method" title="update_pixel_colors (class method)">+ (Object) <strong>update_pixel_colors</strong>(min, max, metric) </a>
     
 
     
@@ -564,7 +564,7 @@ a heatmap of UDI.</p>
       <div class="method_details ">
   <h3 class="signature " id="draw_pixels-class_method">
   
-    + (<tt>Void</tt>) <strong>draw_pixels</strong>(values, pixels, workplane, metric) 
+    + (<tt>String</tt>) <strong>draw_pixels</strong>(values, pixels, workplane, metric) 
   
 
   
@@ -659,9 +659,14 @@ is useful for importing</p>
     <li>
       
       
-        <span class='type'>(<tt>Void</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
+      
+        &mdash;
+        <div class='inline'>
+<p>the metric</p>
+</div>
       
     </li>
   
@@ -859,7 +864,7 @@ is useful for importing</p>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
 		<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_failed_operation_message'>failed_operation_message</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='rparen'>)</span>
 	<span class='kw'>end</span>
-
+	<span class='kw'>return</span> <span class='id identifier rubyid_metric'>metric</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -869,7 +874,7 @@ is useful for importing</p>
       <div class="method_details ">
   <h3 class="signature " id="get_min_max_from_model-class_method">
   
-    + (<tt>Array&lt;Float&gt;</tt>) <strong>get_min_max_from_model</strong> 
+    + (<tt>Array&lt;Float&gt;</tt>) <strong>get_min_max_from_model</strong>(metric) 
   
 
   
@@ -878,14 +883,34 @@ is useful for importing</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Checks all the solved workplanes in the model and gets the minimum and
-maximum values from all of them</p>
+<p>Checks all the solved workplanes in the model that correspond to a metric
+and gets the minimum and maximum values from all of them</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>metric</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The metric that we are getting the min and max from</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 <p class="tag_title">Returns:</p>
 <ul class="return">
   
@@ -943,13 +968,6 @@ maximum values from all of them</p>
       <pre class="lines">
 
 
-232
-233
-234
-235
-236
-237
-238
 239
 240
 241
@@ -959,25 +977,24 @@ maximum values from all of them</p>
 245
 246
 247
-248</pre>
+248
+249
+250
+251</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 232</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 239</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span>
-	<span class='id identifier rubyid_definitions'>definitions</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_solved_workplanes'>get_solved_workplanes</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='comment'>#Get the maximum and minimum in the whole model
 </span>	<span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='op'>-</span><span class='int'>1</span>
 	<span class='id identifier rubyid_min'>min</span><span class='op'>=</span><span class='int'>9999999999999</span>
-	<span class='id identifier rubyid_definitions'>definitions</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_defi'>defi</span><span class='op'>|</span>
-		<span class='comment'>#now we are sure this is a solved_workplane
-</span>		<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_solved_workplane?'>solved_workplane?</span><span class='lparen'>(</span><span class='id identifier rubyid_defi'>defi</span><span class='rparen'>)</span>
-		<span class='kw'>next</span> <span class='kw'>if</span> <span class='id identifier rubyid_defi'>defi</span><span class='period'>.</span><span class='id identifier rubyid_instances'>instances</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_hidden?'>hidden?</span>
-		<span class='id identifier rubyid_defi'>defi</span><span class='period'>.</span><span class='id identifier rubyid_instances'>instances</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_inst'>inst</span><span class='op'>|</span>
-			<span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_inst'>inst</span><span class='rparen'>)</span><span class='rparen'>)</span>
-			<span class='id identifier rubyid_min'>min</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_min'>min</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-			<span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_max'>max</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-		<span class='kw'>end</span>
+	<span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span> <span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>==</span><span class='id identifier rubyid_metric'>metric</span><span class='rbrace'>}</span>
+	<span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_inst'>inst</span><span class='op'>|</span>
+		<span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_inst'>inst</span><span class='rparen'>)</span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_min'>min</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_min'>min</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+		<span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_max'>max</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
 	<span class='kw'>end</span>
 	<span class='kw'>return</span> <span class='lbracket'>[</span><span class='id identifier rubyid_min'>min</span><span class='comma'>,</span><span class='id identifier rubyid_max'>max</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
@@ -1175,6 +1192,154 @@ in the model.</p>
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="get_scale_from_model-class_method">
+  
+    + (<tt>Array&lt;Float&gt;</tt>) <strong>get_scale_from_model</strong>(metric) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Checks all the solved workplanes in the model that correspond to a metric
+and gets the minimum and maximum values from their scale</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>metric</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The metric that we are getting the min and max from</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;Float&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An array with the minimum and maximum values</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Version:</p>
+<ul class="version">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>0.1</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 260</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_scale_from_model'>get_scale_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_solved_workplanes'>get_solved_workplanes</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span> <span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>==</span><span class='id identifier rubyid_metric'>metric</span><span class='rbrace'>}</span>
+	<span class='id identifier rubyid_scale_min'>scale_min</span><span class='op'>=</span><span class='kw'>false</span>
+	<span class='id identifier rubyid_scale_max'>scale_max</span><span class='op'>=</span><span class='kw'>false</span>
+	<span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_workplane'>workplane</span><span class='op'>|</span>
+		<span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rparen'>)</span><span class='rparen'>)</span>
+		<span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_scale_min'>scale_min</span> <span class='kw'>then</span>
+			<span class='id identifier rubyid_scale_min'>scale_min</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>scale_min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+			<span class='id identifier rubyid_scale_max'>scale_max</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>scale_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+		<span class='kw'>else</span>
+			<span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>scale_min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>!=</span> <span class='id identifier rubyid_scale_min'>scale_min</span> <span class='kw'>or</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>scale_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>!=</span> <span class='id identifier rubyid_scale_max'>scale_max</span> <span class='kw'>then</span>
+				<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Workplanes of the same metric have different scales!\nWe will fix that now</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+				<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+				<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
+</span>				<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_scale_from_model'>get_scale_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+			<span class='kw'>end</span>
+		<span class='kw'>end</span>
+	<span class='kw'>end</span>
+	<span class='kw'>return</span> <span class='lbracket'>[</span><span class='id identifier rubyid_scale_min'>scale_min</span><span class='comma'>,</span><span class='id identifier rubyid_scale_max'>scale_max</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="get_workplane_statistics-class_method">
   
     + (<tt>Hash</tt>) <strong>get_workplane_statistics</strong>(wp) 
@@ -1270,8 +1435,6 @@ in the model.</p>
       <pre class="lines">
 
 
-328
-329
 330
 331
 332
@@ -1299,10 +1462,12 @@ in the model.</p>
 354
 355
 356
-357</pre>
+357
+358
+359</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 328</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 330</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplane_statistics'>get_workplane_statistics</span><span class='lparen'>(</span><span class='id identifier rubyid_wp'>wp</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>IGD</span><span class='op'>::</span><span class='const'>Groundhog</span><span class='op'>::</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_solved_workplane?'>solved_workplane?</span> <span class='id identifier rubyid_wp'>wp</span>
@@ -1442,141 +1607,7 @@ in the model.</p>
       <pre class="lines">
 
 
-260
-261
-262
-263
-264
-265
-266
-267
-268
-269
-270
-271
-272
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283
-284
-285
-286</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 260</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_import_results'>import_results</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
-
-	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
-	<span class='id identifier rubyid_name'>name</span><span class='op'>=</span><span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\\</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
-	<span class='id identifier rubyid_values'>values</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_readTextFile'>readTextFile</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='int'>0</span><span class='rparen'>)</span>
-	<span class='kw'>return</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_values'>values</span> <span class='comment'>#if the format was wrong, for example
-</span>
-	<span class='id identifier rubyid_pixels_file'>pixels_file</span> <span class='op'>=</span> <span class='id identifier rubyid_values'>values</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
-	<span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='rparen'>)</span> <span class='kw'>then</span>
-		<span class='comment'>#Assume there is no file there.
-</span>		<span class='comment'>#Try to find the probable pixel file in the GH export.
-</span>		<span class='id identifier rubyid_pixels_file'>pixels_file</span> <span class='op'>=</span> <span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\\</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-		<span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
-		<span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
-		<span class='id identifier rubyid_pixels_file'>pixels_file</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Workplanes/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.pxl</span><span class='tstring_end'>&quot;</span></span>
-		<span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='rparen'>)</span> <span class='kw'>then</span>
-			<span class='comment'>#Now... if THIS does not exist, return.
-</span>			<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Pixels file &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; not found.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-			<span class='kw'>return</span> <span class='kw'>false</span>
-		<span class='kw'>end</span>
-	<span class='kw'>else</span>
-		<span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span> <span class='comment'>#remove the name of the file
-</span>	<span class='kw'>end</span>
-	<span class='id identifier rubyid_pixels'>pixels</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_readTextFile'>readTextFile</span><span class='lparen'>(</span><span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='int'>0</span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_draw_pixels'>draw_pixels</span><span class='lparen'>(</span><span class='id identifier rubyid_values'>values</span><span class='comma'>,</span><span class='id identifier rubyid_pixels'>pixels</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>				
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="show_scale_handler-class_method">
-  
-    + (<tt>Void</tt>) <strong>show_scale_handler</strong> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Opens the “Scale Handler” web dialog and adds the appropriate
-action_callback</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>Void</tt>)</span>
-      
-      
-      
-    </li>
-  
-</ul>
-<p class="tag_title">Author:</p>
-<ul class="author">
-  
-    <li>
-      
-      
-      
-      
-        
-        <div class='inline'>
-<p>German Molina</p>
-</div>
-      
-    </li>
-  
-</ul>
-<p class="tag_title">Version:</p>
-<ul class="version">
-  
-    <li>
-      
-      
-      
-      
-        
-        <div class='inline'>
-<p>0.1</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
+292
 293
 294
 295
@@ -1604,38 +1635,41 @@ action_callback</p>
 317
 318
 319
-320</pre>
+320
+321</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 293</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 292</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_show_scale_handler'>show_scale_handler</span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_import_results'>import_results</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
 
-	<span class='id identifier rubyid_wd'>wd</span><span class='op'>=</span><span class='const'>UI</span><span class='op'>::</span><span class='const'>WebDialog</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
-		<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Scale handler</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-		<span class='int'>180</span><span class='comma'>,</span> <span class='int'>380</span><span class='comma'>,</span> <span class='int'>100</span><span class='comma'>,</span> <span class='int'>100</span><span class='comma'>,</span> <span class='kw'>false</span> <span class='rparen'>)</span>
-
-	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_set_file'>set_file</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/src/html/scale.html</span><span class='tstring_end'>&quot;</span></span> <span class='rparen'>)</span>
-
-	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>update_scale</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
-		<span class='id identifier rubyid_scale'>scale</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
-		<span class='id identifier rubyid_min'>min</span><span class='op'>=</span><span class='id identifier rubyid_scale'>scale</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-		<span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='id identifier rubyid_scale'>scale</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-		<span class='comment'>#check if there is any auto
-</span>		<span class='kw'>if</span><span class='lparen'>(</span><span class='id identifier rubyid_min'>min</span><span class='op'>&lt;</span><span class='int'>0</span> <span class='kw'>or</span> <span class='id identifier rubyid_max'>max</span><span class='op'>&lt;</span><span class='int'>0</span><span class='rparen'>)</span> <span class='kw'>then</span>
-			<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span>
-			<span class='id identifier rubyid_min'>min</span><span class='op'>=</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_min'>min</span><span class='op'>&lt;</span><span class='int'>0</span>
-			<span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_max'>max</span><span class='op'>&lt;</span><span class='int'>0</span>
+	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
+	<span class='id identifier rubyid_name'>name</span><span class='op'>=</span><span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\\</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+	<span class='id identifier rubyid_values'>values</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_readTextFile'>readTextFile</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='int'>0</span><span class='rparen'>)</span>
+	<span class='kw'>return</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_values'>values</span> <span class='comment'>#if the format was wrong, for example
+</span>
+	<span class='id identifier rubyid_pixels_file'>pixels_file</span> <span class='op'>=</span> <span class='id identifier rubyid_values'>values</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+	<span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='rparen'>)</span> <span class='kw'>then</span>
+		<span class='comment'>#Assume there is no file there.
+</span>		<span class='comment'>#Try to find the probable pixel file in the GH export.
+</span>		<span class='id identifier rubyid_pixels_file'>pixels_file</span> <span class='op'>=</span> <span class='id identifier rubyid_path'>path</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\\</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
+		<span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
+		<span class='id identifier rubyid_pixels_file'>pixels_file</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Workplanes/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.pxl</span><span class='tstring_end'>&quot;</span></span>
+		<span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='rparen'>)</span> <span class='kw'>then</span>
+			<span class='comment'>#Now... if THIS does not exist, return.
+</span>			<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Pixels file &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; not found.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+			<span class='kw'>return</span> <span class='kw'>false</span>
 		<span class='kw'>end</span>
-
-
-		<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='id identifier rubyid_min'>min</span><span class='comma'>,</span><span class='id identifier rubyid_max'>max</span><span class='rparen'>)</span>
-
-		<span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>document.getElementById(&#39;min&#39;).value=</span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_min'>min</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>;document.getElementById(&#39;max&#39;).value=</span><span class='tstring_end'>&quot;</span></span><span class='op'>+</span><span class='id identifier rubyid_max'>max</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='semicolon'>;</span>
-	<span class='kw'>end</span>
-
-	<span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_show'>show</span><span class='lparen'>(</span><span class='rparen'>)</span>
-
+	<span class='kw'>else</span>
+		<span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span> <span class='comment'>#remove the name of the file
+</span>	<span class='kw'>end</span>
+	<span class='id identifier rubyid_pixels'>pixels</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_readTextFile'>readTextFile</span><span class='lparen'>(</span><span class='id identifier rubyid_pixels_file'>pixels_file</span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='int'>0</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_metric'>metric</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_draw_pixels'>draw_pixels</span><span class='lparen'>(</span><span class='id identifier rubyid_values'>values</span><span class='comma'>,</span><span class='id identifier rubyid_pixels'>pixels</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>				
+	<span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
+	<span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default
+</span>	<span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_remark_solved_workplanes'>remark_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1645,7 +1679,7 @@ action_callback</p>
       <div class="method_details ">
   <h3 class="signature " id="update_pixel_colors-class_method">
   
-    + (<tt>Object</tt>) <strong>update_pixel_colors</strong>(min, max) 
+    + (<tt>Object</tt>) <strong>update_pixel_colors</strong>(min, max, metric) 
   
 
   
@@ -1691,6 +1725,22 @@ action_callback</p>
         &mdash;
         <div class='inline'>
 <p>the minimum value for the scale</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>metric</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The metric to which we change the color</p>
 </div>
       
     </li>
@@ -1754,7 +1804,6 @@ action_callback</p>
       <pre class="lines">
 
 
-201
 202
 203
 204
@@ -1777,18 +1826,25 @@ action_callback</p>
 221
 222
 223
-224</pre>
+224
+225
+226
+227
+228
+229
+230</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 201</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 202</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='id identifier rubyid_min'>min</span><span class='comma'>,</span><span class='id identifier rubyid_max'>max</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='id identifier rubyid_min'>min</span><span class='comma'>,</span><span class='id identifier rubyid_max'>max</span><span class='comma'>,</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
 	<span class='id identifier rubyid_op_name'>op_name</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Update pixels</span><span class='tstring_end'>&quot;</span></span>
 	<span class='kw'>begin</span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_start_operation'>start_operation</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='comma'>,</span><span class='kw'>true</span><span class='rparen'>)</span>
-		<span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_solved_workplanes'>get_solved_workplanes</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_workplane'>workplane</span><span class='op'>|</span>
-			<span class='kw'>next</span> <span class='kw'>if</span> <span class='id identifier rubyid_workplane'>workplane</span><span class='period'>.</span><span class='id identifier rubyid_hidden?'>hidden?</span>
+		<span class='id identifier rubyid_workplanes'>workplanes</span><span class='op'>=</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_solved_workplanes'>get_solved_workplanes</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>==</span><span class='id identifier rubyid_metric'>metric</span><span class='rbrace'>}</span>
+		<span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_workplane'>workplane</span><span class='op'>|</span>
 			<span class='id identifier rubyid_workplane'>workplane</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pixel'>pixel</span><span class='op'>|</span>
 				<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_face?'>face?</span><span class='lparen'>(</span><span class='id identifier rubyid_pixel'>pixel</span><span class='rparen'>)</span> <span class='kw'>or</span> <span class='kw'>not</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_result_pixel?'>result_pixel?</span><span class='lparen'>(</span><span class='id identifier rubyid_pixel'>pixel</span><span class='rparen'>)</span>
 				<span class='comment'># now we are sure ent is a pixel.
@@ -1797,8 +1853,12 @@ action_callback</p>
 				<span class='id identifier rubyid_pixel'>pixel</span><span class='period'>.</span><span class='id identifier rubyid_material'>material</span><span class='op'>=</span><span class='id identifier rubyid_color'>color</span>
 				<span class='id identifier rubyid_pixel'>pixel</span><span class='period'>.</span><span class='id identifier rubyid_back_material'>back_material</span><span class='op'>=</span><span class='id identifier rubyid_color'>color</span>
 			<span class='kw'>end</span>
+			<span class='id identifier rubyid_wp_value'>wp_value</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rparen'>)</span><span class='rparen'>)</span>
+			<span class='id identifier rubyid_wp_value'>wp_value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>scale_min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>=</span><span class='id identifier rubyid_min'>min</span>
+			<span class='id identifier rubyid_wp_value'>wp_value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>scale_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>=</span><span class='id identifier rubyid_max'>max</span>
+			<span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_set_workplane_value'>set_workplane_value</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_wp_value'>wp_value</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='rparen'>)</span>
 		<span class='kw'>end</span>
-
+		<span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_remark_solved_workplanes'>remark_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_commit_operation'>commit_operation</span>
 
 	<span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
@@ -1816,7 +1876,7 @@ action_callback</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Mar 23 18:41:57 2016 by
+  Generated on Fri Mar 25 11:33:37 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
