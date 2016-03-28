@@ -126,12 +126,9 @@ module IGD
 					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
 						info=workplane.split("/")
-						name=info[1].split(".")[0]
-<<<<<<< HEAD
-						script << "rfluxmtx -I+ #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{winstring} > DC/#{name}.dmx"
-=======
+						name=info[1].split(".")[0]						
 						script << "#{OS.program("rfluxmtx")} -I+ #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}.dmx"
->>>>>>> Latest
+
 					end
 
 					return script
