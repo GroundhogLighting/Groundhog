@@ -37,9 +37,9 @@ module IGD
 			def self.get_name(entity)
 				name=entity.get_attribute("Groundhog","Name")
 				if name == nil then
-					entity.entityID.to_s
+					Utilities.fix_name(entity.entityID.to_s)
 				else
-					name
+					Utilities.fix_name(name)
 				end
 			end
 
@@ -49,12 +49,11 @@ module IGD
 			#
 			# @author German Molina
 			# @param workplane [SketchUp::ComponentDefinition] The workplane to be assigned the value
-			# @param min [Float] Minimum value
-			# @param max [Float] Maximum value
+			# @param value [Hash] Hash with minimum, maximum and metric
 			# @return [Void]
-			def self.set_workplane_value(workplane,min,max)
-				return false if not self.solved_workplane?(workplane)				
-				workplane.set_attribute("Groundhog","Value",[min,max])
+			def self.set_workplane_value(workplane,value)
+				return false if not self.solved_workplane?(workplane)
+				workplane.set_attribute("Groundhog","Value",value)
 			end
 
 			# Assigns the Radiance definition as the value of a Local Material
@@ -101,10 +100,10 @@ module IGD
 
 			# Checks if a component is a solved_workplane
 			# @author German Molina
-			# @param component_definition [SketchUp::ComponentDefinition] component to test.
+			# @param group [SketchUp::ComponentDefinition] component to test.
 			# @return [Boolean]
-			def self.solved_workplane?(component_definition)
-				component_definition.get_attribute("Groundhog","Label")=="solved_workplane"
+			def self.solved_workplane?(group)
+				group.get_attribute("Groundhog","Label")=="solved_workplane"
 			end
 
 
@@ -115,6 +114,15 @@ module IGD
 			def self.result_pixel?(entity)
 				entity.get_attribute("Groundhog","Label")=="result_pixel"
 			end
+
+			# Checks if an entity is a local_luminaire
+			# @author German Molina
+			# @param entity [SketchUp::Entity] Entity to test.
+			# @return [Boolean]
+			def self.local_luminaire?(entity)
+				entity.get_attribute("Groundhog","Label")=="local_luminaire"
+			end
+
 
 			# Checks if an entity is a workplane
 			# @author German Molina
@@ -165,6 +173,14 @@ module IGD
 				entity.is_a? Sketchup::Image
 			end
 
+			# Checks if an entity is an illuminance_sensor
+			# @author German Molina
+			# @param entity [entity] Entity to test.
+			# @return [Boolean]
+			def self.illuminance_sensor?(entity)
+				entity.get_attribute("Groundhog","Label")=="illuminance_sensor"
+			end
+
 			# Assigns a name to a set of faces.
 			#
 			# If there is only one surface, the name will be the inputted on the prompt. If there
@@ -204,9 +220,10 @@ module IGD
 			# Assigns a value to a pixel.
 			#
 			# @author German Molina
-			# @param pixel [SketchUp::Face] the pixel to be assigned a value
-			# @param value [Float] the value to be assigned
+			# @param pixel [SketchUp::Face] The pixel to be assigned a value
+			# @param value [Float] The value to be assigned
 			# @return [Void]
+			# @version 0.1
 			def self.set_pixel_value(pixel,value)
 				pixel.set_attribute("Groundhog","Value",value)
 			end
@@ -240,12 +257,33 @@ module IGD
 				face.set_attribute("Groundhog","Label","result_pixel")
 			end
 
+			# Label selected entity as an Illuminance Sensor
+			# @author German Molina
+			# @param face [Sketchup::Face] The face to be labeled as illuminance_sensor
+			# @return [Void]
+			def self.to_illuminance_sensor(face)
+				face.set_attribute("Groundhog","Label","illuminance_sensor")
+			end
+
 			# Label selected face into as solved_workplane
 			# @author German Molina
 			# @param workplane [SkecthUp::ComponentDefinition] A SketchUp component definition
 			# @return [Void]
 			def self.to_solved_workplane(workplane)
 				workplane.set_attribute("Groundhog","Label","solved_workplane")
+			end
+
+			# Label selected face into as local_luminaire
+			# @author German Molina
+			# @param comp [SkecthUp::ComponentDefinition] A SketchUp component definition
+			# @return [Void]
+			def self.to_local_luminaire(comp)
+				UI.messagebox("Only components can be labeled as Local Luminaires") if not comp.is_a? Sketchup::ComponentDefinition
+				return if not comp.is_a? Sketchup::ComponentDefinition
+
+				comp.set_attribute("Groundhog","Label","local_luminaire")
+				lumfile = UI.openpanel("Choose an IES file", "c:/", "IES|*.ies||")
+				comp.set_attribute("Groundhog","Value",lumfile)
 			end
 
 			# Label selected material as local_material
@@ -290,11 +328,6 @@ module IGD
 				return if not name
 				if faces.length>=1 then
 					faces.each do |i|
-						if i.vertices.count!=4 or i.loops.count!=1 then
-							#not rectangular faces are ignored, as well as those with holes (more than 1 loop)
-							not_sutable=true
-							next
-						end
 						correct=correct+[i]
 						i.set_attribute("Groundhog","Label","workplane")
 						i.material=[1.0,0.0,0.0]
@@ -303,7 +336,7 @@ module IGD
 						i.back_material.alpha=0.2
 					end
 
-					Labeler.set_name(correct,name)
+					self.set_name(correct,name)
 					UI.messagebox("Non-rectangular faces were ignored, as well as those with holes.") if not_sutable
 				else
 					UI.messagebox("No faces selected")

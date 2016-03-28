@@ -5,41 +5,6 @@ module IGD
 		module Results
 
 
-			# Converts sensor results into a 2D array
-			#
-			# It expects the grid be in format "Px Py Pz Value"
-			# where the first three terms are the position in space,
-			# and the 4th value is the actual value to be put in the grid.
-			#
-			# The positions are assumed to be in meters.
-			#
-			# @author German Molina
-			# @param results_path [String] the path to the results file
-			# @return [Depends] An array with the values when succesful, "false" if not.
-			# @version 0.2
-			def self.results_to_array(results_path)
-				if not File.exist?(results_path) then
-					UI.messagebox("Results file not found.")
-					return false
-				end
-
-				ret=[]
-				line_num=1
-				File.open(results_path, "r").each_line do |line|
-					line.strip!
-					data=line.split("\t")
-					if data.length==4 then #check the correct format
-						ret=ret+[[data[0].to_f.m, data[1].to_f.m, data[2].to_f.m, data[3].to_f]]
-					else
-						UI.messagebox("Incorrect results file format at line"+line_num.to_s)
-						return false
-					end
-					line_num+=1
-				end
-
-				return ret
-			end
-
 			# Converts a very long file of annual results into a 2d array for
 			# plotting as a heatmap of UDI.
 			#
@@ -53,7 +18,7 @@ module IGD
 			# @param min [Float] The minimum acceptable illuminance
 			# @param max [Float] The maximum acceptable illuminance
 			# @return [Depends] An array with the values when succesful, "false" if not.
-			# @version 0.1
+			# @version 0.2
 			def self.annual_to_UDI(results_path, workplane_file, min, max, early, late)
 
 				return false if not File.exist?(results_path)
@@ -71,122 +36,32 @@ module IGD
 				timestep=8760.0/n_samples
 
 				ret=[]
-				sensors.each do |line|
-					line.strip!
-					sensor=line.split("\t")
-					ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
-				end
+				#sensors.each do |line|
+				#	line.strip!
+				#	sensor=line.split("\t")
+				#	ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
+				#end
 
 				#they alternate hour
-				ret.each do |sensor|
-					time=timestep/2.0
+				#ret.each do |sensor|
+				sensors.each do |sensor|
+					time=-timestep/2.0 #say, -0.5 is the time
 					ac=0.0
+					good = 0.0
 					for i in 1..n_samples
-						time+=timestep
+						time+=timestep # now it will be 0.5
 						ill=results.shift
 						next if (time%24.0) < early or (time%24.0) > late
 						ac+=1.0
 						next if ill > max
 						next if ill < min
-						sensor[3]+=100.0
+						good+=100.0
 					end
-					sensor[3]/=ac
+					ret.push([good/ac])
 				end
 
 				return ret
 			end
-
-			# Converts a very long file of annual results into a 2d array for
-			# plotting as a heatmap for plotting DA>
-			#
-			# It reads the workplane path for getting the position of each sensor.
-			#
-			# The positions are assumed to be in meters.
-			#
-			# @author German Molina
-			# @param results_path [String] the path to the results file
-			# @param workplane_file [String] the path to the workplane file
-			# @param min [Float] The minimum acceptable illuminance
-			# @return [Depends] An array with the values when succesful, "false" if not.
-			# @version 0.1
-			def self.annual_to_DA(results_path, workplane_file, min, early, late)
-
-				return false if not File.exist?(results_path)
-				return false if not File.exist?(workplane_file)
-
-				results=File.open(results_path).read.split("\n").collect!{|x| x.to_f}
-				n_results=results.length
-
-				sensors=File.open(workplane_file).read.split("\n")
-				n_sensors=sensors.length
-
-				n_samples = n_results/n_sensors
-				warn "Weather file does not seem to have 8760 hours!!" if n_samples != 8760
-
-				timestep=8760.0/n_samples
-
-				ret=[]
-				sensors.each do |line|
-					line.strip!
-					sensor=line.split("\t")
-					ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
-				end
-
-				#they alternate hour
-				ret.each do |sensor|
-					time=timestep/2.0
-					ac=0.0
-					for i in 1..n_samples
-						time+=timestep
-						ill=results.shift
-						next if (time%24.0) < early or (time%24.0) > late
-						ac+=1.0
-						next if ill < min
-						sensor[3]+=100.0
-					end
-					sensor[3]/=ac
-				end
-
-				return ret
-			end
-
-			# Calculates the u and v vectors for drawing the "pixels" in the solved workplanes.
-			#
-			# This method was thought to be used along with "results_to_array"
-			# and, accordingly, that array is the parameter it receives.
-			#
-			# This method assumes that the sensors have a certain order... that is, written
-			# as Groundhog writes them. First, all sensors in direction V, then
-			# shift one U to the side, and again all sensors in direction V.
-			#
-			# @author German Molina
-			# @param array [Array<Float>] a 2d array with 4 columns
-			# @return [Array<Geom::Vector3d>] an array of Geom::Vector3d objects
-			# @version 0.1
-			def self.get_UV(array)
-				#Start with the first two points
-				data0=array[0]
-				data=array[1]
-
-				#get V... easy. Two sequencial points
-				pt0=Geom::Point3d.new(data0[0],data0[1],data0[2])
-				pt=Geom::Point3d.new(data[0],data[1],data[2])
-				v=pt0.vector_to(pt)
-
-				u=v
-				i=2
-				#Now, for getting U, we need to check the moment when we shift one "U"
-				while u.parallel?(v) do
-					data=array[i]
-					pt=Geom::Point3d.new(data[0],data[1],data[2])
-					u=pt0.vector_to(pt)
-					i+=1
-				end
-
-
-				return [u,v]
-			end
-
 
 
 
@@ -198,14 +73,28 @@ module IGD
 			# all the sensors lie in the same plane point in the same direction.
 			#
 			# @author German Molina
-			# @param u [vector3d] U vector
-			# @param v [vector3d] V vector
-			# @param array [array] The array (2D, 4 columns) with the data to show.
+			# @param values [array] The array (2D but 1 columns) with the data to show.
+			# @param pixels [array] The array (2D, 9 columns) with the positions of the vertices of triangles (pixels).
 			# @param name [String] The name that will be given to the group that contains the pixels
 			# @return [Void]
-			# @version 0.2
-			def self.draw_pixels(u,v,array,name)
+			# @version 0.3
+			def self.draw_pixels(values,pixels,name,metric)
 				model=Sketchup.active_model
+				if values.length != pixels.length then
+					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match")
+					return false
+				end
+				if values[0].length != 1 or pixels[0].length != 9 then
+					UI.messagebox("Incorrect format in 'pixels' or 'values' when drawing pixels")
+					return false
+				end
+
+				if not metric then
+					metric = UI.inputbox ["Metric name\n"], [""], "Set a name for the metric"
+				end
+
+				return false if not metric
+
 				op_name="Draw pixels"
 				begin
 					model.start_operation(op_name,true)
@@ -215,46 +104,39 @@ module IGD
 
 					entities=group.entities
 
-
-					#we move half step to each side.
-					u.transform!(0.5)
-					v.transform!(0.5)
-
+					#initialize minimum and maximum
 					max=0
 					min=9999999999999
-					array.each do |data|
-						min=data[3] if min>data[3]
-						max=data[3] if max<data[3]
-					end
 
-					#draw every line. Each pixel is a quadrilateral.
-					array.each do |data|
-						pt=Geom::Point3d.new(data[0],data[1],data[2])
-						vertex1=pt.offset(v).offset(u)
-						vertex4=pt.offset(v.transform(-1)).offset(u)
-						vertex3=pt.offset(v.transform(-1)).offset(u.transform(-1))
-						vertex2=pt.offset(v).offset(u.transform(-1))
+					#draw every line. Each pixel is a triangle.
+					pixels.each do |data|
+						value = values.shift[0].to_f
+						#check minimum and maximum
+						min=value.to_f if min>value.to_f
+						max=value.to_f if max<value.to_f
 
-						pixel=entities.add_face(vertex1,vertex2,vertex3,vertex4)
+						vertex0=Geom::Point3d.new(data[0].to_f.m,data[1].to_f.m,data[2].to_f.m)
+						vertex1=Geom::Point3d.new(data[3].to_f.m,data[4].to_f.m,data[5].to_f.m)
+						vertex2=Geom::Point3d.new(data[6].to_f.m,data[7].to_f.m,data[8].to_f.m)
+
+						pixel=entities.add_face(vertex0,vertex1,vertex2)
 						Labeler.to_result_pixel(pixel)
-						Labeler.set_pixel_value(pixel,data[3])
-
+						Labeler.set_pixel_value(pixel,value)
 					end
 
 					Labeler.to_solved_workplane(group)
-					Labeler.set_workplane_value(group,min,max)
+					Labeler.to_solved_workplane(group.definition)
+					wp_value = Hash.new
+					wp_value["min"] = min
+					wp_value["max"] = max
+					wp_value["metric"] = metric
+					Labeler.set_workplane_value(group,wp_value.to_json)
+
+					group.casts_shadows=false
 					model.commit_operation
 				rescue => e
 					model.abort_operation
 					OS.failed_operation_message(op_name)
-				#else
-				  #
-				  # Do code here ONLY if NO errors occur.
-				  #
-				#ensure
-				  #
-				  # ALWAYS do code here errors or not.
-				  #
 				end
 
 			end
@@ -347,41 +229,63 @@ module IGD
 			#
 			# @author German Molina
 			# @return [Array<Float>] An array with the minimum and maximum values
-			# @version 0.1
+			# @version 0.2
 			def self.get_min_max_from_model
 				definitions=Sketchup.active_model.definitions
 				#Get the maximum and minimum in the whole model
 				max=-1
 				min=9999999999999
 				definitions.each do |defi|
+					#now we are sure this is a solved_workplane
+					next if not Labeler.solved_workplane?(defi)
 					defi.instances.each do |inst|
-						next if not Labeler.solved_workplane?(inst)
-						#now we are sure this is a solved_workplane
-						min_max=Labeler.get_value(inst)
-
-						min=min_max[0] if min > min_max[0]
-						max=min_max[1] if max < min_max[1]
+						value=JSON.parse(Labeler.get_value(inst))
+						min=value["min"] if min > value["min"]
+						max=value["max"] if max < value["max"]
 					end
 				end
 				return [min,max]
 			end
 
+
+
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model.
 			#
+			# If the metric is set to False, the user will be asked to
+			# define one. This is useful for importing
+			#
 			# @author German Molina
 			# @param path [String]
+			# @param metric [String]
 			# @return void
-			# @version 0.1
-			def self.import_results(path)
+			# @version 0.3
+			def self.import_results(path,metric)
 
 				model=Sketchup.active_model
-				name=path.tr("\\","/").split("/").pop.split(".")[0]
-				array=self.results_to_array(path)
-				return if not array #if the format was wrong, for example
+				name=path.tr("\\","/").split("/").pop.split(".")[0].tr("_"," ")
+				values = Utilities.readTextFile(path,",",0)
+				return if not values #if the format was wrong, for example
 
-				uv=self.get_UV(array)
-				self.draw_pixels(uv[0],uv[1],array,name)
+				pixels_file = values[0][0]
+				if not File.exist?(pixels_file) then
+					#Assume there is no file there.
+					#Try to find the probable pixel file in the GH export.
+					pixels_file = path.tr("\\","/").split("/")
+					pixels_file.pop
+					pixels_file.pop
+					pixels_file = "#{pixels_file.join("/")}/Workplanes/#{name}.pxl"
+					if not File.exist?(pixels_file) then
+						#Now... if THIS does not exist, remove.
+						UI.messagebox("Pixels file '#{pixels_file}' not found.")
+						return false
+					end
+				else
+					values.shift #remove the name of the file
+				end
+				pixels = Utilities.readTextFile(pixels_file,",",0)
+
+				self.draw_pixels(values,pixels,name,metric)
 				min_max=self.get_min_max_from_model
 				self.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
 
@@ -421,7 +325,43 @@ module IGD
 
 			end
 
+			# Calculates statistical data from a solved workplane
+			#
+			# @author German Molina
+			# @return [Hash] A hash with statistics
+			# @param wp [Workplane] The workplane to analyze
+			# @version 0.1
+			def self.get_workplane_statistics(wp)
+				return false if not IGD::Groundhog::Labeler.solved_workplane? wp
+				pixels = wp.entities.select{|x| IGD::Groundhog::Labeler.result_pixel? x}
 
+				count=pixels.length
+				sum=0
+				total_area = 0
+				max=IGD::Groundhog::Labeler.get_value(pixels[0])
+				min=max
+
+				pixels.each do |pixel|
+					value = IGD::Groundhog::Labeler.get_value(pixel)
+					area = pixel.area
+					max = value if value > max
+					min = value if value < min
+					sum += value*area
+					total_area += area
+				end
+				average = sum/total_area
+				ret = Hash.new
+
+				ret["name"] = wp.name
+				ret["min"] = min
+				ret["max"] = max
+				ret["average"]=average
+				ret["min_over_average"] = min/average
+				ret["min_over_max"] = min/max
+				ret["nsensors"] = count
+				ret["total_area"] = total_area/1550.0 #transform into square meters from sqin
+				return ret
+			end
 
 
 		end

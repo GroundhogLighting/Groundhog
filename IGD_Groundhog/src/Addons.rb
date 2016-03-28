@@ -2,9 +2,10 @@ module IGD
     module Groundhog
         module Addons
 
-            # loads a list of addons passed to it in an array of strings
+            # Loads a list of addons passed to it in an array of strings
             # @param addons [String <Array>] An array of Strings that contains the names of the addons.
     		# @author German Molina
+            # @param addons [<String>] A list with the names of the active addons (if I remember correctly)            
             def self.load_addons(addons)
                 available= Dir["#{OS.addons_groundhog_path}/*.rb"]
                 available.map!{|x| x.tr("\\","/").split("/").pop}
@@ -24,7 +25,7 @@ module IGD
                     "Addons manager", false, "",
                     450, 550, 100, 100, false )
 
-                wd.set_file("#{IGD::Groundhog::OS.main_groundhog_path}/src/html/addons.html" )
+                wd.set_file("#{OS.main_groundhog_path}/src/html/addons.html" )
 
 
                 #Load the active and inactive addons
@@ -67,7 +68,6 @@ module IGD
 
                         str+="active.appendChild(opt);" if active.include? addon
                         str+="inactive.appendChild(opt);" if not active.include? addon
-
 
                     end
                     web_dialog.execute_script(str)

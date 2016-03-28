@@ -158,9 +158,10 @@ module IGD
 			# @author German Molina
 			# @version 1.0
 			# @param path [String] The path where the model will be exported
+			# @param lights_on [Boolean] The lights will be exported as ON if true, and OFF if false
 			# @return [Boolean] Success
 			# @note this method used to be called 'do_multiphase'
-			def self.export(path)
+			def self.export(path,lights_on)
 				OS.clear_path(path)
 				#begin
 					model=Sketchup.active_model
@@ -171,10 +172,11 @@ module IGD
 					mod_list=self.export_layers(path)
 					return false if not mod_list #return right away
 					return false if not self.export_modifiers(path,mod_list)
+					return false if not self.write_sky(path)
 					return false if not self.export_views(path)
 					return false if not self.write_scene_file(path)
-					return false if not self.export_component_definitions(path)
-					return false if not self.write_sky(path)
+					return false if not self.export_component_definitions(path, lights_on)
+					return false if not self.write_illuminance_sensors(path)
 
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 
@@ -258,7 +260,7 @@ module IGD
 				end
 
 				#write the workplanes
-				return false if not self.write_sensors(path,workplanes)
+				return false if not self.write_workplanes(path,workplanes)
 
 				#Write windows
 				return false if not self.write_window_groups(path,windows)
@@ -408,15 +410,11 @@ module IGD
 			#
 			# The name of the file will be the name of the entity.
 			# @author German Molina
-			# @version 1.1
+			# @version 1.2
 			# @param path [String] Directory to export the Window Groups.
 			# @param entities [entities] Array of workplanes.
 			# @return [Boolean] Success
-			# @note This method assumes that it receives workplanes (which are horizontal surfaces). If there is a not-horizontal
-			#   surface in the array, sensors and spacing will make no sense.
-			# @todo Allow non-horizontal workplanes?
-			def self.write_sensors(path,entities)
-
+			def self.write_workplanes(path,entities)
 
 				return true if entities.length<1 #we export this only if there is any workplane... success
 				d=Config.sensor_spacing
@@ -426,54 +424,25 @@ module IGD
 				OS.mkdir("#{path}/Workplanes")
 				path="#{path}/Workplanes"
 
-
 				entities.each do |ent| #for all the entities (which are faces)
 					if Labeler.workplane?(ent) then #Only workplanes
-						name=Labeler.get_name(ent).tr(" ","_") #Get the name of the surface
-						pts=[] #Create an array with all the points
-
-						#get the basis system for moving around the plane seting sensors
-						vertices=ent.vertices
-						v=vertices[0].position.vector_to(vertices[3].position)
-						u=vertices[0].position.vector_to(vertices[1].position)
-
-						#store the length
-						normU=u.length
-						normV=v.length
-
-						#correct the spacing (to provide exact division of the plane)
-						qU=normU/d
-						qU=qU.round
-						dU=normU/qU
-
-						qV=normV/d
-						qV=qV.round
-						dV=normV/qV
-
-						#then, each step will be the same length
-						u.length=dU
-						v.length=dV
-
-						#place the first sensor
-						p0=vertices[0].position.offset!(u.transform(0.5)).offset!(v.transform(0.5))
-
-						for i in 0..qU-1
-							for j in 0..qV-1
-								pts=pts+[p0.offset(u.transform(i)).offset(v.transform(j))]
-							end
-						end
-
-
-						File.open("#{path}/#{name.tr(" ","_")}.pts",'w+'){ |f| #The file is opened
-							pts.each do |p| #and the sensors are written
-								x=p.x.to_m
-								y=p.y.to_m
-								z=p.z.to_m
-								f.write(x.to_s+"\t"+y.to_s+"\t"+z.to_s+"\t0\t0\t1\n")
-								#this will have to change for exporting non horizontal workplanes.
-							end
+						name=Labeler.get_name(ent) #Get the name of the surface
+						mesh = ent.mesh
+						points = mesh.points
+						polygons = mesh.polygons
+						triangles = Triangle.triangulate(points,polygons)
+						File.open("#{path}/#{name}.pxl",'w+'){ |pixels|
+							File.open("#{path}/#{name}.pts",'w+'){ |points|
+								#now the triangles
+								triangles.each do |triangle|
+									pos = Triangle.get_center(triangle)
+									n = Triangle.get_normal(triangle)
+									pixels.puts "#{triangle[0].x.to_m},#{triangle[0].y.to_m},#{triangle[0].z.to_m},#{triangle[1].x.to_m},#{triangle[1].y.to_m},#{triangle[1].z.to_m},#{triangle[2].x.to_m},#{triangle[2].y.to_m},#{triangle[2].z.to_m}"
+									#points.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t#{n.x}\t#{n.y}\t#{n.z}"
+									points.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t0\t0\t1"
+								end
+							}
 						}
-
 					end
 				end
 
@@ -543,10 +512,6 @@ module IGD
 				File.open("#{path}/scene.rad",'w+'){ |f| #The file is opened
 					f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
 
-					f.write("\n\n\n###### SKY \n\n")
-
-					f.write("!xform ./Skies/sky.rad")
-
 					f.write("\n\n\n###### GEOMETRY \n\n")
 
 					Sketchup.active_model.layers.each do |layer|
@@ -577,7 +542,7 @@ module IGD
 
 			# Writes the standard Clear Sky
 			# @author German Molina
-			# @version 0.9
+			# @version 1.0
 			# @param path [String] Directory to export the sky file
 			# @return [Boolean] Success
 			def self.write_sky(path)
@@ -592,15 +557,53 @@ module IGD
 				azi=floor.angle_between(Geom::Vector3d.new(0,-1,0)).radians
 				azi=-azi if sun.x>0
 
-				File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
-					f.write("\n\n\n###### DEFAULT SKY \n\n")
+				if alt >= 3.0 then
+					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
+						f.write("\n\n\n###### DEFAULT SKY \n\n")
+							f.write("!gensky -ang #{alt} #{azi} +s\n\n")
+							f.write(self.sky_complement)
+					}
 
-					f.write("!gensky -ang #{alt} #{azi} +s\n\n")
-					f.write(self.sky_complement)
+					return true
+				else
+					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
+						f.write "#night-time... No Sky"
+					}
+					return true
+				end
+
+			end
+
+			# Writes the illuminance sensors
+			# @author German Molina
+			# @version 0.1
+			# @param path [String] Directory to export the sky file
+			# @return [Boolean] Success
+			def self.write_illuminance_sensors(path)
+
+				sensors = Sketchup.active_model.definitions.select {|x| Labeler.illuminance_sensor?(x) }
+				return true if sensors.length < 1 #do not do anything, but success
+				sensors = sensors[0].instances
+				return true if sensors.length < 1 #do not do anything, but success
+
+				OS.mkdir("#{path}/Illuminance_Sensors")
+				path="#{path}/Illuminance_Sensors"
+
+				File.open("#{path}/sensors.pts",'w+'){ |f| #The file is opened
+					sensors.each do |sensor|
+						vdir = sensor.transformation.zaxis
+						vx = vdir[0]
+						vy = vdir[1]
+						vz = vdir[2]
+						pos = sensor.transformation.origin
+						px = pos[0].to_m
+						py = pos[1].to_m
+						pz = pos[2].to_m
+						f.write("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}\n")
+					end
 				}
 				return true
 			end
-
 
 			# Get the sky_complement, defining the sky and ground semi-hemispheres
 			#
@@ -624,34 +627,36 @@ module IGD
 			# Export the ComponentDefinitions into separate files into "Components" folder.
 			# Each file is autocontained, although some materials might be repeated in the "materials.mat" file.
 			# @author German Molina
-			# @version 0.4
+			# @version 0.5
 			# @param path [String] Directory to export the model (scene file)
+			# @param lights_on [Boolean] Lights will be exported as ON if true and OFF if false.
 			# @return [Boolean] Success
-			def self.export_component_definitions(path)
+			def self.export_component_definitions(path,lights_on)
 				defi=Sketchup.active_model.definitions.select{|x| x.instances.count!=0}
 				comp_path="#{path}/Components"
 
 				return true if defi.length == 0 #dont do anything if there are no components
-
-				first_exported=true
+				OS.mkdir("#{comp_path}")
 
 				defi.each do |h|
+					#skip the following
 					next if h.image?
 					next if Labeler.solved_workplane?(h)
-
-					if first_exported then #create directories if there is actually something to export
-						OS.mkdir("#{comp_path}")
-						first_exported=false
-					end
+					next if Labeler.illuminance_sensor?(h)
 
 					hName=Utilities.fix_name(h.name)
 					entities=h.entities
-#					faces=Utilities.get_all_layer_faces(entities,[])
 					faces=Utilities.get_faces(entities)
-
 					instances=Utilities.get_component_instances(entities)
 
 					geom_string=""
+
+					if Labeler.local_luminaire? (h) then
+						mult = 1.0
+						mult = 0 if not lights_on
+						geom_string += Lamps.ies2rad(Labeler.get_value(h),mult,h, comp_path)
+					end
+
 					instances.each do |inst| #include the nested components
 						geom_string=geom_string+self.get_component_string(" ./",inst,Utilities.fix_name(inst.definition.name.tr(" ","_").tr("#","_")))
 					end
@@ -764,7 +769,6 @@ module IGD
 
 					#then the pages
 					f.write("\n\n#VIEWS\n\n")
-					f.write("view=actual_view -vf Views/view.vf\n")
 					pages.each do |page|
 						f.write("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
 					end

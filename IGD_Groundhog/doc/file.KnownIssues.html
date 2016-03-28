@@ -68,21 +68,32 @@
 <ul><li>
 <p>Copying and pasting windows, walls, workplanes or any surface with a name
 will end in repeated names… that causes errors when exporting.</p>
+</li><li>
+<p>TILT field in IES files (for exporting luminaires) does not work.</p>
 </li></ul>
 
 <h2 id="label-Simulation+problems">Simulation problems</h2>
 <ul><li>
-<p>Radiance multithreading does not seem to be working on OSX. I think that is
-a problem of compatibility between Radiance and OSX</p>
-</li><li>
 <p>Radiance multithreading is not supported on Windows</p>
+</li><li>
+<p>Some windows users have had trouble assigning the Radiance path. I have
+been told that was solved as follows:</p>
+<ol><li>
+<p>Go to &#39;Control Panel&#39; &gt; &#39;System&#39; &gt; &#39;Advanced&#39;
+&gt; &#39;Environmental Variables&#39; and check if the Radiance PATH is
+correct. If not, fix it.</p>
+</li><li>
+<p>Then input the PATH in the Groundhog Preferences menu as follows:
+<strong>C:/Program Files (x86)/Radiance/bin</strong>, that is, with “/”
+(not “&quot;) and without adding any program name.</p>
+</li></ol>
 </li></ul>
 
 <h2 id="label-Creating+materials+problems">Creating materials problems</h2>
 </div></div>
 
     <div id="footer">
-  Generated on Thu Sep 24 10:38:04 2015 by
+  Generated on Tue Feb  9 14:24:43 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

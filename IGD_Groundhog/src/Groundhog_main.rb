@@ -16,19 +16,26 @@ module IGD
 
 		#################################
 
+		Sketchup::require 'IGD_Groundhog/src/Triangle'
 		Sketchup::require 'IGD_Groundhog/src/Utilities'
 		Sketchup::require 'IGD_Groundhog/src/Config'
 		Sketchup::require 'IGD_Groundhog/src/Labeler'
-		Sketchup::require 'IGD_Groundhog/src/OS'		
+		Sketchup::require 'IGD_Groundhog/src/OS'
 		Sketchup::require 'IGD_Groundhog/src/Exporter'
 		Sketchup::require 'IGD_Groundhog/src/Results'
 		Sketchup::require 'IGD_Groundhog/src/Materials'
 		Sketchup::require 'IGD_Groundhog/src/Rad'
+		Sketchup::require 'IGD_Groundhog/src/LoadHandler'
 		Sketchup::require 'IGD_Groundhog/src/Addons'
+		Sketchup::require 'IGD_Groundhog/src/Color'
+		Sketchup::require 'IGD_Groundhog/src/Luminaires'
+
+
 
 		require 'json'
 		require 'Open3'
 		require 'fileutils'
+		#require 'open-uri'
 
 
 
@@ -50,6 +57,9 @@ module IGD
 		UI.add_context_menu_handler do |context_menu|
 		   faces=Utilities.get_faces(Sketchup.active_model.selection)
 		   namables = Utilities.get_namables(Sketchup.active_model.selection)
+		   components = Utilities.get_components(Sketchup.active_model.selection)
+			 groups = Utilities.get_groups(Sketchup.active_model.selection)
+
 		   if namables.length >= 1 then
 			   context_menu.add_item("Assign Name") {
 					begin
@@ -66,13 +76,74 @@ module IGD
 			   }
 	   		end
 
+			if components.length == 1 then
+				context_menu.add_item("Label as Luminaire") {
+					begin
+						op_name = "Link IES file"
+						model.start_operation(op_name,true)
+						comp = components[0].definition
+
+						Labeler.to_local_luminaire(comp)
+						model.commit_operation
+					rescue => e
+						model.abort_operation
+						OS.failed_operation_message(op_name)
+					end
+			   }
+			end
+
+			if groups.length == 1 then
+				group=groups[0]
+				if Labeler.solved_workplane?(group) then
+					context_menu.add_item("Export results to CSV") {
+						begin
+							op_name = "Export workplane to CSV"
+							model.start_operation(op_name,true)
+
+							path=Exporter.getpath #it returns false if not successful
+							path="" if not path
+							filename="#{Labeler.get_name(group)}.csv"
+							filename=UI.savepanel("Export CSV file of results",path,filename)
+
+							if filename then
+								File.open(filename,'w'){|csv|
+									statistics = Results.get_workplane_statistics(group)
+									#write statistics
+									statistics.to_a.each{|element|
+										csv.puts "#{element[0]},#{element[1]}"
+									}
+									#Write header
+									csv.puts "Position X, Position Y, Position Z, Value (depends on the metric)"
+									#Write pixels
+									pixels = group.entities.select{|x| Labeler.result_pixel?(x)}
+									pixels.each do |pixel|
+										vertices=pixel.vertices
+										nvertices=vertices.length
+										center=vertices.shift.position.to_a
+										vertices.each{|vert|
+											pos=vert.position.to_a
+											center[0]+=pos[0]
+											center[1]+=pos[1]
+											center[2]+=pos[2]
+										}
+										csv.puts "#{(center[0]/nvertices).to_m},#{(center[1]/nvertices).to_m},#{(center[2]/nvertices).to_m},#{Labeler.get_value(pixel)}"
+									end
+								}
+							end
+
+							model.commit_operation
+						rescue => e
+							model.abort_operation
+							OS.failed_operation_message(op_name)
+						end
+				   }
+				end
+			end
+
 			if faces.length>=1 then
-				#context_menu.add_item("Make Window") {
-				#	MkWindow.make_window(faces)
-				#}
 				context_menu.add_item("Label as Illum") {
 					begin
-						op_name = "Label as illum"
+						op_name = "Label as Illum"
 						model.start_operation( op_name ,true)
 
 						Labeler.to_illum(faces)
@@ -85,9 +156,9 @@ module IGD
 			   }
 				horizontal=Utilities.get_horizontal_faces(faces)
 				if horizontal.length >=1 then
-				   context_menu.add_item("Label as workplane") {
+				   context_menu.add_item("Label as Workplane") {
 							begin
-								op_name = "Label as workplane"
+								op_name = "Label as Workplane"
 								model.start_operation( op_name,true )
 
 								Labeler.to_workplane(faces)
@@ -101,7 +172,7 @@ module IGD
 				end
 			   context_menu.add_item("Label as Window") {
 					begin
-						op_name = "Label as window"
+						op_name = "Label as Window"
 						model.start_operation( op_name ,true)
 
 						Labeler.to_window(faces)
@@ -115,7 +186,7 @@ module IGD
 
 				context_menu.add_item("Remove Labels") {
 					begin
-						op_name = "Remove labels"
+						op_name = "Remove Labels"
 						model.start_operation( op_name, true)
 
 						Labeler.to_nothing(faces)
@@ -167,27 +238,42 @@ module IGD
 		extensions_menu = UI.menu "Plugins"
 		groundhog_menu=extensions_menu.add_submenu("Groundhog")
 
-			### TOOLS SUBMENU
 
-			gh_tools_menu=groundhog_menu.add_submenu("Tools")
+			### EXPORT
+			groundhog_menu.add_item("Export to Radiance") {
 
-				#gh_tools_menu.add_item("Make Window"){
-				#	MkWindow.make_window(Utilities.get_faces(Sketchup.active_model.selection))
-				#}
+				path=Exporter.getpath #it returns false if not successful
+				path="" if not path
 
-				gh_tools_menu.add_item("Simulation Wizard"){
-					Rad.show_sim_wizard
-				}
+				path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
+
+				if path_to_save then
+					OS.mkdir(path_to_save)
+					Exporter.export(path_to_save,true) #lights on
+				end
+			}
 
 
-			### MATERIALS SUBMENU
+			groundhog_menu.add_item("Simulation Wizard"){
+				Rad.show_sim_wizard
+			}
 
-			gh_materials_menu=groundhog_menu.add_submenu("Materials")
 
-				gh_materials_menu.add_item("Add Materials"){
+			### INSERT SUBMENU
+
+			gh_insert_menu=groundhog_menu.add_submenu("Insert")
+
+				gh_insert_menu.add_item("Materials"){
 					Materials.show_material_wizard
 				}
 
+				gh_insert_menu.add_item("Illuminance Sensor"){
+					Loader.load_illuminance_sensor
+				}
+
+				gh_insert_menu.add_item("Products from Arqhub"){
+					Loader.open_arqhub
+				}
 
 			### RESULTS SUBMENU
 
@@ -198,7 +284,7 @@ module IGD
 					path=Exporter.getpath #it returns false if not successful
 					path="c:/" if not path
 					path=UI.openpanel("Open results file",path)
-					Results.import_results(path) if path
+					Results.import_results(path,false) if path
 
 
 				}
@@ -224,22 +310,6 @@ module IGD
 					Utilities.hide_show_specific("solved_workplane")
 				}
 
-
-
-
-			### EXPORT
-			groundhog_menu.add_item("Export to Radiance") {
-
-				path=Exporter.getpath #it returns false if not successful
-				path="" if not path
-
-				path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
-
-				if path_to_save then
-					OS.mkdir(path_to_save)
-					Exporter.export(path_to_save)
-				end
-			}
 
 
 
