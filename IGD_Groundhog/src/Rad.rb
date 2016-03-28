@@ -137,7 +137,7 @@ module IGD
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						script << "rfluxmtx -n 1 -I+ #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{winstring} > DC/#{name}.dmx"
+						script << "rfluxmtx -I+ #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{winstring} > DC/#{name}.dmx"
 					end
 
 					return script
