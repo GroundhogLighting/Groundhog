@@ -18,6 +18,10 @@ function onLoad(){
   window.location.href = 'skp:on_load@message';
 }
 
+function writeReport(){
+  window.location.href = 'skp:write_report@message';
+}
+
 function changeMetric(){
   clearTable();
   window.location.href = 'skp:select_metric@message';

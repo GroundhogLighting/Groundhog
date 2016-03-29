@@ -1,6 +1,7 @@
 
 
-body {margin:0;padding:10px; width: 100%; box-sizing: border-box; font-size: 80%; font-family: 'Open Sans', Verdana, Arial, Sans-Serif; 	text-align: justify; background-color: #f1f0ee;}
+@import url("opensans.css");
+body {margin:0;padding:10px; width: 100%; box-sizing: border-box; font-size: 80%; font-family: 'Open Sans', Sans-Serif; 	text-align: justify; background-color: #f1f0ee;}
 button {font-size: 100%;}
 
 table, th, td {

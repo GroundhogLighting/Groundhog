@@ -16,5 +16,7 @@ Thumbs.db
 ######################
 IGD_Groundhog/config
 
-# DEPLOY #
+#   MY OWN SCRIPTS   #
+######################
 deploy
+test

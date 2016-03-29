@@ -4,7 +4,6 @@
 		<title>Groundhog Report</title>
 		<meta charset="UTF-8">
 	</head>
-	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 	<link rel="stylesheet" type="text/css" href="css/general.css">
 	<body>
 
@@ -18,8 +17,9 @@
 						</div>
 					</div-->
 					<p align="center">
-						<select id='metrics' onchange="changeMetric()">
-						</select><button onclick='onLoad()'> Refresh </button>
+						<select id='metrics' onchange="changeMetric()"></select>
+						<button onclick='onLoad()'> Refresh </button>
+						<!--button onclick='writeReport()'> Save Report </button-->
 					</p>
 					<table align="center">
 						<tr>
@@ -43,6 +43,7 @@
 
 	</body>
 
-	 <script src="js/report.js"></script>
+	<script src="../ThirdParty/jsPDF/dist/jspdf.min.js"></script>
+	<script src="js/report.js"></script>
 
 </html>
