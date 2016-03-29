@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+sudo cp -r IGD_Groundhog /Users/german/Library/Application\ Support/SketchUp\ 2016/SketchUp/Plugins/
+sudo cp IGD_Groundhog.rb /Users/german/Library/Application\ Support/SketchUp\ 2016/SketchUp/Plugins/IGD_Groundhog.rb
