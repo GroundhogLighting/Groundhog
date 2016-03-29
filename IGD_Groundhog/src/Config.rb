@@ -6,13 +6,15 @@ module IGD
 
 			# ALL POSSIBLE OPTIONS MUST BE HERE
 			@@default_config = {
-				"SENSOR_SPACING" => 0.5,
+				"DESIRED_PIXEL_AREA" => 0.25,
+				"ALBEDO" => 0.2,
 				"RADIANCE_PATH" => nil,
 				"WEATHER_PATH" => nil,
 				"RVU" => "-ab 3",
 				"RCONTRIB" => "-ab 4 -ad 512",
 				"RTRACE" => "-ab 4 -ad 512",
-				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7
+				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7,
+				"TERRAIN_OVERSIZE" => 4,
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -30,6 +32,14 @@ module IGD
 					f.write(@@config.to_json)
 				}
 			end
+
+			# Returns the desired pixel area in m2
+			# @author German Molina
+			# @return [Numeric] The desired pixel area
+			def self.desired_pixel_area
+				@@config["DESIRED_PIXEL_AREA"].to_f
+			end
+
 
 			# Asks for a EPW or WEA file to be inputed.
 			# @author German Molina
@@ -67,7 +77,21 @@ module IGD
 			# @author German Molina
 			# @return [Depends] The radiance bin path if successful, nil (false) if not.
 			def self.weather_path
-				return @@config["WEATHER_PATH"]
+				@@config["WEATHER_PATH"]
+			end
+
+			# Gets the albedo
+			# @author German Molina
+			# @return [String] The albedo
+			def self.albedo
+				@@config["ALBEDO"]
+			end
+
+			# Gets the terrain oversize parameter
+			# @author German Molina
+			# @return [String] The terrain oversize param
+			def self.terrain_oversize
+				@@config["TERRAIN_OVERSIZE"].to_f
 			end
 
 			# Sets the path where the weather files are supposed to be stored... must be configured by the user.
@@ -134,8 +158,7 @@ module IGD
 			# @author German Molina
 			# @return [Float] Sensor Spacing
 			def self.sensor_spacing
-				return @@config["SENSOR_SPACING"].to_f if @@config["SENSOR_SPACING"]!= nil
-				return @@default_config["SENSOR_SPACING"].to_f
+				return @@config["SENSOR_SPACING"].to_f
 			end
 
 

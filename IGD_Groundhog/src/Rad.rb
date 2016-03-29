@@ -90,9 +90,9 @@ module IGD
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#OSX
-						script << "#{OS.program("gendaymtx")} -m #{options["bins"]} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("gendaymtx")} -m #{options["bins"]} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
 						#WIN
-						script << "#{OS.program("gendaymtx")} -m #{options["bins"]} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("gendaymtx")} -m #{options["bins"]} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
 					end
 				end
 				return script
@@ -158,7 +158,7 @@ module IGD
 					azi=-azi if sun.x>0
 					if alt >= 3 then
 						File.open("Skies/sky.rad",'w+'){ |f| #The file is opened
-							f.write("!gensky -ang #{alt} #{azi} #{options["sky"]} -g #{options["ground_rho"]}\n\n")
+							f.write("!gensky -ang #{alt} #{azi} #{options["sky"]} -g #{Config.albedo}\n\n")
 							f.write(Exporter.sky_complement)
 						}
 					end
@@ -193,7 +193,7 @@ module IGD
 
 					#modify sky
 					File.open("Skies/sky.rad",'w+'){ |f| #The file is opened
-						f.write("!gensky -ang 45 0 -c -B 55.86592\n\n")
+						f.write("!gensky -ang 45 40 -c -B 55.86592 -g #{Config.albedo}\n\n")
 						f.write("skyfunc glow skyglow\n0\n0\n4 1 1 1 0\n\nskyglow source skyball\n0\n0\n 4 0 0 1 360")
 					}
 

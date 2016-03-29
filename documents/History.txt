@@ -7,9 +7,10 @@
 This just intends to show a little bit of how Groundhog has been developed.
 
 ## Groundhog 0.9
-- Integration of Artificial lighting
-- Integration of Arqhub products Started
+- Integration of Artificial lighting (validation and documentation has not been done)
 - Configuration is now automatically saved when closing the WebDialog.
+- Terrain is automatically added according to the size of the model
+- Groundhog now allows working with several metrics at the same time.
 
 ## Groundhog 0.8
 - Add-on environment is initiated (0.7.1)

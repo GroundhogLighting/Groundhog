@@ -3,7 +3,7 @@
 	<head>
 		<title>Groundhog Preferences</title>
 		<meta charset="UTF-8">
-	</head>	
+	</head>
 	<link rel="stylesheet" type="text/css" href="css/general.css">
 	<link rel="stylesheet" type="text/css" href="css/tabs.css">
 	<body>
@@ -11,44 +11,22 @@
 
 				<ul id="tabs">
 					<li>
-						<a class="selected" href="#general">General</a>
+						<a class="selected" href="#radiance">Radiance</a>
 					</li>
 					<li>
-						<a href="#radiance">Radiance</a>
+						<a href="#workplanes">Workplanes</a>
 					</li>
 					<li>
 						<a href="#luminaires">Luminaires</a>
 					</li>
-
+					<li>
+						<a href="#terrain">Terrain</a>
+					</li>
 
 				</ul>
 
 
-
-
-			   <div id="general" class="tabContent">
-					<h2>General preferences</h2>
-					<p>Please set up Groundhog.</p>
-					<div class="more_info">
-						More info
-						<div class="tooltip">
-							<p>Sensor spacing is the desired distance between measurement points in workplanes, in meters.</p>
-						</div>
-					</div>
-					<br>
-					<table>
-					  <tr>
-						<td>Sensor spacing (m)</td>
-						<td><input type="text" size="5" id="sensor_spacing"></td>
-					  </tr>
-					</table>
-					<!--p align="center"> <button onclick='set_general_preferences()'> Save general preferences </button></p-->
-				</div>
-
-
-
-
-				<div id="radiance" class="tabContent hide">
+				<div id="radiance" class="tabContent">
 					<h2>Radiance Preferences</h2>
 					<p>Please set up Radiance simulation parameters, paths and others.</p>
 					<div class="more_info">
@@ -61,9 +39,7 @@
 					</div>
 					<br>
 					<table>
-
-
-					  <tr>
+						<tr>
 						<td>Radiance path</td>
 						<td><input type="text" size="42" id="radiance_path">
 							<div class='option_info'>
@@ -72,28 +48,71 @@
 								</div>
 							</div>
 						</td>
-					  </tr>
-					  <tr>
+						</tr>
+						<tr>
 						<td>Weather path</td>
 						<td><input type = "text" id='weather_path' onclick='window.location.href = "skp:set_weather_path@msg"'></td>
 					</tr>
-					  <tr>
+						<tr>
 						<td>Rvu options</td>
 						<td><input type="text" size="42" id="rvu"></td>
-					  </tr>
-					  <tr>
+						</tr>
+						<tr>
 						<td>Rfluxmtx options</td>
 						<td><input type="text" size="42" id="rcontrib"></td>
-					  </tr>
-					  <tr>
+						</tr>
+						<tr>
 						<td>Rtrace options</td>
 						<td><input type="text" size="42" id="rtrace"></td>
-					  </tr>
+						</tr>
 
 					</table>
 
 					<!--p align="center"> <button onclick='set_radiance_preferences()'> Save Radiance preferences </button></p-->
 				</div>
+
+
+			   <div id="workplanes" class="tabContent hide">
+					<h2>Workplane preferences</h2>
+					<div class="more_info">
+						More info
+						<div class="tooltip">
+							<p>Desired pixel area in m2. It will not be exact due to the refinement algorithm.</p>
+						</div>
+					</div>
+					<br>
+					<table>
+					  <tr>
+						<td>Desired pixel area (m2)</td>
+						<td><input type="text" size="5" id="desired_pixel_area"></td>
+					  </tr>
+					</table>
+					<!--p align="center"> <button onclick='set_general_preferences()'> Save general preferences </button></p-->
+				</div>
+
+
+				<div id="terrain" class="tabContent">
+				 <h2>Terrain preferences</h2>
+				 <div class="more_info">
+					 More info
+					 <div class="tooltip">
+						 <p>Sensor spacing is the desired distance between measurement points in workplanes, in meters.</p>
+					 </div>
+				 </div>
+				 <br>
+				 <table>
+					 <tr>
+					 <td>Albedo</td>
+					 <td><input type="number" max="1" min="0" step="0.1" size="5" id="albedo"></td>
+					 </tr>
+					 <tr>
+					 <td>Terrain oversizing</td>
+					 <td><input type="number" min="1" size="5" id="terrain_oversize"></td>
+					 </tr>
+				 </table>
+				 <!--p align="center"> <button onclick='set_general_preferences()'> Save general preferences </button></p-->
+			 </div>
+
 
 
 

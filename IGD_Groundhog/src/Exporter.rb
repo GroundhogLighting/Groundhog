@@ -519,6 +519,13 @@ module IGD
 						f.write("!xform ./Geometry/"+name+".rad\n")
 					end
 
+					f.write("\n\n\n###### GROUND \n\n")
+					albedo = Config.albedo
+					model_bounds=Sketchup.active_model.bounds
+					radius = IGD::Groundhog::Config.terrain_oversize * model_bounds.diagonal
+					f.write("void plastic terrain_mat\n0\n0\n5\t#{albedo}\t#{albedo}\t#{albedo}\t0\t0")
+					f.write("\n\nterrain_mat ring ground 0 0 8 #{model_bounds.center.x.to_m} #{model_bounds.center.y.to_m} 0 0 0 1 0 #{radius.to_m}")
+
 					f.write("\n\n\n###### COMPONENT INSTANCES \n\n")
 					defi=Sketchup.active_model.definitions
 					defi.each do |h|
@@ -560,7 +567,7 @@ module IGD
 				if alt >= 3.0 then
 					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
 						f.write("\n\n\n###### DEFAULT SKY \n\n")
-							f.write("!gensky -ang #{alt} #{azi} +s\n\n")
+							f.write("!gensky -ang #{alt} #{azi} +s -g #{Config.albedo}\n\n")
 							f.write(self.sky_complement)
 					}
 

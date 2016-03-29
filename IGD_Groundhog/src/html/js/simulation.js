@@ -21,27 +21,24 @@ function calc_DF(){
 
 function calc_actual_illuminance(){
     var sky = document.getElementById('actual_illuminance_sky').value;
-    var gr_rho = document.getElementById('actual_illuminance_rho').value;
-    var query = 'skp:calc_actual_illuminance@{"sky":"'+sky+'","ground_rho":"'+gr_rho+'"}';
+    var query = 'skp:calc_actual_illuminance@{"sky":"'+sky+'"}';
     window.location.href = query;
 }
 
 function calc_DA(){
-    var gr_rho = document.getElementById('da_rho').value;
     var threshold = document.getElementById('da_threshold').value;
     var bins = document.getElementById('da_bins').value;
     var method = document.getElementById('da_method').value;
     var early = document.getElementById('da_early').value;
     var late = document.getElementById('da_late').value;
 
-    var query = 'skp:calc_DA@{"ground_rho":"'+gr_rho+'","threshold":'+threshold+',"bins":'+bins+',"method":"'+method+'","early":'+early+',"late":'+late+'}';
+    var query = 'skp:calc_DA@{"threshold":'+threshold+',"bins":'+bins+',"method":"'+method+'","early":'+early+',"late":'+late+'}';
 
     window.location.href = query;
 
 }
 
 function calc_UDI(){
-    var gr_rho = document.getElementById('udi_rho').value;
     var lower_threshold = document.getElementById('udi_lower_threshold').value;
     var upper_threshold = document.getElementById('udi_upper_threshold').value;
     var bins = document.getElementById('udi_bins').value;
@@ -54,7 +51,7 @@ function calc_UDI(){
         return;
     }
 
-    var query = 'skp:calc_UDI@{"ground_rho":"'+gr_rho+'","upper_threshold":'+upper_threshold+',"lower_threshold":'+lower_threshold+',"bins":'+bins+',"method":"'+method+'","early":'+early+',"late":'+late+'}';
+    var query = 'skp:calc_UDI@{"upper_threshold":'+upper_threshold+',"lower_threshold":'+lower_threshold+',"bins":'+bins+',"method":"'+method+'","early":'+early+',"late":'+late+'}';
     window.location.href = query;
 }
 

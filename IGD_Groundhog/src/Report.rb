@@ -182,7 +182,7 @@ module IGD
 					script += "cell.innerHTML='#{data["min_over_max"].round(3)}';"
 				end
 				#update scale
-				script += "document.getElementById('scale_min').innerHTML='#{scale[0.round(0)]}';"
+				script += "document.getElementById('scale_min').innerHTML='#{scale[0].round(0)}';"
 				script += "document.getElementById('scale_max').innerHTML='#{scale[1].round(0)}';"
 				return script
 			end
