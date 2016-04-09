@@ -123,6 +123,21 @@ else
 end
 ```
 
+##Groups
+
+### Tubular Daylight Devices (TDD)
+
+A group may labeled as Tubular Daylight Device, which means that it will be exported accordingly for
+simulation and workaround (TDDs are not easy to simulate using ray-tracing)
+
+```
+if Labeler.tdd?(group) then
+	#group is a TDD
+else
+	#Group is not a TDD
+end
+```
+
 ## Material Labels
 
 

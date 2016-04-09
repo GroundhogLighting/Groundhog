@@ -135,6 +135,7 @@ module IGD
 			end
 
 
+
 			# Writes the files and return the script for calculating the Actual illuminance
 			# @author German Molina
 			# @param options [Hash] A Hash with the sky type and the ground reflectance

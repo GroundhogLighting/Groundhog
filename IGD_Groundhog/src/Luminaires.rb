@@ -62,15 +62,19 @@ module IGD
                     if lamp=~ l[0] then #if it matches
                         return l[1]
                     end
-                    return [1.0/3.0, 1.0/3.0, 1.0] #if not found
+                    return [1.0/3.0, 1.0/3.0, 1.0/3.0] #if not found
                 end
             end
 
 
+            #  Decides weather the illum surrounding one luminaire is a sphere or a box
+            # @author German Molina based on Radiance's code
+            # @param definition [SketchUp::ComponentDefinition] the definition to surround with illum
+            # @return [Hash] A Hash with the information about the shape
             def self.get_illum_shape(definition)
                 ret = Hash.new()
 
-                threshold = 2.0
+                threshold = Config.luminaire_shape_threshold
 
                 bounds = definition.bounds
                 max = bounds.max
@@ -83,7 +87,7 @@ module IGD
 
                 aspect = size.max/size.min
 
-                if aspect <= Config.luminaire_shape_threshold then
+                if aspect <= threshold then
                     ret["shape"] = "sphere"
                     ret["radius"] = bounds.diagonal.to_m*0.5
                 else #box
@@ -96,7 +100,14 @@ module IGD
                 return ret
             end
 
-
+            #  Transform an IES file into a Radiance understood data file
+            # @author German Molina based on Radiance's code
+            # @param iesname [String] The path of the IES file
+            # @param multiplier [Numeric] A number that powers the lamp. 1 is fully on, 0 is off.
+            # @param definition [Sketchup::ComponentDefinition] The definition to which the IES will be assigned
+            # @param path [String] The actual path on which we are working.
+            # @return [String] The Radiance definition of the light.
+            # @note a .dat file is written in the process
             def self.ies2rad(iesname, multiplier, definition, path)
 
                 ret = []
@@ -338,6 +349,10 @@ module IGD
                 return [vlim,hlim]
 
             end #end function
+
+
+
+
         end
     end
 end

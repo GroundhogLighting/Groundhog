@@ -7,6 +7,16 @@ module IGD
 		module Utilities
 
 
+			def self.mat_array_2_mat_string(mat_array,name)
+				ret=""
+				mat_array.uniq!
+				extension=""
+				extension= "_"+name if name
+				mat_array.each do |mat|
+					ret+=Exporter.get_mat_string(mat, Utilities.fix_name(mat.name)+extension)+"\n\n"
+				end
+				return ret
+			end
 
 
 			#  Loads a text file (CSV, TSV) into an array of strings.
@@ -406,7 +416,7 @@ module IGD
 				scale_max=false
 				self.get_solved_workplanes(Sketchup.active_model.entities).each{|x|
 					value=JSON.parse(Labeler.get_value(x))
-					if value["metric"]==metric						
+					if value["metric"]==metric
 						x.hidden=false
 					else
 						x.hidden=true

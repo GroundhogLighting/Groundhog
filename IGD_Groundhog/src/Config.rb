@@ -15,6 +15,7 @@ module IGD
 				"RTRACE" => "-ab 4 -ad 512",
 				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7,
 				"TERRAIN_OVERSIZE" => 4,
+				"TDD_PIPE_RFLUXMTX" => "-ab 9 -ad 1024",
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -38,6 +39,13 @@ module IGD
 			# @return [Numeric] The desired pixel area
 			def self.desired_pixel_area
 				@@config["DESIRED_PIXEL_AREA"].to_f
+			end
+
+			# Returns the desired options for ray-tracing within a TDD pipe
+			# @author German Molina
+			# @return [String] The selected options
+			def self.tdd_pipe_rfluxmtx
+				@@config["TDD_PIPE_RFLUXMTX"]
 			end
 
 

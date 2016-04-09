@@ -22,6 +22,9 @@
 					<li>
 						<a href="#terrain">Terrain</a>
 					</li>
+					<li>
+						<a href="#tdds">TDDs</a>
+					</li>
 
 				</ul>
 
@@ -67,8 +70,6 @@
 						</tr>
 
 					</table>
-
-					<!--p align="center"> <button onclick='set_radiance_preferences()'> Save Radiance preferences </button></p-->
 				</div>
 
 
@@ -87,7 +88,6 @@
 						<td><input type="text" size="5" id="desired_pixel_area"></td>
 					  </tr>
 					</table>
-					<!--p align="center"> <button onclick='set_general_preferences()'> Save general preferences </button></p-->
 				</div>
 
 
@@ -110,27 +110,26 @@
 					 <td><input type="number" min="1" size="5" id="terrain_oversize"></td>
 					 </tr>
 				 </table>
-				 <!--p align="center"> <button onclick='set_general_preferences()'> Save general preferences </button></p-->
 			 </div>
 
 
+			 <div id="tdds" class="tabContent hide">
+		 		<h2>Tubular Daylight Devices Preferences</h2>
+		 		<br>
+		 		<table>
+					<tr>
+		 			<td>RFLUXMTX options in the pipe</td>
+		 			<td><input type="text" size="42" id="tdd_pipe_rfluxmtx"></td>
+		 			</tr>
+		 		</table>
+		 	</div>
 
 
 				<div id="luminaires" class="tabContent hide">
 					<h2>Luminaire Preferences</h2>
 					<p>Please set up how luminaires are exported.</p>
-					<!--div class="more_info">
-						More info
-						<div class="tooltip">
-							<p>Rvu is the programs that allows previewing.</p>
-							<p>Rfluxmtx is used for annual simulations.</p>
-							<p>Rtrace is used for 'Daylight Factor' and 'Actual Illuminance' calculations.</p>
-						</div>
-					</div-->
 					<br>
 					<table>
-
-
 					  <tr>
 						<td>Aspect ratio threshold</td>
 						<td><input type="number" min="1" step="0.1" size="42" id="luminaire_shape_threshold">
@@ -141,10 +140,7 @@
 							</div>
 						</td>
 					  </tr>
-
-
 					</table>
-					<!--p align="center"> <button onclick='set_luminaire_preferences()'> Save Luminaire preferences </button></p-->
 				</div>
 
 
