@@ -208,6 +208,21 @@ has been linked with an IES file that is within the computer.</p>
 	<span class='comment'>#component_definition is not a local_luminaire
 </span><span class='kw'>end</span></code></pre>
 
+<h2 id="label-Groups">Groups</h2>
+
+<h3 id="label-Tubular+Daylight+Devices+%28TDD%29">Tubular Daylight Devices (TDD)</h3>
+
+<p>A group may labeled as Tubular Daylight Device, which means that it will be
+exported accordingly for
+simulation and workaround (TDDs are not easy to
+simulate using ray-tracing)</p>
+
+<pre class="code ruby"><code class="ruby"><span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_tdd?'>tdd?</span><span class='lparen'>(</span><span class='id identifier rubyid_group'>group</span><span class='rparen'>)</span> <span class='kw'>then</span>
+	<span class='comment'>#group is a TDD
+</span><span class='kw'>else</span>
+	<span class='comment'>#Group is not a TDD
+</span><span class='kw'>end</span></code></pre>
+
 <h2 id="label-Material+Labels">Material Labels</h2>
 
 <h3 id="label-Local+materials">Local materials</h3>
@@ -225,7 +240,7 @@ stored their
 </div></div>
 
     <div id="footer">
-  Generated on Tue Mar 29 17:14:38 2016 by
+  Generated on Sat Apr  9 10:10:28 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

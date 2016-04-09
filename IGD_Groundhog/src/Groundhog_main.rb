@@ -30,6 +30,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Color'
 		Sketchup::require 'IGD_Groundhog/src/Luminaires'
 		Sketchup::require 'IGD_Groundhog/src/Report'
+		Sketchup::require 'IGD_Groundhog/src/Tdd'
 
 
 
@@ -94,11 +95,32 @@ module IGD
 			end
 
 			if groups.length == 1 then
-				group=groups[0]
-				if Labeler.solved_workplane?(group) then
+				if Labeler.solved_workplane?(groups[0]) then
 					context_menu.add_item("Export results to CSV") {
-						Report.report_csv(group)
+						Report.report_csv(groups[0])
 				   }
+				end
+			end
+
+			if groups.length >= 1 then
+					context_menu.add_item("Label as Tubular Daylight Device") {
+						Labeler.to_tdd(groups)
+				  }
+			end
+			if components.length >= 1 then
+					context_menu.add_item("Label as Tubular Daylight Device") {
+						Labeler.to_tdd(components)
+				  }
+			end
+
+			if faces.length == 1 then
+				if Labeler.tdd?(faces[0].parent) then
+					context_menu.add_item("Label as TDD's top lens"){
+						Labeler.to_tdd_top(faces[0])
+					}
+					context_menu.add_item("Label as TDD's bottom lens"){
+						Labeler.to_tdd_bottom(faces[0])
+					}
 				end
 			end
 

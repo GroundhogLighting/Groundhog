@@ -5,7 +5,7 @@ require 'extensions'
 module IGD
 	module Groundhog
 
-		Groundhog = SketchupExtension.new "Groundhog", "IGD_Groundhog/src/Groundhog_main.rb"
+		Groundhog = SketchupExtension.new "Groundhog", "IGD_Groundhog/src/Groundhog_main"
 		Groundhog.copyright='Germán Molina, Sergio Vera, Waldo Bustamante'
 		Groundhog.creator='Germán Molina (gmolina1@uc.cl)'
 		Groundhog.description = "OpenSource SketchUp extension for creating, exporting and analyzing Radiance Models."
