@@ -13,23 +13,24 @@ module IGD
 
 			# Calculates and plots the UDI
 			# @author German Molina
-			# @param options [Hash] The options
+			# @param da [Boolean] Parameter that sais if we are calculating DA or UDI.
 			# @return [Boolean] Success
-			def self.calc_UDI(options)
+			def self.calc_UDI(da)
 				path=OS.tmp_groundhog_path
 				FileUtils.cd(path) do
-					return false if not OS.execute_script(self.calc_annual_illuminance(options))
+					return false if not OS.execute_script(self.calc_annual_illuminance)
 					wps=Dir["Workplanes/*.pts"]
-
+					max = Config.max_illuminance
+					max = 9e16 if da #basically, ignore this threshold
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						values=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["lower_threshold"], options["upper_threshold"], options["early"], options["late"])
+						values=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", Config.min_illuminance, max, Config.early, Config.late)
 						return if not values #if the format was wrong, for example
 
 						pixels = Utilities.readTextFile("#{OS.tmp_groundhog_path}/Workplanes/#{name}.pxl",",",0)
-						metric = "U.D.I"
-						metric = "Daylight authonomy" if options["upper_threshold"] > 9e15
+						metric = "U.D.I."
+						metric = "Daylight authonomy" if da
 						Results.draw_pixels(values,pixels,name.tr("_"," "),metric)
 						min_max=Results.get_min_max_from_model(metric)
 						Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
@@ -40,20 +41,16 @@ module IGD
 
 			# Calculates and plots the Daylight Autonomy
 			# @author German Molina
-			# @param options [Hash] The options
 			# @return [Boolean] Success
-			def self.calc_DA(options)
-				options["upper_threshold"] = 9e16
-				options["lower_threshold"] = options["threshold"]
-				return self.calc_UDI(options)
+			def self.calc_DA
+				self.calc_UDI(true)
 			end
 
 
 			# Calculates the annual illuminance using a chosen method
 			# @author German Molina
-			# @param options [Hash] A hash with the options (method, bins)
 			# @return [Boolean] Success
-			def self.calc_annual_illuminance(options)
+			def self.calc_annual_illuminance
 				path=OS.tmp_groundhog_path
 				script=[]
 
@@ -72,9 +69,9 @@ module IGD
 					FileUtils.cp(file,"#{weaname}.wea") if extension=="wea"
 
 					#Calculate DC matrices
-					case options["method"]
+					case Config.annual_calculation_method
 					when "DC"
-						dc=self.calc_DC(options["bins"])
+						dc=self.calc_DC
 						return false if not dc
 						script += dc
 					else
@@ -90,9 +87,9 @@ module IGD
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#OSX
-						script << "#{OS.program("gendaymtx")} -m #{options["bins"]} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("gendaymtx")} -m #{Config.sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
 						#WIN
-						script << "#{OS.program("gendaymtx")} -m #{options["bins"]} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("gendaymtx")} -m #{Config.sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
 					end
 				end
 				return script
@@ -101,9 +98,8 @@ module IGD
 
 			# Exports the files and creates the script for calculating the simplest DC
 			# @author German Molina
-			# @param bins [Integer] The sky subdivition
 			# @return [Array<String>] The Script if success, false if not.
-			def self.calc_DC(bins)
+			def self.calc_DC
 				path=OS.tmp_groundhog_path
 
 				FileUtils.cd(path) do
@@ -116,7 +112,7 @@ module IGD
 
 					#modify sky
 					File.open("Skies/sky.rad",'w+'){ |f| #The file is opened
-						f.write(Exporter.white_sky(bins))
+						f.write(Exporter.white_sky(Config.sky_bins))
 					}
 
 
@@ -236,29 +232,150 @@ module IGD
 				return script
 			end
 
+
+
+			# Returns the javascript for loading the Scenes (Pages) into the GUI
+			# for previsualization
+			# @author German Molina
+			# @return [String] Script
+			def self.load_views
+				script = "var select = document.getElementById('rvu_scene');"
+				script += "var option =  document.createElement('option');"
+				script += "option.value = 'view';"
+				script += "option.text = 'actual view';"
+				script += "select.add(option);"
+
+				Sketchup.active_model.pages.each do |page|
+					name = page.name
+					value = Utilities.fix_name(name)
+					script += "var option =  document.createElement('option');"
+					script += "option.value = '#{value}';"
+					script += "option.text = '#{name}';"
+					script += "select.add(option);"
+				end
+				return script
+			end
+
+			@@default_metrics = {
+				"Review" => {:action => "rvu()", :html => "<h2>Review model</h2><fieldset><legend>Scene to review</legend><select id='rvu_scene'></select></fieldset><p align='center'><button onclick='load_rvu_views()'>Refresh views</button> <button onclick='rvu()'>Review </button></p>"},
+				"Instant illuminance" => {:action => "calc_actual_illuminance()", :html => "<h2>Actual illuminance</h2><fieldset><legend>Sky model</legend><select id='actual_illuminance_sky'><option value='-u'>CIE Uniform</option><option value='-c'>CIE Overcast</option><option value='+i'>CIE Intermediate</option><option value='+s'>CIE Clear</option></select><div class='option_info'>?<div class='tooltip'><p>The sun's position is obtained from the SketchUp model.</p></div></div></fieldset><p align='center'> <button onclick='calc_instant_illuminance()'> Calculate </button></p><table align='center'><tr><td id='instant_illuminance_scale_min'></td><td><img align='center' src='images/scale_horizontal.png' alt='scale' style='width:200px;height:30px'></td><td id='instant_illuminance_scale_max'></td></tr></table><table id='instant_illuminance_results' class='with_border'></table>"},
+				"Daylight factor" => {:action => "calc_DF()"},
+				"Daylight authonomy" => {:action => "calc_DA()"},
+				"U.D.I." => {:action => "calc_UDI()"}
+			}
+
+			# Returns the javascript for adding a metric to the GUI
+			# @author German Molina
+			# @param metric [String] the metric to add
+			# @return [String] Script
+			def self.add_metric(metric)
+				fixed_name = Utilities.fix_name(metric).downcase
+				directives = @@default_metrics[metric]
+
+				#the tab first
+				script  = "var tabs = document.getElementById('tabs');"
+				script += "var li = document.createElement('li');"
+				script += "li.innerHTML=\"<a href='\##{fixed_name}'>#{metric}</a>\";"
+				script += "li.setAttribute('class','selected');" if metric == @@default_metrics.keys[0]
+				script += "li.onclick = function(){select_metric('#{metric}')};"
+				script += "tabs.appendChild(li);"
+
+				#then the content
+				script += "var div = document.createElement('div');"
+				script += "div.setAttribute('id','#{fixed_name}');"
+				script += "div.setAttribute('class','tabContent hide');"
+				script += "div.setAttribute('class','tabContent');" if metric == @@default_metrics.keys[0]
+
+				button = ""
+				button = "<p align='center'><button onclick='#{directives[:action]}'> Calculate </button></p>" if directives != nil and directives[:action] != nil
+
+				inner_html="<h2>#{metric}</h2>#{button}<table align='center'><tr><td id='#{fixed_name}_scale_min'></td><td><img align='center' src='images/scale_horizontal.png' alt='scale' style='width:200px;height:30px'></td><td id='#{fixed_name}_scale_max'></td></tr></table><table id='#{fixed_name}_results' class='with_border'></table>"
+				inner_html = directives[:html] if directives != nil and directives[:html] != nil
+
+				script += "div.innerHTML = \"#{inner_html}\";"
+				script += "document.body.appendChild(div);"
+				return script
+			end
+
+			# Returns a script that needs to be run to update the metric results table
+			# @author German Molina
+			# @return [String] The javascript script that needs to be run to update the metric results table
+			def self.refresh_table(metric)
+				return "" if metric == "Review"
+				fixed_name=Utilities.fix_name(metric).downcase
+
+				#select workplanes with the corresponding metric
+				workplanes = Results.get_workplane_list.select{|x| JSON.parse(Labeler.get_value(x))["metric"] == metric}
+				return "" if workplanes.length == 0 #return if there are none.
+				scale=Results.get_scale_from_model(metric)
+				#get the script
+				script=""
+				script += "var table = document.getElementById('#{fixed_name}_results');"
+				script += "table.innerHTML = '<tr><td></td><td>Average</td><td>Minimum</td><td>Maximum</td><td>Min / Average</td><td>Min / Max</td></tr>';"
+				workplanes.each do |workplane|
+					data = JSON.parse(Labeler.get_value(workplane))
+
+					script += "var row = table.insertRow(-1);"
+					#name
+					script += "var cell = row.insertCell(0);"
+					script += "cell.innerHTML='#{data["workplane"]}';"
+					#Average
+					script += "cell = row.insertCell(1);"
+					script += "cell.innerHTML='#{data["average"].round(1)}';"
+					#Minimum
+					script += "cell = row.insertCell(2);"
+					script += "cell.innerHTML='#{data["min"].round(1)}';"
+					#Maximum
+					script += "cell = row.insertCell(3);"
+					script += "cell.innerHTML='#{data["max"].round(1)}';"
+					#Min/Average
+					script += "cell = row.insertCell(4);"
+					script += "cell.innerHTML='#{data["min_over_average"].round(3)}';"
+					#Min/Max
+					script += "cell = row.insertCell(5);"
+					script += "cell.innerHTML='#{data["min_over_max"].round(3)}';"
+				end
+				#update scale
+				script += "document.getElementById('#{fixed_name}_scale_min').innerHTML='#{scale[0].round(0)}';"
+				script += "document.getElementById('#{fixed_name}_scale_max').innerHTML='#{scale[1].round(0)}';"
+				return script
+			end
+
+			# Returns the javascript for adding all the metrics to the GUI
+			# @author German Molina
+			# @return [String] Script
+			def self.load_metrics
+				script = ""
+				metrics = @@default_metrics.keys + Results.get_metrics_list
+				metrics.uniq!
+				metrics.each {|key|
+					script+= self.add_metric(key)
+					script+= self.refresh_table(key)
+				}
+
+				script+="init();"
+				script += self.load_views
+				return script
+			end
+
 			def self.show_sim_wizard
 				wd=UI::WebDialog.new(
 					"Simulation wizard", false, "",
-					595, 490, 100, 100, false )
+					595, 490, 100, 100, true )
 
 				wd.set_file("#{OS.main_groundhog_path}/src/html/simulation.html" )
 
 				wd.add_action_callback("load_views") do |web_dialog,msg|
-					script = "var select = document.getElementById('rvu_scene');"
-					script += "var option =  document.createElement('option');"
-					script += "option.value = 'view';"
-					script += "option.text = 'actual view';"
-					script += "select.add(option);"
+					web_dialog.execute_script(self.load_views)
+				end
 
-					Sketchup.active_model.pages.each do |page|
-						name = page.name
-						value = Utilities.fix_name(name)
-						script += "var option =  document.createElement('option');"
-						script += "option.value = '#{value}';"
-						script += "option.text = '#{name}';"
-						script += "select.add(option);"
-					end
-					web_dialog.execute_script(script)
+
+				wd.add_action_callback("onLoad") do |web_dialog,msg|
+					web_dialog.execute_script(self.load_metrics)
+				end
+
+				wd.add_action_callback("select_metric") do |web_dialog,msg|
+					Utilities.remark_solved_workplanes(msg)
 				end
 
 				wd.add_action_callback("rvu") do |web_dialog,msg|
@@ -298,11 +415,11 @@ module IGD
 							Utilities.remark_solved_workplanes(metric)
 							min_max=Results.get_min_max_from_model(metric)
 							Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
+							web_dialog.execute_script(self.refresh_table(metric))
 						rescue
-							UI.messagebox "There was a problem when trying to calculate the Daylight Factor."
+							UI.messagebox "There was a problem when trying to calculate the Daylight factor."
 						end
 					end
-
 				end
 
 				wd.add_action_callback("calc_actual_illuminance") do |web_dialog,msg|
@@ -321,13 +438,14 @@ module IGD
 								results << name
 							end
 
-							metric = "Current illuminance"
+							metric = "Instant illuminance"
 							results.each do |res|
 								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt",metric)
 							end
 							Utilities.remark_solved_workplanes(metric)
 							min_max=Results.get_min_max_from_model(metric)
 							Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
+							web_dialog.execute_script(self.refresh_table(metric))
 						rescue
 							UI.messagebox "There was a problem when trying to calculate the Actual Illuminance."
 						end
@@ -337,23 +455,23 @@ module IGD
 				wd.add_action_callback("calc_DA") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
 					next if not Exporter.export(OS.tmp_groundhog_path, false)
-					options=JSON.parse(msg)
-					self.calc_DA(options)
+					self.calc_DA
 					metric = "Daylight authonomy"
 					Utilities.remark_solved_workplanes(metric)
 					min_max=Results.get_min_max_from_model(metric)
 					Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
+					web_dialog.execute_script(self.refresh_table(metric))
 				end
 
 				wd.add_action_callback("calc_UDI") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
 					next if not Exporter.export(OS.tmp_groundhog_path, false)
-					options=JSON.parse(msg)
-					self.calc_UDI(options)
+					self.calc_UDI(false)
 					metric="U.D.I."
 					Utilities.remark_solved_workplanes(metric)
 					min_max=Results.get_min_max_from_model(metric)
 					Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
+					web_dialog.execute_script(self.refresh_table(metric))
 				end
 
 				wd.show()
