@@ -64,6 +64,29 @@ module IGD
 			end
 
 
+			# Returns an array with the names of the metrics within the solved-workplanes, obtained from the Solved Workplanes
+			# @author German Molina
+			# @return [Array <String>] An array with the names of the metrics
+			def self.get_metrics_list
+				Utilities.get_solved_workplanes(Sketchup.active_model.entities).map{|x| JSON.parse(Labeler.get_value(x))["metric"]}.uniq
+			end
+
+			# Returns an array with the solved workplanes in the model
+			# @author German Molina
+			# @return [Array <String>] An array with the names of the workplanes
+			def self.get_workplane_list
+				Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+			end
+
+			# Returns an array with the names of the workplanes, obtained from the Solved Workplanes
+			# @author German Molina
+			# @return [Array <String>] An array with the names of the workplanes
+			def self.get_workplane_name_list
+				Utilities.get_solved_workplanes(Sketchup.active_model.entities).map{|x| JSON.parse(Labeler.get_value(x))["workplane"]}.uniq
+			end
+
+
+			
 
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model.
@@ -314,7 +337,7 @@ module IGD
 				end
 				pixels = Utilities.readTextFile(pixels_file,",",0)
 				name = name.tr("_"," ")
-				metric = self.draw_pixels(values,pixels,name,metric)				
+				metric = self.draw_pixels(values,pixels,name,metric)
 				min_max=Results.get_min_max_from_model(metric)
 				Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
 				Utilities.remark_solved_workplanes(metric)

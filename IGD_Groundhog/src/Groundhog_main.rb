@@ -242,9 +242,6 @@ module IGD
 				Rad.show_sim_wizard
 			}
 
-			groundhog_menu.add_item("Report Wizard"){
-				Report.show_report_wizard
-			}
 			groundhog_menu.add_item("Import results"){
 				path=Exporter.getpath #it returns false if not successful
 				path="c:/" if not path

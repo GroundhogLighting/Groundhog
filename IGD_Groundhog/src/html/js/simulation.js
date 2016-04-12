@@ -1,3 +1,8 @@
+function select_metric(metric){
+  var query = 'skp:select_metric@'+metric;
+  window.location.href = query;
+}
+
 function rvu(){
     var view = document.getElementById('rvu_scene').value
     var query = 'skp:rvu@{"scene":"'+view+'"}';
@@ -37,4 +42,5 @@ function calc_UDI(){
     window.location.href = query;
 }
 
+window.location.href = 'skp:onLoad@.';
 load_rvu_views();

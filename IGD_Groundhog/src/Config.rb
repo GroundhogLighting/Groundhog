@@ -270,7 +270,7 @@ module IGD
 
 				wd=UI::WebDialog.new(
 					"Preferences", false, "",
-					510, 470, 100, 100, false )
+					595, 490, 100, 100, false )
 
 				wd.set_file("#{OS.main_groundhog_path}/src/html/preferences.html" )
 				wd.show

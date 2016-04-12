@@ -26,6 +26,19 @@ module IGD
 
 			@position=0.0 #this keeps track of the vertical position of the line we write on the report
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 			# Returns a script that is used to write and save a PDF report using jsPDF
 			# @author German Molina
 			# @return [String] The javascript script
@@ -66,6 +79,8 @@ module IGD
 			end
 
 
+
+
 			# Returns a javascript that is used to write some text with a certain format
 			#
 			# If the text is long, it will be split on several lines.
@@ -96,118 +111,13 @@ module IGD
 				"doc.addPage();"
 			end
 
-			# Opens the report wizard
-			# @author German Molina
-			def self.show_report_wizard
-				wd=UI::WebDialog.new(
-					"Report wizard", false, "",
-					595, 490, 100, 100, false )
-
-				wd.set_file("#{OS.main_groundhog_path}/src/html/report.html" )
-
-				wd.add_action_callback("on_load") do |web_dialog,msg|
-					metrics = self.get_metrics_list
-					script = ""
-					script += self.refresh_metrics(metrics)
-					script += self.refresh_table(metrics[0])
-					web_dialog.execute_script(script)
-				end
-
-				wd.add_action_callback("select_metric") do |web_dialog,msg|
-					metric = web_dialog.get_element_value("metrics")
-					script = ""
-					script += self.refresh_table(metric)
-					web_dialog.execute_script(script)
-				end
-
-				wd.add_action_callback("write_report") do |web_dialog,msg|
-					web_dialog.execute_script(self.write_report)
-				end
-
-				wd.show()
-			end
-
-			# Returns a script that needs to be run to update the metrics input box
-			# @author German Molina
-			# @param metrics [Array<String>] An array of strings with the entities
-			# @return [String] The javascript script that needs to be run to update the metrics input box
-			def self.refresh_metrics(metrics)
-				script = "var select = document.getElementById('metrics');"
-				metrics.each do |metric|
-					value = metric
-					script += "var option =  document.createElement('option');"
-					script += "option.value = '#{value}';"
-					script += "option.text = '#{metric}';"
-					script += "select.add(option);"
-				end
-				return script
-			end
 
 
-			# Returns a script that needs to be run to update the metric results table
-			# @author German Molina
-			# @return [String] The javascript script that needs to be run to update the metric results table
-			def self.refresh_table(metric)
-				#get all workplanes
-				workplanes = self.get_workplane_list
-				scale=Results.get_scale_from_model(metric)
-				Utilities.remark_solved_workplanes(metric)
-				#select those with the corresponding metric
-				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value(x))["metric"] == metric}
-				#get the script
-				script=""
-				script += "var table = document.getElementById('results');"
-				script += "table.innerHTML = '<tr><td></td><td>Average</td><td>Minimum</td><td>Maximum</td><td>Min / Average</td><td>Min / Max</td></tr>';"
-				workplanes.each do |workplane|
-					data = JSON.parse(Labeler.get_value(workplane))
-
-					script += "var row = table.insertRow(-1);"
-					#name
-					script += "var cell = row.insertCell(0);"
-					script += "cell.innerHTML='#{data["workplane"]}';"
-					#Average
-					script += "cell = row.insertCell(1);"
-					script += "cell.innerHTML='#{data["average"].round(1)}';"
-					#Minimum
-					script += "cell = row.insertCell(2);"
-					script += "cell.innerHTML='#{data["min"].round(1)}';"
-					#Maximum
-					script += "cell = row.insertCell(3);"
-					script += "cell.innerHTML='#{data["max"].round(1)}';"
-					#Min/Average
-					script += "cell = row.insertCell(4);"
-					script += "cell.innerHTML='#{data["min_over_average"].round(3)}';"
-					#Min/Max
-					script += "cell = row.insertCell(5);"
-					script += "cell.innerHTML='#{data["min_over_max"].round(3)}';"
-				end
-				#update scale
-				script += "document.getElementById('scale_min').innerHTML='#{scale[0].round(0)}';"
-				script += "document.getElementById('scale_max').innerHTML='#{scale[1].round(0)}';"
-				return script
-			end
 
 
-      # Returns an array with the names of the workplanes, obtained from the Solved Workplanes
-      # @author German Molina
-      # @return [Array <String>] An array with the names of the workplanes
-      def self.get_workplane_name_list
-        Utilities.get_solved_workplanes(Sketchup.active_model.entities).map{|x| JSON.parse(Labeler.get_value(x))["workplane"]}.uniq
-      end
 
-			# Returns an array with the solved workplanes in the model
-			# @author German Molina
-			# @return [Array <String>] An array with the names of the workplanes
-			def self.get_workplane_list
-				Utilities.get_solved_workplanes(Sketchup.active_model.entities)
-			end
 
-      # Returns an array with the names of the metrics within the solved-workplanes, obtained from the Solved Workplanes
-      # @author German Molina
-      # @return [Array <String>] An array with the names of the metrics
-      def self.get_metrics_list
-        Utilities.get_solved_workplanes(Sketchup.active_model.entities).map{|x| JSON.parse(Labeler.get_value(x))["metric"]}.uniq
-      end
+
 
 
 
