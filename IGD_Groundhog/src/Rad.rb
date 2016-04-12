@@ -13,23 +13,24 @@ module IGD
 
 			# Calculates and plots the UDI
 			# @author German Molina
-			# @param options [Hash] The options
+			# @param da [Boolean] Parameter that sais if we are calculating DA or UDI.
 			# @return [Boolean] Success
-			def self.calc_UDI(options)
+			def self.calc_UDI(da)
 				path=OS.tmp_groundhog_path
 				FileUtils.cd(path) do
-					return false if not OS.execute_script(self.calc_annual_illuminance(options))
+					return false if not OS.execute_script(self.calc_annual_illuminance)
 					wps=Dir["Workplanes/*.pts"]
-
+					max = Config.max_illuminance
+					max = 9e16 if da #basically, ignore this threshold
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						values=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", options["lower_threshold"], options["upper_threshold"], options["early"], options["late"])
+						values=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", Config.min_illuminance, max, Config.early, Config.late)
 						return if not values #if the format was wrong, for example
 
 						pixels = Utilities.readTextFile("#{OS.tmp_groundhog_path}/Workplanes/#{name}.pxl",",",0)
 						metric = "U.D.I"
-						metric = "Daylight authonomy" if options["upper_threshold"] > 9e15
+						metric = "Daylight authonomy" if da
 						Results.draw_pixels(values,pixels,name.tr("_"," "),metric)
 						min_max=Results.get_min_max_from_model(metric)
 						Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
@@ -40,20 +41,16 @@ module IGD
 
 			# Calculates and plots the Daylight Autonomy
 			# @author German Molina
-			# @param options [Hash] The options
 			# @return [Boolean] Success
-			def self.calc_DA(options)
-				options["upper_threshold"] = 9e16
-				options["lower_threshold"] = options["threshold"]
-				return self.calc_UDI(options)
+			def self.calc_DA
+				self.calc_UDI(true)
 			end
 
 
 			# Calculates the annual illuminance using a chosen method
 			# @author German Molina
-			# @param options [Hash] A hash with the options (method, bins)
 			# @return [Boolean] Success
-			def self.calc_annual_illuminance(options)
+			def self.calc_annual_illuminance
 				path=OS.tmp_groundhog_path
 				script=[]
 
@@ -72,9 +69,9 @@ module IGD
 					FileUtils.cp(file,"#{weaname}.wea") if extension=="wea"
 
 					#Calculate DC matrices
-					case options["method"]
+					case Config.annual_calculation_method
 					when "DC"
-						dc=self.calc_DC(options["bins"])
+						dc=self.calc_DC
 						return false if not dc
 						script += dc
 					else
@@ -90,9 +87,9 @@ module IGD
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#OSX
-						script << "#{OS.program("gendaymtx")} -m #{options["bins"]} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("gendaymtx")} -m #{Config.sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
 						#WIN
-						script << "#{OS.program("gendaymtx")} -m #{options["bins"]} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("gendaymtx")} -m #{Config.sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
 					end
 				end
 				return script
@@ -101,9 +98,8 @@ module IGD
 
 			# Exports the files and creates the script for calculating the simplest DC
 			# @author German Molina
-			# @param bins [Integer] The sky subdivition
 			# @return [Array<String>] The Script if success, false if not.
-			def self.calc_DC(bins)
+			def self.calc_DC
 				path=OS.tmp_groundhog_path
 
 				FileUtils.cd(path) do
@@ -116,7 +112,7 @@ module IGD
 
 					#modify sky
 					File.open("Skies/sky.rad",'w+'){ |f| #The file is opened
-						f.write(Exporter.white_sky(bins))
+						f.write(Exporter.white_sky(Config.sky_bins))
 					}
 
 
@@ -337,8 +333,7 @@ module IGD
 				wd.add_action_callback("calc_DA") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
 					next if not Exporter.export(OS.tmp_groundhog_path, false)
-					options=JSON.parse(msg)
-					self.calc_DA(options)
+					self.calc_DA
 					metric = "Daylight authonomy"
 					Utilities.remark_solved_workplanes(metric)
 					min_max=Results.get_min_max_from_model(metric)
@@ -348,8 +343,7 @@ module IGD
 				wd.add_action_callback("calc_UDI") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
 					next if not Exporter.export(OS.tmp_groundhog_path, false)
-					options=JSON.parse(msg)
-					self.calc_UDI(options)
+					self.calc_UDI
 					metric="U.D.I."
 					Utilities.remark_solved_workplanes(metric)
 					min_max=Results.get_min_max_from_model(metric)

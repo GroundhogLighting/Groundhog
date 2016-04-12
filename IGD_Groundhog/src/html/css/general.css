@@ -45,6 +45,10 @@ fieldset{
     padding: 10px 10px 5px 10px;
 }
 
+fieldset table{
+  width: 95%;
+}
+
 fieldset p{
     margin:0;
 }
@@ -52,6 +56,11 @@ fieldset p{
 fieldset input{
     width: 50px;
 }
+
+fieldset input.long, fieldset select.long{
+    width: 85%;
+}
+
 fieldset > label{
     display: inline-block;
     width: 45px;
@@ -102,7 +111,7 @@ select {
 .tooltip {
     box-sizing: border-box;
 	font-size: 90%;
-	width: 80vw;
+	width: 60vw;
 	text-align: justify;
 	background:#ffffff;
   	margin-bottom: -105px;

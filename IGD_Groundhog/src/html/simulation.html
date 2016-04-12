@@ -108,39 +108,6 @@
 						</div>
 					</div>
 
-					<form>
-
-
-						<fieldset>
-							<legend>Target illuminance</legend>
-								<label>Min:</label><input id='da_threshold' type='number' value='300' step='1' min='0'></input>
-						</fieldset>
-						<fieldset>
-							<legend>Working hours</legend>
-								<label>From:</label> <input id='da_early' type='number' value='9.5' step='0.5' min='0' max='24'></input>
-								<label>To:</label><input id='da_late' type='number' value='17.5' step='0.5' min='0' max='24'></input>
-						</fieldset>
-						<fieldset>
-							<legend>Reinhart subdivition</legend>
-							<input id='da_bins' type='number' value='1' step='1' min='1'></input>
-								<div class='option_info'>
-									?<div class="tooltip">
-										<p>The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305..</p>
-									</div>
-								</div>
-						</fieldset>
-						<fieldset>
-							<legend>Method</legend>
-							<select id='da_method'>
-								<option value="DC">Simple Daylight Coefficients</option>
-							</select>
-								<div class='option_info'>
-									?<div class="tooltip">
-										<p>The simple daylight coefficients is the simplest and the fastest method within Groundhog. However, it handles the direct solar component together with the sky and inter-reflected solar components, which may lead to errors. </p>
-									</div>
-								</div>
-						</fieldset>
-					</form>
 					<p align="center"> <button onclick='calc_DA()'> Calculate </button></p>
 				</div>
 
@@ -157,40 +124,7 @@
 						</div>
 					</div>
 
-					<form>
 
-
-						<fieldset>
-							<legend>Target illuminance</legend>
-								<label>Min:</label><input id='udi_lower_threshold' type='number' value='300' step='1' min='0'></input>
-								<label>Max:</label><input id='udi_upper_threshold' type='number' value='2000' step='1' min='0'></input>
-						</fieldset>
-						<fieldset>
-							<legend>Working hours</legend>
-								<label>From:</label> <input id='udi_early' type='number' value='9.5' step='0.5' min='0' max='24'></input>
-								<label>To:</label><input id='udi_late' type='number' value='17.5' step='0.5' min='0' max='24'></input>
-						</fieldset>
-						<fieldset>
-							<legend>Reinhart subdivition</legend>
-							<input id='udi_bins' type='number' value='1' step='1' min='1'></input>
-								<div class='option_info'>
-									?<div class="tooltip">
-										<p>The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305..</p>
-									</div>
-								</div>
-						</fieldset>
-						<fieldset>
-							<legend>Method</legend>
-							<select id='udi_method'>
-								<option value="DC">Simple Daylight Coefficients</option>
-							</select>
-								<div class='option_info'>
-									?<div class="tooltip">
-										<p>The simple daylight coefficients is the simplest and the fastest method within Groundhog. However, it handles the direct solar component together with the sky and inter-reflected solar components, which may lead to errors. </p>
-									</div>
-								</div>
-						</fieldset>
-					</form>
 					<p align="center"> <button onclick='calc_UDI()'> Calculate </button></p>
 				</div>
 
