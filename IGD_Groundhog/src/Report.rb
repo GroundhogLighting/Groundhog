@@ -131,9 +131,6 @@ module IGD
         end
 
         begin
-          op_name = "Export workplane to CSV"
-
-
           path=Exporter.getpath #it returns false if not successful
           path="" if not path
 
@@ -169,8 +166,7 @@ module IGD
 
 
         rescue => e
-          model.abort_operation
-          OS.failed_operation_message(op_name)
+          OS.failed_operation_message("Report CSV")
         end
       end
 

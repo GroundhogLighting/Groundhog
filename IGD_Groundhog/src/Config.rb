@@ -41,7 +41,7 @@ module IGD
 				ret = @@config[key]
 				ret = @@default_config[key] if ret == nil
 				ret = false if ret == nil
-				UI.messagebox("Trying to get an element not set neither defaulted in the Configuration") if not ret
+				UI.messagebox("Trying to get '#{key}', which is not set neither defaulted in the Configuration") if not ret
 				return ret
 			end
 
@@ -99,7 +99,8 @@ module IGD
 			# @author German Molina
 			# @return [String] The radiance bin path
 			def self.radiance_path
-				self.get_element("RADIANCE_PATH")
+				#self.get_element("RADIANCE_PATH")
+				@@config["RADIANCE_PATH"]
 			end
 
 			# Gets the path where the weather files are supposed to be stored... must be configured by the user.
@@ -197,8 +198,8 @@ module IGD
 			# Gets the spacing between workplane sensors
 			# @author German Molina
 			# @return [Float] Sensor Spacing
-			def self.sensor_spacing
-				self.get_element("SENSOR_SPACING").to_f
+			def self.pixel_area
+				self.get_element("DESIRED_PIXEL_AREA").to_f
 			end
 
 			# Gets the early working hour (i.e. when people start working)

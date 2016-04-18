@@ -136,7 +136,7 @@ module IGD
 			# @author German Molina
 			# @param options [Hash] A Hash with the sky type and the ground reflectance
 			# @return [Array<String>] Script if succesfull, false if not.
-			def self.actual_illuminance(options)
+			def self.instant_illuminance(options)
 				path=OS.tmp_groundhog_path
 				script=[]
 
@@ -422,14 +422,14 @@ module IGD
 					end
 				end
 
-				wd.add_action_callback("calc_actual_illuminance") do |web_dialog,msg|
+				wd.add_action_callback("calc_instant_illuminance") do |web_dialog,msg|
 					next if not OS.ask_about_Radiance
 					next if not Exporter.export(OS.tmp_groundhog_path,true)
 					options=JSON.parse(msg)
 					FileUtils.cd(OS.tmp_groundhog_path) do
 						begin
 							OS.mkdir("Results")
-							OS.execute_script(self.actual_illuminance(options))
+							OS.execute_script(self.instant_illuminance(options))
 							wps=Dir["Workplanes/*.pts"]
 							results=[]
 							wps.each do |workplane|
