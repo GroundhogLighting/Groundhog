@@ -5,7 +5,7 @@ module IGD
             # Loads a list of addons passed to it in an array of strings
             # @param addons [String <Array>] An array of Strings that contains the names of the addons.
     		# @author German Molina
-            # @param addons [<String>] A list with the names of the active addons (if I remember correctly)            
+            # @param addons [<String>] A list with the names of the active addons (if I remember correctly)
             def self.load_addons(addons)
                 available= Dir["#{OS.addons_groundhog_path}/*.rb"]
                 available.map!{|x| x.tr("\\","/").split("/").pop}
@@ -100,8 +100,8 @@ module IGD
                         begin
                             FileUtils.rm(final_addon) if File.exist? final_addon
                             FileUtils.rm_rf(final_support) if File.directory? final_support
-                        rescue
-                            UI.messagebox "There was a problem deleting the conflicting Add-on"
+                          rescue Exception => ex
+              							UI.messagebox ex
                         end
                     end
 
@@ -126,8 +126,8 @@ module IGD
                         str+="opt.innerHTML='#{shown_name}';"
                         str+="inactive.appendChild(opt);"
                         web_dialog.execute_script(str)
-                    rescue
-                        UI.messagebox("There was a problem trying to install your Add-on.")
+                      rescue Exception => ex
+          							UI.messagebox ex
                     end
 
                 end

@@ -46,7 +46,13 @@ module IGD
 		selection=model.selection
 		entities=model.entities
 
-
+		# ADD RADIANCE_PATH
+		if Config.radiance_path then
+			ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
+			ENV["RAYPATH"] = "#{Config.radiance_path}/lib"
+		else
+			UI.messagebox "There was a problem loading Radiance"
+		end
 
 		#######################
 		### CONTEXT MENUS
@@ -71,9 +77,9 @@ module IGD
 						model.abort_operation if not name
 						Labeler.set_name(Sketchup.active_model.selection,name)
 						model.commit_operation
-					rescue => e
+					rescue Exception => ex
+						UI.messagebox ex
 						model.abort_operation
-						OS.failed_operation_message(op_name)
 					end
 			   }
 	   		end
@@ -87,9 +93,9 @@ module IGD
 
 						Labeler.to_local_luminaire(comp)
 						model.commit_operation
-					rescue => e
+					rescue Exception => ex
+						UI.messagebox ex
 						model.abort_operation
-						OS.failed_operation_message(op_name)
 					end
 			   }
 			end
@@ -133,9 +139,9 @@ module IGD
 						Labeler.to_illum(faces)
 
 						model.commit_operation
-					rescue => e
+					rescue Exception => ex
+						UI.messagebox ex
 						model.abort_operation
-						OS.failed_operation_message(op_name)
 					end
 			   }
 				horizontal=Utilities.get_horizontal_faces(faces)
@@ -148,9 +154,9 @@ module IGD
 								Labeler.to_workplane(faces)
 
 								model.commit_operation
-							rescue => e
+							rescue Exception => ex
+								UI.messagebox ex
 								model.abort_operation
-								OS.failed_operation_message(op_name)
 							end
 				   }
 				end
@@ -162,9 +168,9 @@ module IGD
 						Labeler.to_window(faces)
 
 						model.commit_operation
-					rescue => e
+					rescue Exception => ex
+						UI.messagebox ex
 						model.abort_operation
-						OS.failed_operation_message(op_name)
 					end
 			   }
 
@@ -176,9 +182,9 @@ module IGD
 						Labeler.to_nothing(faces)
 
 						model.commit_operation
-					rescue => e
+					rescue Exception => ex
+						UI.messagebox ex
 						model.abort_operation
-						OS.failed_operation_message(op_name)
 					end
 			   }
 			   wins=Utilities.get_windows(faces)
@@ -195,9 +201,9 @@ module IGD
 							Utilities.group_windows(Sketchup.active_model.selection, sys[0])
 
 							model.commit_operation
-						rescue => e
+						rescue Exception => ex
+							UI.messagebox ex
 							model.abort_operation
-							OS.failed_operation_message(op_name)
 						end
 				   }
 				end
@@ -358,12 +364,14 @@ module IGD
 
 			# Add the About.
 			groundhog_menu.add_item("About Groundhog"){
-				str="Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+"\n\nGroundhog was created and it is mainly developed by "+Sketchup.extensions["Groundhog"].creator+", currently working at IGD.\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
+
+				str="Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+" with Radiance binaries which are a courtesy of NREL (www.nrel.gov)\n\nGroundhog was created and it is mainly developed by "+Sketchup.extensions["Groundhog"].creator+", currently working at IGD.\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
 				str+="\n\nLicense:\nGroundhog is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 Go to GNU's website for more information about this license."
+
 				UI.messagebox str
 			}
 
@@ -375,6 +383,7 @@ Go to GNU's website for more information about this license."
 			#########################################
 			if File.exists? Config.config_path then #if a configuration file was once created
 				Config.load_config
+
 			end
 
 

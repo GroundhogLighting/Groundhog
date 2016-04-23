@@ -168,9 +168,9 @@ module IGD
           end
 
 
-        rescue => e
-          model.abort_operation
-          OS.failed_operation_message(op_name)
+				rescue Exception => ex
+					UI.messagebox ex
+          model.abort_operation          
         end
       end
 

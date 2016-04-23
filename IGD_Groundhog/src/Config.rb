@@ -8,7 +8,6 @@ module IGD
 			@@default_config = {
 				"DESIRED_PIXEL_AREA" => 0.25,
 				"ALBEDO" => 0.2,
-				"RADIANCE_PATH" => nil,
 				"WEATHER_PATH" => nil,
 				"RVU" => "-ab 3",
 				"RCONTRIB" => "-ab 4 -ad 512",
@@ -99,14 +98,23 @@ module IGD
 			# @author German Molina
 			# @return [String] The radiance bin path
 			def self.radiance_path
-				self.get_element("RADIANCE_PATH")
+				os = "macosx"
+				if(OS.getsystem == 'WIN') then
+					asd
+					if Sketchup.respond_to?(:is_64bit?) && Sketchup.is_64bit? then
+						os="windows/x64"
+					else
+						os="windows/x32"
+					end
+				end
+				"#{OS.main_groundhog_path}/src/Radiance/#{os}"
 			end
 
 			# Gets the path where the weather files are supposed to be stored... must be configured by the user.
 			# @author German Molina
-			# @return [Depends] The radiance bin path if successful, nil (false) if not.
+			# @return [Depends] The weather path if successful, nil (false) if not.
 			def self.weather_path
-				self.get_element("WEATHER_PATH")
+				@@config["WEATHER_PATH"]
 			end
 
 			# Gets the albedo
@@ -194,13 +202,6 @@ module IGD
 				self.get_element("LUMINAIRE_SHAPE_THRESHOLD")
 			end
 
-			# Gets the spacing between workplane sensors
-			# @author German Molina
-			# @return [Float] Sensor Spacing
-			def self.sensor_spacing
-				self.get_element("SENSOR_SPACING").to_f
-			end
-
 			# Gets the early working hour (i.e. when people start working)
 			# @author German Molina
 			# @return [Float] Early
@@ -236,10 +237,7 @@ module IGD
 			# @return void
 			def self.load_config
 				path=self.config_path
-
-				#add radiance path
 				@@config=JSON.parse(File.open(path).read)
-				ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"] if Config.radiance_path
 
 				#include add-ons
 				Addons.load_addons(self.active_addons)
@@ -286,28 +284,11 @@ module IGD
 				end
 
 				wd.set_on_close{
-					old_path=@@config["RADIANCE_PATH"]
-
 					@@default_config.each do |field|
 						id = field[0].downcase
 						@@config[field[0]] = wd.get_element_value(id).strip
 					end
-
-
-					#CHECK VALUES
-					if OS.check_Radiance_Path(@@config["RADIANCE_PATH"]) then
-						#update the Radiance path
-						if old_path != nil and old_path != "" then
-							ENV["PATH"]=ENV["PATH"].split(old_path).join(Config.radiance_path) #erase the old one and replace it
-						else
-							ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
-						end
-					else
-						UI.messagebox("WARNING:\n\nRadiance does not seem to be where you told us.\n\nThe rest of your options have been saved.")
-						@@config["RADIANCE_PATH"] = @@default_config["RADIANCE_PATH"]
-					end
 					self.write_config_file
-
 				}
 
 
