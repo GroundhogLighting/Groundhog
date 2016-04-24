@@ -1,29 +1,5 @@
 #make Documentation
 
-rm -f Groundhog.rbz
-
-yardoc IGD_Groundhog/src/*.rb IGD_Groundhog/src/Tools/*.rb - Readme.md - documents/*
-
-#modify documentation
-cd doc
-
-sed -i tmphtml 's/_index/doc_index/g' *.html
-mv _index.html doc_index.html
-mv file.README.html file.Readme.html
-rm *tmphtml
-
-cd ..
-
-#rm config file
-rm -f IGD_Groundhog/config
-
-#Include new doc into the main Groundhog directory
-rm -fr IGD_Groundhog/doc
-cp -rf doc IGD_Groundhog/doc
-
-#create RBZ
-zip -r Groundhog.rbz IGD_Groundhog IGD_Groundhog.rb -x *yardoc* *.DS_Store
-
 #Commit
 echo "
 

@@ -49,7 +49,7 @@ module IGD
 		# ADD RADIANCE_PATH
 		if Config.radiance_path then
 			ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
-			ENV["RAYPATH"] = "#{Config.radiance_path}/lib"
+			ENV["RAYPATH"] = "#{Config.raypath}"
 		else
 			UI.messagebox "There was a problem loading Radiance"
 		end

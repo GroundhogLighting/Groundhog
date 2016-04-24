@@ -94,20 +94,18 @@ module IGD
 				return path.tr("\\","/")
 			end
 
-			# Gets the path where the Radiance programs are installed... must be configured by the user.
+			# Gets the path where the Radiance programs are installed.
 			# @author German Molina
 			# @return [String] The radiance bin path
 			def self.radiance_path
-				os = "macosx"
-				if(OS.getsystem == 'WIN') then
-					asd
-					if Sketchup.respond_to?(:is_64bit?) && Sketchup.is_64bit? then
-						os="windows/x64"
-					else
-						os="windows/x32"
-					end
-				end
-				"#{OS.main_groundhog_path}/src/Radiance/#{os}"
+				"#{OS.main_groundhog_path}/src/Radiance/bin"
+			end
+
+			# Gets the path where the Radiance library is installed
+			# @author German Molina
+			# @return [String] The radiance bin path
+			def self.raypath
+				"#{OS.main_groundhog_path}/src/Radiance/lib"
 			end
 
 			# Gets the path where the weather files are supposed to be stored... must be configured by the user.
