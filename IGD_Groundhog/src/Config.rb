@@ -101,6 +101,18 @@ module IGD
 				"#{OS.main_groundhog_path}/src/Radiance/bin"
 			end
 
+			# Adds the Radiance Path and the Raypath to the environmental variables.
+			# @author German Molina
+			def self.setup_radiance
+				# ADD RADIANCE_PATH
+				if Config.radiance_path then
+					ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
+					ENV["RAYPATH"] = "#{Config.raypath}"
+				else
+					UI.messagebox "There was a problem loading Radiance"
+				end
+			end
+
 			# Gets the path where the Radiance library is installed
 			# @author German Molina
 			# @return [String] The radiance bin path

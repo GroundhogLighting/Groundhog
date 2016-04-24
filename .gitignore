@@ -18,6 +18,6 @@ IGD_Groundhog/config
 
 #      RADIANCE      #
 ######################
-Radiance/macosx
-Radiance/win32
-Radiance/win64
+#Radiance/macosx
+#Radiance/win32
+#Radiance/win64
