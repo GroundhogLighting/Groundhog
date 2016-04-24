@@ -4,7 +4,8 @@ CLEAN_DESTINATION=rm -rf $(GH_DESTINATION)/*
 
 commit:
 	@read -p "Enter commit message:  " message; \
-	commit_message=\"$$message\"; \
+	commit_message=$(echo $$message | sed -e 's/ /_/g'); \
+	echo $$commit_message; \
 	git add . ;\
 	git commit -m \"$$commit_message\";
 
