@@ -9,6 +9,7 @@ publish: all
 	git push
 
 all: win32 win64 macosx
+	$(CLEAN_DESTINATION)
 
 doc:
 	rm -rf doc

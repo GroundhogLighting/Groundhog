@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+  File: Known issues
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!file.KnownIssues.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="doc_index.html">Index</a> &raquo; 
+    <span class="title">File: Known issues</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'>
+<h1 id="label-Known+issues">Known issues</h1>
+
+<h2 id="label-Exporting+problems">Exporting problems</h2>
+<ul><li>
+<p>Copying and pasting windows, walls, workplanes or any surface with a name
+will end in repeated names… that causes errors when exporting.</p>
+</li><li>
+<p>TILT field in IES files (for exporting luminaires) does not work.</p>
+</li></ul>
+
+<h2 id="label-Simulation+problems">Simulation problems</h2>
+<ul><li>
+<p>Radiance multithreading is not supported on Windows</p>
+</li><li>
+<p>Some windows users have had trouble assigning the Radiance path. I have
+been told that was solved as follows:</p>
+<ol><li>
+<p>Go to &#39;Control Panel&#39; &gt; &#39;System&#39; &gt; &#39;Advanced&#39;
+&gt; &#39;Environmental Variables&#39; and check if the Radiance PATH is
+correct. If not, fix it.</p>
+</li><li>
+<p>Then input the PATH in the Groundhog Preferences menu as follows:
+<strong>C:/Program Files (x86)/Radiance/bin</strong>, that is, with “/”
+(not “&quot;) and without adding any program name.</p>
+</li></ol>
+</li></ul>
+
+<h2 id="label-Creating+materials+problems">Creating materials problems</h2>
+</div></div>
+
+    <div id="footer">
+  Generated on Mon Apr 18 18:20:11 2016 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>

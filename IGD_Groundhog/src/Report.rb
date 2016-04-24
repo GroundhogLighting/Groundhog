@@ -131,9 +131,6 @@ module IGD
         end
 
         begin
-          op_name = "Export workplane to CSV"
-
-
           path=Exporter.getpath #it returns false if not successful
           path="" if not path
 

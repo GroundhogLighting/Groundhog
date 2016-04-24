@@ -40,7 +40,7 @@ module IGD
 				ret = @@config[key]
 				ret = @@default_config[key] if ret == nil
 				ret = false if ret == nil
-				UI.messagebox("Trying to get an element not set neither defaulted in the Configuration") if not ret
+				UI.messagebox("Trying to get '#{key}', which is not set neither defaulted in the Configuration") if not ret
 				return ret
 			end
 
@@ -73,7 +73,7 @@ module IGD
 			# @author German Molina
 			# @return [String] The weather file path, False if not
 			def self.ask_for_weather_file
-				path = @@config["WEATHER_PATH"]				
+				path = @@config["WEATHER_PATH"]
 				if path then
 					path=path.split("/")
 					path.pop
@@ -210,6 +210,14 @@ module IGD
 			# @return [String] The threshold
 			def self.luminaire_shape_threshold
 				self.get_element("LUMINAIRE_SHAPE_THRESHOLD")
+			end
+
+
+			# Gets the spacing between workplane sensors
+			# @author German Molina
+			# @return [Float] Sensor Spacing
+			def self.desired_pixel_area
+				self.get_element("DESIRED_PIXEL_AREA").to_f
 			end
 
 			# Gets the early working hour (i.e. when people start working)

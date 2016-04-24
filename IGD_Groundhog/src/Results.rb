@@ -100,14 +100,16 @@ module IGD
 			# @param workplane [String] The name that will be given to the group that contains the pixels
 			# @param metric [String] The name that will be given to the group that contains the pixels
 			# @return [String] the metric
-			# @version 0.5
+			# @version 0.6
 			def self.draw_pixels(values,pixels,workplane,metric)
 				model=Sketchup.active_model
 				if values.length != pixels.length then
 					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match")
 					return false
 				end
-				if values[0].length != 1 or pixels[0].length != 9 then
+				#pixels need to have 3 values for each vertex
+				#values need to be in one column.
+				if values[0].length != 1 or pixels[0].length%3 != 0 then
 					UI.messagebox("Incorrect format in 'pixels' or 'values' when drawing pixels")
 					return false
 				end
@@ -142,18 +144,23 @@ module IGD
 					max=0
 					min=9999999999999
 
-					#draw every line. Each pixel is a triangle.
+					#draw every line. Each pixel is a polygon.
 					pixels.each do |data|
 						value = values.shift[0].to_f
 						#check minimum and maximum
 						min=value.to_f if min>value.to_f
 						max=value.to_f if max<value.to_f
 
-						vertex0=Geom::Point3d.new(data[0].to_f.m,data[1].to_f.m,data[2].to_f.m)
-						vertex1=Geom::Point3d.new(data[3].to_f.m,data[4].to_f.m,data[5].to_f.m)
-						vertex2=Geom::Point3d.new(data[6].to_f.m,data[7].to_f.m,data[8].to_f.m)
+						vertex=[]
+						nvertices = data.length/3
+						nvertices.times do
+							v1 = data.shift.to_f
+							v2 = data.shift.to_f
+							v3 = data.shift.to_f
+							vertex.push [v1.m, v2.m, v3.m]
+						end
 
-						pixel=entities.add_face(vertex0,vertex1,vertex2)
+						pixel=entities.add_face(vertex)
 						Labeler.to_result_pixel(pixel)
 						Labeler.set_pixel_value(pixel,value)
 					end

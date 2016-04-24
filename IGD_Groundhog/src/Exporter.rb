@@ -203,7 +203,7 @@ module IGD
 
 					model.commit_operation
 				rescue Exception => ex
-					UI.messagebox ex		
+					UI.messagebox ex
 				end
 				return true
 			end

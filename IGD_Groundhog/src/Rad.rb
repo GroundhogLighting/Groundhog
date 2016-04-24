@@ -57,7 +57,7 @@ module IGD
 				FileUtils.cd(path) do
 					file=Config.weather_path
 					file = Config.ask_for_weather_file if not file
-					file = file.gsub(" ","\\ ")				
+					file = file.gsub(" ","\\ ")
 
 					#if it is nil or (not epw and not wea)
 					if not file or (file.split(".").pop!='wea' and file.split(".").pop != 'epw') then
@@ -422,7 +422,7 @@ module IGD
 					end
 				end
 
-				wd.add_action_callback("calc_instant_illuminance") do |web_dialog,msg|
+				wd.add_action_callback("calc_instant_illuminance") do |web_dialog,msg|					
 					next if not Exporter.export(OS.tmp_groundhog_path,true)
 					options=JSON.parse(msg)
 					FileUtils.cd(OS.tmp_groundhog_path) do
