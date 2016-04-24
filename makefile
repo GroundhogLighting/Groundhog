@@ -3,18 +3,10 @@ GH_DESTINATION=./IGD_Groundhog/src/Radiance
 CLEAN_DESTINATION=rm -rf $(GH_DESTINATION)/*
 
 
-publish:
+publish: all
 	git add . ;\
 	git commit -m "automatic commit, built doc, wrapped RBZ, and pushed";
 	git push
-
-
-aa:
-	@read -p "Enter commit message:" commitmessage; \
-	git add .
-	git commit -m \"$$commitmessage\"
-	git push
-
 
 all: win32 win64 macosx
 
@@ -31,21 +23,19 @@ clean:
 test: macosx
 	cp -r IGD_Groundhog.rb $(SKETCHUP_PLUGIN_DIR)/IGD_Groundhog.rb
 	cp -r IGD_Groundhog $(SKETCHUP_PLUGIN_DIR)/IGD_Groundhog
+	$(CLEAN_DESTINATION)
 
 macosx: clean doc
 	$(CLEAN_DESTINATION)
 	cp -r Radiance/macosx/usr/local/radiance/* $(GH_DESTINATION)
 	zip -r Groundhog_macosx.rbz IGD_Groundhog IGD_Groundhog.rb -x *yardoc* *.DS_Store
-	$(CLEAN_DESTINATION)
 
 win32: clean doc
 	$(CLEAN_DESTINATION)
 	cp -r Radiance/win32/Radiance/* $(GH_DESTINATION)
 	zip -r Groundhog_win32.rbz IGD_Groundhog IGD_Groundhog.rb -x *yardoc* *.DS_Store
-	$(CLEAN_DESTINATION)
 
 win64: clean doc
 	$(CLEAN_DESTINATION)
 	cp -r Radiance/win64/Radiance/* $(GH_DESTINATION)
 	zip -r Groundhog_win64.rbz IGD_Groundhog IGD_Groundhog.rb -x *yardoc* *.DS_Store
-	$(CLEAN_DESTINATION)
