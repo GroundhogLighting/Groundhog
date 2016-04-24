@@ -25,7 +25,9 @@ function calc_DF(){
 }
 
 function calc_instant_illuminance(){
-    var sky = document.getElementById('actual_illuminance_sky').value;
+
+    var sky = document.getElementById('instant_illuminance_sky').value;
+
     var query = 'skp:calc_instant_illuminance@{"sky":"'+sky+'"}';
     window.location.href = query;
 }

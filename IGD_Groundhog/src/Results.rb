@@ -178,9 +178,9 @@ module IGD
 					group.entities.select{|x| x.is_a? Sketchup::Edge}.each{|x| x.hidden=true}
 
 					model.commit_operation
-				rescue => e
+				rescue Exception => ex
+					UI.messagebox ex
 					model.abort_operation
-					OS.failed_operation_message(op_name)
 				end
 				return metric
 			end
@@ -253,9 +253,9 @@ module IGD
 					Utilities.remark_solved_workplanes(metric)
 					model.commit_operation
 
-				rescue => e
+				rescue Exception => ex
+					UI.messagebox ex
 					model.abort_operation
-					OS.failed_operation_message(op_name)
 				end
 			end
 

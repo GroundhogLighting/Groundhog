@@ -56,6 +56,8 @@ module IGD
 
 				FileUtils.cd(path) do
 					file=Config.weather_path
+					file = Config.ask_for_weather_file if not file
+					file = file.gsub(" ","\\ ")
 
 					#if it is nil or (not epw and not wea)
 					if not file or (file.split(".").pop!='wea' and file.split(".").pop != 'epw') then
@@ -258,7 +260,7 @@ module IGD
 
 			@@default_metrics = {
 				"Review" => {:action => "rvu()", :html => "<h2>Review model</h2><fieldset><legend>Scene to review</legend><select id='rvu_scene'></select></fieldset><p align='center'><button onclick='load_rvu_views()'>Refresh views</button> <button onclick='rvu()'>Review </button></p>"},
-				"Instant illuminance" => {:action => "calc_actual_illuminance()", :html => "<h2>Actual illuminance</h2><fieldset><legend>Sky model</legend><select id='actual_illuminance_sky'><option value='-u'>CIE Uniform</option><option value='-c'>CIE Overcast</option><option value='+i'>CIE Intermediate</option><option value='+s'>CIE Clear</option></select><div class='option_info'>?<div class='tooltip'><p>The sun's position is obtained from the SketchUp model.</p></div></div></fieldset><p align='center'> <button onclick='calc_instant_illuminance()'> Calculate </button></p><table align='center'><tr><td id='instant_illuminance_scale_min'></td><td><img align='center' src='images/scale_horizontal.png' alt='scale' style='width:200px;height:30px'></td><td id='instant_illuminance_scale_max'></td></tr></table><table id='instant_illuminance_results' class='with_border'></table>"},
+				"Instant illuminance" => {:action => "calc_instant_illuminance()", :html => "<h2>Instant illuminance</h2><fieldset><legend>Sky model</legend><select id='instant_illuminance_sky'><option value='-u'>CIE Uniform</option><option value='-c'>CIE Overcast</option><option value='+i'>CIE Intermediate</option><option value='+s'>CIE Clear</option></select><div class='option_info'>?<div class='tooltip'><p>The sun's position is obtained from the SketchUp model.</p></div></div></fieldset><p align='center'> <button onclick='calc_instant_illuminance()'> Calculate </button></p><table align='center'><tr><td id='instant_illuminance_scale_min'></td><td><img align='center' src='images/scale_horizontal.png' alt='scale' style='width:200px;height:30px'></td><td id='instant_illuminance_scale_max'></td></tr></table><table id='instant_illuminance_results' class='with_border'></table>"},
 				"Daylight factor" => {:action => "calc_DF()"},
 				"Daylight authonomy" => {:action => "calc_DA()"},
 				"U.D.I." => {:action => "calc_UDI()"}
@@ -379,21 +381,19 @@ module IGD
 				end
 
 				wd.add_action_callback("rvu") do |web_dialog,msg|
-					next if not OS.ask_about_Radiance
 					next if not Exporter.export(OS.tmp_groundhog_path, true)
 					FileUtils.cd(OS.tmp_groundhog_path) do
 						begin
 							OS.execute_script(self.rvu(msg))
 							OS.clear_actual_path
-						rescue
-							UI.messagebox "There was a problem when trying to RVU your model."
+						rescue Exception => ex
+							UI.messagebox ex
 						end
 					end
 
 				end
 
 				wd.add_action_callback("calc_DF") do |web_dialog,msg|
-					next if not OS.ask_about_Radiance
 					next if not Exporter.export(OS.tmp_groundhog_path,false) #lights off
 					FileUtils.cd(OS.tmp_groundhog_path) do
 						begin
@@ -416,14 +416,13 @@ module IGD
 							min_max=Results.get_min_max_from_model(metric)
 							Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
 							web_dialog.execute_script(self.refresh_table(metric))
-						rescue
-							UI.messagebox "There was a problem when trying to calculate the Daylight factor."
+						rescue Exception => ex
+							UI.messagebox ex
 						end
 					end
 				end
 
-				wd.add_action_callback("calc_instant_illuminance") do |web_dialog,msg|
-					next if not OS.ask_about_Radiance
+				wd.add_action_callback("calc_instant_illuminance") do |web_dialog,msg|					
 					next if not Exporter.export(OS.tmp_groundhog_path,true)
 					options=JSON.parse(msg)
 					FileUtils.cd(OS.tmp_groundhog_path) do
@@ -446,14 +445,13 @@ module IGD
 							min_max=Results.get_min_max_from_model(metric)
 							Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
 							web_dialog.execute_script(self.refresh_table(metric))
-						rescue
-							UI.messagebox "There was a problem when trying to calculate the Actual Illuminance."
+						rescue Exception => ex
+							UI.messagebox ex
 						end
 					end
 				end
 
 				wd.add_action_callback("calc_DA") do |web_dialog,msg|
-					next if not OS.ask_about_Radiance
 					next if not Exporter.export(OS.tmp_groundhog_path, false)
 					self.calc_DA
 					metric = "Daylight authonomy"
@@ -464,7 +462,6 @@ module IGD
 				end
 
 				wd.add_action_callback("calc_UDI") do |web_dialog,msg|
-					next if not OS.ask_about_Radiance
 					next if not Exporter.export(OS.tmp_groundhog_path, false)
 					self.calc_UDI(false)
 					metric="U.D.I."

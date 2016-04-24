@@ -684,9 +684,9 @@ new lines and tabs… easier to read.</p>
 
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_commit_operation'>commit_operation</span>
 		<span class='kw'>return</span> <span class='kw'>true</span>
-	<span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+	<span class='kw'>rescue</span> <span class='const'>Exception</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_ex'>ex</span>
+		<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='id identifier rubyid_ex'>ex</span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
-		<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_failed_operation_message'>failed_operation_message</span><span class='lparen'>(</span><span class='id identifier rubyid_op_name'>op_name</span><span class='rparen'>)</span>
 		<span class='kw'>return</span> <span class='kw'>false</span>
 	<span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -809,7 +809,11 @@ action_callback</p>
 </div>
 
     <div id="footer">
+<<<<<<< HEAD
   Generated on Mon Apr 18 18:20:13 2016 by
+=======
+  Generated on Sun Apr 24 11:18:03 2016 by
+>>>>>>> Model-analysis
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>
