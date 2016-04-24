@@ -3,6 +3,13 @@ GH_DESTINATION=./IGD_Groundhog/src/Radiance
 CLEAN_DESTINATION=rm -rf $(GH_DESTINATION)/*
 
 publish:
+	@read -p "Enter commit message:" message; \
+	commit_message=$$message; \
+	git add .
+	git commit -m \"$$commitmessage\"
+	
+
+aa:
 	@read -p "Enter commit message:" commitmessage; \
 	git add .
 	git commit -m \"$$commitmessage\"
