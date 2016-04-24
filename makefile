@@ -6,7 +6,7 @@ publish:
 	@read -p "Enter commit message:" commitmessage; \
 	git add .
 	git commit -m \"$$commitmessage\"
-
+	git push
 
 
 all: win32 win64 macosx
