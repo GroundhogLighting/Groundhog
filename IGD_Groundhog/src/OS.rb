@@ -83,15 +83,6 @@ module IGD
 				return File.join(array)
 			end
 
-
-			# Sends an error message saying that an operation failed
-			# @author German Molina
-			# @param op_name [String] The name of the failed operation
-			def self.failed_operation_message(op_name)
-				UI.messagebox("There was an error while performing '#{op_name}' operation.\n\nPlease contact #{Groundhog.creator} to tell us what happened.\n\nTHANKS!")
-			end
-
-
 			# Removes everything from the input path
 			# The commands need to be strings.
 			# @author German Molina
@@ -147,35 +138,11 @@ module IGD
 			# @return [Boolean] success
 			def self.execute_script(script)
 				return false if not script
-				
+
 				script.each  do |cmd|
 					return false if not self.run_command(cmd)
 				end
 				return true
-			end
-
-			# Looks for OCONV program to check if the given Radiance path contains Radiance
-			# @author German Molina
-			# @param path [String] The path where Radiance is supposed to be
-			# @return [Boolean] True if oconv is there, false if not.
-			def self.check_Radiance_Path(path)
-				return false if path==nil
-				return false if not File.directory?(path)
-
-				oconv="#{path}/oconv.exe"
-				oconv="#{path}/oconv" if OS.getsystem=="MAC"
-				return File.exists?(oconv)
-			end
-
-			# Checks if Radiance is installed. If not, it will offer for configuration... the user can say no.
-			# @author German Molina
-			# @return [Boolean] True if Radiance was installed... if not, it offers to do it, and return false
-			def self.ask_about_Radiance
-				return true if self.check_Radiance_Path(Config.radiance_path) #return true if it is installed
-				#if there is no Radiance Path
-				result = UI.messagebox("Radiance does not seem to be configured with Groundhog.\nWould you like to set it up now?", MB_YESNO)
-				Config.show_config if result==IDYES
-				return false
 			end
 
 			# Receives the name of a program... adds .exe if necessary

@@ -26,7 +26,7 @@ module IGD
 
 			# Opens the materials wizard web dialog and adds the appropriate action_callback
 			#
-			# @author German Molina			
+			# @author German Molina
 			# @return [Void]
 			# @version 0.1
 			def self.show_material_wizard
@@ -106,9 +106,9 @@ module IGD
 
 					model.commit_operation
 					return true
-				rescue => e
+				rescue Exception => ex
+					UI.messagebox ex
 					model.abort_operation
-					OS.failed_operation_message(op_name)
 					return false
 				end
 			end

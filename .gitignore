@@ -16,7 +16,8 @@ Thumbs.db
 ######################
 IGD_Groundhog/config
 
-#   MY OWN SCRIPTS   #
+#      RADIANCE      #
 ######################
-deploy
-test
+#Radiance/macosx
+#Radiance/win32
+#Radiance/win64

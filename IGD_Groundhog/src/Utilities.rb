@@ -222,9 +222,9 @@ module IGD
 					end
 
 					model.commit_operation
-				rescue => e
+				rescue Exception => ex
+					UI.messagebox ex
 					model.abort_operation
-					OS.failed_operation_message(op_name)
 				end
 
 			end
@@ -313,9 +313,9 @@ module IGD
 						edges.map{|y| y.hidden = hide}
 					}
 					model.commit_operation
-				rescue => e
+				rescue Exception => ex
+					UI.messagebox ex
 					model.abort_operation
-					OS.failed_operation_message(op_name)
 				end
 			end
 

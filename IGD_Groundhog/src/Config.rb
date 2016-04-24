@@ -8,7 +8,6 @@ module IGD
 			@@default_config = {
 				"DESIRED_PIXEL_AREA" => 0.25,
 				"ALBEDO" => 0.2,
-				"RADIANCE_PATH" => nil,
 				"WEATHER_PATH" => nil,
 				"RVU" => "-ab 3",
 				"RCONTRIB" => "-ab 4 -ad 512",
@@ -95,18 +94,37 @@ module IGD
 				return path.tr("\\","/")
 			end
 
-			# Gets the path where the Radiance programs are installed... must be configured by the user.
+			# Gets the path where the Radiance programs are installed.
 			# @author German Molina
 			# @return [String] The radiance bin path
 			def self.radiance_path
-				self.get_element("RADIANCE_PATH")
+				"#{OS.main_groundhog_path}/src/Radiance/bin"
+			end
+
+			# Adds the Radiance Path and the Raypath to the environmental variables.
+			# @author German Molina
+			def self.setup_radiance
+				# ADD RADIANCE_PATH
+				if Config.radiance_path then
+					ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
+					ENV["RAYPATH"] = "#{Config.raypath}"
+				else
+					UI.messagebox "There was a problem loading Radiance"
+				end
+			end
+
+			# Gets the path where the Radiance library is installed
+			# @author German Molina
+			# @return [String] The radiance bin path
+			def self.raypath
+				"#{OS.main_groundhog_path}/src/Radiance/lib"
 			end
 
 			# Gets the path where the weather files are supposed to be stored... must be configured by the user.
 			# @author German Molina
-			# @return [Depends] The radiance bin path if successful, nil (false) if not.
+			# @return [Depends] The weather path if successful, nil (false) if not.
 			def self.weather_path
-				self.get_element("WEATHER_PATH")
+				@@config["WEATHER_PATH"]
 			end
 
 			# Gets the albedo
@@ -194,13 +212,6 @@ module IGD
 				self.get_element("LUMINAIRE_SHAPE_THRESHOLD")
 			end
 
-			# Gets the spacing between workplane sensors
-			# @author German Molina
-			# @return [Float] Sensor Spacing
-			def self.sensor_spacing
-				self.get_element("SENSOR_SPACING").to_f
-			end
-
 			# Gets the early working hour (i.e. when people start working)
 			# @author German Molina
 			# @return [Float] Early
@@ -236,10 +247,7 @@ module IGD
 			# @return void
 			def self.load_config
 				path=self.config_path
-
-				#add radiance path
 				@@config=JSON.parse(File.open(path).read)
-				ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"] if Config.radiance_path
 
 				#include add-ons
 				Addons.load_addons(self.active_addons)
@@ -286,28 +294,11 @@ module IGD
 				end
 
 				wd.set_on_close{
-					old_path=@@config["RADIANCE_PATH"]
-
 					@@default_config.each do |field|
 						id = field[0].downcase
 						@@config[field[0]] = wd.get_element_value(id).strip
 					end
-
-
-					#CHECK VALUES
-					if OS.check_Radiance_Path(@@config["RADIANCE_PATH"]) then
-						#update the Radiance path
-						if old_path != nil and old_path != "" then
-							ENV["PATH"]=ENV["PATH"].split(old_path).join(Config.radiance_path) #erase the old one and replace it
-						else
-							ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
-						end
-					else
-						UI.messagebox("WARNING:\n\nRadiance does not seem to be where you told us.\n\nThe rest of your options have been saved.")
-						@@config["RADIANCE_PATH"] = @@default_config["RADIANCE_PATH"]
-					end
 					self.write_config_file
-
 				}
 
 

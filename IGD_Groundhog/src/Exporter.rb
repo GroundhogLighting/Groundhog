@@ -184,7 +184,7 @@ module IGD
 			# @note this method used to be called 'do_multiphase'
 			def self.export(path,lights_on)
 				OS.clear_path(path)
-				#begin
+				begin
 					model=Sketchup.active_model
 					op_name = "Export"
 					model.start_operation( op_name,true )
@@ -202,11 +202,9 @@ module IGD
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 
 					model.commit_operation
-				#rescue => e
-				#	model.abort_operation
-				#	OS.failed_operation_message(op_name)
-				#	return false
-				#end
+				rescue Exception => ex
+					UI.messagebox ex		
+				end
 				return true
 			end
 
@@ -438,7 +436,7 @@ module IGD
 			def self.write_workplanes(path,entities)
 
 				return true if entities.length<1 #we export this only if there is any workplane... success
-				d=Config.sensor_spacing
+				d=Config.desired_pixel_area
 				return false if not d
 				d=d.m
 
