@@ -6,7 +6,7 @@ commit:
 	@read -p "Enter commit message:" message; \
 	commit_message=$$message; \
 	git add .
-	git commit -m '$$commit_message'
+	git commit -m \"$$commit_message\"
 
 publish:
 	git push
