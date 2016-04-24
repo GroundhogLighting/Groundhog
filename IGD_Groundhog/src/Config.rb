@@ -73,7 +73,7 @@ module IGD
 			# @author German Molina
 			# @return [String] The weather file path, False if not
 			def self.ask_for_weather_file
-				path = @@config["WEATHER_PATH"]
+				path = @@config["WEATHER_PATH"]				
 				if path then
 					path=path.split("/")
 					path.pop
@@ -91,7 +91,7 @@ module IGD
 					return false if not path
 				end
 
-				return path.tr("\\","/")
+				return path
 			end
 
 			# Gets the path where the Radiance programs are installed.
