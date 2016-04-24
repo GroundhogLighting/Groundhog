@@ -5,7 +5,7 @@ CLEAN_DESTINATION=rm -rf $(GH_DESTINATION)/*
 commit:
 	@read -p "Enter commit message:" message; \
 	commit_message=$$message; \
-	git add .
+	git add . ;\
 	git commit -m \"$$commit_message\"
 
 publish:
