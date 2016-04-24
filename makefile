@@ -2,15 +2,11 @@ SKETCHUP_PLUGIN_DIR=~/Library/Application\ Support/SketchUp\ 2016/SketchUp/Plugi
 GH_DESTINATION=./IGD_Groundhog/src/Radiance
 CLEAN_DESTINATION=rm -rf $(GH_DESTINATION)/*
 
-commit:
-	@read -p "Enter commit message:  " message; \
-	commit_message=$(echo $$message | sed -e 's/ /_/g'); \
-	echo $$commit_message; \
-	git add . ;\
-	git commit -m \"$$commit_message\";
 
 publish:
-	git push
+	git add . ;\
+	git commit -m "automatic commit, built doc, wrapped RBZ, and pushed";
+
 
 aa:
 	@read -p "Enter commit message:" commitmessage; \
