@@ -6,6 +6,7 @@ CLEAN_DESTINATION=rm -rf $(GH_DESTINATION)/*
 publish:
 	git add . ;\
 	git commit -m "automatic commit, built doc, wrapped RBZ, and pushed";
+	git push
 
 
 aa:
