@@ -19,9 +19,10 @@
               <p>Groundhog</p>
               <small>Lighting analysis within SketchUp</small>
               <div id='home_downloads'>
-                  <a onclick="ga('send','event','Download','Download_Stable','Stable',1)" href="https://github.com/IGD-Labs/Groundhog/raw/Stable/Groundhog.rbz" id="home_download_button"><small>Download</small>Stable<p id='stable_date'></p></a>
-                  <a onclick="ga('send','event','Download','Download_Latest','Latest',1)" href="https://github.com/IGD-Labs/Groundhog/raw/Latest/Groundhog.rbz" id="home_download_latest"><small>Download</small>Latest<p id='latest_date'></p></a>
-                  <a onclick="ga('send','event','Visit','Visit_SketchUp','SketchUp',1)" href="http://extensions.sketchup.com/en/content/groundhog" id="home_sketchup_button"><small>view on</small>SketchUp</a>
+                  <a onclick="ga('send','event','Download','Download_OSX','Stable',1)" href="https://github.com/IGD-Labs/Groundhog/raw/master/Groundhog_macosx.rbz" id="home_download_osx"><small>Download</small>Mac OSX<p id='osx_date'></p></a>
+                  <a onclick="ga('send','event','Download','Download_Win32','Latest',1)" href="https://github.com/IGD-Labs/Groundhog/raw/master/Groundhog_win32.rbz" id="home_download_windows_32"><small>Download</small>Windows x32<p id='windows32_date'></p></a>
+                  <a onclick="ga('send','event','Download','Download_Win64','Latest',1)" href="https://github.com/IGD-Labs/Groundhog/raw/master/Groundhog_win64.rbz" id="home_download_windows_64"><small>Download</small>Windows x64<p id='windows64_date'></p></a>
+                  <!--a onclick="ga('send','event','Visit','Visit_SketchUp','SketchUp',1)" href="http://extensions.sketchup.com/en/content/groundhog" id="home_sketchup_button"><small>view on</small>SketchUp</a-->
                   <a onclick="ga('send','event','Visit','Visit_Github','Github',1)" href="https://github.com/IGD-Labs/Groundhog" id="home_github_button"><small>View project on</small>GitHub</a>
               </div>
           </div>
@@ -76,30 +77,6 @@
         <iframe width="760" height="570.5" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/1xac-uZZ998JfBBa3moXK8nUaE_LBItXIlO5Q20wsUMQ/pubchart?oid=1865347291&amp;format=interactive"></iframe>
       </div>
 
-      <div class='section' id='download'>
-          <h1>Download</h1>
-          <h2>Start now, it is free!</h2>
-          <p>There are four options available.</p>
-          <table class = 'columns'>
-           <tr>
-             <td><a onclick="ga('send','event','Download','Download_Latest','Latest',1)" href="https://github.com/IGD-Labs/Groundhog/raw/Latest/Groundhog.rbz" id="download_latest"></a></td>
-             <td><a onclick="ga('send','event','Download','Download_Stable','Stable',1)" href="https://github.com/IGD-Labs/Groundhog/raw/Stable/Groundhog.rbz" id="download_button"></a></td>
-             <td><a onclick="ga('send','event','Visit','Visit_SketchUp','SketchUp',1)" href="http://extensions.sketchup.com/en/content/groundhog" id="sketchup_button"></a></td>
-             <td><a onclick="ga('send','event','Visit','Visit_Github','Github',1)" href="https://github.com/IGD-Labs/Groundhog" id="github_button"></a></td>
-           </tr>
-           <tr>
-             <td><h2>Download latest version</h2><p>Are you willing to try the new features?</p></td>
-             <td><h2>Download stable version</h2><p>Our recommended version</p></td>
-             <td><h2>Get from SketchUp</h2><p>The most stable version, but not usually up to date</p></td>
-             <td><h2>View on GitHub</h2><p>Where everything starts</p></td>
-           </tr>
-
-         </table>
-
-
-
-
-      </div>
 
       <div class='section' id='get_involved'>
           <h1>Get involved</h1>
@@ -110,10 +87,12 @@
            <tr>
              <td><a href="https://github.com/IGD-Labs/Groundhog" id="contribute_button"></a></a></td>
              <td><a href="https://twitter.com/groundhog_su" id="contribute_twitter"></a></td>
+             <td><a href="https://groundhogproject.gitbooks.io/groundhog-bible/content/" id="gitbook"></a></td>
            </tr>
            <tr>
              <td><h2>Contribute on GitHub</h2><p>Add comments on the Wiki, write documentation, let us know of any bugs, ask for new features, clone and add your own code.</p></td>
              <td><h2>Contribute on Twitter</h2><p>Follow us, spread the word, report bugs, ask for help and tips, ask for new features.</p></td>
+             <td><h2>Contribute on Documentation</h2><p>Publish, fix, enhance and read tutorials in our collaborative documentation.</p></td>
            </tr>
 
          </table>
@@ -137,12 +116,12 @@
            <tr>
              <td><a href="http://www.igd.cl/contact" id="resources_igd"></a></a></td>
              <td><a href="https://twitter.com/groundhog_su" id="resources_twitter"></a></td>
-             <td><a href="https://github.com/IGD-Labs/Groundhog/wiki" id="resources_github"></a></td>
+             <td><a href="https://groundhogproject.gitbooks.io/groundhog-bible/content/" id="resources_gitbook"></a></td>
            </tr>
            <tr>
              <td><h2>Contact IGD directly</h2><p>For general questions.</p></td>
              <td><h2>Contact us using Twitter</h2><p>Does your question fit in 140 characters?</p></td>
-             <td><h2>Use the GitHub wiki</h2><p>You can read and write.</p></td>
+             <td><h2>Read the documentation</h2><p>You can read it and write it.</p></td>
            </tr>
 
          </table>
@@ -332,8 +311,10 @@
             return date;
         }
 
-        document.getElementById('latest_date').innerHTML = get_date("https://api.github.com/repos/IGD-Labs/Groundhog/branches/Latest");
-        document.getElementById('stable_date').innerHTML = get_date("https://api.github.com/repos/IGD-Labs/Groundhog/branches/Stable");
+        var windate=get_date("https://api.github.com/repos/IGD-Labs/Groundhog/branches/Latest");
+        document.getElementById('windows32_date').innerHTML = windate;
+        document.getElementById('windows64_date').innerHTML = windate;
+        document.getElementById('osx_date').innerHTML = get_date("https://api.github.com/repos/IGD-Labs/Groundhog/branches/Stable");
 
   </script>
 

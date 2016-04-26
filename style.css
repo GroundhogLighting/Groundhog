@@ -176,7 +176,7 @@ a:hover {
     max-width:100%;
     text-align: left;
     padding:0px;
-    width:
+
 }
 
 #title > small{
@@ -199,9 +199,9 @@ a:hover {
 }
 /*BUTTONS*/
 
-#home_download_latest, #home_download_button, #home_github_button, #home_sketchup_button {
-  width: 134px;
-  height: 58px;
+#home_download_windows_32, #home_download_windows_64, #home_download_osx, #home_github_button, #home_sketchup_button {
+  width: 160px;
+  height: 60px;
   padding-top: 11px;
   padding-left: 68px;
   font-size: 140%;
@@ -216,18 +216,18 @@ a:hover {
   border-color: white;
 }
 
-#home_download_latest small, #home_download_button small, #home_github_button small, #home_sketchup_button small{
+#home_download_windows_32 small, #home_download_windows_64 small, #home_download_osx small, #home_github_button small, #home_sketchup_button small{
   display: block;
   font-size: 50%;
 }
 
-#home_download_latest p, #home_download_button p, #home_github_button p, #home_sketchup_button p{
+#home_download_windows_32 p, #home_download_windows_64 p, #home_download_osx p, #home_github_button p, #home_sketchup_button p{
     color: white;
     display: block;
     font-size: 50%;
 }
 
-#home_github_button::before, #home_download_latest::before,  #home_download_button::before, #home_sketchup_button::before{
+#home_github_button::before, #home_download_windows_32::before, #home_download_windows_64::before,  #home_download_osx::before, #home_sketchup_button::before{
     content: "";
     position:relative;
     width: 60px;
@@ -245,8 +245,12 @@ a:hover {
     background-image: url("images/github_icon_2.png");
 }
 
-#home_download_button::before, #home_download_latest::before {
-    background-image: url("images/download_icon.png");
+#home_download_windows_32::before, #home_download_windows_64::before {
+   background-image: url("images/windows.png");
+ }
+
+#home_download_osx::before{
+    background-image: url("images/osx.png");
 }
 
 #home_sketchup_button::before{
@@ -256,26 +260,20 @@ a:hover {
 #github_button, #resources_github{
     background: #6cb16e url("images/github_icon_2.png") no-repeat;
 }
-#sketchup_button{
-    background: #b16e6c url("images/sketchup_icon.gif") no-repeat; //#939598
-}
-#download_button{
-    background: #6E6CB1 url("images/download_icon.png") no-repeat; //#b16e6c  #6CB16E
-}
 
-#download_latest{
-    background: #6CAFB1 url("images/download_icon.png") no-repeat; //#b16e6c  #6CB16E
+#gitbook, #resources_gitbook{
+  background: #B16E6C url("images/gitbook.png") no-repeat;
 }
 
 #training{
-    background: #b16e6c url("images/personnel.png") no-repeat; //#939598
+    background: #b16e6c url("images/personnel.png") no-repeat;
 }
 
 #customization{
-    background: #6cb16e  url("images/RD.png") no-repeat; //#b16e6c  #6CB16E
+    background: #6cb16e  url("images/RD.png") no-repeat;
 }
 
-#download_latest, #download_button, #sketchup_button, #github_button, #training, #customization{
+#github_button, #training, #customization{
     max-height:220px;
     max-width:220px;
     width: 20vw;
@@ -296,7 +294,7 @@ a:hover {
     background: #6cb16e url("images/github_icon_2.png") no-repeat;
 }
 
-#contribute_button, #contribute_twitter {
+#contribute_button, #contribute_twitter, #gitbook {
     margin-top:50px;
     max-width: 220px;
     max-height: 220px;
@@ -314,7 +312,7 @@ a:hover {
     background: #6E6CB1 url("images/isoIGD.png") no-repeat;
 }
 
-#resources_igd, #resources_twitter, #resources_github {
+#resources_igd, #resources_twitter, #resources_gitbook {
     margin-top:50px;
     max-width: 220px;
     max-height: 220px;
@@ -388,7 +386,6 @@ a:hover {
     height: 30vw;
     margin: auto;
 
-    //border: 12px rgba(255,255,240,1) solid;
     -webkit-box-shadow: 0px 0px 5px rgba(0,0,0,.8);
     -moz-box-shadow: 0px 0px 25px rgba(0,0,0,.8);
     box-shadow: 0px 0px 5px rgba(0,0,0,.8);
@@ -448,7 +445,7 @@ a:hover {
     bottom: 0px;
     left: 0px;
     text-align: left;
-    width:auto;    
+    width:auto;
 }
 
 .slider > ul > li > .credit{
