@@ -303,59 +303,10 @@ module IGD
 
 			### HELP MENU
 
-			gh_help_menu=groundhog_menu.add_submenu("Help")
-				gh_help_menu.add_item("Full Groundhog documentation") {
-					wd=UI::WebDialog.new(
-						"Full doc", true, "",
-						700, 700, 100, 100, true )
-					wd.set_file("#{OS.main_groundhog_path}/doc/doc_index.html" )
-					wd.show()
-				}
+			groundhog_menu.add_item("Online documentation"){
+				status = UI.openURL("http://groundhogproject.gitbooks.io/groundhog-bible/content/")			
+			}
 
-				## Tutorials
-				gh_tutorials_menu=gh_help_menu.add_submenu("Tutorials")
-					gh_tutorials_menu.add_item("Getting Started") {
-						wd=UI::WebDialog.new(
-							"Tutorials", true, "",
-							700, 700, 100, 100, true )
-						wd.set_file( "#{OS.main_groundhog_path}/doc/file.GettingStarted.html" )
-						wd.show()
-					}
-					gh_tutorials_menu.add_item("Adding windows") {
-						wd=UI::WebDialog.new(
-							"Tutorials", true, "",
-							700, 700, 100, 100, true )
-						wd.set_file("#{OS.main_groundhog_path}/doc/file.MakeWindow.html" )
-						wd.show()
-					}
-					gh_tutorials_menu.add_item("Adding workplanes") {
-						wd=UI::WebDialog.new(
-							"Tutorials", true, "",
-							700, 700, 100, 100, true )
-						wd.set_file("#{OS.main_groundhog_path}/doc/file.MakeWorkplane.html" )
-						wd.show()
-					}
-					gh_tutorials_menu.add_item("Adding illums") {
-						wd=UI::WebDialog.new(
-							"Tutorials", true, "",
-							700, 700, 100, 100, true )
-						wd.set_file("#{OS.main_groundhog_path}/doc/file.MakeIllum.html" )
-						wd.show()
-					}
-					gh_tutorials_menu.add_item("Exporting views") {
-						wd=UI::WebDialog.new(
-							"Tutorials", true, "",
-							700, 700, 100, 100, true )
-						wd.set_file("#{OS.main_groundhog_path}/doc/file.Views.html" )
-						wd.show()
-					}
-					gh_tutorials_menu.add_item("Visualizing results") {
-						wd=UI::WebDialog.new(
-							"Tutorials", true, "",
-							700, 700, 100, 100, true )
-						wd.set_file("#{OS.main_groundhog_path}/doc/file.ImportResults.html" )
-						wd.show()
-					}
 
 			# Add the About.
 			groundhog_menu.add_item("About Groundhog"){
