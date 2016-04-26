@@ -1,9 +1,20 @@
 
 body{padding:0;}
 ul#tabs {position:absolute; list-style-type: none; margin: 0px 0 0 0; padding: 0 0 0.0em 0; z-index: 1;}
-ul#tabs li { height: 18px; width: 77px; margin-bottom: 11px;  }
+ul#tabs li { height: 18px; width: 135px; margin-bottom: 11px;  }
 ul#tabs li a {display: block; width: 100%; color: #42454a; background-color: #dedbde; border: 1px solid #c9c3ba; border-right: none; padding: 0.3em 0.3em 0.3em 0.3em; text-decoration: none; }
 ul#tabs li a:hover { background-color: #f1f0ee; }
 ul#tabs li a.selected { color: #000; background-color: #f1f0ee; font-weight: bold; padding: 0.3em 0.5em 0.3em 0.3em; }
-div.tabContent {height:100vh;position:absolute; margin-left: 87px; float:left; border-left: 1px solid #c9c3ba; padding: 0.0em 0.5em 0.3em 1.3em; background-color: #f1f0ee; width:400px;}
+
+div.tabContent {
+  height:100vh;
+  position:absolute;
+  left: 145px;
+  right: 10px;
+  width: auto;
+  border-left: 1px solid #c9c3ba;
+  padding: 0.0em 0.5em 0.3em 1.3em;
+  background-color: #f1f0ee;
+
+}
 div.tabContent.hide { display: none; }

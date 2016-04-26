@@ -7,6 +7,16 @@ module IGD
 		module Utilities
 
 
+			def self.mat_array_2_mat_string(mat_array,name)
+				ret=""
+				mat_array.uniq!
+				extension=""
+				extension= "_"+name if name
+				mat_array.each do |mat|
+					ret+=Exporter.get_mat_string(mat, Utilities.fix_name(mat.name)+extension)+"\n\n"
+				end
+				return ret
+			end
 
 
 			#  Loads a text file (CSV, TSV) into an array of strings.
@@ -212,9 +222,9 @@ module IGD
 					end
 
 					model.commit_operation
-				rescue => e
+				rescue Exception => ex
+					UI.messagebox ex
 					model.abort_operation
-					OS.failed_operation_message(op_name)
 				end
 
 			end
@@ -303,9 +313,9 @@ module IGD
 						edges.map{|y| y.hidden = hide}
 					}
 					model.commit_operation
-				rescue => e
+				rescue Exception => ex
+					UI.messagebox ex
 					model.abort_operation
-					OS.failed_operation_message(op_name)
 				end
 			end
 
@@ -358,6 +368,22 @@ module IGD
 				return entities.select{|x| x.is_a? Sketchup::ComponentInstance}
 			end
 
+			# Gets the workplanes
+			# @author German Molina
+			# @param entities [Array<SketchUp::Entities>]
+			# @return [Array <SketchUp::Entities>] An array with the entities that are SketchUp::ComponentDefinition
+			def self.get_workplanes(entities)
+				return entities.select{|x| Labeler.workplane? x}
+			end
+
+			# Gets the workplanes
+			# @author German Molina
+			# @param entities [Array<SketchUp::Entities>]
+			# @return [Array <SketchUp::Entities>] An array with the entities that are SketchUp::ComponentDefinition
+			def self.get_solved_workplanes(entities)
+				return entities.select{|x| Labeler.solved_workplane? x}
+			end
+
 			# Returns an array with the transformations that lead to the global position of the entity
 			# @author German Molina
 			# @param entity [SketchUp::Entities]
@@ -378,6 +404,24 @@ module IGD
 						entity = entity.parent
 					end
 				end
+			end
+
+			# Hides all solved workplanes with the exception of those with the input metric
+			# @author German Molina
+			# @param metric [String]
+			# @version 0.1
+			def self.remark_solved_workplanes(metric)
+				#hide them all, except those with the metric we are interested in
+				scale_min=false
+				scale_max=false
+				self.get_solved_workplanes(Sketchup.active_model.entities).each{|x|
+					value=JSON.parse(Labeler.get_value(x))
+					if value["metric"]==metric
+						x.hidden=false
+					else
+						x.hidden=true
+					end
+				}
 			end
 
 

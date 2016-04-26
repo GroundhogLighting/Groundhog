@@ -126,7 +126,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_illum_shape-class_method" title="get_illum_shape (class method)">+ (Object) <strong>get_illum_shape</strong>(definition) </a>
+      <a href="#get_illum_shape-class_method" title="get_illum_shape (class method)">+ (Hash) <strong>get_illum_shape</strong>(definition) </a>
     
 
     
@@ -140,7 +140,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Decides weather the illum surrounding one luminaire is a sphere or a box.</p>
+</div></span>
   
 </li>
 
@@ -148,7 +150,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#ies2rad-class_method" title="ies2rad (class method)">+ (Object) <strong>ies2rad</strong>(iesname, multiplier, definition, path) </a>
+      <a href="#ies2rad-class_method" title="ies2rad (class method)">+ (String) <strong>ies2rad</strong>(iesname, multiplier, definition, path) </a>
     
 
     
@@ -162,7 +164,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Transform an IES file into a Radiance understood data file.</p>
+</div></span>
   
 </li>
 
@@ -338,22 +342,83 @@
       <div class="method_details ">
   <h3 class="signature " id="get_illum_shape-class_method">
   
-    + (<tt>Object</tt>) <strong>get_illum_shape</strong>(definition) 
+    + (<tt>Hash</tt>) <strong>get_illum_shape</strong>(definition) 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Decides weather the illum surrounding one luminaire is a sphere or a box</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>definition</span>
+      
+      
+        <span class='type'>(<tt>SketchUp::ComponentDefinition</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the definition to surround with illum</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A Hash with the information about the shape</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina based on Radiance&#39;s code</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-70
-71
-72
-73
 74
 75
 76
@@ -377,15 +442,19 @@
 94
 95
 96
-97</pre>
+97
+98
+99
+100
+101</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Luminaires.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Luminaires.rb', line 74</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_illum_shape'>get_illum_shape</span><span class='lparen'>(</span><span class='id identifier rubyid_definition'>definition</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='rparen'>)</span>
 
-    <span class='id identifier rubyid_threshold'>threshold</span> <span class='op'>=</span> <span class='float'>2.0</span>
+    <span class='id identifier rubyid_threshold'>threshold</span> <span class='op'>=</span> <span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_luminaire_shape_threshold'>luminaire_shape_threshold</span>
 
     <span class='id identifier rubyid_bounds'>bounds</span> <span class='op'>=</span> <span class='id identifier rubyid_definition'>definition</span><span class='period'>.</span><span class='id identifier rubyid_bounds'>bounds</span>
     <span class='id identifier rubyid_max'>max</span> <span class='op'>=</span> <span class='id identifier rubyid_bounds'>bounds</span><span class='period'>.</span><span class='id identifier rubyid_max'>max</span>
@@ -398,7 +467,7 @@
 
     <span class='id identifier rubyid_aspect'>aspect</span> <span class='op'>=</span> <span class='id identifier rubyid_size'>size</span><span class='period'>.</span><span class='id identifier rubyid_max'>max</span><span class='op'>/</span><span class='id identifier rubyid_size'>size</span><span class='period'>.</span><span class='id identifier rubyid_min'>min</span>
 
-    <span class='kw'>if</span> <span class='id identifier rubyid_aspect'>aspect</span> <span class='op'>&lt;=</span> <span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_luminaire_shape_threshold'>luminaire_shape_threshold</span> <span class='kw'>then</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_aspect'>aspect</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_threshold'>threshold</span> <span class='kw'>then</span>
         <span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>shape</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>sphere</span><span class='tstring_end'>&quot;</span></span>
         <span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>radius</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_bounds'>bounds</span><span class='period'>.</span><span class='id identifier rubyid_diagonal'>diagonal</span><span class='period'>.</span><span class='id identifier rubyid_to_m'>to_m</span><span class='op'>*</span><span class='float'>0.5</span>
     <span class='kw'>else</span> <span class='comment'>#box
@@ -418,29 +487,139 @@
       <div class="method_details ">
   <h3 class="signature " id="ies2rad-class_method">
   
-    + (<tt>Object</tt>) <strong>ies2rad</strong>(iesname, multiplier, definition, path) 
+    + (<tt>String</tt>) <strong>ies2rad</strong>(iesname, multiplier, definition, path) 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>a .dat file is written in the process</p>
+</div>
+  </div>
+
+
+<p>Transform an IES file into a Radiance understood data file</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>iesname</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The path of the IES file</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>multiplier</span>
+      
+      
+        <span class='type'>(<tt>Numeric</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A number that powers the lamp. 1 is fully on, 0 is off.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>definition</span>
+      
+      
+        <span class='type'>(<tt>Sketchup::ComponentDefinition</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The definition to which the IES will be assigned</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>path</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The actual path on which we are working.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The Radiance definition of the light.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina based on Radiance&#39;s code</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
 111
 112
 113
@@ -597,10 +776,21 @@
 264
 265
 266
-267</pre>
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Luminaires.rb', line 100</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Luminaires.rb', line 111</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ies2rad'>ies2rad</span><span class='lparen'>(</span><span class='id identifier rubyid_iesname'>iesname</span><span class='comma'>,</span> <span class='id identifier rubyid_multiplier'>multiplier</span><span class='comma'>,</span> <span class='id identifier rubyid_definition'>definition</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 
@@ -807,7 +997,7 @@
         <span class='kw'>if</span> <span class='id identifier rubyid_lamp'>lamp</span><span class='op'>=~</span> <span class='id identifier rubyid_l'>l</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='kw'>then</span> <span class='comment'>#if it matches
 </span>            <span class='kw'>return</span> <span class='id identifier rubyid_l'>l</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
         <span class='kw'>end</span>
-        <span class='kw'>return</span> <span class='lbracket'>[</span><span class='float'>1.0</span><span class='op'>/</span><span class='float'>3.0</span><span class='comma'>,</span> <span class='float'>1.0</span><span class='op'>/</span><span class='float'>3.0</span><span class='comma'>,</span> <span class='float'>1.0</span><span class='rbracket'>]</span> <span class='comment'>#if not found
+        <span class='kw'>return</span> <span class='lbracket'>[</span><span class='float'>1.0</span><span class='op'>/</span><span class='float'>3.0</span><span class='comma'>,</span> <span class='float'>1.0</span><span class='op'>/</span><span class='float'>3.0</span><span class='comma'>,</span> <span class='float'>1.0</span><span class='op'>/</span><span class='float'>3.0</span><span class='rbracket'>]</span> <span class='comment'>#if not found
 </span>    <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -830,17 +1020,6 @@
       <pre class="lines">
 
 
-271
-272
-273
-274
-275
-276
-277
-278
-279
-280
-281
 282
 283
 284
@@ -899,10 +1078,21 @@
 337
 338
 339
-340</pre>
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Luminaires.rb', line 271</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Luminaires.rb', line 282</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_dat_file'>write_dat_file</span><span class='lparen'>(</span><span class='id identifier rubyid_vang'>vang</span><span class='comma'>,</span><span class='id identifier rubyid_hang'>hang</span><span class='comma'>,</span><span class='id identifier rubyid_iesname'>iesname</span><span class='comma'>,</span> <span class='id identifier rubyid_ies_content'>ies_content</span><span class='rparen'>)</span>
 
@@ -984,7 +1174,15 @@
 </div>
 
     <div id="footer">
+<<<<<<< HEAD
   Generated on Tue Mar 29 12:09:10 2016 by
+=======
+<<<<<<< HEAD
+  Generated on Mon Apr 18 18:20:13 2016 by
+=======
+  Generated on Sun Apr 24 11:18:03 2016 by
+>>>>>>> Model-analysis
+>>>>>>> Model-analysis
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

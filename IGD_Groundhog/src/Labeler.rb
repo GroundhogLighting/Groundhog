@@ -106,6 +106,30 @@ module IGD
 				group.get_attribute("Groundhog","Label")=="solved_workplane"
 			end
 
+			# Checks if a component is a TDD_top, meaning that it is the exterior lens of the TDD.
+			# @author German Molina
+			# @param face [SketchUp::Face] face to test.
+			# @return [Boolean]
+			def self.tdd_top?(face)
+				face.get_attribute("Groundhog","Label")=="TDD_top"
+			end
+
+			# Checks if a component is a TDD_bottom, meaning that it is the interior lens of the TDD.
+			# @author German Molina
+			# @param face [SketchUp::Face] face to test.
+			# @return [Boolean]
+			def self.tdd_bottom?(face)
+				face.get_attribute("Groundhog","Label")=="TDD_bottom"
+			end
+
+			# Checks if a group is a TDD
+			# @author German Molina
+			# @param group [SketchUp::ComponentDefinition] component to test.
+			# @return [Boolean]
+			def self.tdd?(group)
+				group.get_attribute("Groundhog","Label")=="TDD"
+			end
+
 
 			# Checks if an entity is an illum
 			# @author German Molina
@@ -341,6 +365,37 @@ module IGD
 				else
 					UI.messagebox("No faces selected")
 				end
+			end
+
+			# Label selected groups as TDDs
+			# @author German Molina
+			# @param groups [Array<SketchUp::Group>] An array with the groups to be labeled as TDDs
+			# @version 0.1
+			# @return [Void]
+			def self.to_tdd(groups)
+				groups.each{|x|
+					x.set_attribute("Groundhog","Label","TDD")
+					x.definition.set_attribute("Groundhog","Label","TDD")					
+				}
+
+			end
+
+			# Label selected face as TDD top lens
+			# @author German Molina
+			# @param face [SketchUp::Face] A face
+			# @version 0.1
+			# @return [Void]
+			def self.to_tdd_top(face)
+					face.set_attribute("Groundhog","Label","TDD_top")
+			end
+
+			# Label selected face as TDD bottom lens
+			# @author German Molina
+			# @param face [SketchUp::Face] A face
+			# @version 0.1
+			# @return [Void]
+			def self.to_tdd_bottom(face)
+					face.set_attribute("Groundhog","Label","TDD_bottom")
 			end
 
 			# Delete label from entities

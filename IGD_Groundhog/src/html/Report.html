@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Groundhog Report</title>
+		<meta charset="UTF-8">
+	</head>
+	<link rel="stylesheet" type="text/css" href="css/general.css">
+	<body>
+
+					<h2>Reporter</h2>
+					<p>The reports generated here are built from the existing solved workplanes in the model. You can report your own data if you want</p>
+					<!--div class="more_info">
+						More info
+						<div class="tooltip">
+							<p> It does not differentiate between climates or orientations.</p>
+							<p> The calculation program for this is RTrace. You can change the parameters in the Configuration panel.</p>
+						</div>
+					</div-->
+					<p align="center">
+						<select id='metrics' onchange="changeMetric()"></select>
+						<button onclick='onLoad()'> Refresh </button>
+						<!--button onclick='writeReport()'> Save Report </button-->
+					</p>
+					<table align="center">
+						<tr>
+							<td id="scale_min">
+								--
+							</td>
+							<td>
+								<img align="center" src="images/scale_horizontal.png" alt="scale" style="width:200px;height:30px">
+							</td>
+							<td id="scale_max">
+								--
+							</td>
+						</tr>
+					</table>
+					<h3>Results</h3>
+					<table id="results" class="with_border"></table>
+
+
+
+
+
+	</body>
+
+	<script src="../ThirdParty/jsPDF/dist/jspdf.min.js"></script>
+	<script src="js/report.js"></script>
+
+</html>

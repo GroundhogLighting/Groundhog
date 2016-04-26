@@ -64,40 +64,76 @@ module IGD
 			end
 
 
+			# Returns an array with the names of the metrics within the solved-workplanes, obtained from the Solved Workplanes
+			# @author German Molina
+			# @return [Array <String>] An array with the names of the metrics
+			def self.get_metrics_list
+				Utilities.get_solved_workplanes(Sketchup.active_model.entities).map{|x| JSON.parse(Labeler.get_value(x))["metric"]}.uniq
+			end
+
+			# Returns an array with the solved workplanes in the model
+			# @author German Molina
+			# @return [Array <String>] An array with the names of the workplanes
+			def self.get_workplane_list
+				Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+			end
+
+			# Returns an array with the names of the workplanes, obtained from the Solved Workplanes
+			# @author German Molina
+			# @return [Array <String>] An array with the names of the workplanes
+			def self.get_workplane_name_list
+				Utilities.get_solved_workplanes(Sketchup.active_model.entities).map{|x| JSON.parse(Labeler.get_value(x))["workplane"]}.uniq
+			end
+
+
+
 
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model.
 			#
-			# The normal of the plane as well as the dimension of the pixels
-			# are calculated from the position of the sensors. It is assumed that
-			# all the sensors lie in the same plane point in the same direction.
+			# If the metric is set to False, the user will be asked to
+			# define one. This is useful for importing
 			#
 			# @author German Molina
 			# @param values [array] The array (2D but 1 columns) with the data to show.
 			# @param pixels [array] The array (2D, 9 columns) with the positions of the vertices of triangles (pixels).
-			# @param name [String] The name that will be given to the group that contains the pixels
-			# @return [Void]
-			# @version 0.3
-			def self.draw_pixels(values,pixels,name,metric)
+			# @param workplane [String] The name that will be given to the group that contains the pixels
+			# @param metric [String] The name that will be given to the group that contains the pixels
+			# @return [String] the metric
+			# @version 0.6
+			def self.draw_pixels(values,pixels,workplane,metric)
 				model=Sketchup.active_model
 				if values.length != pixels.length then
 					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match")
 					return false
 				end
-				if values[0].length != 1 or pixels[0].length != 9 then
+				#pixels need to have 3 values for each vertex
+				#values need to be in one column.
+				if values[0].length != 1 or pixels[0].length%3 != 0 then
 					UI.messagebox("Incorrect format in 'pixels' or 'values' when drawing pixels")
 					return false
 				end
 
 				if not metric then
-					metric = UI.inputbox ["Metric name\n"], [""], "Set a name for the metric"
+					answer = UI.inputbox(["Metric name","Workplane name"],["",workplane], "What are your results?")
+					return false if not answer
+					workplane=answer[1]
+					metric=answer[0]
 				end
 
-				return false if not metric
 
 				op_name="Draw pixels"
 				begin
 					model.start_operation(op_name,true)
+
+					#delete previous workplane.
+					Utilities.get_solved_workplanes(Sketchup.active_model.entities).select{|x|
+						JSON.parse(Labeler.get_value(x))["metric"]==metric
+					}.select {|x|
+						JSON.parse(Labeler.get_value(x))["workplane"]==workplane
+					}.each{|x|
+						x.erase!
+					}
 
 					group = Sketchup.active_model.entities.add_group
 					group.name=name
@@ -108,37 +144,45 @@ module IGD
 					max=0
 					min=9999999999999
 
-					#draw every line. Each pixel is a triangle.
+					#draw every line. Each pixel is a polygon.
 					pixels.each do |data|
 						value = values.shift[0].to_f
 						#check minimum and maximum
 						min=value.to_f if min>value.to_f
 						max=value.to_f if max<value.to_f
 
-						vertex0=Geom::Point3d.new(data[0].to_f.m,data[1].to_f.m,data[2].to_f.m)
-						vertex1=Geom::Point3d.new(data[3].to_f.m,data[4].to_f.m,data[5].to_f.m)
-						vertex2=Geom::Point3d.new(data[6].to_f.m,data[7].to_f.m,data[8].to_f.m)
+						vertex=[]
+						nvertices = data.length/3
+						nvertices.times do
+							v1 = data.shift.to_f
+							v2 = data.shift.to_f
+							v3 = data.shift.to_f
+							vertex.push [v1.m, v2.m, v3.m]
+						end
 
-						pixel=entities.add_face(vertex0,vertex1,vertex2)
+						pixel=entities.add_face(vertex)
 						Labeler.to_result_pixel(pixel)
 						Labeler.set_pixel_value(pixel,value)
 					end
 
 					Labeler.to_solved_workplane(group)
 					Labeler.to_solved_workplane(group.definition)
-					wp_value = Hash.new
-					wp_value["min"] = min
-					wp_value["max"] = max
+					wp_value = self.get_workplane_statistics(group)
 					wp_value["metric"] = metric
+					wp_value["workplane"] = workplane
 					Labeler.set_workplane_value(group,wp_value.to_json)
 
 					group.casts_shadows=false
-					model.commit_operation
-				rescue => e
-					model.abort_operation
-					OS.failed_operation_message(op_name)
-				end
 
+					#hide the edges
+					group.entities.select{|x| x.is_a? Sketchup::Edge}.each{|x| x.hidden=true}
+
+					model.commit_operation
+				rescue Exception => ex
+					UI.messagebox ex
+					model.abort_operation
+				end
+				return metric
 			end
 
 
@@ -182,78 +226,93 @@ module IGD
 			# @author German Molina
 			# @param max [Float] the maximum value for the scale
 			# @param min [Float] the minimum value for the scale
+			# @param metric [String] The metric to which we change the color
 			# @return void
-			# @version 0.1
-			def self.update_pixel_colors(min,max)
+			# @version 0.2
+			def self.update_pixel_colors(min,max,metric)
 				model=Sketchup.active_model
 				op_name="Update pixels"
 				begin
 					model.start_operation(op_name,true)
-
-					entities=Sketchup.active_model.entities
-
-					entities.each do |ent|
-						next if not Labeler.solved_workplane?(ent)
-						#now we are sure this is a solved_workplane
-
-						ent.entities.each do |pixel|
+					workplanes=Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+					workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value(x))["metric"]==metric}
+					workplanes.each do |workplane|
+						workplane.entities.each do |pixel|
 							next if not Labeler.face?(pixel) or not Labeler.result_pixel?(pixel)
 							# now we are sure ent is a pixel.
 							value=Labeler.get_value(pixel)
-
 							color=self.get_pixel_color(value,max,min)
 							pixel.material=color
 							pixel.back_material=color
-
 						end
-
+						wp_value=JSON.parse(Labeler.get_value(workplane))
+						wp_value["scale_min"]=min
+						wp_value["scale_max"]=max
+						Labeler.set_workplane_value(workplane,wp_value.to_json)
 					end
+					Utilities.remark_solved_workplanes(metric)
 					model.commit_operation
 
-				rescue => e
+				rescue Exception => ex
+					UI.messagebox ex
 					model.abort_operation
-					OS.failed_operation_message(op_name)
-				#else
-				  #
-				  # Do code here ONLY if NO errors occur.
-				  #
-				#ensure
-				  #
-				  # ALWAYS do code here errors or not.
-				  #
 				end
 			end
 
-			# Checks all the solved workplanes in the model
+			# Checks all the solved workplanes in the model that correspond to a metric
 			# and gets the minimum and maximum values from all of them
 			#
 			# @author German Molina
 			# @return [Array<Float>] An array with the minimum and maximum values
+			# @param metric [String] The metric that we are getting the min and max from
 			# @version 0.2
-			def self.get_min_max_from_model
-				definitions=Sketchup.active_model.definitions
+			def self.get_min_max_from_model(metric)
+				workplanes = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
 				#Get the maximum and minimum in the whole model
 				max=-1
 				min=9999999999999
-				definitions.each do |defi|
-					#now we are sure this is a solved_workplane
-					next if not Labeler.solved_workplane?(defi)
-					defi.instances.each do |inst|
-						value=JSON.parse(Labeler.get_value(inst))
-						min=value["min"] if min > value["min"]
-						max=value["max"] if max < value["max"]
-					end
+				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value x)["metric"]==metric}
+				workplanes.each do |inst|
+					value=JSON.parse(Labeler.get_value(inst))
+					min=value["min"] if min > value["min"]
+					max=value["max"] if max < value["max"]
 				end
 				return [min,max]
+			end
+
+			# Checks all the solved workplanes in the model that correspond to a metric
+			# and gets the minimum and maximum values from their scale
+			#
+			# @author German Molina
+			# @return [Array<Float>] An array with the minimum and maximum values
+			# @param metric [String] The metric that we are getting the min and max from
+			# @version 0.1
+			def self.get_scale_from_model(metric)
+				workplanes = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value x)["metric"]==metric}
+				scale_min=false
+				scale_max=false
+				workplanes.each do |workplane|
+					value=JSON.parse(Labeler.get_value(workplane))
+					if not scale_min then
+						scale_min = value["scale_min"]
+						scale_max = value["scale_max"]
+					else
+						if value["scale_min"] != scale_min or value["scale_max"] != scale_max then
+							UI.messagebox("Workplanes of the same metric have different scales!\nWe will fix that now")
+							min_max=Results.get_min_max_from_model(metric)
+							Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
+							self.get_scale_from_model(metric)
+						end
+					end
+				end
+				return [scale_min,scale_max]
 			end
 
 
 
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model.
-			#
-			# If the metric is set to False, the user will be asked to
-			# define one. This is useful for importing
 			#
 			# @author German Molina
 			# @param path [String]
@@ -263,7 +322,7 @@ module IGD
 			def self.import_results(path,metric)
 
 				model=Sketchup.active_model
-				name=path.tr("\\","/").split("/").pop.split(".")[0].tr("_"," ")
+				name=path.tr("\\","/").split("/").pop.split(".")[0]
 				values = Utilities.readTextFile(path,",",0)
 				return if not values #if the format was wrong, for example
 
@@ -276,7 +335,7 @@ module IGD
 					pixels_file.pop
 					pixels_file = "#{pixels_file.join("/")}/Workplanes/#{name}.pxl"
 					if not File.exist?(pixels_file) then
-						#Now... if THIS does not exist, remove.
+						#Now... if THIS does not exist, return.
 						UI.messagebox("Pixels file '#{pixels_file}' not found.")
 						return false
 					end
@@ -284,46 +343,13 @@ module IGD
 					values.shift #remove the name of the file
 				end
 				pixels = Utilities.readTextFile(pixels_file,",",0)
-
-				self.draw_pixels(values,pixels,name,metric)
-				min_max=self.get_min_max_from_model
-				self.update_pixel_colors(0,min_max[1])	#minimum is 0 by default
-
+				name = name.tr("_"," ")
+				metric = self.draw_pixels(values,pixels,name,metric)
+				min_max=Results.get_min_max_from_model(metric)
+				Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
+				Utilities.remark_solved_workplanes(metric)
 			end
 
-			# Opens the "Scale Handler" web dialog and adds the appropriate action_callback
-			#
-			# @author German Molina
-			# @return [Void]
-			# @version 0.1
-			def self.show_scale_handler
-
-				wd=UI::WebDialog.new(
-					"Scale handler", false, "",
-					180, 380, 100, 100, false )
-
-				wd.set_file("#{OS.main_groundhog_path}/src/html/scale.html" )
-
-				wd.add_action_callback("update_scale") do |web_dialog,msg|
-					scale=JSON.parse(msg)
-					min=scale["min"]
-					max=scale["max"]
-					#check if there is any auto
-					if(min<0 or max<0) then
-						min_max=Results.get_min_max_from_model
-						min=min_max[0] if min<0
-						max=min_max[1] if max<0
-					end
-
-
-					Results.update_pixel_colors(min,max)
-
-					web_dialog.execute_script("document.getElementById('min').value="+min.to_i.to_s+";document.getElementById('max').value="+max.to_i.to_s+";");
-				end
-
-				wd.show()
-
-			end
 
 			# Calculates statistical data from a solved workplane
 			#
@@ -352,7 +378,6 @@ module IGD
 				average = sum/total_area
 				ret = Hash.new
 
-				ret["name"] = wp.name
 				ret["min"] = min
 				ret["max"] = max
 				ret["average"]=average

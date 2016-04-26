@@ -29,6 +29,8 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Addons'
 		Sketchup::require 'IGD_Groundhog/src/Color'
 		Sketchup::require 'IGD_Groundhog/src/Luminaires'
+		Sketchup::require 'IGD_Groundhog/src/Report'
+		Sketchup::require 'IGD_Groundhog/src/Tdd'
 
 
 
@@ -44,7 +46,8 @@ module IGD
 		selection=model.selection
 		entities=model.entities
 
-
+		#Add Radiance to Path as well as RAYPATH
+		Config.setup_radiance
 
 		#######################
 		### CONTEXT MENUS
@@ -69,9 +72,9 @@ module IGD
 						model.abort_operation if not name
 						Labeler.set_name(Sketchup.active_model.selection,name)
 						model.commit_operation
-					rescue => e
+					rescue Exception => ex
+						UI.messagebox ex
 						model.abort_operation
-						OS.failed_operation_message(op_name)
 					end
 			   }
 	   		end
@@ -85,58 +88,40 @@ module IGD
 
 						Labeler.to_local_luminaire(comp)
 						model.commit_operation
-					rescue => e
+					rescue Exception => ex
+						UI.messagebox ex
 						model.abort_operation
-						OS.failed_operation_message(op_name)
 					end
 			   }
 			end
 
 			if groups.length == 1 then
-				group=groups[0]
-				if Labeler.solved_workplane?(group) then
+				if Labeler.solved_workplane?(groups[0]) then
 					context_menu.add_item("Export results to CSV") {
-						begin
-							op_name = "Export workplane to CSV"
-							model.start_operation(op_name,true)
-
-							path=Exporter.getpath #it returns false if not successful
-							path="" if not path
-							filename="#{Labeler.get_name(group)}.csv"
-							filename=UI.savepanel("Export CSV file of results",path,filename)
-
-							if filename then
-								File.open(filename,'w'){|csv|
-									statistics = Results.get_workplane_statistics(group)
-									#write statistics
-									statistics.to_a.each{|element|
-										csv.puts "#{element[0]},#{element[1]}"
-									}
-									#Write header
-									csv.puts "Position X, Position Y, Position Z, Value (depends on the metric)"
-									#Write pixels
-									pixels = group.entities.select{|x| Labeler.result_pixel?(x)}
-									pixels.each do |pixel|
-										vertices=pixel.vertices
-										nvertices=vertices.length
-										center=vertices.shift.position.to_a
-										vertices.each{|vert|
-											pos=vert.position.to_a
-											center[0]+=pos[0]
-											center[1]+=pos[1]
-											center[2]+=pos[2]
-										}
-										csv.puts "#{(center[0]/nvertices).to_m},#{(center[1]/nvertices).to_m},#{(center[2]/nvertices).to_m},#{Labeler.get_value(pixel)}"
-									end
-								}
-							end
-
-							model.commit_operation
-						rescue => e
-							model.abort_operation
-							OS.failed_operation_message(op_name)
-						end
+						Report.report_csv(groups[0])
 				   }
+				end
+			end
+
+			if groups.length >= 1 then
+					context_menu.add_item("Label as Tubular Daylight Device") {
+						Labeler.to_tdd(groups)
+				  }
+			end
+			if components.length >= 1 then
+					context_menu.add_item("Label as Tubular Daylight Device") {
+						Labeler.to_tdd(components)
+				  }
+			end
+
+			if faces.length == 1 then
+				if Labeler.tdd?(faces[0].parent) then
+					context_menu.add_item("Label as TDD's top lens"){
+						Labeler.to_tdd_top(faces[0])
+					}
+					context_menu.add_item("Label as TDD's bottom lens"){
+						Labeler.to_tdd_bottom(faces[0])
+					}
 				end
 			end
 
@@ -149,9 +134,9 @@ module IGD
 						Labeler.to_illum(faces)
 
 						model.commit_operation
-					rescue => e
+					rescue Exception => ex
+						UI.messagebox ex
 						model.abort_operation
-						OS.failed_operation_message(op_name)
 					end
 			   }
 				horizontal=Utilities.get_horizontal_faces(faces)
@@ -164,9 +149,9 @@ module IGD
 								Labeler.to_workplane(faces)
 
 								model.commit_operation
-							rescue => e
+							rescue Exception => ex
+								UI.messagebox ex
 								model.abort_operation
-								OS.failed_operation_message(op_name)
 							end
 				   }
 				end
@@ -178,9 +163,9 @@ module IGD
 						Labeler.to_window(faces)
 
 						model.commit_operation
-					rescue => e
+					rescue Exception => ex
+						UI.messagebox ex
 						model.abort_operation
-						OS.failed_operation_message(op_name)
 					end
 			   }
 
@@ -192,9 +177,9 @@ module IGD
 						Labeler.to_nothing(faces)
 
 						model.commit_operation
-					rescue => e
+					rescue Exception => ex
+						UI.messagebox ex
 						model.abort_operation
-						OS.failed_operation_message(op_name)
 					end
 			   }
 			   wins=Utilities.get_windows(faces)
@@ -211,9 +196,9 @@ module IGD
 							Utilities.group_windows(Sketchup.active_model.selection, sys[0])
 
 							model.commit_operation
-						rescue => e
+						rescue Exception => ex
+							UI.messagebox ex
 							model.abort_operation
-							OS.failed_operation_message(op_name)
 						end
 				   }
 				end
@@ -258,7 +243,12 @@ module IGD
 				Rad.show_sim_wizard
 			}
 
-
+			groundhog_menu.add_item("Import results"){
+				path=Exporter.getpath #it returns false if not successful
+				path="c:/" if not path
+				path=UI.openpanel("Open results file",path)
+				Results.import_results(path,false) if path
+			}
 			### INSERT SUBMENU
 
 			gh_insert_menu=groundhog_menu.add_submenu("Insert")
@@ -271,31 +261,6 @@ module IGD
 					Loader.load_illuminance_sensor
 				}
 
-				gh_insert_menu.add_item("Products from Arqhub"){
-					Loader.open_arqhub
-				}
-
-			### RESULTS SUBMENU
-
-			gh_results_menu=groundhog_menu.add_submenu("Results")
-
-				gh_results_menu.add_item("Import results"){
-
-					path=Exporter.getpath #it returns false if not successful
-					path="c:/" if not path
-					path=UI.openpanel("Open results file",path)
-					Results.import_results(path,false) if path
-
-
-				}
-
-				gh_results_menu.add_item("Scale handler"){
-					Results.show_scale_handler
-
-				}
-
-
-
 
 			### VIEW
 			gh_view_menu=groundhog_menu.add_submenu("View")
@@ -306,9 +271,10 @@ module IGD
 				gh_view_menu.add_item("Show/Hide Workplanes"){
 					Utilities.hide_show_specific("workplane")
 				}
-				gh_view_menu.add_item("Show/Hide Results"){
+				gh_view_menu.add_item("Show/Hide Solved Workplanes"){
 					Utilities.hide_show_specific("solved_workplane")
 				}
+
 
 
 
@@ -393,12 +359,14 @@ module IGD
 
 			# Add the About.
 			groundhog_menu.add_item("About Groundhog"){
-				str="Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+"\n\nGroundhog was created and it is mainly developed by "+Sketchup.extensions["Groundhog"].creator+", currently working at IGD.\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
+
+				str="Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+" with Radiance binaries which are a courtesy of NREL (www.nrel.gov)\n\nGroundhog was created and it is mainly developed by "+Sketchup.extensions["Groundhog"].creator+", currently working at IGD.\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
 				str+="\n\nLicense:\nGroundhog is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 Go to GNU's website for more information about this license."
+
 				UI.messagebox str
 			}
 
@@ -410,6 +378,7 @@ Go to GNU's website for more information about this license."
 			#########################################
 			if File.exists? Config.config_path then #if a configuration file was once created
 				Config.load_config
+
 			end
 
 

@@ -466,8 +466,8 @@
             <span class='kw'>begin</span>
                 <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_rm'>rm</span><span class='lparen'>(</span><span class='id identifier rubyid_final_addon'>final_addon</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span> <span class='id identifier rubyid_final_addon'>final_addon</span>
                 <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_rm_rf'>rm_rf</span><span class='lparen'>(</span><span class='id identifier rubyid_final_support'>final_support</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_directory?'>directory?</span> <span class='id identifier rubyid_final_support'>final_support</span>
-            <span class='kw'>rescue</span>
-                <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>There was a problem deleting the conflicting Add-on</span><span class='tstring_end'>&quot;</span></span>
+              <span class='kw'>rescue</span> <span class='const'>Exception</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_ex'>ex</span>
+  							<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='id identifier rubyid_ex'>ex</span>
             <span class='kw'>end</span>
         <span class='kw'>end</span>
 
@@ -492,8 +492,8 @@
             <span class='id identifier rubyid_str'>str</span><span class='op'>+=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>opt.innerHTML=&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_shown_name'>shown_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;;</span><span class='tstring_end'>&quot;</span></span>
             <span class='id identifier rubyid_str'>str</span><span class='op'>+=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>inactive.appendChild(opt);</span><span class='tstring_end'>&quot;</span></span>
             <span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_str'>str</span><span class='rparen'>)</span>
-        <span class='kw'>rescue</span>
-            <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>There was a problem trying to install your Add-on.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+          <span class='kw'>rescue</span> <span class='const'>Exception</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_ex'>ex</span>
+					<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='id identifier rubyid_ex'>ex</span>
         <span class='kw'>end</span>
 
     <span class='kw'>end</span>
@@ -511,7 +511,15 @@
 </div>
 
     <div id="footer">
+<<<<<<< HEAD
   Generated on Tue Mar 29 12:09:09 2016 by
+=======
+<<<<<<< HEAD
+  Generated on Mon Apr 18 18:20:12 2016 by
+=======
+  Generated on Sun Apr 24 11:18:02 2016 by
+>>>>>>> Model-analysis
+>>>>>>> Model-analysis
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

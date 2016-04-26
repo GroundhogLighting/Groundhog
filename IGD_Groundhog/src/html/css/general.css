@@ -1,11 +1,27 @@
 
 
-body {margin:0;padding:10px; width: 100%; box-sizing: border-box; font-size: 80%; font-family: 'Open Sans', Verdana, Arial, Sans-Serif; 	text-align: justify; background-color: #f1f0ee;}
+@import url("opensans.css");
+body {margin:0;padding:10px; width: 100%; box-sizing: border-box; font-size: 80%; font-family: 'Open Sans', Sans-Serif; 	text-align: justify; background-color: #f1f0ee;}
 button {font-size: 100%;}
 
 table, th, td {
    border: 0px solid black;
    font-size: 100%;
+}
+
+table.with_border{
+  width:100%;
+  margin-top: 30px;
+}
+table.with_border, table.with_border th, table.with_border td{
+   border: 1px solid black;
+   font-size: 100%;
+   border-collapse: collapse;
+   text-align: center;
+}
+
+table.with_border tr:first-child,table.with_border td:first-child{
+  font-weight: bold;
 }
 
 h2{
@@ -30,6 +46,10 @@ fieldset{
     padding: 10px 10px 5px 10px;
 }
 
+fieldset table{
+  width: 95%;
+}
+
 fieldset p{
     margin:0;
 }
@@ -37,6 +57,11 @@ fieldset p{
 fieldset input{
     width: 50px;
 }
+
+fieldset input.long, fieldset select.long{
+    width: 85%;
+}
+
 fieldset > label{
     display: inline-block;
     width: 45px;
@@ -51,7 +76,7 @@ fieldset > legend{
     font-weight: bold;
 }
 
-td{    
+td{
     height: 15px;
 }
 
@@ -87,7 +112,7 @@ select {
 .tooltip {
     box-sizing: border-box;
 	font-size: 90%;
-	width: 80vw;
+	width: 60vw;
 	text-align: justify;
 	background:#ffffff;
   	margin-bottom: -105px;
@@ -105,7 +130,7 @@ select {
   display: none;
 
   opacity: 0;
-  filter: alpha(opacity=0);
+  /*filter: alpha(opacity=0); COMMENTED*/
   pointer-events: none;
   position: absolute;
 
@@ -128,7 +153,7 @@ select {
        -o-transition: all .25s ease-out;
           transition: all .25s ease-out;
   -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     /*-moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28); COMMENTED */
       -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
        -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
           box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
@@ -150,7 +175,7 @@ select {
 .more_info:hover .tooltip, .option_info:hover .tooltip {
   display: block;
   opacity: 1;
-  filter: alpha(opacity=100);
+  /* filter: alpha(opacity=100); COMMENTED */
   pointer-events: auto;
   -webkit-transform: translateY(0px);
      -moz-transform: translateY(0px);

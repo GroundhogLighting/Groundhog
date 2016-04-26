@@ -575,6 +575,80 @@ temporal entities).</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#tdd%3F-class_method" title="tdd? (class method)">+ (Boolean) <strong>tdd?</strong>(group) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Checks if a group is a TDD.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tdd_bottom%3F-class_method" title="tdd_bottom? (class method)">+ (Boolean) <strong>tdd_bottom?</strong>(face) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Checks if a component is a TDD_bottom, meaning that it is the interior lens
+of the TDD.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tdd_top%3F-class_method" title="tdd_top? (class method)">+ (Boolean) <strong>tdd_top?</strong>(face) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Checks if a component is a TDD_top, meaning that it is the exterior lens of
+the TDD.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#to_illum-class_method" title="to_illum (class method)">+ (Void) <strong>to_illum</strong>(entities) </a>
     
 
@@ -735,6 +809,78 @@ temporal entities).</p>
   
     <span class="summary_desc"><div class='inline'>
 <p>Label selected face into as solved_workplane.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_tdd-class_method" title="to_tdd (class method)">+ (Void) <strong>to_tdd</strong>(groups) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Label selected groups as TDDs.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_tdd_bottom-class_method" title="to_tdd_bottom (class method)">+ (Void) <strong>to_tdd_bottom</strong>(face) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Label selected face as TDD bottom lens.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_tdd_top-class_method" title="to_tdd_top (class method)">+ (Void) <strong>to_tdd_top</strong>(face) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Label selected face as TDD top lens.</p>
 </div></span>
   
 </li>
@@ -920,12 +1066,21 @@ temporal entities).</p>
       <pre class="lines">
 
 
+<<<<<<< HEAD
 155
 156
 157</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 155</span>
+=======
+179
+180
+181</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 179</span>
+>>>>>>> Model-analysis
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_component_instance?'>component_instance?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>ComponentInstance</span>
@@ -1010,12 +1165,21 @@ temporal entities).</p>
       <pre class="lines">
 
 
+<<<<<<< HEAD
 147
 148
 149</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 147</span>
+=======
+171
+172
+173</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 171</span>
+>>>>>>> Model-analysis
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_face?'>face?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Face</span>
@@ -1216,12 +1380,12 @@ other hand, will return a float.</p>
       <pre class="lines">
 
 
-373
-374
-375</pre>
+428
+429
+430</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 373</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 428</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Value</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1402,12 +1566,21 @@ anything, even if it is not an window.</p>
       <pre class="lines">
 
 
+<<<<<<< HEAD
 164
 165
 166</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 164</span>
+=======
+188
+189
+190</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 188</span>
+>>>>>>> Model-analysis
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_group?'>group?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Group</span>
@@ -1582,12 +1755,21 @@ anything, even if it is not an window.</p>
       <pre class="lines">
 
 
+<<<<<<< HEAD
 180
 181
 182</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 180</span>
+=======
+204
+205
+206</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 204</span>
+>>>>>>> Model-analysis
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_illuminance_sensor?'>illuminance_sensor?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>illuminance_sensor</span><span class='tstring_end'>&quot;</span></span>
@@ -1672,12 +1854,21 @@ anything, even if it is not an window.</p>
       <pre class="lines">
 
 
+<<<<<<< HEAD
 172
 173
 174</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 172</span>
+=======
+196
+197
+198</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 196</span>
+>>>>>>> Model-analysis
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_image?'>image?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Image</span>
@@ -1880,12 +2071,21 @@ anything, even if it is not an window.</p>
       <pre class="lines">
 
 
+<<<<<<< HEAD
 122
 123
 124</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 122</span>
+=======
+146
+147
+148</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 146</span>
+>>>>>>> Model-analysis
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_local_luminaire?'>local_luminaire?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>local_luminaire</span><span class='tstring_end'>&quot;</span></span>
@@ -2060,12 +2260,21 @@ anything, even if it is not an window.</p>
       <pre class="lines">
 
 
+<<<<<<< HEAD
 114
 115
 116</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 114</span>
+=======
+138
+139
+140</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 138</span>
+>>>>>>> Model-analysis
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_result_pixel?'>result_pixel?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>result_pixel</span><span class='tstring_end'>&quot;</span></span>
@@ -2314,6 +2523,7 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
+<<<<<<< HEAD
 199
 200
 201
@@ -2337,6 +2547,31 @@ If there is more than one face selected, the names will be numbered.</p>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 199</span>
+=======
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 223</span>
+>>>>>>> Model-analysis
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_set_name'>set_name</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
 
@@ -2470,12 +2705,12 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
-227
-228
-229</pre>
+251
+252
+253</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 227</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 251</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_set_pixel_value'>set_pixel_value</span><span class='lparen'>(</span><span class='id identifier rubyid_pixel'>pixel</span><span class='comma'>,</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_pixel'>pixel</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Value</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
@@ -2686,6 +2921,278 @@ If there is more than one face selected, the names will be numbered.</p>
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="tdd?-class_method">
+  
+    + (<tt>Boolean</tt>) <strong>tdd?</strong>(group) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Checks if a group is a TDD</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>group</span>
+      
+      
+        <span class='type'>(<tt>SketchUp::ComponentDefinition</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>component to test.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+129
+130
+131</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 129</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_tdd?'>tdd?</span><span class='lparen'>(</span><span class='id identifier rubyid_group'>group</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="tdd_bottom?-class_method">
+  
+    + (<tt>Boolean</tt>) <strong>tdd_bottom?</strong>(face) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Checks if a component is a TDD_bottom, meaning that it is the interior lens
+of the TDD.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>face</span>
+      
+      
+        <span class='type'>(<tt>SketchUp::Face</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>face to test.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+121
+122
+123</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 121</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_tdd_bottom?'>tdd_bottom?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_bottom</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="tdd_top?-class_method">
+  
+    + (<tt>Boolean</tt>) <strong>tdd_top?</strong>(face) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Checks if a component is a TDD_top, meaning that it is the exterior lens of
+the TDD.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>face</span>
+      
+      
+        <span class='type'>(<tt>SketchUp::Face</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>face to test.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+113
+114
+115</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 113</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_tdd_top?'>tdd_top?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_top</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="to_illum-class_method">
   
     + (<tt>Void</tt>) <strong>to_illum</strong>(entities) 
@@ -2760,25 +3267,25 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246
-247
-248
-249
-250</pre>
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 235</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 259</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_illum'>to_illum</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 
@@ -2876,12 +3383,12 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
-264
-265
-266</pre>
+288
+289
+290</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 264</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 288</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_illuminance_sensor'>to_illuminance_sensor</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>illuminance_sensor</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -2966,17 +3473,17 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
-280
-281
-282
-283
-284
-285
-286
-287</pre>
+304
+305
+306
+307
+308
+309
+310
+311</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 280</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 304</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_local_luminaire'>to_local_luminaire</span><span class='lparen'>(</span><span class='id identifier rubyid_comp'>comp</span><span class='rparen'>)</span>
 	<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Only components can be labeled as Local Luminaires</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_comp'>comp</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>ComponentDefinition</span>
@@ -3066,12 +3573,12 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
-293
-294
-295</pre>
+317
+318
+319</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 293</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 317</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_local_material'>to_local_material</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_workplane'>workplane</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>local_material</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -3156,21 +3663,21 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
-350
-351
-352
-353
-354
-355
-356
-357
-358
-359
-360
-361</pre>
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 350</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 405</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_nothing'>to_nothing</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_faces'>faces</span><span class='op'>=</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_faces'>get_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
@@ -3264,12 +3771,12 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
-256
-257
-258</pre>
+280
+281
+282</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 256</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 280</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_result_pixel'>to_result_pixel</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>result_pixel</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -3354,15 +3861,341 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
-272
-273
-274</pre>
+296
+297
+298</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 272</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 296</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_solved_workplane'>to_solved_workplane</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_workplane'>workplane</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>solved_workplane</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_tdd-class_method">
+  
+    + (<tt>Void</tt>) <strong>to_tdd</strong>(groups) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Label selected groups as TDDs</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>groups</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;SketchUp::Group&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An array with the groups to be labeled as TDDs</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Void</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Version:</p>
+<ul class="version">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>0.1</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+375
+376
+377
+378
+379
+380
+381</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 375</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_tdd'>to_tdd</span><span class='lparen'>(</span><span class='id identifier rubyid_groups'>groups</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_groups'>groups</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span>
+		<span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_definition'>definition</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>					
+	<span class='rbrace'>}</span>
+
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_tdd_bottom-class_method">
+  
+    + (<tt>Void</tt>) <strong>to_tdd_bottom</strong>(face) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Label selected face as TDD bottom lens</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>face</span>
+      
+      
+        <span class='type'>(<tt>SketchUp::Face</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A face</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Void</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Version:</p>
+<ul class="version">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>0.1</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+397
+398
+399</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 397</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_tdd_bottom'>to_tdd_bottom</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_bottom</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_tdd_top-class_method">
+  
+    + (<tt>Void</tt>) <strong>to_tdd_top</strong>(face) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Label selected face as TDD top lens</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>face</span>
+      
+      
+        <span class='type'>(<tt>SketchUp::Face</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A face</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Void</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Version:</p>
+<ul class="version">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>0.1</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+388
+389
+390</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 388</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_tdd_top'>to_tdd_top</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_set_attribute'>set_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_top</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -3444,24 +4277,24 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
-302
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316</pre>
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 302</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 326</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_window'>to_window</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_faces'>faces</span><span class='op'>=</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_faces'>get_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
@@ -3574,31 +4407,31 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
-323
-324
-325
-326
-327
-328
-329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344</pre>
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 323</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 347</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_workplane'>to_workplane</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_faces'>faces</span><span class='op'>=</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_horizontal_faces'>get_horizontal_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
@@ -3702,12 +4535,21 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
+<<<<<<< HEAD
 139
 140
 141</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 139</span>
+=======
+163
+164
+165</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 163</span>
+>>>>>>> Model-analysis
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_window?'>window?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>window</span><span class='tstring_end'>&quot;</span></span>
@@ -3792,12 +4634,21 @@ If there is more than one face selected, the names will be numbered.</p>
       <pre class="lines">
 
 
+<<<<<<< HEAD
 131
 132
 133</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 131</span>
+=======
+155
+156
+157</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Labeler.rb', line 155</span>
+>>>>>>> Model-analysis
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_workplane?'>workplane?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Label</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplane</span><span class='tstring_end'>&quot;</span></span>
@@ -3812,7 +4663,15 @@ If there is more than one face selected, the names will be numbered.</p>
 </div>
 
     <div id="footer">
+<<<<<<< HEAD
   Generated on Tue Mar 29 12:09:10 2016 by
+=======
+<<<<<<< HEAD
+  Generated on Mon Apr 18 18:20:13 2016 by
+=======
+  Generated on Sun Apr 24 11:18:03 2016 by
+>>>>>>> Model-analysis
+>>>>>>> Model-analysis
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

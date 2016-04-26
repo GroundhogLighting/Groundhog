@@ -98,6 +98,7 @@ certain pixel for numeric analysis.</p>
 numeric value stored. The value
 of the Solved Workplane will be a JSON that
 will contain the Metric that the workplane
+<<<<<<< HEAD
 is displaying, the minimum and
 the maximum value.</p>
 
@@ -105,6 +106,25 @@ the maximum value.</p>
 </span><span class='id identifier rubyid_min_value'>min_value</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
 <span class='id identifier rubyid_max_value'>max_value</span><span class='op'>=</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
 <span class='id identifier rubyid_metric'>metric</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span></code></pre>
+=======
+is displaying, the workplane it
+corresponds to and statistics.</p>
+
+<p>It should be noted that this value is added when drawing the pixels</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>GH_Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='comment'># &#39;value&#39; is a Hash
+</span><span class='id identifier rubyid_min'>min</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_max'>max</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_average'>average</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_uniformity1'>uniformity1</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_uniformity2'>uniformity2</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_nsensors'>nsensors</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>nsensors</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_area'>area</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>total_area</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_metric'>metric</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_workplane'>workplane</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplane</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_scale_min'>scale_min</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>scale_min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='comment'>#This is added or updated when updating pixel colors
+</span><span class='id identifier rubyid_scale_max'>scale_max</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>scale_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='comment'>#This is added or updated when updating pixel colors</span></code></pre>
+>>>>>>> Model-analysis
 
 <h3 id="label-Local+luminaire+Value">Local luminaire Value</h3>
 
@@ -129,7 +149,11 @@ is everything that goes after the material&#39;s name.</p>
 </div></div>
 
     <div id="footer">
+<<<<<<< HEAD
   Generated on Tue Mar 29 12:09:08 2016 by
+=======
+  Generated on Mon Apr 18 18:20:11 2016 by
+>>>>>>> Model-analysis
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

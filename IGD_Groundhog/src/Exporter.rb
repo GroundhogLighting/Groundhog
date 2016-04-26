@@ -22,22 +22,15 @@ module IGD
 				return File.join(path)
 			end
 
-			# Assess the String that should be written in the Radiance geometry file.
-			#
-			# If no material is assigned, or the material is not supported, it assigns one of the
-			# default materials.
+
+			# Returns the front-material of the face, if it has one. If not, it will return
+			# the back one. If it does not have one of those either, it will return the
+			# default ones.
 			# @author German Molina
-			# @version 1.3
+			# @version 1.0
 			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
-			# @param trans [Array <Sketchup::Transformation>] list of transformations to apply to the face.
-			# @return [<Array>] The string to be written in the .rad file, and the material
-			# @note tr=True is used for exporting layers, and tr=False is for exporting Components, that are located
-			#   in the Scene.rad file using Radiance's !xform program.
-			def self.get_rad_string(face,trans)
-
-				self.close_face([], 1, 4, face)
-
-
+			# @return [Sketchup::Material] The material
+			def self.get_material(face)
 				mat=face.material
 				if mat==nil then # If the face does not have a front material
 					mat=face.back_material # the back material will be tested
@@ -57,29 +50,57 @@ module IGD
 						end
 					end
 				end
+				return mat
+			end
 
-		#		puts Labeler.get_name(face) if not Utilities.planar?(face)
 
+			# Assess the String that should be written in the Radiance geometry file.
+			#
+			# If no material is assigned, or the material is not supported, it assigns one of the
+			# default materials.
+			# @author German Molina
+			# @version 1.3
+			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
+			# @param trans [Array <Sketchup::Transformation>] list of transformations to apply to the face.
+			# @return [<Array>] The string to be written in the .rad file, and the material
+			def self.get_rad_string(face,trans)
+				self.close_face([], 1, 4, face)
+				mat = self.get_material(face)
 				vert=face.vertices #get the vertices
-
-				n=3*vert.length
-				string1="\tpolygon\t"+Labeler.get_name(face).tr(" ","_").tr("#","_")+"\n0\n0\n"+n.to_s #Write the standard first three lines
-
+				string1="\tpolygon\t"+Labeler.get_name(face).tr(" ","_").tr("#","_")+"\n0\n0\n"+(3*vert.length).to_s #Write the standard first three lines
 				string2=""
-				vert.each do |v|
+				vert.each { |v|
 					p=v.position
-					trans.each do |tr|
-						p.transform!(tr)
-					end
-
+					trans.each { |tr| p.transform!(tr) }
 					string2=string2+"\t#{p.x.to_m.to_f}\t#{p.y.to_m.to_f}\t#{p.z.to_m.to_f}\n"
-				end
-				string3="\n\n"
+				}
+				string2+="\n\n"
 
 				Utilities.delete_label(face.edges,"added") #Maybe this could be done later... and it would be faster...?
+				return [string1+string2,mat] #Returns the string and the material
+			end
 
-				return [string1+string2+string3,mat] #Returns the string and the material
+			# Same as get_rad_string, but reversing the order of the vertices.
+			# @author German Molina
+			# @version 1.3
+			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
+			# @param trans [Array <Sketchup::Transformation>] list of transformations to apply to the face.
+			# @return [<Array>] The string to be written in the .rad file, and the material
+			def self.get_reversed_rad_string(face,trans)
+				self.close_face([], 1, 4, face)
+				mat = self.get_material(face)
+				vert=face.vertices.reverse #get the vertices
+				string1="\tpolygon\t"+Labeler.get_name(face).tr(" ","_").tr("#","_")+"\n0\n0\n"+(3*vert.length).to_s #Write the standard first three lines
+				string2=""
+				vert.each { |v|
+					p=v.position
+					trans.each { |tr| p.transform!(tr) }
+					string2=string2+"\t#{p.x.to_m.to_f}\t#{p.y.to_m.to_f}\t#{p.z.to_m.to_f}\n"
+				}
+				string2+="\n\n"
 
+				Utilities.delete_label(face.edges,"added") #Maybe this could be done later... and it would be faster...?
+				return [string1+string2,mat] #Returns the string and the material
 			end
 
 
@@ -163,7 +184,7 @@ module IGD
 			# @note this method used to be called 'do_multiphase'
 			def self.export(path,lights_on)
 				OS.clear_path(path)
-				#begin
+				begin
 					model=Sketchup.active_model
 					op_name = "Export"
 					model.start_operation( op_name,true )
@@ -181,11 +202,9 @@ module IGD
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 
 					model.commit_operation
-				#rescue => e
-				#	model.abort_operation
-				#	OS.failed_operation_message(op_name)
-				#	return false
-				#end
+				rescue Exception => ex
+					UI.messagebox ex
+				end
 				return true
 			end
 
@@ -417,7 +436,7 @@ module IGD
 			def self.write_workplanes(path,entities)
 
 				return true if entities.length<1 #we export this only if there is any workplane... success
-				d=Config.sensor_spacing
+				d=Config.desired_pixel_area
 				return false if not d
 				d=d.m
 
@@ -519,6 +538,13 @@ module IGD
 						f.write("!xform ./Geometry/"+name+".rad\n")
 					end
 
+					f.write("\n\n\n###### GROUND \n\n")
+					albedo = Config.albedo
+					model_bounds=Sketchup.active_model.bounds
+					radius = IGD::Groundhog::Config.terrain_oversize * model_bounds.diagonal
+					f.write("void plastic terrain_mat\n0\n0\n5\t#{albedo}\t#{albedo}\t#{albedo}\t0\t0")
+					f.write("\n\nterrain_mat ring ground 0 0 8 #{model_bounds.center.x.to_m} #{model_bounds.center.y.to_m} 0 0 0 1 0 #{radius.to_m}")
+
 					f.write("\n\n\n###### COMPONENT INSTANCES \n\n")
 					defi=Sketchup.active_model.definitions
 					defi.each do |h|
@@ -527,9 +553,11 @@ module IGD
 							next if Labeler.solved_workplane?(h)
 							hName=Utilities.fix_name(h.name)
 							instances=h.instances
+							comp_path = " ./Components/"
+							comp_path = " ./TDDs/" if Labeler.tdd?(h)
 							instances.each do |inst|
 								next if not inst.parent.is_a? Sketchup::Model
-								f.write(self.get_component_string(" ./Components/",inst,hName))
+								f.write(self.get_component_string(comp_path,inst,hName))
 							end
 						end
 					end
@@ -560,7 +588,7 @@ module IGD
 				if alt >= 3.0 then
 					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
 						f.write("\n\n\n###### DEFAULT SKY \n\n")
-							f.write("!gensky -ang #{alt} #{azi} +s\n\n")
+							f.write("!gensky -ang #{alt} #{azi} +s -g #{Config.albedo}\n\n")
 							f.write(self.sky_complement)
 					}
 
@@ -586,8 +614,8 @@ module IGD
 				sensors = sensors[0].instances
 				return true if sensors.length < 1 #do not do anything, but success
 
-				OS.mkdir("#{path}/Illuminance_Sensors")
 				path="#{path}/Illuminance_Sensors"
+				OS.mkdir(path)
 
 				File.open("#{path}/sensors.pts",'w+'){ |f| #The file is opened
 					sensors.each do |sensor|
@@ -627,7 +655,7 @@ module IGD
 			# Export the ComponentDefinitions into separate files into "Components" folder.
 			# Each file is autocontained, although some materials might be repeated in the "materials.mat" file.
 			# @author German Molina
-			# @version 0.5
+			# @version 0.6
 			# @param path [String] Directory to export the model (scene file)
 			# @param lights_on [Boolean] Lights will be exported as ON if true and OFF if false.
 			# @return [Boolean] Success
@@ -636,7 +664,6 @@ module IGD
 				comp_path="#{path}/Components"
 
 				return true if defi.length == 0 #dont do anything if there are no components
-				OS.mkdir("#{comp_path}")
 
 				defi.each do |h|
 					#skip the following
@@ -644,21 +671,40 @@ module IGD
 					next if Labeler.solved_workplane?(h)
 					next if Labeler.illuminance_sensor?(h)
 
+					comp_path="#{path}/TDDs" if Labeler.tdd?(h)
+
 					hName=Utilities.fix_name(h.name)
+					filename = "#{comp_path}/#{hName}.rad"
+
 					entities=h.entities
 					faces=Utilities.get_faces(entities)
 					instances=Utilities.get_component_instances(entities)
 
 					geom_string=""
 
-					if Labeler.local_luminaire? (h) then
+					# Add the illum if it is a luminaire
+					if Labeler.local_luminaire?(h) then #add the illum
 						mult = 1.0
 						mult = 0 if not lights_on
 						geom_string += Lamps.ies2rad(Labeler.get_value(h),mult,h, comp_path)
 					end
 
+					# write and next if it is a TDD
+					if Labeler.tdd?(h) then
+						tdd_path = "#{path}/TDDs"
+						OS.mkdir(tdd_path)
+						tdd_geom = TDD.write_tdd(tdd_path,h)
+						if tdd_geom then
+							File.open(filename,'w+'){ |f|
+								f.write tdd_geom
+							}
+						end
+						next
+					end
+
+
 					instances.each do |inst| #include the nested components
-						geom_string=geom_string+self.get_component_string(" ./",inst,Utilities.fix_name(inst.definition.name.tr(" ","_").tr("#","_")))
+						geom_string=geom_string+self.get_component_string(" ./",inst,Utilities.fix_name(inst.definition.name))
 					end
 					geom_string+="\n\n"
 
@@ -694,14 +740,9 @@ module IGD
 
 
 					#Write materials and geometry
-					mat_array.uniq!
-					mat_string=""
-
-					mat_array.each do |mat|
-						mat_string+=self.get_mat_string(mat, Utilities.fix_name(mat.name)+"_"+hName)+"\n\n"
-					end
-
-					File.open("#{comp_path}/#{hName}.rad",'w+'){ |f|
+					mat_string = Utilities.mat_array_2_mat_string(mat_array,hName)
+					OS.mkdir(comp_path)
+					File.open(filename,'w+'){ |f|
 						f.write mat_string+geom_string
 					}
 
@@ -756,7 +797,7 @@ module IGD
 
 					f.write("ZONE= I #{min.x.to_m} #{max.x.to_m} #{min.y.to_m} #{max.y.to_m} #{min.z.to_m}  #{max.z.to_m} \n")
 					f.write("UP=Z\n")
-					f.write("scene=./scene.rad\n")
+					f.write("scene=./Skies/sky.rad ./scene.rad\n")
 					f.write("materials=./Materials/materials.mat\n")
 					f.write("QUAL=LOW\n")
 					f.write("DETAIL=LOW\n")

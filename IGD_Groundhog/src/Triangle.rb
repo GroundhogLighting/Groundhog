@@ -2,6 +2,11 @@ module IGD
   module Groundhog
     module Triangle
 
+      # Transforms a set of points and polygons into an array of
+      # @author German Molina
+      # @param points [Array] an array of SketchUp::3DPoint
+      # @param polygons [Array] a Nx3 array of SketchUp::3DPoint, where each row is a polygon indicating which triangle in 'points' form the triangle
+      # @return [Array] A 2D array, where each row is one triangle formed by 3 SketchUp::3DPoint
       def self.to_triangles(points, polygons)
         ret = []
         polygons.each do |polygon|
@@ -13,13 +18,25 @@ module IGD
         return ret
       end
 
+      # Calculates the area of a triangle
+      # @author German Molina
+      # @param a [SketchUp::Point3d] Side a of triangle
+      # @param c [SketchUp::Point3d] Side b of triangle
+      # @param b [SketchUp::Point3d] Side c of triangle
+      # @return [Numeric] The area of the triangle
       def self.get_area(a,b,c)
         return Math.sqrt((c+b+a)*((c+b+a)/2-a)*((c+b+a)/2-b)*((c+b+a)/2-c))/Math.sqrt(2)
       end
 
+      # Refines a triangle... It does this by just spliting each edge by half, forming 4 triangles.
+      #
+      # It is expected that the input to this are just Delaunay-compliant triangles
+      # @author German Molina
+      # @param triangles [Array] an array of Nx3 SketchUp::3DPoint
+      # @return [Array] an array of Nx3 SketchUp::3DPoint
       def self.refine_triangles(triangles)
         final_triangles = []
-        desired_patch_area = 0.04/0.00064516 #in square inches
+        desired_pixel_area = Config.desired_pixel_area/0.00064516 #in square inches
 
         #first we transform them into Delaunay-compliant triangles (as much as we can)
         triangles.each do |triangle|
@@ -28,7 +45,7 @@ module IGD
           c = triangle[2].distance(triangle[0])
           area = get_area(a,b,c)
 
-          if area < desired_patch_area  then
+          if area < desired_pixel_area  then
             final_triangles.push(triangle)
             next
           end
@@ -46,6 +63,11 @@ module IGD
         return final_triangles
       end
 
+      # From a set of triangles it makes just Delaunay-compliant triangles
+      # @author German Molina
+      # @param triangles [Array] an array of Nx3 SketchUp::3DPoint
+      # @return [Array] an array of Nx3 SketchUp::3DPoint
+      # @note This might be a horrible algorithm... I made id up from nothing
       def self.get_delaunay_triangles(triangles)
         final_triangles = []
         ratio_threshold = 1
@@ -60,7 +82,7 @@ module IGD
           shortest_edge = [a,b,c].min
           ratio = circumradius/shortest_edge
 
-          #if it is a good triangle: store and next
+          #if it is a good triangle or too small: store and next
           if ratio < ratio_threshold or get_area(a,b,c) < min_area  then
             final_triangles.push(triangle)
             next
@@ -99,7 +121,7 @@ module IGD
             end
           end
 
-          #now that we have identified everything, we add the 3 new triangles
+          #now that we have identified everything, we subdivide (add the 3 new triangles)
           largest_mid = Geom::Point3d.new([ (pivot.x+farthest.x)/2, (pivot.y+farthest.y)/2,(pivot.z+farthest.z)/2 ])
           other_mid = Geom::Point3d.new([ (pivot.x+other.x)/2, (pivot.y+other.y)/2,(pivot.z+other.z)/2 ])
 
@@ -111,16 +133,30 @@ module IGD
         return final_triangles
       end
 
+      # Calculates the center of a triangle, as just the average of all the
+      #   points
+      # @author German Molina
+      # @param triangle [Array] an array of 3 SketchUp::3DPoint
+      # @return [SketchUp::Point3d] The normal of the triangle
       def self.get_center(triangle)
         return Geom::Point3d.new([(triangle[0].x+triangle[1].x+triangle[2].x)/3, (triangle[0].y+triangle[1].y+triangle[2].y)/3,(triangle[0].z+triangle[1].z+triangle[2].z)/3])
       end
 
+      # Calculates the normal of a triangle
+      # @author German Molina
+      # @param triangle [Array] an array of 3 SketchUp::3DPoint
+      # @return [SketchUp::Vector3d] The normal of the triangle
       def self.get_normal(triangle)
         ed1 = triangle[0].vector_to(triangle[1])
         ed2 = triangle[1].vector_to(triangle[2])
         return ed1.cross(ed2).normalize
       end
 
+      # Triangulates and refines a workplane
+      # @author German Molina
+      # @param points [Array] an array of SketchUp::3DPoint
+      # @param polygons [Array] a Nx3 array of SketchUp::3DPoint, where each row is a polygon indicating which triangle in 'points' form the triangle
+      # @return [Array] A 2D array, where each row is one triangle formed by 3 SketchUp::3DPoint
       def self.triangulate(points,polygons)
 
         triangles = to_triangles(points,polygons)
