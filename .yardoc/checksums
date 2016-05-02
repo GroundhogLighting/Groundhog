@@ -1,14 +1,28 @@
 IGD_Groundhog/src/Addons.rb 4250dd60f1b2d297da748e30c257fc8cf0953f4d
 IGD_Groundhog/src/Color.rb 456ecb291f3e09de9098cfaf46bef23a30cf5d61
 <<<<<<< HEAD
+IGD_Groundhog/src/Config.rb 5beed15d495dea1bdb647ee43507312fcf0b176a
+IGD_Groundhog/src/Exporter.rb 2a822d132a43ccda9714b96322e170f4953e4005
+IGD_Groundhog/src/Groundhog_main.rb b22ca7842a07baf83d5f0f8567223a42db388a9d
+IGD_Groundhog/src/Labeler.rb 028b6999dfbc055821970295441b30490077e5a1
+=======
+<<<<<<< HEAD
 IGD_Groundhog/src/Config.rb 2de9073feb289edfbcd0af50ee6cc92efa158aba
 IGD_Groundhog/src/Exporter.rb 6b94ebd570725018b78f642284c6890e0ed10984
 IGD_Groundhog/src/Groundhog_main.rb 214566d69da79a77821963fc1ea1f2bdb125a533
 IGD_Groundhog/src/Labeler.rb df7d538248e934442718a29ffe60822b41e7b04a
+>>>>>>> Model-analysis
 IGD_Groundhog/src/LoadHandler.rb e86697b446103bba57c62e65cb4234f02073f091
 IGD_Groundhog/src/Luminaires.rb 425d84f4ec14ff373e19112f5ea5b0b4d9499fb3
 IGD_Groundhog/src/Materials.rb a51b91f07e3ee30cb1890489ee236d14e8f99f3b
 IGD_Groundhog/src/OS.rb 734078637d6739c269474e883f85b2db0015c633
+<<<<<<< HEAD
+IGD_Groundhog/src/Rad.rb 86f77cbda21df10aa92970320750dafd6b21abbb
+IGD_Groundhog/src/Results.rb 4597e1378d4551694b7664beba672a331bc47b9d
+IGD_Groundhog/src/Triangle.rb 1e24f91382559d5e47b8e3e9783cd93a7bd859cc
+IGD_Groundhog/src/Utilities.rb 1a6bdeadbfb9590f130c7d01e8fa7612797d4216
+IGD_Groundhog/src/Tools/mkWindow.rb 13e0ff2cdd5075c885758ea3ba049056f5b95d68
+=======
 IGD_Groundhog/src/Rad.rb 24013c3548227b672f0f10d13764978b1ac35197
 IGD_Groundhog/src/Report.rb b162cc8a9967d26485ce4872fed112d86a95fe46
 IGD_Groundhog/src/Results.rb 1e06be35380e5df4f0447fc006b33a8ac2224d34
@@ -28,3 +42,4 @@ IGD_Groundhog/src/Results.rb f97a496ca4c04038653fd3573549bdbd499cbe1c
 IGD_Groundhog/src/Tdd.rb 9a35665f5dafb23c3a454206f8240309d2c23804
 IGD_Groundhog/src/Triangle.rb 69863cc9dd85d7caade8df4393eead7f4a06e421
 IGD_Groundhog/src/Utilities.rb adb3d260d121b98fd769de2a6a7fafd33edf811a
+>>>>>>> Model-analysis

@@ -23,8 +23,8 @@ clean:
 test: macosx
 	rm -rf $(SKETCHUP_PLUGIN_DIR)/IGD_Groundhog.rb
 	rm -rf $(SKETCHUP_PLUGIN_DIR)/IGD_Groundhog
-	cp -rf IGD_Groundhog.rb $(SKETCHUP_PLUGIN_DIR)/IGD_Groundhog.rb
-	cp -rf IGD_Groundhog $(SKETCHUP_PLUGIN_DIR)/IGD_Groundhog
+	cp -r IGD_Groundhog.rb $(SKETCHUP_PLUGIN_DIR)/IGD_Groundhog.rb
+	cp -r IGD_Groundhog $(SKETCHUP_PLUGIN_DIR)/IGD_Groundhog
 	$(CLEAN_DESTINATION)
 
 macosx: clean doc
