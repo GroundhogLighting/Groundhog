@@ -165,9 +165,20 @@ module IGD
           end
 
 
+<<<<<<< Updated upstream
 				rescue Exception => ex
 					UI.messagebox ex
           model.abort_operation          
+=======
+<<<<<<< HEAD
+        rescue => e
+          OS.failed_operation_message("Report CSV")
+=======
+				rescue Exception => ex
+					UI.messagebox ex
+          model.abort_operation          
+>>>>>>> Model-analysis
+>>>>>>> Stashed changes
         end
       end
 
