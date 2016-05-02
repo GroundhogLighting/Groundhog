@@ -73,7 +73,7 @@ module IGD
 			# @author German Molina
 			# @return [String] The weather file path, False if not
 			def self.ask_for_weather_file
-				path = @@config["WEATHER_PATH"]				
+				path = @@config["WEATHER_PATH"]
 				if path then
 					path=path.split("/")
 					path.pop
@@ -98,13 +98,6 @@ module IGD
 			# @author German Molina
 			# @return [String] The radiance bin path
 			def self.radiance_path
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-				#self.get_element("RADIANCE_PATH")
-				@@config["RADIANCE_PATH"]
-=======
->>>>>>> Stashed changes
 				"#{OS.main_groundhog_path}/src/Radiance/bin"
 			end
 
@@ -125,10 +118,6 @@ module IGD
 			# @return [String] The radiance bin path
 			def self.raypath
 				"#{OS.main_groundhog_path}/src/Radiance/lib"
-<<<<<<< Updated upstream
-=======
->>>>>>> Model-analysis
->>>>>>> Stashed changes
 			end
 
 			# Gets the path where the weather files are supposed to be stored... must be configured by the user.
@@ -223,11 +212,7 @@ module IGD
 				self.get_element("LUMINAIRE_SHAPE_THRESHOLD")
 			end
 
-<<<<<<< Updated upstream
 
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
 			# Gets the spacing between workplane sensors
 			# @author German Molina
 			# @return [Float] Sensor Spacing
@@ -235,8 +220,7 @@ module IGD
 				self.get_element("DESIRED_PIXEL_AREA").to_f
 			end
 
-=======
->>>>>>> Model-analysis
+
 			# Gets the early working hour (i.e. when people start working)
 			# @author German Molina
 			# @return [Float] Early

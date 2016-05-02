@@ -203,11 +203,7 @@ module IGD
 
 					model.commit_operation
 				rescue Exception => ex
-<<<<<<< Updated upstream
 					UI.messagebox ex
-=======
-					UI.messagebox ex		
->>>>>>> Stashed changes
 				end
 				return true
 			end
@@ -440,15 +436,8 @@ module IGD
 			def self.write_workplanes(path,entities)
 
 				return true if entities.length<1 #we export this only if there is any workplane... success
-<<<<<<< Updated upstream
+
 				d=Config.desired_pixel_area
-=======
-<<<<<<< HEAD
-				d=Config.pixel_area
-=======
-				d=Config.desired_pixel_area
->>>>>>> Model-analysis
->>>>>>> Stashed changes
 				return false if not d
 				d=d.m
 

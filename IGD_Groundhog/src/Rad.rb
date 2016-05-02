@@ -57,11 +57,8 @@ module IGD
 				FileUtils.cd(path) do
 					file=Config.weather_path
 					file = Config.ask_for_weather_file if not file
-<<<<<<< Updated upstream
 					file = file.gsub(" ","\\ ")
-=======
-					file = file.gsub(" ","\\ ")				
->>>>>>> Stashed changes
+
 
 					#if it is nil or (not epw and not wea)
 					if not file or (file.split(".").pop!='wea' and file.split(".").pop != 'epw') then
@@ -128,7 +125,7 @@ module IGD
 					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
 						info=workplane.split("/")
-						name=info[1].split(".")[0]						
+						name=info[1].split(".")[0]
 						script << "#{OS.program("rfluxmtx")} -I+ #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}.dmx"
 
 					end
@@ -427,15 +424,10 @@ module IGD
 					end
 				end
 
-<<<<<<< Updated upstream
-				wd.add_action_callback("calc_instant_illuminance") do |web_dialog,msg|					
-=======
+
 				wd.add_action_callback("calc_instant_illuminance") do |web_dialog,msg|
-<<<<<<< HEAD
 					next if not OS.ask_about_Radiance
-=======
->>>>>>> Model-analysis
->>>>>>> Stashed changes
+
 					next if not Exporter.export(OS.tmp_groundhog_path,true)
 					options=JSON.parse(msg)
 					FileUtils.cd(OS.tmp_groundhog_path) do
