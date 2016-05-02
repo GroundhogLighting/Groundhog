@@ -22,6 +22,7 @@ module IGD
 				"MAX_ILLUMINANCE" => 2000,
 				"ANNUAL_CALCULATION_METHOD" => "DC",
 				"SKY_BINS" => 1,
+				"TDD_SINGLEDAYMTX" => "false",
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -299,6 +300,7 @@ module IGD
 						id = field[0].downcase
 						script += Utilities.set_element_value(id,@@config,field[1])
 					end
+					script+="if(document.getElementById('tdd_singledaymtx').value == 'true'){document.getElementById('tdd_singledaymtx').checked=true;}"
 					web_dialog.execute_script(script);
 				end
 

@@ -69,7 +69,6 @@ module IGD
 						value = default
 					end
 				end
-
 				return "document.getElementById('#{id}').value='#{value}';"
 			end
 
