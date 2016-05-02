@@ -9,10 +9,7 @@ publish: all
 	git push
 
 all: win32 win64 macosx
-<<<<<<< Updated upstream
 	$(CLEAN_DESTINATION)
-=======
->>>>>>> Stashed changes
 
 doc:
 	rm -rf doc
