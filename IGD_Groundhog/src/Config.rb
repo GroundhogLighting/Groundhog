@@ -107,7 +107,9 @@ module IGD
 			def self.setup_radiance
 				# ADD RADIANCE_PATH
 				if Config.radiance_path then
-					ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
+					divider = ":"
+					divider = ";" if OS.sys == "WIN"
+					ENV["PATH"]=Config.radiance_path+divider << ENV["PATH"]
 					ENV["RAYPATH"] = "#{Config.raypath}"
 				else
 					UI.messagebox "There was a problem loading Radiance"

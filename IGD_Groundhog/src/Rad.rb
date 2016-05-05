@@ -122,13 +122,24 @@ module IGD
 					#build the script
 					script=[]
 
+					# first, the workplanes to the sky... this will not add the TDDs contribution
 					wps=Dir["Workplanes/*.pts"]
 					wps.each do |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						script << "#{OS.program("rfluxmtx")} -I+ #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}.dmx"
-
 					end
+
+					# second, the TDD contrubution... for which:
+					### First, the Daylight matrix
+					tdds=Dir["TDDs/*.rad"] #get all the TDDs.
+					tdds.each do |tdd|
+						info=tdd.split("/")
+						name=info[1].split(".")[0]
+						sender = "TDDs/pieces/#{name}_top_lens.rad"
+						script << "#{OS.program("rfluxmtx")} #{Config.rcontrib_options} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > TDD/#{name}.dmx"
+					end
+
 
 					return script
 				end
@@ -364,8 +375,8 @@ module IGD
 
 			def self.show_sim_wizard
 				wd=UI::WebDialog.new(
-					"Simulation wizard", false, "",
-					595, 490, 100, 100, true )
+				"Simulation wizard", false, "",
+				595, 490, 100, 100, true )
 
 				wd.set_file("#{OS.main_groundhog_path}/src/html/simulation.html" )
 
