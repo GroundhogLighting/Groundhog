@@ -108,9 +108,7 @@ module IGD
 				# ADD RADIANCE_PATH
 				if Config.radiance_path then
 					divider = ":"
-					divider = ";" if OS.getsystem == "WIN"
-					puts "WINDOWS FOUND!" if OS.getsystem == "WIN"
-					puts "OSX FOUND!" if OS.getsystem == "MAC"
+					divider = ";" if OS.getsystem == "WIN"					
 					ENV["PATH"]=Config.radiance_path+divider << ENV["PATH"]
 					ENV["RAYPATH"] = "#{Config.raypath}"
 				else
