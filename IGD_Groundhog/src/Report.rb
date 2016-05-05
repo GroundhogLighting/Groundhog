@@ -163,11 +163,9 @@ module IGD
               end
             }
           end
-
-
 				rescue Exception => ex
 					UI.messagebox ex
-          model.abort_operation          
+          model.abort_operation
         end
       end
 

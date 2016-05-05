@@ -228,6 +228,14 @@
 				 			<td>Within pipe</td>
 				 			<td><input type="text" class="long" id="tdd_pipe_rfluxmtx"></td>
 			 			</tr>
+						<tr>
+				 			<td>Assume one Daylight Matrix</td>
+				 			<td><input type="checkbox" id="tdd_singledaymtx"><div class='option_info'>
+								?<div class="tooltip">
+									<p>Calculate a single daylight matrix and use it for all the TDDs.<br><br>This works well if all the TDDs basically see the same sky and obstructions.</p>
+								</div>
+							</div></td>
+			 			</tr>
 			 		</table>
 				</fieldset>
 		 	</div>
@@ -238,6 +246,17 @@
 
 	 <script src="js/tabs.js"></script>
 	 <script>
-	 	window.location.href = 'skp:onLoad@message';
+	 var changeCheckBox = function(){
+			 if(this.checked){
+				 this.value="true";
+			 }else{
+				 this.value="false";
+			 }
+	 }
+
+	 document.getElementById('tdd_singledaymtx').onchange = changeCheckBox;
+
+	 	window.location.href = 'skp:onLoad@message';		
+
 	 </script>
 </html>

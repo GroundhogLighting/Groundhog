@@ -22,6 +22,7 @@ module IGD
 				"MAX_ILLUMINANCE" => 2000,
 				"ANNUAL_CALCULATION_METHOD" => "DC",
 				"SKY_BINS" => 1,
+				"TDD_SINGLEDAYMTX" => "false",
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -106,7 +107,9 @@ module IGD
 			def self.setup_radiance
 				# ADD RADIANCE_PATH
 				if Config.radiance_path then
-					ENV["PATH"]=Config.radiance_path+":" << ENV["PATH"]
+					divider = ":"
+					divider = ";" if OS.getsystem == "WIN"					
+					ENV["PATH"]=Config.radiance_path+divider << ENV["PATH"]
 					ENV["RAYPATH"] = "#{Config.raypath}"
 				else
 					UI.messagebox "There was a problem loading Radiance"
@@ -220,6 +223,7 @@ module IGD
 				self.get_element("DESIRED_PIXEL_AREA").to_f
 			end
 
+
 			# Gets the early working hour (i.e. when people start working)
 			# @author German Molina
 			# @return [Float] Early
@@ -298,6 +302,7 @@ module IGD
 						id = field[0].downcase
 						script += Utilities.set_element_value(id,@@config,field[1])
 					end
+					script+="if(document.getElementById('tdd_singledaymtx').value == 'true'){document.getElementById('tdd_singledaymtx').checked=true;}"
 					web_dialog.execute_script(script);
 				end
 

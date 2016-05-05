@@ -436,6 +436,7 @@ module IGD
 			def self.write_workplanes(path,entities)
 
 				return true if entities.length<1 #we export this only if there is any workplane... success
+
 				d=Config.desired_pixel_area
 				return false if not d
 				d=d.m
