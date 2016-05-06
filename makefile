@@ -11,14 +11,14 @@ publish: all
 all: win32 win64 macosx
 	$(CLEAN_DESTINATION)
 
-doc:
-	rm -rf doc
+doc: clean	
 	yardoc IGD_Groundhog/src/*.rb - Readme.md
 	rm -fr IGD_Groundhog/doc
 	cp -rf doc IGD_Groundhog/doc
 
 clean:
 	rm -f *.rbz
+	rm -rf doc
 
 test: macosx
 	rm -rf $(SKETCHUP_PLUGIN_DIR)/IGD_Groundhog.rb
