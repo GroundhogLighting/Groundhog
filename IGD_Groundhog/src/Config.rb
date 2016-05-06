@@ -10,8 +10,8 @@ module IGD
 				"ALBEDO" => 0.2,
 				"WEATHER_PATH" => nil,
 				"RVU" => "-ab 3",
-				"RCONTRIB" => "-ab 4 -ad 512",
-				"RTRACE" => "-ab 4 -ad 512",
+				"RCONTRIB" => "-ab 4 -ad 512 -lw 1e-3",
+				"RTRACE" => "-ab 4 -ad 512 -lw 1e-3",
 				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7,
 				"TERRAIN_OVERSIZE" => 4,
 				"TDD_PIPE_RFLUXMTX" => "-ab 9 -ad 1024",
@@ -108,7 +108,7 @@ module IGD
 				# ADD RADIANCE_PATH
 				if Config.radiance_path then
 					divider = ":"
-					divider = ";" if OS.getsystem == "WIN"					
+					divider = ";" if OS.getsystem == "WIN"
 					ENV["PATH"]=Config.radiance_path+divider << ENV["PATH"]
 					ENV["RAYPATH"] = "#{Config.raypath}"
 				else
