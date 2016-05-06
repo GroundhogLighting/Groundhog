@@ -129,7 +129,7 @@ module IGD
 						name=info[1].split(".")[0]
 						script << "#{OS.program("rfluxmtx")} -I+ #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}.dmx"
 					end
-
+=begin
 					# second, the TDD contrubution... for which:
 					### First, the Daylight matrix
 					tdds=Dir["TDDs/*.rad"] #get all the TDDs.
@@ -139,7 +139,7 @@ module IGD
 						sender = "TDDs/pieces/#{name}_top_lens.rad"
 						script << "#{OS.program("rfluxmtx")} #{Config.rcontrib_options} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > TDD/#{name}.dmx"
 					end
-
+=end
 
 					return script
 				end
