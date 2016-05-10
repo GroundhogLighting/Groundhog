@@ -1407,15 +1407,7 @@ repeated in the “materials.mat” file.</p>
 774
 775
 776
-777
-778
-779
-780
-781
-782
-783
-784
-785</pre>
+777</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 682</span>
@@ -1452,17 +1444,9 @@ repeated in the “materials.mat” file.</p>
 
 		<span class='comment'># write and next if it is a TDD
 </span>		<span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_tdd?'>tdd?</span><span class='lparen'>(</span><span class='id identifier rubyid_h'>h</span><span class='rparen'>)</span> <span class='kw'>then</span>
-			<span class='id identifier rubyid_tdd_path'>tdd_path</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/TDDs</span><span class='tstring_end'>&quot;</span></span>
-			<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_tdd_path'>tdd_path</span><span class='rparen'>)</span>
-			<span class='id identifier rubyid_tdd_geom'>tdd_geom</span> <span class='op'>=</span> <span class='const'>TDD</span><span class='period'>.</span><span class='id identifier rubyid_write_tdd'>write_tdd</span><span class='lparen'>(</span><span class='id identifier rubyid_tdd_path'>tdd_path</span><span class='comma'>,</span><span class='id identifier rubyid_h'>h</span><span class='rparen'>)</span>
-			<span class='kw'>if</span> <span class='id identifier rubyid_tdd_geom'>tdd_geom</span> <span class='kw'>then</span>
-				<span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w+</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span>
-					<span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span> <span class='id identifier rubyid_tdd_geom'>tdd_geom</span>
-				<span class='rbrace'>}</span>
-			<span class='kw'>end</span>
+			<span class='const'>TDD</span><span class='period'>.</span><span class='id identifier rubyid_write_tdd'>write_tdd</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/TDDs</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_h'>h</span><span class='rparen'>)</span>
 			<span class='kw'>next</span>
 		<span class='kw'>end</span>
-
 
 		<span class='id identifier rubyid_instances'>instances</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_inst'>inst</span><span class='op'>|</span> <span class='comment'>#include the nested components
 </span>			<span class='id identifier rubyid_geom_string'>geom_string</span><span class='op'>=</span><span class='id identifier rubyid_geom_string'>geom_string</span><span class='op'>+</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_component_string'>get_component_string</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> ./</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_inst'>inst</span><span class='comma'>,</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_inst'>inst</span><span class='period'>.</span><span class='id identifier rubyid_definition'>definition</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -2199,6 +2183,14 @@ pages, within the API) in other files with the scene (page)name.</p>
       <pre class="lines">
 
 
+784
+785
+786
+787
+788
+789
+790
+791
 792
 793
 794
@@ -2210,18 +2202,10 @@ pages, within the API) in other files with the scene (page)name.</p>
 800
 801
 802
-803
-804
-805
-806
-807
-808
-809
-810
-811</pre>
+803</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 792</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 784</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_component_string'>get_component_string</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_comp'>comp</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
 
@@ -2364,6 +2348,14 @@ the inputted value. This is useful for exporting components.</code></pre>
       <pre class="lines">
 
 
+887
+888
+889
+890
+891
+892
+893
+894
 895
 896
 897
@@ -2389,18 +2381,10 @@ the inputted value. This is useful for exporting components.</code></pre>
 917
 918
 919
-920
-921
-922
-923
-924
-925
-926
-927
-928</pre>
+920</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 895</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 887</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_mat_string'>get_mat_string</span><span class='lparen'>(</span><span class='id identifier rubyid_material'>material</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_matName'>matName</span><span class='op'>=</span><span class='id identifier rubyid_material'>material</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_tr'>tr</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>#</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -4246,6 +4230,14 @@ an array of 3D Points</p>
       <pre class="lines">
 
 
+811
+812
+813
+814
+815
+816
+817
+818
 819
 820
 821
@@ -4303,18 +4295,10 @@ an array of 3D Points</p>
 873
 874
 875
-876
-877
-878
-879
-880
-881
-882
-883
-884</pre>
+876</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 819</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 811</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_rif_file'>write_rif_file</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span> <span class='id identifier rubyid_illums'>illums</span><span class='comma'>,</span> <span class='id identifier rubyid_windows'>windows</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
@@ -4554,9 +4538,9 @@ files to create the model.</p>
 				<span class='id identifier rubyid_hName'>hName</span><span class='op'>=</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_h'>h</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
 				<span class='id identifier rubyid_instances'>instances</span><span class='op'>=</span><span class='id identifier rubyid_h'>h</span><span class='period'>.</span><span class='id identifier rubyid_instances'>instances</span>
 				<span class='id identifier rubyid_comp_path'>comp_path</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> ./Components/</span><span class='tstring_end'>&quot;</span></span>
-				<span class='id identifier rubyid_comp_path'>comp_path</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> ./TDDs/</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_tdd?'>tdd?</span><span class='lparen'>(</span><span class='id identifier rubyid_h'>h</span><span class='rparen'>)</span>
 				<span class='id identifier rubyid_instances'>instances</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_inst'>inst</span><span class='op'>|</span>
 					<span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_inst'>inst</span><span class='period'>.</span><span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Model</span>
+					<span class='kw'>next</span> <span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_tdd?'>tdd?</span><span class='lparen'>(</span><span class='id identifier rubyid_inst'>inst</span><span class='rparen'>)</span>
 					<span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_component_string'>get_component_string</span><span class='lparen'>(</span><span class='id identifier rubyid_comp_path'>comp_path</span><span class='comma'>,</span><span class='id identifier rubyid_inst'>inst</span><span class='comma'>,</span><span class='id identifier rubyid_hName'>hName</span><span class='rparen'>)</span><span class='rparen'>)</span>
 				<span class='kw'>end</span>
 			<span class='kw'>end</span>
@@ -5189,7 +5173,7 @@ folder on the directory.</p>
 </div>
 
     <div id="footer">
-  Generated on Tue May 10 11:25:50 2016 by
+  Generated on Tue May 10 20:19:29 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.0.0).
 </div>

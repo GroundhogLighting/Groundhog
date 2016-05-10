@@ -574,9 +574,9 @@ module IGD
 							hName=Utilities.fix_name(h.name)
 							instances=h.instances
 							comp_path = " ./Components/"
-							comp_path = " ./TDDs/" if Labeler.tdd?(h)
 							instances.each do |inst|
 								next if not inst.parent.is_a? Sketchup::Model
+								next if Labeler.tdd?(inst)
 								f.write(self.get_component_string(comp_path,inst,hName))
 							end
 						end
@@ -711,17 +711,9 @@ module IGD
 
 					# write and next if it is a TDD
 					if Labeler.tdd?(h) then
-						tdd_path = "#{path}/TDDs"
-						OS.mkdir(tdd_path)
-						tdd_geom = TDD.write_tdd(tdd_path,h)
-						if tdd_geom then
-							File.open(filename,'w+'){ |f|
-								f.write tdd_geom
-							}
-						end
+						TDD.write_tdd("#{path}/TDDs",h)
 						next
 					end
-
 
 					instances.each do |inst| #include the nested components
 						geom_string=geom_string+self.get_component_string(" ./",inst,Utilities.fix_name(inst.definition.name))

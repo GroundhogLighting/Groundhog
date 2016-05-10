@@ -31,52 +31,56 @@ module IGD
       # @param tdd [Boolean] The Tubular Daylight Device component definition
       # @return [String] The string that should be written in the Component Definition file.
       def self.write_tdd(path,tdd)
-        path = "#{path}/pieces"
-        geom = ""
-        #mat_array = []
-        name=Utilities.fix_name(tdd.name)
-        pipe_filename = "#{name}_pipe.rad"
-        top_filename = "#{name}_top_lens.rad"
-        bottom_filename = "#{name}_bottom_lens.rad"
-
-        #create the dir, if it does not exist
         OS.mkdir(path)
-        entities=tdd.entities
-        faces=Utilities.get_faces(entities)
-        instances=Utilities.get_component_instances(entities)
+        #path = "#{path}/Pieces"
+        geom = ""
 
+        name=Utilities.fix_name(tdd.name)
+        pipe_filename = "#{name}.pipe"
+        top_filename = "#{name}.top"
+        bottom_filename = "#{name}.bottom"
+
+        faces=Utilities.get_faces(tdd.entities)
         n_top_lens = faces.select{|x| Labeler.tdd_top? x}.length
         n_bottom_lens = faces.select{|x| Labeler.tdd_bottom? x}.length
 
-
+        tr = Utilities.get_all_global_transformations(faces[0],Geom::Transformation.new)
         if n_top_lens != 1 or n_bottom_lens != 1 then
           UI.messagebox "Incorrect definition of TDD #{name}.\n\nIt will be ignored."
           return false
         end
 
-        UI.messagebox "There are components inside a Tubular Daylight Device! They will be ignored" if instances.length > 0
+        #OS.mkdir(path) #make the Pieces path
 
-        faces.each{|face|
-          info=Exporter.get_rad_string(face)
-          if Labeler.tdd_top?(face) then
-            info = Exporter.get_reversed_rad_string(face) if face.normal.z > 0
-            File.open("#{path}/#{bottom_filename}",'w'){|top|
-              top.write "\#@rfluxmtx h=kf u=Y\n\n#{self.lens_material}\n\n default_tdd_lens_mat #{info[0]}"
+        tr.each_with_index{|t,index|
+          #File.open("#{path}/#{index}_#{name}.rad",'w'){ |file|
+
+            faces.each{|face|
+              info = Exporter.get_transformed_rad_string(face,t)
+              if Labeler.tdd_top?(face) then
+                #info = Exporter.get_reversed_transformed_rad_string(face,t) if face.normal.z > 0
+                File.open("#{path}/#{index}_#{bottom_filename}",'w'){|top|
+                  top.write "\#@rfluxmtx h=kf u=Y\n\n#{self.lens_material}\n\n default_tdd_lens_mat #{info[0]}"
+                }
+              elsif Labeler.tdd_bottom?(face) then
+                #info = Exporter.get_reversed_transformed_rad_string(face,t) if face.normal.z > 0
+                File.open("#{path}/#{index}_#{top_filename}",'w'){|top|
+                  top.write "\#@rfluxmtx h=kf u=Y\n\n#{self.lens_material}\n\n default_tdd_lens_mat #{info[0]}"
+                }
+              else
+                geom = geom + "default_tdd_pipe_mat" + info[0]
+              end
             }
-          elsif Labeler.tdd_bottom?(face) then
-            info = Exporter.get_reversed_rad_string(face) if face.normal.z > 0
-            File.open("#{path}/#{top_filename}",'w'){|top|
-              top.write "\#@rfluxmtx h=kf u=Y\n\n#{self.lens_material}\n\n default_tdd_lens_mat #{info[0]}"
+            File.open("#{path}/#{index}_#{pipe_filename}",'w'){|pipe|
+              pipe.write "#{self.pipe_material}\n\n#{geom}"
             }
-          else
-            geom = geom + "default_tdd_pipe_mat" + info[0]
-          end
-        }
-        File.open("#{path}/#{pipe_filename}",'w'){|pipe|
-          pipe.write "#{self.pipe_material}\n\n#{geom}"
+
+
+            #file.write("\#xform ")
+          #}
         }
 
-        return "!xform ./pieces/#{pipe_filename}\n!xform ./pieces/#{top_filename}\n!xform ./pieces/#{bottom_filename}\n"
+        return true
       end
 
 

@@ -3,10 +3,57 @@ module IGD
 		module Rad
 			#This module calls Radiance for performing calculations
 
+			# Gets the String that reference all the Windows
+			# @author German Molina
+			# @return [String] All the files
 			def self.gather_windows
 				winstring=Dir["Windows/*"]
 				if winstring.length > 0 then
-					return  "./"+winstring.join(" ./").tr("\\","/")
+					return  "./"+winstring.join(" ./").gsub("\\","/")
+				end
+				return ""
+			end
+
+			# Gets the String that reference all the  TDDs
+			# @author German Molina
+			# @return [String] All the files
+			def self.gather_tdds
+				tdd_string=Dir["TDDs/*"]
+				if tdd_string.length > 0 then
+					return  "./"+tdd_string.join(" ./").gsub("\\","/")
+				end
+				return ""
+			end
+
+			# Gets the String that reference all the top lenses of the TDDs
+			# @author German Molina
+			# @return [String] All the files
+			def self.gather_tdd_tops
+				tdd_string=Dir["TDDs/*.top"]
+				if tdd_string.length > 0 then
+					return  "./"+tdd_string.join(" ./").gsub("\\","/")
+				end
+				return ""
+			end
+
+			# Gets the String that reference all the bottom lenses of the TDDs
+			# @author German Molina
+			# @return [String] All the files
+			def self.gather_tdd_bottoms
+				tdd_string=Dir["TDDs/*.bottom"]
+				if tdd_string.length > 0 then
+					return  "./"+tdd_string.join(" ./").gsub("\\","/")
+				end
+				return ""
+			end
+
+			# Gets the String that reference all the pipes of the TDDs
+			# @author German Molina
+			# @return [String] All the files
+			def self.gather_tdd_pipes
+				tdd_string=Dir["TDDs/*.pipe"]
+				if tdd_string.length > 0 then
+					return  "./"+tdd_string.join(" ./").gsub("\\","/")
 				end
 				return ""
 			end
@@ -240,7 +287,7 @@ module IGD
 					script=[]
 
 					#oconv
-					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{self.gather_windows} > octree.oct"
+					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{self.gather_windows} #{self.gather_tdds} > octree.oct"
 					script << "#{OS.program("rvu")} #{Config.rvu_options} -vf Views/#{scene}.vf octree.oct"
 				end
 				return script
