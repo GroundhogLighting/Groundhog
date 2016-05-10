@@ -159,7 +159,17 @@ module IGD
 							v3 = data.shift.to_f
 							vertex.push [v1.m, v2.m, v3.m]
 						end
-
+=begin
+						# This is for avoiding the error of "points are not planar" that
+						# is thrown when points are too close.
+						too_small=false
+						vertex.each_with_index{|v,index|
+							vp=vertex[index-1]
+							d=Math.sqrt((vp[0]-v[0])**2+(vp[1]-v[1])**2+(vp[2]-v[2])**2)
+							too_small = true if d<=1e-3 #this is SketchUp's tolerance in inches							
+						}
+						next if too_small
+=end
 						pixel=entities.add_face(vertex)
 						Labeler.to_result_pixel(pixel)
 						Labeler.set_pixel_value(pixel,value)
