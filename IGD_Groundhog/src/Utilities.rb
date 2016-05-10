@@ -163,21 +163,7 @@ module IGD
 			def self.count_windows(entities)
 				return self.get_windows(entities).length
 			end
-=begin
-			# Reverse all the faces in an array
-			# @author German Molina
-			# @param entities [Array<entities>] Array of entities
-			# @return [Void]
-			def self.reverseFaces(entities)
-				faces=self.get_faces(entities)
 
-				faces.each do |k|
-					if Labeler.face?(k)
-						k.reverse!
-					end
-				end
-			end
-=end
 
 			# Checks if all the windows within a set of entities have the same normal (point to the same direction).
 			# @author German Molina
@@ -297,6 +283,10 @@ module IGD
 				entities=Sketchup.active_model.entities
 				entities = entities.select{|x| Labeler.is?(x,label)}
 
+				Sketchup.active_model.definitions.each{|defi|
+					entities += defi.entities.select{|x| Labeler.is?(x,label)}
+				}
+
 				return if entities.length == 0
 
 				hide=true
@@ -383,27 +373,6 @@ module IGD
 				return entities.select{|x| Labeler.solved_workplane? x}
 			end
 
-			# Returns an array with the transformations that lead to the global position of the entity
-			# @author German Molina
-			# @param entity [SketchUp::Entities]
-			# @return [Array <SketchUp::Transformation>] An array with the transformations
-			# @note This method is not used, and it is not working... the idea was to enable
-			#    exporting illums and workplanes within groups and components, but I could not
-			#    find a way of geting the global coordinates of them.
-			def self.get_global_transformations(entity)
-				tr=[]
-				if entity.is_a? Sketchup::Face
-					until entity.parent.is_a? Sketchup::Model
-						tr << entity.parent.transformation
-						entity = entity.parent
-					end
-				else
-					until entity.is_a? Sketchup::Model
-						tr << entity.transformation
-						entity = entity.parent
-					end
-				end
-			end
 
 			# Hides all solved workplanes with the exception of those with the input metric
 			# @author German Molina
@@ -423,6 +392,23 @@ module IGD
 				}
 			end
 
+			# Returns an array with the transformations that lead to the global position of the entity
+			# @author German Molina
+			# @param entity [SketchUp::Face (or something)]
+			# @return [Array <SketchUp::Transformation>] An array with the transformations
+			# @note if the input entity is not within a group or component, its own transformation will be returned.
+			def self.get_all_global_transformations(entity,transform)
+				ret = []
+				if entity.parent.is_a? Sketchup::Model then
+					ret << transform if not entity.respond_to? :transformation #face, edge, or other
+					ret << transform * entity.transformation #if it is a Component instance or group
+				else
+					entity.parent.instances.each{|inst|
+						ret += get_all_global_transformations(inst,transform)
+					}
+				end
+				return ret
+			end
 
 		end
 	end #end module

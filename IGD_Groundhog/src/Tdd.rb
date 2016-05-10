@@ -57,14 +57,14 @@ module IGD
         UI.messagebox "There are components inside a Tubular Daylight Device! They will be ignored" if instances.length > 0
 
         faces.each{|face|
-          info=Exporter.get_rad_string(face,[])
+          info=Exporter.get_rad_string(face)
           if Labeler.tdd_top?(face) then
-            info = Exporter.get_reversed_rad_string(face,[]) if face.normal.z > 0
+            info = Exporter.get_reversed_rad_string(face) if face.normal.z > 0
             File.open("#{path}/#{bottom_filename}",'w'){|top|
               top.write "\#@rfluxmtx h=kf u=Y\n\n#{self.lens_material}\n\n default_tdd_lens_mat #{info[0]}"
             }
           elsif Labeler.tdd_bottom?(face) then
-            info = Exporter.get_reversed_rad_string(face,[]) if face.normal.z > 0
+            info = Exporter.get_reversed_rad_string(face) if face.normal.z > 0
             File.open("#{path}/#{top_filename}",'w'){|top|
               top.write "\#@rfluxmtx h=kf u=Y\n\n#{self.lens_material}\n\n default_tdd_lens_mat #{info[0]}"
             }

@@ -53,6 +53,33 @@ module IGD
 				return mat
 			end
 
+			# Assess the array of vertex that conform the face, closing it as Radiance needs.
+			#
+			# @author German Molina
+			# @version 1.0
+			# @param face [Sketchup::Face] SketchUp face
+			# @return [<Array>] Of SketchUp 3DPoints
+			def self.get_vertex_positions(face)
+				self.close_face([],1,4,face)
+				ret = face.vertices.map{|x| x.position}
+				Utilities.delete_label(face.edges,"added") #Maybe this could be done later... and it would be faster...?
+				return ret
+			end
+
+			# Assess the String that should be written in the Radiance geometry file from an array of 3D Points
+			# @author German Molina
+			# @version 1.0
+			# @param positions [Sketchup::3DPoint] An array of 3D Points
+			# @return [String] The string to be written in the .rad file
+			def self.vertex_positions_to_rad_string(positions,name)
+				string1="\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
+				string2=""
+				positions.each{|pos|
+					string2=string2+"\t#{pos.x.to_m.to_f}\t#{pos.y.to_m.to_f}\t#{pos.z.to_m.to_f}\n"
+				}
+				string2+="\n\n"
+				return string1+string2
+			end
 
 			# Assess the String that should be written in the Radiance geometry file.
 			#
@@ -61,48 +88,53 @@ module IGD
 			# @author German Molina
 			# @version 1.3
 			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
-			# @param trans [Array <Sketchup::Transformation>] list of transformations to apply to the face.
 			# @return [<Array>] The string to be written in the .rad file, and the material
-			def self.get_rad_string(face,trans)
-				self.close_face([], 1, 4, face)
+			def self.get_rad_string(face)
 				mat = self.get_material(face)
-				vert=face.vertices #get the vertices
-				string1="\tpolygon\t"+Labeler.get_name(face).tr(" ","_").tr("#","_")+"\n0\n0\n"+(3*vert.length).to_s #Write the standard first three lines
-				string2=""
-				vert.each { |v|
-					p=v.position
-					trans.each { |tr| p.transform!(tr) }
-					string2=string2+"\t#{p.x.to_m.to_f}\t#{p.y.to_m.to_f}\t#{p.z.to_m.to_f}\n"
-				}
-				string2+="\n\n"
-
-				Utilities.delete_label(face.edges,"added") #Maybe this could be done later... and it would be faster...?
-				return [string1+string2,mat] #Returns the string and the material
+				positions = self.get_vertex_positions(face)
+				name = Utilities.fix_name(Labeler.get_name(face))
+				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
+
+			# Same as get_rad_string, but transforming the vertices
+			# @author German Molina
+			# @version 1.0
+			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
+			# @param transformation [Geom::Transformation] SketchUp transformation to apply to the vertices
+			# @return [<Array>] The string to be written in the .rad file, and the material
+			def self.get_transformed_rad_string(face,transformation)
+				mat = self.get_material(face)
+				positions = self.get_vertex_positions(face).map{|x| x.transform(transformation) }
+				name = Utilities.fix_name(Labeler.get_name(face))
+				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
+			end
+
+
+			# Same as get_rad_string, but transforming the vertices and reversing the face
+			# @author German Molina
+			# @version 1.0
+			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
+			# @param transformation [Geom::Transformation] SketchUp transformation to apply to the vertices
+			# @return [<Array>] The string to be written in the .rad file, and the material
+			def self.get_reversed_transformed_rad_string(face,transformation)
+				mat = self.get_material(face)
+				positions = self.get_vertex_positions(face).reverse.map{|x| x.transform(transformation) }
+				name = Utilities.fix_name(Labeler.get_name(face))
+				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
+			end
+
 
 			# Same as get_rad_string, but reversing the order of the vertices.
 			# @author German Molina
 			# @version 1.3
 			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
-			# @param trans [Array <Sketchup::Transformation>] list of transformations to apply to the face.
 			# @return [<Array>] The string to be written in the .rad file, and the material
-			def self.get_reversed_rad_string(face,trans)
-				self.close_face([], 1, 4, face)
+			def self.get_reversed_rad_string(face)
 				mat = self.get_material(face)
-				vert=face.vertices.reverse #get the vertices
-				string1="\tpolygon\t"+Labeler.get_name(face).tr(" ","_").tr("#","_")+"\n0\n0\n"+(3*vert.length).to_s #Write the standard first three lines
-				string2=""
-				vert.each { |v|
-					p=v.position
-					trans.each { |tr| p.transform!(tr) }
-					string2=string2+"\t#{p.x.to_m.to_f}\t#{p.y.to_m.to_f}\t#{p.z.to_m.to_f}\n"
-				}
-				string2+="\n\n"
-
-				Utilities.delete_label(face.edges,"added") #Maybe this could be done later... and it would be faster...?
-				return [string1+string2,mat] #Returns the string and the material
+				positions = self.get_vertex_positions(face).reverse
+				name = Utilities.fix_name(Labeler.get_name(face))
+				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
-
 
 
 			# Recursively connects the interior and the exterior loops of a face.
@@ -246,14 +278,18 @@ module IGD
 
 				#now we loop over the faces, and write them were they belong
 				faces.each do |fc| #for each face
-					info=self.get_rad_string(fc,[]) #get the information
+					info=self.get_rad_string(fc) #get the information
 
 					if Labeler.window?(fc)
 						#Window groups will be exported separatedly
 						windows=windows+[fc]
 					elsif Labeler.workplane?(fc) then
-						#if it is workplane, store
-						workplanes=workplanes+[fc]
+						#if it is workplane, export
+						name=Labeler.get_name(fc) #Get the name of the surface
+						mesh = fc.mesh
+						points = mesh.points
+						polygons = mesh.polygons
+						self.write_workplane(path, name, points, polygons)
 					elsif Labeler.illum?(fc) then
 						illums=illums+[fc]
 					else
@@ -278,14 +314,11 @@ module IGD
 					w.close
 				end
 
-				#write the workplanes
-				return false if not self.write_workplanes(path,workplanes)
-
 				#Write windows
 				return false if not self.write_window_groups(path,windows)
 
 				#Write illums
-				return false if not self.write_illums(path,illums,[],false)
+				return false if not self.write_illums(path,illums)
 
 				#write rif
 				return false if not self.write_rif_file(path, illums, windows)
@@ -374,7 +407,7 @@ module IGD
 
 				windows.each do |win|
 					c=Labeler.get_win_group(win)
-					info=self.get_rad_string(win,[])
+					info=self.get_rad_string(win)
 					if c!=nil then # if the window has a group
 						# We write using the writer of that group
 						i=0
@@ -423,19 +456,17 @@ module IGD
 
 			end
 
-			# Writes the sensors that are over the workplanes. Creates a Workplanes folder on the directory.
-			#
-			# The prompt will ask for the spacing, and a .pts file will be written on the path on the Workplanes folder.
+			# Writes the sensors that are over a certain workplane. Creates a Workplanes folder on the directory.
 			#
 			# The name of the file will be the name of the entity.
 			# @author German Molina
 			# @version 1.2
-			# @param path [String] Directory to export the Window Groups.
-			# @param entities [entities] Array of workplanes.
+			# @param path [String] Directory to export the Workplanes
+			# @param name [entities] the name of the workplane file (without extension)
+			# @param points [entities] The points of the mesh
+			# @param polygons [entities] The polygons of the mesh
 			# @return [Boolean] Success
-			def self.write_workplanes(path,entities)
-
-				return true if entities.length<1 #we export this only if there is any workplane... success
+			def self.write_workplane(path, name, points, polygons)
 
 				d=Config.desired_pixel_area
 				return false if not d
@@ -444,30 +475,22 @@ module IGD
 				OS.mkdir("#{path}/Workplanes")
 				path="#{path}/Workplanes"
 
-				entities.each do |ent| #for all the entities (which are faces)
-					if Labeler.workplane?(ent) then #Only workplanes
-						name=Labeler.get_name(ent) #Get the name of the surface
-						mesh = ent.mesh
-						points = mesh.points
-						polygons = mesh.polygons
-						triangles = Triangle.triangulate(points,polygons)
-						File.open("#{path}/#{name}.pxl",'w+'){ |pixels|
-							File.open("#{path}/#{name}.pts",'w+'){ |points|
-								#now the triangles
-								triangles.each do |triangle|
-									pos = Triangle.get_center(triangle)
-									n = Triangle.get_normal(triangle)
-									pixels.puts "#{triangle[0].x.to_m},#{triangle[0].y.to_m},#{triangle[0].z.to_m},#{triangle[1].x.to_m},#{triangle[1].y.to_m},#{triangle[1].z.to_m},#{triangle[2].x.to_m},#{triangle[2].y.to_m},#{triangle[2].z.to_m}"
-									#points.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t#{n.x}\t#{n.y}\t#{n.z}"
-									points.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t0\t0\t1"
-								end
-							}
-						}
-					end
-				end
+				triangles = Triangle.triangulate(points,polygons)
+
+				File.open("#{path}/#{name}.pxl",'w+'){ |pixels|
+					File.open("#{path}/#{name}.pts",'w+'){ |points|
+						#now the triangles
+						triangles.each do |triangle|
+							pos = Triangle.get_center(triangle)
+							n = Triangle.get_normal(triangle)
+							pixels.puts "#{triangle[0].x.to_m},#{triangle[0].y.to_m},#{triangle[0].z.to_m},#{triangle[1].x.to_m},#{triangle[1].y.to_m},#{triangle[1].z.to_m},#{triangle[2].x.to_m},#{triangle[2].y.to_m},#{triangle[2].z.to_m}"
+							#points.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t#{n.x}\t#{n.y}\t#{n.z}"
+							points.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t0\t0\t1"
+						end
+					}
+				}
 
 				return true
-
 			end
 
 
@@ -476,10 +499,8 @@ module IGD
 			# @version 1.0
 			# @param path [String] Directory to export the Window Groups.
 			# @param entities [Array <Sketchup::Face>] An array with illums, selected during exportFaces.
-			# @param trans [Array <Sketchup::Transformation>] An array with transformations to apply to the face.
-			# @param ext [String] An extension that will be assigned to the file.
 			# @return [Boolean] Success
-			def self.write_illums(path,entities,trans,ext)
+			def self.write_illums(path,entities)
 
 				return true if entities.length<1  #success... did not export, though.
 
@@ -489,9 +510,7 @@ module IGD
 				entities.each do |ent| #for all the entities (which are faces)
 					if Labeler.illum?(ent) then #Only illums
 						name=Labeler.get_name(ent) #Get the name of the surface
-						name="#{Utilities.fix_name(ent.parent.name)}_#{name}" if ent.parent.is_a? Sketchup::ComponentDefinition
-						name+="_#{ext}" if ext
-						info=self.get_rad_string(ent,trans)
+						info=self.get_rad_string(ent)
 
 						File.open("#{path}/#{Utilities.fix_name(name)}.rad",'w+'){ |f| #The file is opened
 							f.write("void "+info[0])
@@ -710,34 +729,45 @@ module IGD
 					geom_string+="\n\n"
 
 					mat_array=[]
-					#wp_array=[]
-					#ill_array=[]
-					#window_array=[]
 					faces.each do |fc| #then the rest of the faces
 						if Labeler.workplane? (fc) then
-						#	wp_array << fc
+							wps = []
+							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
+							tr.each_with_index{|t,index|
+								#if it is workplane, export
+								name=Labeler.get_name(fc) #Get the name of the surface
+								mesh = fc.mesh
+								points = mesh.points.map{|x| x.transform(t) }
+								polygons = mesh.polygons
+								self.write_workplane(path, "#{name}_#{index}", points, polygons)
+							}
 						elsif Labeler.illum? (fc) then
-						#	ill_array << fc
+							OS.mkdir("#{path}/Illums")
+							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
+							tr.each_with_index{|t,index|
+								File.open("#{path}/Illums/#{hName}_#{index}.rad",'w'){ |file|
+									info = self.get_transformed_rad_string(fc,t)
+									file.write("void"+info[0])
+								}
+							}
 						elsif Labeler.window? (fc) then
-						#	window_array << fc
+							OS.mkdir("#{path}/Windows")
+							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
+							tr.each_with_index{|t,index|
+								File.open("#{path}/Windows/#{hName}_#{index}.rad",'w'){ |file|
+									info = self.get_transformed_rad_string(fc,t)
+									file.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
+								}
+							}
 						else #common surfaces
-							info=self.get_rad_string(fc,[])
+							info=self.get_rad_string(fc)
 							matName=Utilities.fix_name(info[1].name)+"_"+hName
 							geom_string=geom_string+matName+info[0]
 							mat_array=mat_array+[info[1]]
 						end
 					end
 
-					#h.instances.each do |inst|
-						#write illums
-					#	self.write_illums(path,ill_array,[],Labeler.get_name(inst))
 
-						#write windows
-						#return false if not self.write_illums(path,ill_array)
-
-						#write workplanes
-						#return false if not self.write_illums(path,ill_array)
-					#end
 
 
 					#Write materials and geometry
