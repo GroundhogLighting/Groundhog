@@ -102,29 +102,24 @@ module IGD
 
             #  Transform an IES file into a Radiance understood data file
             # @author German Molina based on Radiance's code
-            # @param iesname [String] The path of the IES file
             # @param multiplier [Numeric] A number that powers the lamp. 1 is fully on, 0 is off.
             # @param definition [Sketchup::ComponentDefinition] The definition to which the IES will be assigned
             # @param path [String] The actual path on which we are working.
             # @return [String] The Radiance definition of the light.
             # @note a .dat file is written in the process
-            def self.ies2rad(iesname, multiplier, definition, path)
+            def self.ies2rad(multiplier, definition, path)
 
                 ret = []
 
-                ret << "### BEGINNING OF IES2RAD OUTPUT\n\n"
+                ret << "### BEGINNING OF GROUNDHOG'S IES2RAD OUTPUT\n\n"
 
                 name = Utilities.fix_name(definition.name)
-
-                #abort if file is not found
-                warn "input file does not exist" if not File.exist? iesname
-                return false if not File.exist? iesname
 
                 ### PUT HEADER
                 ret << "# rad file generated within Groundhog using code based on RADIANCE's IES2RAD program"
                 ret << "# Dimensions in meters"
 
-                text=File.open(iesname).read.gsub!(/\r\n?/, "\n").split("\n")
+                text=Labeler.get_value(definition)
 
                 lamptype = ""
                 while text.length > 0 do

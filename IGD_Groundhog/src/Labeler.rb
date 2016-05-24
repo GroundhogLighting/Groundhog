@@ -307,7 +307,7 @@ module IGD
 
 				comp.set_attribute("Groundhog","Label","local_luminaire")
 				lumfile = UI.openpanel("Choose an IES file", "c:/", "IES|*.ies||")
-				comp.set_attribute("Groundhog","Value",lumfile)
+				comp.set_attribute("Groundhog","Value",File.readlines(lumfile))
 			end
 
 			# Label selected material as local_material
@@ -375,7 +375,7 @@ module IGD
 			def self.to_tdd(groups)
 				groups.each{|x|
 					x.set_attribute("Groundhog","Label","TDD")
-					x.definition.set_attribute("Groundhog","Label","TDD")					
+					x.definition.set_attribute("Groundhog","Label","TDD")
 				}
 
 			end
@@ -387,6 +387,8 @@ module IGD
 			# @return [Void]
 			def self.to_tdd_top(face)
 					face.set_attribute("Groundhog","Label","TDD_top")
+					file = UI.openpanel("Choose an BSDF.xml file", "c:/", "XML|*.xml||")
+					face.set_attribute("Groundhog","Value",File.readlines(file))
 			end
 
 			# Label selected face as TDD bottom lens
@@ -395,7 +397,9 @@ module IGD
 			# @version 0.1
 			# @return [Void]
 			def self.to_tdd_bottom(face)
-					face.set_attribute("Groundhog","Label","TDD_bottom")
+				face.set_attribute("Groundhog","Label","TDD_bottom")
+				file = UI.openpanel("Choose an BSDF.xml file", "c:/", "XML|*.xml||")
+				face.set_attribute("Groundhog","Value",File.readlines(file))
 			end
 
 			# Delete label from entities
