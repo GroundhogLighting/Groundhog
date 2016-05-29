@@ -96,16 +96,17 @@ module IGD
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
-			# Same as get_rad_string, but transforming the vertices
+			# Same as get_rad_string, but transforming the vertices.
 			# @author German Molina
 			# @version 1.0
 			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
 			# @param transformation [Geom::Transformation] SketchUp transformation to apply to the vertices
+			# @param name [String] A String with the name to asign to the face
 			# @return [<Array>] The string to be written in the .rad file, and the material
-			def self.get_transformed_rad_string(face,transformation)
+			def self.get_transformed_rad_string(face,transformation,name)
 				mat = self.get_material(face)
 				positions = self.get_vertex_positions(face).map{|x| x.transform(transformation) }
-				name = Utilities.fix_name(Labeler.get_name(face))
+				name = Utilities.fix_name(name)
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
@@ -115,11 +116,12 @@ module IGD
 			# @version 1.0
 			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
 			# @param transformation [Geom::Transformation] SketchUp transformation to apply to the vertices
+			# @param name [String] A String with the name to asign to the face
 			# @return [<Array>] The string to be written in the .rad file, and the material
-			def self.get_reversed_transformed_rad_string(face,transformation)
+			def self.get_reversed_transformed_rad_string(face,transformation,name)
 				mat = self.get_material(face)
 				positions = self.get_vertex_positions(face).reverse.map{|x| x.transform(transformation) }
-				name = Utilities.fix_name(Labeler.get_name(face))
+				name = Utilities.fix_name(name)
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
@@ -213,7 +215,6 @@ module IGD
 			# @param path [String] The path where the model will be exported
 			# @param lights_on [Boolean] The lights will be exported as ON if true, and OFF if false
 			# @return [Boolean] Success
-			# @note this method used to be called 'do_multiphase'
 			def self.export(path,lights_on)
 				OS.clear_path(path)
 				begin
@@ -222,10 +223,12 @@ module IGD
 					model.start_operation( op_name,true )
 
 					#Export the faces and obtain the modifiers
+
 					mod_list=self.export_layers(path)
-					return false if not mod_list #return right away
+					return false if not mod_list
 					return false if not self.export_modifiers(path,mod_list)
 					return false if not self.write_sky(path)
+					return false if not self.write_weather("#{path}/Skies")
 					return false if not self.export_views(path)
 					return false if not self.write_scene_file(path)
 					return false if not self.export_component_definitions(path, lights_on)
@@ -240,6 +243,28 @@ module IGD
 				return true
 			end
 
+			# Writes the weather file in WEA format
+			# @author German Molina
+			# @version 1.0
+			# @param path [String] Directory to export the weather file
+			# @return [Boolean] Success
+			def self.write_weather(path)
+				if Config.weather_path then
+					OS.mkdir(path)
+					w_extension = Config.weather_path.split(".").pop
+					if w_extension == 'wea' then
+						File.open("#{path}/Skies/weather.#{w_extension}",'w'){|file| File.readlines(Config.weather_path).each{|x| file.puts x}}
+					elsif w_extension == 'epw' then
+						epw2wea = OS.program("epw2wea")
+						OS.run_command("#{epw2wea} #{Config.weather_path.gsub(" ","\\ ")} #{path.gsub(" ","\\ ")}/weather.wea")
+					else
+						UI.messagebox "Unkown weather file format!"
+						return false
+					end
+				else
+					return true #success... nothing to do, though.
+				end
+			end
 
 
 			# This method exports the faces organized in Groundhog distribution
@@ -574,9 +599,9 @@ module IGD
 							hName=Utilities.fix_name(h.name)
 							instances=h.instances
 							comp_path = " ./Components/"
-							comp_path = " ./TDDs/" if Labeler.tdd?(h)
 							instances.each do |inst|
 								next if not inst.parent.is_a? Sketchup::Model
+								next if Labeler.tdd?(inst)
 								f.write(self.get_component_string(comp_path,inst,hName))
 							end
 						end
@@ -706,22 +731,14 @@ module IGD
 					if Labeler.local_luminaire?(h) then #add the illum
 						mult = 1.0
 						mult = 0 if not lights_on
-						geom_string += Lamps.ies2rad(Labeler.get_value(h),mult,h, comp_path)
+						geom_string += Lamps.ies2rad(mult,h, comp_path)
 					end
 
 					# write and next if it is a TDD
 					if Labeler.tdd?(h) then
-						tdd_path = "#{path}/TDDs"
-						OS.mkdir(tdd_path)
-						tdd_geom = TDD.write_tdd(tdd_path,h)
-						if tdd_geom then
-							File.open(filename,'w+'){ |f|
-								f.write tdd_geom
-							}
-						end
+						TDD.write_tdd("#{path}/TDDs",h)
 						next
 					end
-
 
 					instances.each do |inst| #include the nested components
 						geom_string=geom_string+self.get_component_string(" ./",inst,Utilities.fix_name(inst.definition.name))
@@ -746,7 +763,7 @@ module IGD
 							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
 							tr.each_with_index{|t,index|
 								File.open("#{path}/Illums/#{hName}_#{index}.rad",'w'){ |file|
-									info = self.get_transformed_rad_string(fc,t)
+									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_name(fc)}_#{index}")
 									file.write("void"+info[0])
 								}
 							}
@@ -755,7 +772,7 @@ module IGD
 							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
 							tr.each_with_index{|t,index|
 								File.open("#{path}/Windows/#{hName}_#{index}.rad",'w'){ |file|
-									info = self.get_transformed_rad_string(fc,t)
+									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_name(fc)}_#{index}")
 									file.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
 								}
 							}

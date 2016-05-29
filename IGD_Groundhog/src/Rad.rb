@@ -3,10 +3,57 @@ module IGD
 		module Rad
 			#This module calls Radiance for performing calculations
 
+			# Gets the String that reference all the Windows
+			# @author German Molina
+			# @return [String] All the files
 			def self.gather_windows
 				winstring=Dir["Windows/*"]
 				if winstring.length > 0 then
-					return  "./"+winstring.join(" ./").tr("\\","/")
+					return  "./"+winstring.join(" ./").gsub("\\","/")
+				end
+				return ""
+			end
+
+			# Gets the String that reference all the  TDDs
+			# @author German Molina
+			# @return [String] All the files
+			def self.gather_tdds
+				tdd_string=Dir["TDDs/*"]
+				if tdd_string.length > 0 then
+					return  "./"+tdd_string.join(" ./").gsub("\\","/")
+				end
+				return ""
+			end
+
+			# Gets the String that reference all the top lenses of the TDDs
+			# @author German Molina
+			# @return [String] All the files
+			def self.gather_tdd_tops
+				tdd_string=Dir["TDDs/*.top"]
+				if tdd_string.length > 0 then
+					return  "./"+tdd_string.join(" ./").gsub("\\","/")
+				end
+				return ""
+			end
+
+			# Gets the String that reference all the bottom lenses of the TDDs
+			# @author German Molina
+			# @return [String] All the files
+			def self.gather_tdd_bottoms
+				tdd_string=Dir["TDDs/*.bottom"]
+				if tdd_string.length > 0 then
+					return  "./"+tdd_string.join(" ./").gsub("\\","/")
+				end
+				return ""
+			end
+
+			# Gets the String that reference all the pipes of the TDDs
+			# @author German Molina
+			# @return [String] All the files
+			def self.gather_tdd_pipes
+				tdd_string=Dir["TDDs/*.pipe"]
+				if tdd_string.length > 0 then
+					return  "./"+tdd_string.join(" ./").gsub("\\","/")
 				end
 				return ""
 			end
@@ -55,20 +102,11 @@ module IGD
 				script=[]
 
 				FileUtils.cd(path) do
-					file=Config.weather_path
-					file = Config.ask_for_weather_file if not file
-
-					#if it is nil or (not epw and not wea)
-					if not file or (file.split(".").pop!='wea' and file.split(".").pop != 'epw') then
-						file = Config.ask_for_weather_file
-						return false if not file
+					file="./Skies/weather.wea"
+					if not File.exist? file then
+						UI.messagebox "Please set up a Weather File.\n This is done in the Groundhog/Preferences/Project tab."
+						return false
 					end
-					file = file.gsub(" ","\\ ")
-
-					extension = file.split(".").pop
-					weaname = file.tr("//","/").split("/").pop.split(".").shift
-					script << "#{OS.program("epw2wea")} #{file} #{weaname}.wea" if extension=="epw"
-					FileUtils.cp(file,"#{weaname}.wea") if extension=="wea"
 
 					#Calculate DC matrices
 					case Config.annual_calculation_method
@@ -89,9 +127,9 @@ module IGD
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#OSX
-						script << "#{OS.program("gendaymtx")} -m #{Config.sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("gendaymtx")} -m #{Config.sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} Skies/weather.wea | dctimestep DC/#{name}.dc | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
 						#WIN
-						script << "#{OS.program("gendaymtx")} -m #{Config.sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} #{weaname}.wea | dctimestep DC/#{name}.dmx | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("gendaymtx")} -m #{Config.sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} Skies/weather.wea | dctimestep DC/#{name}.dc | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
 					end
 				end
 				return script
@@ -105,7 +143,7 @@ module IGD
 				path=OS.tmp_groundhog_path
 
 				FileUtils.cd(path) do
-					if not File.directory?("Workplanes")
+					if not File.directory?("Workplanes") then
 						UI.messagebox("There are no workplanes to calculate")
 						return false
 					end
@@ -117,33 +155,114 @@ module IGD
 						f.write(Exporter.white_sky(Config.sky_bins))
 					}
 
-
 					#build the script
 					script=[]
 
 					# first, the workplanes to the sky... this will not add the TDDs contribution
 					wps=Dir["Workplanes/*.pts"]
-					wps.each do |workplane|
+					wps.each { |workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						script << "#{OS.program("rfluxmtx")} -I+ #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}.dmx"
-					end
-=begin
-					# second, the TDD contrubution... for which:
-					### First, the Daylight matrix
-					tdds=Dir["TDDs/*.rad"] #get all the TDDs.
-					tdds.each do |tdd|
-						info=tdd.split("/")
-						name=info[1].split(".")[0]
-						sender = "TDDs/pieces/#{name}_top_lens.rad"
-						script << "#{OS.program("rfluxmtx")} #{Config.rcontrib_options} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > TDD/#{name}.dmx"
-					end
-=end
+						nsensors = File.readlines(workplane).length
+						script << "#{OS.program("rfluxmtx")} -I+ -y #{nsensors} #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.dc"
+					}
 
+					#second, add the TDD contribution if exists.
+					script += self.calc_TDD_contributions if File.directory? "TDDs"
+
+
+					#Third, calculate the total contribution
+					unique_tdds=Dir["TDDs/*.pipe"].map{|x| x.split("/").pop.split(".").shift.split("-").pop}.uniq
+					wps.each {|workplane|
+						info=workplane.split("/")
+						name=info[1].split(".")[0]
+						wp_name = Utilities.fix_name(name)
+						all_tdds = ["DC/#{wp_name}-sky.dc"]
+						unique_tdds.each{|tdd_name|
+							index = 0
+							while File.file? "TDDs/#{index}-#{tdd_name}.pipe" do
+								all_tdds << "DC/#{wp_name}-#{index}-#{tdd_name}.dc"
+								index+=1
+							end
+						}
+
+						script << "#{OS.program("rmtxop")} #{all_tdds.join(" + ")} > DC/#{wp_name}.dc"
+					}
 					return script
-				end
+				end				
 			end
 
+			def self.calc_TDD_contributions
+				script = []
+				unique_tdds=Dir["TDDs/*.pipe"].map{|x| x.split("/").pop.split(".").shift.split("-").pop}.uniq
+				wps=Dir["Workplanes/*.pts"]
+				### First, the Daylight matrix
+				tdds=Dir["TDDs/*.top"] #get all the TDD tops.
+				if Config.tdd_singledaymtx then
+					sender = tdds.shift
+					info=sender.split("/")
+					name=info[1].split(".")[0]
+					script << "#{OS.program("rfluxmtx")} #{Config.rcontrib_options} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/ALL_TDDs-sky.mtx"
+				else
+					tdds.each do |sender|
+						info=sender.split("/")
+						name=info[1].split(".")[0]
+						script << "#{OS.program("rfluxmtx")} #{Config.rcontrib_options} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.mtx"
+					end
+				end
+
+				### Second, calculate the View matrices
+				wps.each do |workplane|
+					bottoms = ""
+					info=workplane.split("/")
+					name=info[1].split(".")[0]
+					wp_name = Utilities.fix_name(name)
+					nsensors = File.readlines(workplane).length
+
+					Dir["TDDs/*.bottom"].each{|bottom| #get all the TDD bottoms.
+						info=bottom.split("/")
+						tdd_name=info[1].split(".")[0]
+						bottoms += "\#@rfluxmtx h=kf u=Y o=DC/#{wp_name}-#{tdd_name}.vmx\n\n"
+						bottoms += File.open(bottom, "rb").read
+					}
+
+					File.open("DC/#{wp_name}_receiver.rad",'w'){|x| x.puts bottoms}
+
+					script << "#{OS.program("rfluxmtx")} -y #{nsensors} -I+ #{Config.rcontrib_options} < #{workplane} - DC/#{wp_name}_receiver.rad Materials/materials.mat scene.rad #{self.gather_windows}"
+				end
+
+				### Third, calculate the flux matrix from one lens to the other.
+				unique_tdds.each{|x|
+					sender = "TDDs/#{x}_bottom.rad"
+					receiver = "TDDs/0-#{x}.top"
+					pipe = "TDDs/0-#{x}.pipe"
+					File.open(sender,'w'){|b|
+						b.puts "\#@rfluxmtx h=kf u=Y\n"
+						b.puts File.open("TDDs/0-#{x}.bottom", "rb").read
+					}
+					script << "#{OS.program("rfluxmtx")} #{Config.tdd_pipe_rfluxmtx} #{sender} #{receiver} #{pipe} > DC/#{x}-pipe.mtx"
+				}
+
+				### Fourth: Multiply all the parts of all TDDs
+				wps.each do |workplane|
+					info=workplane.split("/")
+					name=info[1].split(".")[0]
+					wp_name = Utilities.fix_name(name)
+					unique_tdds.each{|tdd_name|
+						index = 0
+						while File.file? "TDDs/#{index}-#{tdd_name}.pipe" do
+							top_lens_bsdf = "./TDDs/#{tdd_name}_top.xml" #has to match the one given in TDD.write_tdd
+							bottom_lens_bsdf= "./TDDs/#{tdd_name}_bottom.xml"
+							daymtx = "DC/#{index}-#{wp_name}-sky.mtx"
+							daymtx = "DC/ALL_TDDs-sky.mtx" if Config.tdd_singledaymtx
+							script << "#{OS.program("rmtxop")} DC/#{wp_name}-#{index}-#{tdd_name}.vmx #{bottom_lens_bsdf.strip} DC/#{tdd_name}-pipe.mtx #{top_lens_bsdf.strip} #{daymtx} > DC/#{wp_name}-#{index}-#{tdd_name}.dc"
+							index+=1
+						end
+					}
+
+				end
+				return script
+			end
 
 
 			# Writes the files and return the script for calculating the Actual illuminance
@@ -240,7 +359,7 @@ module IGD
 					script=[]
 
 					#oconv
-					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{self.gather_windows} > octree.oct"
+					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{self.gather_windows} #{self.gather_tdds} > octree.oct"
 					script << "#{OS.program("rvu")} #{Config.rvu_options} -vf Views/#{scene}.vf octree.oct"
 				end
 				return script

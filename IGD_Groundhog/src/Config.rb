@@ -14,7 +14,7 @@ module IGD
 				"RTRACE" => "-ab 4 -ad 512 -lw 1e-3",
 				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7,
 				"TERRAIN_OVERSIZE" => 4,
-				"TDD_PIPE_RFLUXMTX" => "-ab 9 -ad 1024",
+				"TDD_PIPE_RFLUXMTX" => "-ab 4 -ad 512 -lw 1e-3",
 				"PROJECT_NAME" => nil,
 				"EARLY" => 9.0,
 				"LATE" => 18.5,
@@ -22,7 +22,7 @@ module IGD
 				"MAX_ILLUMINANCE" => 2000,
 				"ANNUAL_CALCULATION_METHOD" => "DC",
 				"SKY_BINS" => 1,
-				"TDD_SINGLEDAYMTX" => "false",
+				"TDD_SINGLEDAYMTX" => "true",
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -276,6 +276,16 @@ module IGD
 				"#{OS.main_groundhog_path}/config"
 			end
 
+			# Returns true if
+			#
+			# @author German Molina
+			# @return [String] Configuration file path
+			# @version 0.1
+			def self.tdd_singledaymtx
+				ret = self.get_element("TDD_SINGLEDAYMTX")
+				return true if ret == "true"
+				return false if ret == "false"
+			end
 
 
 
