@@ -250,6 +250,7 @@ module IGD
 			# @return [Boolean] Success
 			def self.write_weather(path)
 				if Config.weather_path then
+					puts Config.weather_path
 					OS.mkdir(path)
 					w_extension = Config.weather_path.split(".").pop
 					if w_extension == 'wea' then

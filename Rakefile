@@ -23,6 +23,7 @@ task :test => [:win64] do
 	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog"
 	FileUtils.cp_r "IGD_Groundhog.rb","#{sketchup_plugin_dir}/IGD_Groundhog.rb"
 	FileUtils.cp_r "IGD_Groundhog","#{sketchup_plugin_dir}/IGD_Groundhog"
+	FileUtils.rm_rf("./IGD_Groundhog/src/Radiance")
 end
 
 
@@ -37,7 +38,6 @@ def compress(os)
 	FileUtils.cp_r radiance_version, "./IGD_Groundhog/src/Radiance"
 	puts `7z a -tzip Groundhog_#{os}.rbz @listfile.txt -x!.yardoc -x!*.DS_Store `
 	FileUtils.rm "listfile.txt"
-	FileUtils.rm_rf("./IGD_Groundhog/src/Radiance")
 end
 
 task :win64 => [:clean, :doc] do
