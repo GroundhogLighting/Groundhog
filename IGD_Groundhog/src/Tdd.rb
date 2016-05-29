@@ -17,7 +17,8 @@ module IGD
       # @version 0.1
       # @return [String] The material definition
       def self.pipe_material
-        "void metal default_tdd_pipe_mat\n0\n0\n5\t0.98\t0.98\t0.98\t0.99\t0\n\n"
+        r = Config.tdd_pipe_reflectance
+        "void metal default_tdd_pipe_mat\n0\n0\n5\t#{r}\t#{r}\t#{r}\t1\t0\n\n"
       end
 
 

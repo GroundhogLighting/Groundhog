@@ -117,7 +117,9 @@
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>RTRACE</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>-ab 4 -ad 512 -lw 1e-3</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>LUMINAIRE_SHAPE_THRESHOLD</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='float'>1.7</span><span class='comma'>,</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TERRAIN_OVERSIZE</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='int'>4</span><span class='comma'>,</span>
-	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_PIPE_RFLUXMTX</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>-ab 4 -ad 512 -lw 1e-3</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_DAYLIGHT_RFLUXMTX</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>-ab 4 -ad 128 -lw 1e-3</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_VIEW_RFLUXMTX</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>-ab 4 -ad 512 -lw 1e-3</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_PIPE_RFLUXMTX</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>-ab 4 -ad 128 -lw 1e-3</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>PROJECT_NAME</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='kw'>nil</span><span class='comma'>,</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>EARLY</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='float'>9.0</span><span class='comma'>,</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>LATE</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='float'>18.5</span><span class='comma'>,</span>
@@ -126,6 +128,7 @@
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ANNUAL_CALCULATION_METHOD</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DC</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SKY_BINS</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='int'>1</span><span class='comma'>,</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_SINGLEDAYMTX</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>true</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_PIPE_REFLECTANCE</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='float'>0.95</span><span class='comma'>,</span>
 <span class='rbrace'>}</span></pre></dd>
       
     </dl>
@@ -725,6 +728,54 @@ action_callback.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#tdd_daylight_rfluxmtx-class_method" title="tdd_daylight_rfluxmtx (class method)">+ (String) <strong>tdd_daylight_rfluxmtx</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the desired options for ray-tracing for a TDD daylight matrix.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tdd_pipe_reflectance-class_method" title="tdd_pipe_reflectance (class method)">+ (String) <strong>tdd_pipe_reflectance</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the desired options for a TDD pipe reflectance.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#tdd_pipe_rfluxmtx-class_method" title="tdd_pipe_rfluxmtx (class method)">+ (String) <strong>tdd_pipe_rfluxmtx</strong> </a>
     
 
@@ -765,6 +816,30 @@ action_callback.</p>
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns true if.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tdd_view_rfluxmtx-class_method" title="tdd_view_rfluxmtx (class method)">+ (String) <strong>tdd_view_rfluxmtx</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the desired options for ray-tracing for a TDD view matrix.</p>
 </div></span>
   
 </li>
@@ -911,13 +986,13 @@ action_callback.</p>
       <pre class="lines">
 
 
-170
-171
-172
-173</pre>
+194
+195
+196
+197</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 170</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 194</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_active_addons'>active_addons</span>
 	<span class='kw'>return</span> <span class='cvar'>@@config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ACTIVE_ADDONS</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='cvar'>@@config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ACTIVE_ADDONS</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -988,12 +1063,12 @@ action_callback.</p>
       <pre class="lines">
 
 
-136
-137
-138</pre>
+160
+161
+162</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 136</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 160</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_albedo'>albedo</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ALBEDO</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1063,12 +1138,12 @@ action_callback.</p>
       <pre class="lines">
 
 
-186
-187
-188</pre>
+210
+211
+212</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 186</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 210</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_annual_calculation_method'>annual_calculation_method</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ANNUAL_CALCULATION_METHOD</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1138,30 +1213,30 @@ action_callback.</p>
       <pre class="lines">
 
 
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96</pre>
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 76</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 100</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ask_for_weather_file'>ask_for_weather_file</span>
 	<span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='cvar'>@@config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WEATHER_PATH</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -1265,12 +1340,12 @@ action_callback.</p>
       <pre class="lines">
 
 
-275
-276
-277</pre>
+299
+300
+301</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 275</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 299</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_config_path'>config_path</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/config</span><span class='tstring_end'>&quot;</span></span>
@@ -1340,12 +1415,12 @@ action_callback.</p>
       <pre class="lines">
 
 
-61
-62
-63</pre>
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 61</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 64</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_desired_pixel_area'>desired_pixel_area</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DESIRED_PIXEL_AREA</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span>
@@ -1415,12 +1490,12 @@ action_callback.</p>
       <pre class="lines">
 
 
-230
-231
-232</pre>
+254
+255
+256</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 230</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 254</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_early'>early</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>EARLY</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span>
@@ -1491,12 +1566,12 @@ other modules</p>
       <pre class="lines">
 
 
-31
-32
-33</pre>
+34
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 31</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_config'>get_config</span>
 	<span class='cvar'>@@config</span>
@@ -1588,16 +1663,16 @@ other modules</p>
       <pre class="lines">
 
 
-40
-41
-42
 43
 44
 45
-46</pre>
+46
+47
+48
+49</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 43</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='cvar'>@@config</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span>
@@ -1671,12 +1746,12 @@ other modules</p>
       <pre class="lines">
 
 
-237
-238
-239</pre>
+261
+262
+263</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 237</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 261</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_late'>late</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>LATE</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span>
@@ -1747,18 +1822,18 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-260
-261
-262
-263
-264
-265
-266
-267
-268</pre>
+284
+285
+286
+287
+288
+289
+290
+291
+292</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 260</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 284</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_config'>load_config</span>
 	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_config_path'>config_path</span>
@@ -1834,12 +1909,12 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-214
-215
-216</pre>
+238
+239
+240</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 214</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 238</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_luminaire_shape_threshold'>luminaire_shape_threshold</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>LUMINAIRE_SHAPE_THRESHOLD</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1909,12 +1984,12 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-251
-252
-253</pre>
+275
+276
+277</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 251</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 275</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_max_illuminance'>max_illuminance</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>MAX_ILLUMINANCE</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span>
@@ -1984,12 +2059,12 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-244
-245
-246</pre>
+268
+269
+270</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 244</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 268</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_min_illuminance'>min_illuminance</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>MIN_ILLUMINANCE</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span>
@@ -2059,12 +2134,12 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-101
-102
-103</pre>
+125
+126
+127</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 125</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_radiance_path'>radiance_path</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/src/Radiance/bin</span><span class='tstring_end'>&quot;</span></span>
@@ -2134,12 +2209,12 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-122
-123
-124</pre>
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 122</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 146</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_raypath'>raypath</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/src/Radiance/lib</span><span class='tstring_end'>&quot;</span></span>
@@ -2209,12 +2284,12 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-207
-208
-209</pre>
+231
+232
+233</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 207</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 231</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rcontrib_options'>rcontrib_options</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>RCONTRIB</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -2284,12 +2359,12 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-200
-201
-202</pre>
+224
+225
+226</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 200</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 224</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rtrace_options'>rtrace_options</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>RTRACE</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -2359,12 +2434,12 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-179
-180
-181</pre>
+203
+204
+205</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 179</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 203</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rvu_options'>rvu_options</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>RVU</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -2454,14 +2529,14 @@ not exist, it ask you to fill it.</p>
       <pre class="lines">
 
 
-161
-162
-163
-164
-165</pre>
+185
+186
+187
+188
+189</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 161</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 185</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_set_active_addons'>set_active_addons</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
 	 <span class='cvar'>@@config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ACTIVE_ADDONS</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_msg'>msg</span>
@@ -2554,14 +2629,14 @@ configured by the user.</p>
       <pre class="lines">
 
 
-151
-152
-153
-154
-155</pre>
+175
+176
+177
+178
+179</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 151</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 175</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_set_weather_path'>set_weather_path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	 <span class='cvar'>@@config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WEATHER_PATH</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_path'>path</span>
@@ -2615,20 +2690,20 @@ configured by the user.</p>
       <pre class="lines">
 
 
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117</pre>
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 107</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 131</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_setup_radiance'>setup_radiance</span>
 	<span class='comment'># ADD RADIANCE_PATH
@@ -2722,30 +2797,6 @@ configured by the user.</p>
       <pre class="lines">
 
 
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
 321
 322
 323
@@ -2760,10 +2811,34 @@ configured by the user.</p>
 332
 333
 334
-335</pre>
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 297</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 321</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_show_config'>show_config</span>
 
@@ -2869,15 +2944,165 @@ configured by the user.</p>
       <pre class="lines">
 
 
-193
-194
-195</pre>
+217
+218
+219</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 193</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 217</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_sky_bins'>sky_bins</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SKY_BINS</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="tdd_daylight_rfluxmtx-class_method">
+  
+    + (<tt>String</tt>) <strong>tdd_daylight_rfluxmtx</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the desired options for ray-tracing for a TDD daylight matrix</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The selected options</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+92
+93
+94</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 92</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_tdd_daylight_rfluxmtx'>tdd_daylight_rfluxmtx</span>
+	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_DAYLIGHT_RFLUXMTX</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="tdd_pipe_reflectance-class_method">
+  
+    + (<tt>String</tt>) <strong>tdd_pipe_reflectance</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the desired options for a TDD pipe reflectance</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The selected options</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+85
+86
+87</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 85</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_tdd_pipe_reflectance'>tdd_pipe_reflectance</span>
+	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_PIPE_REFLECTANCE</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2944,12 +3169,12 @@ configured by the user.</p>
       <pre class="lines">
 
 
-68
-69
-70</pre>
+71
+72
+73</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 68</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 71</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_tdd_pipe_rfluxmtx'>tdd_pipe_rfluxmtx</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_PIPE_RFLUXMTX</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -3035,19 +3260,94 @@ configured by the user.</p>
       <pre class="lines">
 
 
-284
-285
-286
-287
-288</pre>
+308
+309
+310
+311
+312</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 284</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 308</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_tdd_singledaymtx'>tdd_singledaymtx</span>
 	<span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_SINGLEDAYMTX</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_ret'>ret</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>true</span><span class='tstring_end'>&quot;</span></span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_ret'>ret</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>false</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="tdd_view_rfluxmtx-class_method">
+  
+    + (<tt>String</tt>) <strong>tdd_view_rfluxmtx</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the desired options for ray-tracing for a TDD view matrix</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The selected options</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+78
+79
+80</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 78</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_tdd_view_rfluxmtx'>tdd_view_rfluxmtx</span>
+	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDD_VIEW_RFLUXMTX</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -3114,12 +3414,12 @@ configured by the user.</p>
       <pre class="lines">
 
 
-143
-144
-145</pre>
+167
+168
+169</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 143</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 167</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_terrain_oversize'>terrain_oversize</span>
 	<span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_element'>get_element</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TERRAIN_OVERSIZE</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span>
@@ -3190,12 +3490,12 @@ configured by the user.</p>
       <pre class="lines">
 
 
-129
-130
-131</pre>
+153
+154
+155</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 129</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 153</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_weather_path'>weather_path</span>
 	<span class='cvar'>@@config</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>WEATHER_PATH</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
@@ -3247,15 +3547,15 @@ configured by the user.</p>
       <pre class="lines">
 
 
-51
-52
-53
 54
 55
-56</pre>
+56
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 51</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Config.rb', line 54</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_config_file'>write_config_file</span>
 	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_config_path'>config_path</span>
@@ -3273,7 +3573,7 @@ configured by the user.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun May 29 17:42:52 2016 by
+  Generated on Sun May 29 18:47:55 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

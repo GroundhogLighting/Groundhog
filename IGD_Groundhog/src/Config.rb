@@ -14,7 +14,9 @@ module IGD
 				"RTRACE" => "-ab 4 -ad 512 -lw 1e-3",
 				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7,
 				"TERRAIN_OVERSIZE" => 4,
-				"TDD_PIPE_RFLUXMTX" => "-ab 4 -ad 512 -lw 1e-3",
+				"TDD_DAYLIGHT_RFLUXMTX" => "-ab 4 -ad 128 -lw 1e-3",
+				"TDD_VIEW_RFLUXMTX" => "-ab 4 -ad 512 -lw 1e-3",
+				"TDD_PIPE_RFLUXMTX" => "-ab 4 -ad 128 -lw 1e-3",
 				"PROJECT_NAME" => nil,
 				"EARLY" => 9.0,
 				"LATE" => 18.5,
@@ -23,6 +25,7 @@ module IGD
 				"ANNUAL_CALCULATION_METHOD" => "DC",
 				"SKY_BINS" => 1,
 				"TDD_SINGLEDAYMTX" => "true",
+				"TDD_PIPE_REFLECTANCE" => 0.95,
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -67,6 +70,27 @@ module IGD
 			# @return [String] The selected options
 			def self.tdd_pipe_rfluxmtx
 				self.get_element("TDD_PIPE_RFLUXMTX")
+			end
+
+			# Returns the desired options for ray-tracing for a TDD view matrix
+			# @author German Molina
+			# @return [String] The selected options
+			def self.tdd_view_rfluxmtx
+				self.get_element("TDD_VIEW_RFLUXMTX")
+			end
+
+			# Returns the desired options for a TDD pipe reflectance
+			# @author German Molina
+			# @return [String] The selected options
+			def self.tdd_pipe_reflectance
+				self.get_element("TDD_PIPE_REFLECTANCE")
+			end
+
+			# Returns the desired options for ray-tracing for a TDD daylight matrix
+			# @author German Molina
+			# @return [String] The selected options
+			def self.tdd_daylight_rfluxmtx
+				self.get_element("TDD_DAYLIGHT_RFLUXMTX")
 			end
 
 

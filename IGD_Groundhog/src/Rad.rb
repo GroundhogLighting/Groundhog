@@ -170,7 +170,6 @@ module IGD
 					#second, add the TDD contribution if exists.
 					script += self.calc_TDD_contributions if File.directory? "TDDs"
 
-
 					#Third, calculate the total contribution
 					unique_tdds=Dir["TDDs/*.pipe"].map{|x| x.split("/").pop.split(".").shift.split("-").pop}.uniq
 					wps.each {|workplane|
@@ -189,7 +188,7 @@ module IGD
 						script << "#{OS.program("rmtxop")} #{all_tdds.join(" + ")} > DC/#{wp_name}.dc"
 					}
 					return script
-				end				
+				end
 			end
 
 			def self.calc_TDD_contributions
@@ -202,12 +201,12 @@ module IGD
 					sender = tdds.shift
 					info=sender.split("/")
 					name=info[1].split(".")[0]
-					script << "#{OS.program("rfluxmtx")} #{Config.rcontrib_options} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/ALL_TDDs-sky.mtx"
+					script << "#{OS.program("rfluxmtx")} #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/ALL_TDDs-sky.mtx"
 				else
 					tdds.each do |sender|
 						info=sender.split("/")
 						name=info[1].split(".")[0]
-						script << "#{OS.program("rfluxmtx")} #{Config.rcontrib_options} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.mtx"
+						script << "#{OS.program("rfluxmtx")} #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.mtx"
 					end
 				end
 
@@ -228,7 +227,7 @@ module IGD
 
 					File.open("DC/#{wp_name}_receiver.rad",'w'){|x| x.puts bottoms}
 
-					script << "#{OS.program("rfluxmtx")} -y #{nsensors} -I+ #{Config.rcontrib_options} < #{workplane} - DC/#{wp_name}_receiver.rad Materials/materials.mat scene.rad #{self.gather_windows}"
+					script << "#{OS.program("rfluxmtx")} -y #{nsensors} -I+ #{Config.tdd_view_rfluxmtx} < #{workplane} - DC/#{wp_name}_receiver.rad Materials/materials.mat scene.rad #{self.gather_windows}"
 				end
 
 				### Third, calculate the flux matrix from one lens to the other.
@@ -335,9 +334,9 @@ module IGD
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#for OSX
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)/100' >> Results/#{name}.txt" if OS.getsystem=="MAC"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)/100' > Results/#{name}.txt" if OS.getsystem=="MAC"
 						#for Windows
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)/100\" >> Results/#{name}.txt" if OS.getsystem=="WIN"
+						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)/100\" > Results/#{name}.txt" if OS.getsystem=="WIN"
 					end
 
 				end
@@ -504,6 +503,7 @@ module IGD
 
 
 				wd.add_action_callback("onLoad") do |web_dialog,msg|
+					puts self.load_metrics
 					web_dialog.execute_script(self.load_metrics)
 				end
 
