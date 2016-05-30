@@ -250,14 +250,13 @@ module IGD
 			# @return [Boolean] Success
 			def self.write_weather(path)
 				if Config.weather_path then
-					puts Config.weather_path
 					OS.mkdir(path)
 					w_extension = Config.weather_path.split(".").pop
 					if w_extension == 'wea' then
 						File.open("#{path}/Skies/weather.#{w_extension}",'w'){|file| File.readlines(Config.weather_path).each{|x| file.puts x}}
 					elsif w_extension == 'epw' then
 						epw2wea = OS.program("epw2wea")
-						OS.run_command("#{epw2wea} #{Config.weather_path.gsub(" ","\\ ")} #{path.gsub(" ","\\ ")}/weather.wea")
+						OS.run_command("#{epw2wea} \"#{Config.weather_path}\" \"#{path}/weather.wea\"")
 					else
 						UI.messagebox "Unkown weather file format!"
 						return false

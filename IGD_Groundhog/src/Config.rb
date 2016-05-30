@@ -108,7 +108,7 @@ module IGD
 				end
 				path = UI.openpanel("Choose a weather file", path, "weather file (.epw, .wea) | *.epw; *.wea ||")
 				return false if not path
-				#return path.tr("\\","/") if not check
+				return path.gsub("\\","/") 
 
 				while path.split('.').pop!='epw' and path.split('.').pop!='wea' do
 					UI.messagebox("Invalid file extension. Please input a WEA or EPW file")

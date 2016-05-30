@@ -42,4 +42,4 @@ function calc_UDI(){
 }
 
 window.location.href = 'skp:onLoad@.';
-load_rvu_views();
+//load_rvu_views();

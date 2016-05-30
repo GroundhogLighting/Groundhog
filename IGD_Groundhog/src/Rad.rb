@@ -503,7 +503,6 @@ module IGD
 
 
 				wd.add_action_callback("onLoad") do |web_dialog,msg|
-					puts self.load_metrics
 					web_dialog.execute_script(self.load_metrics)
 				end
 
