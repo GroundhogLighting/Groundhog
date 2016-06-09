@@ -14,7 +14,7 @@
 					<a class="selected" href="#project">Project</a>
 				</li>
 				<li>
-					<a href="#radiance">Radiance</a>
+					<a href="#radiance">Simulation</a>
 				</li>
 				<li>
 					<a href="#workplanes">Workplanes</a>
@@ -74,21 +74,11 @@
 			</div>
 
 			<div id="radiance" class="tabContent hide">
-				<h2>Radiance Preferences</h2>
+				<h2>Simulation Preferences</h2>
 				<fieldset>
 					<legend>Radiance options</legend>
 
 					<table>
-						<!--tr>
-						<td>Radiance path</td>
-						<td><input type="text"  class="long" id="radiance_path">
-							<div class='option_info'>
-								?<div class="tooltip">
-									<p>Should be as follows: 'C:/Program Files (x86)/Radiance/bin'. That is, with "/" instead of "\", and without adding any program name (i.e. rad.exe). </p>
-								</div>
-							</div>
-						</td>
-					</tr-->
 						<tr>
 						<td>Rvu options</td>
 						<td><input type="text"  class="long"  id="rvu">
@@ -104,7 +94,7 @@
 						<td><input type="text"  class="long" id="rcontrib">
 							<div class='option_info'>
 								?<div class="tooltip">
-									<p>This is the program used in annual simulations</p>
+									<p>This is the program used in Daylight Coefficient simulations</p>
 								</div>
 							</div>
 						</td>
@@ -114,7 +104,7 @@
 						<td><input type="text" class="long"  id="rtrace">
 							<div class='option_info'>
 								?<div class="tooltip">
-									<p>This is the program used for static simulations (i.e. Daylight Factor, Actual Illuminance, etc.)</p>
+									<p>This is the program used for ray-tracing in static simulations (i.e. Daylight Factor, Actual Illuminance, etc.)</p>
 								</div>
 							</div>
 						</td>
@@ -123,13 +113,13 @@
 				</fieldset>
 
 				<fieldset>
-					<legend>Annual simulation options</legend>
+					<legend>Dynamic simulation options</legend>
 
 					<table>
 						<tr>
 							<td>Calculation method</td>
 							<td>
-								<select class="long" id='annual_calculation_method'>
+								<select class="long" id='dynamic_calculation_method'>
 									<option value="DC">Simple Daylight Coefficients</option>
 								</select>
 									<div class='option_info'>
@@ -142,7 +132,36 @@
 						<tr>
 							<td>Sky subdivition</td>
 							<td>
-								<input id='sky_bins' class="long" type='number' value='1' step='1' min='1'></input>
+								<input id='dynamic_sky_bins' class="long" type='number' value='1' step='1' min='1'></input>
+									<div class='option_info'>
+										?<div class="tooltip">
+											<p>The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305..</p>
+										</div>
+									</div>
+							</td>
+						</tr>
+
+					</table>
+
+				</fieldset>
+
+				<fieldset>
+					<legend>Static simulation options</legend>
+
+					<table>
+						<tr>
+							<td>Calculation method</td>
+							<td>
+								<select class="long" id='static_calculation_method'>
+									<option value="RTRACE">Ray-tracing</option>
+									<option value="DC">Simple Daylight Coefficients</option>
+								</select>								
+							</td>
+						</tr>
+						<tr>
+							<td>Sky subdivition</td>
+							<td>
+								<input id='static_sky_bins' class="long" type='number' value='1' step='1' min='1'></input>
 									<div class='option_info'>
 										?<div class="tooltip">
 											<p>The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305..</p>

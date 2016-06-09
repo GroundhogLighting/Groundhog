@@ -109,9 +109,7 @@ module IGD
 			# @param cmd [String] The command to execute.
 			# @return [Boolean] success
 			def self.run_command(cmd)
-				UI.messagebox("Either your Radiance configuration is incorrect or inexistent.\n\nPlease reconfigure.") if not Config.radiance_path
-				return false if Config.radiance_path == nil
-
+				
 				exit_status=""
 				warn ">> #{cmd}"
 				Sketchup.set_status_text cmd ,SB_PROMPT

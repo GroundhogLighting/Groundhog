@@ -22,8 +22,10 @@ module IGD
 				"LATE" => 18.5,
 				"MIN_ILLUMINANCE" => 300,
 				"MAX_ILLUMINANCE" => 2000,
-				"ANNUAL_CALCULATION_METHOD" => "DC",
-				"SKY_BINS" => 1,
+				"DYNAMIC_CALCULATION_METHOD" => "DC",
+				"STATIC_CALCULATION_METHOD" => "RTRACE",
+				"STATIC_SKY_BINS" => 1,
+				"DYNAMIC_SKY_BINS" => 1,
 				"TDD_SINGLEDAYMTX" => "true",
 				"TDD_PIPE_REFLECTANCE" => 0.95,
 			}
@@ -108,7 +110,7 @@ module IGD
 				end
 				path = UI.openpanel("Choose a weather file", path, "weather file (.epw, .wea) | *.epw; *.wea ||")
 				return false if not path
-				return path.gsub("\\","/") 
+				return path.gsub("\\","/")
 
 				while path.split('.').pop!='epw' and path.split('.').pop!='wea' do
 					UI.messagebox("Invalid file extension. Please input a WEA or EPW file")
@@ -151,7 +153,10 @@ module IGD
 			# @author German Molina
 			# @return [Depends] The weather path if successful, nil (false) if not.
 			def self.weather_path
-				@@config["WEATHER_PATH"]
+				path = @@config["WEATHER_PATH"]
+				return false if path ==""
+				return false if path == nil
+				return path
 			end
 
 			# Gets the albedo
@@ -207,15 +212,29 @@ module IGD
 			# Gets the Annual calculation method
 			# @author German Molina
 			# @return [String] The method
-			def self.annual_calculation_method
-				self.get_element("ANNUAL_CALCULATION_METHOD")
+			def self.dynamic_calculation_method
+				self.get_element("DYNAMIC_CALCULATION_METHOD")
 			end
 
-			# Gets the reinhart subdivition
+			# Gets the Static calculation method
+			# @author German Molina
+			# @return [String] The method
+			def self.static_calculation_method
+				self.get_element("STATIC_CALCULATION_METHOD")
+			end
+
+			# Gets the reinhart subdivition for dynamic simulation
 			# @author German Molina
 			# @return [Number] The reinhart subdivition
-			def self.sky_bins
-				self.get_element("SKY_BINS")
+			def self.dynamic_sky_bins
+				self.get_element("DYNAMIC_SKY_BINS")
+			end
+
+			# Gets the reinhart subdivition for static simulation
+			# @author German Molina
+			# @return [Number] The reinhart subdivition
+			def self.static_sky_bins
+				self.get_element("STATIC_SKY_BINS")
 			end
 
 			# Gets the preconfigured RTRACE options for calculations

@@ -6,6 +6,25 @@ module IGD
 		# entities with a certain label.
 		module Utilities
 
+			#  Assess the current CIE sky, using model's sun position and
+			#  a type of sky
+			#
+			# @author German Molina
+			# @return [String] The sky description
+			# @param sky_type [String] The file to read
+			def self.get_current_sky(sky_type)
+				sky = false
+				info=Sketchup.active_model.shadow_info
+				sun=info["SunDirection"]
+				floor=Geom::Vector3d.new(sun.x, sun.y, 0)
+				alt=sun.angle_between(floor).radians
+				azi=floor.angle_between(Geom::Vector3d.new(0,-1,0)).radians
+				azi=-azi if sun.x>0
+				if alt >= 3 then
+					sky="gensky -ang #{alt} #{azi} #{sky_type} -g #{Config.albedo}"
+				end
+				return sky
+			end
 
 			def self.mat_array_2_mat_string(mat_array,name)
 				ret=""
