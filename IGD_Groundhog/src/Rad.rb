@@ -358,7 +358,6 @@ module IGD
 			# @return [Array<String>] Script
 			def self.rvu(scene)
 				path=Sketchup.temp_dir
-
 				script=[] #
 				FileUtils.cd(path) do
 					#oconv
@@ -518,7 +517,8 @@ module IGD
 					next if not Exporter.export(Sketchup.temp_dir)
 					FileUtils.cd(Sketchup.temp_dir) do
 						begin
-							OS.execute_script(self.rvu(msg))
+							view = JSON.parse(msg)
+							OS.execute_script(self.rvu(view["scene"]))
 							OS.clear_actual_path
 						rescue Exception => ex
 							UI.messagebox ex
