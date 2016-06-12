@@ -146,7 +146,7 @@ module IGD
                 csv.puts "#{element[0]},#{element[1]}"
               }
               #Write header
-              csv.puts "Position X, Position Y, Position Z, Value (depends on the metric)"
+              csv.puts "Area (m2),Position X,Position Y,Position Z Value (depends on the metric)"
               #Write pixels
               pixels = group.entities.select{|x| Labeler.result_pixel?(x)}
               pixels.each do |pixel|
@@ -159,7 +159,7 @@ module IGD
                   center[1]+=pos[1]
                   center[2]+=pos[2]
                 }
-                csv.puts "#{(center[0]/nvertices).to_m},#{(center[1]/nvertices).to_m},#{(center[2]/nvertices).to_m},#{Labeler.get_value(pixel)}"
+                csv.puts "#{pixel.area/1550.0},#{(center[0]/nvertices).to_m},#{(center[1]/nvertices).to_m},#{(center[2]/nvertices).to_m},#{Labeler.get_value(pixel)}"
               end
             }
           end

@@ -166,7 +166,7 @@ module IGD
 						vertex.each_with_index{|v,index|
 							vp=vertex[index-1]
 							d=Math.sqrt((vp[0]-v[0])**2+(vp[1]-v[1])**2+(vp[2]-v[2])**2)
-							too_small = true if d<=1e-3 #this is SketchUp's tolerance in inches							
+							too_small = true if d<=1e-3 #this is SketchUp's tolerance in inches
 						}
 						next if too_small
 =end
@@ -368,31 +368,31 @@ module IGD
 			# @param wp [Workplane] The workplane to analyze
 			# @version 0.1
 			def self.get_workplane_statistics(wp)
-				return false if not IGD::Groundhog::Labeler.solved_workplane? wp
-				pixels = wp.entities.select{|x| IGD::Groundhog::Labeler.result_pixel? x}
+				return false if not Labeler.solved_workplane? wp
+				pixels = wp.entities.select{|x| Labeler.result_pixel? x}
 
 				count=pixels.length
 				sum=0
 				total_area = 0
-				max=IGD::Groundhog::Labeler.get_value(pixels[0])
+				max=Labeler.get_value(pixels[0])
 				min=max
 
 				pixels.each do |pixel|
-					value = IGD::Groundhog::Labeler.get_value(pixel)
+					value = Labeler.get_value(pixel)
 					area = pixel.area
 					max = value if value > max
 					min = value if value < min
 					sum += value*area
 					total_area += area
 				end
+
 				average = sum/total_area
 				ret = Hash.new
-
 				ret["min"] = min
 				ret["max"] = max
 				ret["average"]=average
-				ret["min_over_average"] = min/average
-				ret["min_over_max"] = min/max
+				ret["min_over_average"] = min==average ? 1 : min/average
+				ret["min_over_max"] = min==max ? 1 : min/max #fully shaded planes get a Max and Min of 0.
 				ret["nsensors"] = count
 				ret["total_area"] = total_area/1550.0 #transform into square meters from sqin
 				return ret

@@ -63,7 +63,7 @@ module IGD
 			# @param da [Boolean] Parameter that sais if we are calculating DA or UDI.
 			# @return [Boolean] Success
 			def self.calc_UDI(da)
-				path=OS.tmp_groundhog_path
+				path=Sketchup.temp_dir
 				FileUtils.cd(path) do
 					return false if not OS.execute_script(self.calc_annual_illuminance)
 					wps=Dir["Workplanes/*.pts"]
@@ -72,10 +72,10 @@ module IGD
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						values=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", Config.min_illuminance, max, Config.early, Config.late)
+						values=Results.annual_to_UDI("#{Sketchup.temp_dir}/Results/#{name}_DC.txt", "#{Sketchup.temp_dir}/Workplanes/#{name}.pts", Config.min_illuminance, max, Config.early, Config.late)
 						return if not values #if the format was wrong, for example
 
-						pixels = Utilities.readTextFile("#{OS.tmp_groundhog_path}/Workplanes/#{name}.pxl",",",0)
+						pixels = Utilities.readTextFile("#{Sketchup.temp_dir}/Workplanes/#{name}.pxl",",",0)
 						metric = "U.D.I."
 						metric = "Daylight authonomy" if da
 						Results.draw_pixels(values,pixels,name.tr("_"," "),metric)
@@ -98,7 +98,7 @@ module IGD
 			# @author German Molina
 			# @return [Boolean] Success
 			def self.calc_annual_illuminance
-				path=OS.tmp_groundhog_path
+				path=Sketchup.temp_dir
 				script=[]
 
 				FileUtils.cd(path) do
@@ -127,9 +127,15 @@ module IGD
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#OSX
-						script << "#{OS.program("gendaymtx")} -m #{Config.dynamic_sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} Skies/weather.wea | dctimestep DC/#{name}.dc | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
+						script << "gendaymtx -m #{Config.dynamic_sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} Skies/weather.wea > tmp1.tmp"
+						script << "dctimestep DC/#{name}.dc tmp1.tmp > tmp2.tmp"
+						script << "rmtxop -fa tmp2.tmp > tmp3.tmp"
+						script << "rcollate -ho -oc 1 tmp3.tmp > tmp4.tmp "
+
+						#OSX
+						script << "rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' tmp4.tmp > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
 						#WIN
-						script << "#{OS.program("gendaymtx")} -m #{Config.dynamic_sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} Skies/weather.wea | dctimestep DC/#{name}.dc | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
+						script << "rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" tmp4.tmp > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
 					end
 				end
 				return script
@@ -142,7 +148,7 @@ module IGD
 			# @param bins [Integer] The number of MF Reinhart subdivitions
 			# @return [Array<String>] The Script if success, false if not.
 			def self.calc_DC(bins)
-				path=OS.tmp_groundhog_path
+				path=Sketchup.temp_dir
 
 				FileUtils.cd(path) do
 					if not File.directory?("Workplanes") then
@@ -182,7 +188,7 @@ module IGD
 							end
 						}
 
-						script << "#{OS.program("rmtxop")} #{all_tdds.join(" + ")} > DC/#{wp_name}.dc"
+						script << "rmtxop #{all_tdds.join(" + ")} > DC/#{wp_name}.dc"
 					}
 					return script
 				end
@@ -198,7 +204,7 @@ module IGD
 					info=workplane.split("/")
 					name=info[1].split(".")[0]
 					nsensors = File.readlines(workplane).length
-					script << "#{OS.program("rfluxmtx")} -I+ -y #{nsensors} #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.dc"
+					script << "rfluxmtx -I+ -y #{nsensors} #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.dc"
 				}
 				return script
 			end
@@ -217,12 +223,12 @@ module IGD
 					sender = tdds.shift
 					info=sender.split("/")
 					name=info[1].split(".")[0]
-					script << "#{OS.program("rfluxmtx")} #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/ALL_TDDs-sky.mtx"
+					script << "rfluxmtx #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/ALL_TDDs-sky.mtx"
 				else
 					tdds.each do |sender|
 						info=sender.split("/")
 						name=info[1].split(".")[0]
-						script << "#{OS.program("rfluxmtx")} #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.mtx"
+						script << "rfluxmtx #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.mtx"
 					end
 				end
 
@@ -243,7 +249,7 @@ module IGD
 
 					File.open("DC/#{wp_name}_receiver.rad",'w'){|x| x.puts bottoms}
 
-					script << "#{OS.program("rfluxmtx")} -y #{nsensors} -I+ #{Config.tdd_view_rfluxmtx} < #{workplane} - DC/#{wp_name}_receiver.rad Materials/materials.mat scene.rad #{self.gather_windows}"
+					script << "rfluxmtx -y #{nsensors} -I+ #{Config.tdd_view_rfluxmtx} < #{workplane} - DC/#{wp_name}_receiver.rad Materials/materials.mat scene.rad #{self.gather_windows}"
 				end
 
 				### Third, calculate the flux matrix from one lens to the other.
@@ -255,7 +261,7 @@ module IGD
 						b.puts "\#@rfluxmtx h=kf u=Y\n"
 						b.puts File.open("TDDs/0-#{x}.bottom", "rb").read
 					}
-					script << "#{OS.program("rfluxmtx")} #{Config.tdd_pipe_rfluxmtx} #{sender} #{receiver} #{pipe} > DC/#{x}-pipe.mtx"
+					script << "rfluxmtx #{Config.tdd_pipe_rfluxmtx} #{sender} #{receiver} #{pipe} > DC/#{x}-pipe.mtx"
 				}
 
 				### Fourth: Multiply all the parts of all TDDs
@@ -270,7 +276,7 @@ module IGD
 							bottom_lens_bsdf= "./TDDs/#{tdd_name}_bottom.xml"
 							daymtx = "DC/#{index}-#{wp_name}-sky.mtx"
 							daymtx = "DC/ALL_TDDs-sky.mtx" if Config.tdd_singledaymtx
-							script << "#{OS.program("rmtxop")} DC/#{wp_name}-#{index}-#{tdd_name}.vmx #{bottom_lens_bsdf.strip} DC/#{tdd_name}-pipe.mtx #{top_lens_bsdf.strip} #{daymtx} > DC/#{wp_name}-#{index}-#{tdd_name}.dc"
+							script << "rmtxop DC/#{wp_name}-#{index}-#{tdd_name}.vmx #{bottom_lens_bsdf.strip} DC/#{tdd_name}-pipe.mtx #{top_lens_bsdf.strip} #{daymtx} > DC/#{wp_name}-#{index}-#{tdd_name}.dc"
 							index+=1
 						end
 					}
@@ -286,7 +292,7 @@ module IGD
 			# @return [Array<String>] Script if succesfull, false if not.
 			def self.instant_illuminance(sky, lights_on, daytime)
 
-				path=OS.tmp_groundhog_path
+				path=Sketchup.temp_dir
 				script=[]
 
 				FileUtils.cd(path) do
@@ -301,15 +307,17 @@ module IGD
 							f.write("!#{sky}\n\n")
 							f.write(Exporter.sky_complement)
 						}
-						script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad ./Skies/sky.rad #{self.gather_windows} > octree.oct"
+						script << "oconv ./Materials/materials.mat ./scene.rad ./Skies/sky.rad #{self.gather_windows} > octree.oct"
 						wps=Dir["Workplanes/*.pts"]
 						wps.each do |workplane|
 							info=workplane.split("/")
 							name=info[1].split(".")[0]
+							script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} > tmp1.tmp"
+
 							#for OSX
-							script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)' > Results/#{name}.txt" if OS.getsystem=="MAC"
+							script << "rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)' tmp1.tmp > Results/#{name}.txt" if OS.getsystem=="MAC"
 							#for Windows
-							script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)\" > Results/#{name}.txt" if OS.getsystem=="WIN"
+							script << "rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)\" tmp1.tmp > Results/#{name}.txt" if OS.getsystem=="WIN"
 						end
 					when "DC"
 						#UI.messagebox "This feature is still under development. We are sorry!"
@@ -331,9 +339,9 @@ module IGD
 						wps.each do |workplane|
 							info=workplane.split("/")
 							name=info[1].split(".")[0]
-							#wp_name = Utilities.fix_name(name)
-							#CROSS PLATFORM!
-							script << "rmtxop DC/#{name}.dc #{skyvecfile} | rmtxop -fa -c 47.4 119.9 11.6 - | rcollate -oc 1 -ho > Results/#{name}.txt"
+							script << "rmtxop DC/#{name}.dc #{skyvecfile} > tmp1.tmp "
+							script << "rmtxop -fa -c 47.4 119.9 11.6 tmp1.tmp > tmp2.tmp "
+							script << "rcollate -oc 1 -ho > Results/#{name}.txt"
 						end
 					else
 						UI.messagebox "Unkown method for calculating Instant Illuminance"
@@ -349,13 +357,13 @@ module IGD
 			# @param scene [String] The scene to review
 			# @return [Array<String>] Script
 			def self.rvu(scene)
-				path=OS.tmp_groundhog_path
+				path=Sketchup.temp_dir
 
 				script=[] #
 				FileUtils.cd(path) do
 					#oconv
-					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{self.gather_windows} #{self.gather_tdds} > octree.oct"
-					script << "#{OS.program("rvu")} #{Config.rvu_options} -vf Views/#{scene}.vf octree.oct"
+					script << "oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{self.gather_windows} #{self.gather_tdds} > octree.oct"
+					script << "rvu #{Config.rvu_options} -vf Views/#{scene}.vf octree.oct"
 				end
 				return script
 			end
@@ -507,8 +515,8 @@ module IGD
 				end
 
 				wd.add_action_callback("rvu") do |web_dialog,msg|
-					next if not Exporter.export(OS.tmp_groundhog_path)
-					FileUtils.cd(OS.tmp_groundhog_path) do
+					next if not Exporter.export(Sketchup.temp_dir)
+					FileUtils.cd(Sketchup.temp_dir) do
 						begin
 							OS.execute_script(self.rvu(msg))
 							OS.clear_actual_path
@@ -520,8 +528,8 @@ module IGD
 				end
 
 				wd.add_action_callback("calc_DF") do |web_dialog,msg|
-					next if not Exporter.export(OS.tmp_groundhog_path)
-					FileUtils.cd(OS.tmp_groundhog_path) do
+					next if not Exporter.export(Sketchup.temp_dir)
+					FileUtils.cd(Sketchup.temp_dir) do
 						begin
 							sky = "gensky -ang 45 40 -c -B 0.5586592 -g #{Config.albedo}"
 
@@ -537,7 +545,7 @@ module IGD
 
 							metric = "Daylight factor"
 							results.each do |res|
-								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt",metric)
+								Results.import_results("#{Sketchup.temp_dir}/Results/#{res}.txt",metric)
 							end
 							Utilities.remark_solved_workplanes(metric)
 							min_max=Results.get_min_max_from_model(metric)
@@ -552,9 +560,9 @@ module IGD
 
 				wd.add_action_callback("calc_instant_illuminance") do |web_dialog,msg|
 
-					next if not Exporter.export(OS.tmp_groundhog_path)
+					next if not Exporter.export(Sketchup.temp_dir)
 					options=JSON.parse(msg)
-					FileUtils.cd(OS.tmp_groundhog_path) do
+					FileUtils.cd(Sketchup.temp_dir) do
 						begin
 							sky = Utilities.get_current_sky(options["sky"])
 
@@ -570,7 +578,7 @@ module IGD
 
 							metric = "Instant illuminance"
 							results.each do |res|
-								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt",metric)
+								Results.import_results("#{Sketchup.temp_dir}/Results/#{res}.txt",metric)
 							end
 							Utilities.remark_solved_workplanes(metric)
 							min_max=Results.get_min_max_from_model(metric)
@@ -583,7 +591,7 @@ module IGD
 				end
 
 				wd.add_action_callback("calc_DA") do |web_dialog,msg|
-					next if not Exporter.export(OS.tmp_groundhog_path)
+					next if not Exporter.export(Sketchup.temp_dir)
 					self.calc_DA
 					metric = "Daylight authonomy"
 					Utilities.remark_solved_workplanes(metric)
@@ -593,7 +601,7 @@ module IGD
 				end
 
 				wd.add_action_callback("calc_UDI") do |web_dialog,msg|
-					next if not Exporter.export(OS.tmp_groundhog_path)
+					next if not Exporter.export(Sketchup.temp_dir)
 					self.calc_UDI(false)
 					metric="U.D.I."
 					Utilities.remark_solved_workplanes(metric)

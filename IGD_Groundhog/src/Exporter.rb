@@ -222,7 +222,6 @@ module IGD
 					model.start_operation( op_name,true )
 
 					#Export the faces and obtain the modifiers
-
 					mod_list=self.export_layers(path)
 					return false if not mod_list
 					return false if not self.export_modifiers(path,mod_list)
@@ -244,25 +243,15 @@ module IGD
 
 			# Writes the weather file in WEA format
 			# @author German Molina
-			# @version 1.0
+			# @version 2.0
 			# @param path [String] Directory to export the weather file
 			# @return [Boolean] Success
 			def self.write_weather(path)
-				if Config.weather_path then
-					OS.mkdir(path)
-					w_extension = Config.weather_path.split(".").pop
-					if w_extension == 'wea' then
-						File.open("#{path}/Skies/weather.#{w_extension}",'w'){|file| File.readlines(Config.weather_path).each{|x| file.puts x}}
-					elsif w_extension == 'epw' then
-						epw2wea = OS.program("epw2wea")
-						OS.run_command("#{epw2wea} \"#{Config.weather_path}\" \"#{path}/weather.wea\"")
-					else
-						UI.messagebox "Unkown weather file format!"
-						return false
-					end
-				else
-					return true #success... nothing to do, though.
-				end
+				weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
+				return true if weather == nil
+				OS.mkdir(path)
+				weather = JSON.parse(weather)
+				Weather.write_wea(weather,1,12,"#{path}/weather.wea")
 			end
 
 
@@ -701,7 +690,6 @@ module IGD
 			# @author German Molina
 			# @version 0.6
 			# @param path [String] Directory to export the model (scene file)
-			# @param lights_on [Boolean] Lights will be exported as ON if true and OFF if false.
 			# @return [Boolean] Success
 			def self.export_component_definitions(path)
 				defi=Sketchup.active_model.definitions.select{|x| x.instances.count!=0}

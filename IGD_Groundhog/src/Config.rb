@@ -8,7 +8,6 @@ module IGD
 			@@default_config = {
 				"DESIRED_PIXEL_AREA" => 0.25,
 				"ALBEDO" => 0.2,
-				"WEATHER_PATH" => nil,
 				"RVU" => "-ab 3",
 				"RCONTRIB" => "-ab 4 -ad 512 -lw 1e-3",
 				"RTRACE" => "-ab 4 -ad 512 -lw 1e-3",
@@ -100,19 +99,10 @@ module IGD
 			# @author German Molina
 			# @return [String] The weather file path, False if not
 			def self.ask_for_weather_file
-				path = @@config["WEATHER_PATH"]
-				if path then
-					path=path.split("/")
-					path.pop
-					path=path.join("/")
-				else
-					path="c:/"
-				end
-				path = UI.openpanel("Choose a weather file", path, "weather file (.epw, .wea) | *.epw; *.wea ||")
+				path = UI.openpanel("Choose a weather file", "c:/", "weather file (.epw, .wea) | *.epw; *.wea ||")
 				return false if not path
-				return path.gsub("\\","/")
 
-				while path.split('.').pop!='epw' and path.split('.').pop!='wea' do
+				while path.split('.').pop!='epw' do
 					UI.messagebox("Invalid file extension. Please input a WEA or EPW file")
 					path = UI.openpanel("Choose a weather file", path, "*.epw; *.wea")
 					return false if not path
@@ -173,14 +163,26 @@ module IGD
 				self.get_element("TERRAIN_OVERSIZE").to_f
 			end
 
-			# Sets the path where the weather files are supposed to be stored... must be configured by the user.
+			# Opens, reads and parses a weather file. The file gets fixed into the model
 			# @author German Molina
-			# @param path [String] the path
+			# @param path [String] the path to the weather file
 			# @return void
-			def self.set_weather_path(path)
-				 @@config["WEATHER_PATH"] = path
-				#write the rad file
-				self.write_config_file
+			def self.set_weather(path)
+				return false if not path
+				if Sketchup.active_model.georeferenced? then
+					result = UI.messagebox('This model is already georeferenced. Choosing a weather file will overwrite this location.Do you want to continue?', MB_YESNO)
+					return false if result == IDNO
+				end
+				weather = Weather.parse_epw(path)
+				Sketchup.active_model.set_attribute("Groundhog","Weather",weather.to_json)
+				shadow_info = Sketchup.active_model.shadow_info
+				shadow_info["City"]=weather["city"]
+				shadow_info["Country"] = weather["country"]
+				shadow_info["Latitude"] = weather["latitude"]
+				shadow_info["Longitude"] = weather["longitude"]
+				shadow_info["TZOffset"] = weather["timezone"]
+
+				return true
 			end
 
 			# Sets the list of active addons
@@ -343,7 +345,7 @@ module IGD
 
 				wd=UI::WebDialog.new(
 					"Preferences", false, "",
-					595, 490, 100, 100, false )
+					595, 490, 100, 100, true )
 
 				wd.set_file("#{OS.main_groundhog_path}/src/html/preferences.html" )
 				wd.show
@@ -354,6 +356,16 @@ module IGD
 					@@default_config.each do |field|
 						id = field[0].downcase
 						script += Utilities.set_element_value(id,@@config,field[1])
+					end
+					weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
+					if weather != nil then
+						weather = JSON.parse(weather)
+						script += "document.getElementById('weather_city').innerHTML='#{weather["city"]}';"
+						script += "document.getElementById('weather_state').innerHTML='#{weather["state"]}';"
+						script += "document.getElementById('weather_country').innerHTML='#{weather["country"]}';"
+						script += "document.getElementById('weather_latitude').innerHTML='#{weather["latitude"]}';"
+						script += "document.getElementById('weather_longitude').innerHTML='#{weather["longitude"]}';"
+						script += "document.getElementById('weather_timezone').innerHTML='GMT #{weather["timezone"]}';"
 					end
 					script+="if(document.getElementById('tdd_singledaymtx').value == 'true'){document.getElementById('tdd_singledaymtx').checked=true;}"
 					web_dialog.execute_script(script);
@@ -370,8 +382,17 @@ module IGD
 
 				wd.add_action_callback("set_weather_path") do |web_dialog,msg|
 					path = self.ask_for_weather_file
-					if path then
-						web_dialog.execute_script("document.getElementById('weather_path').value='#{path}'")
+					self.set_weather(path)
+					weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
+					if weather != nil then
+						weather = JSON.parse(weather)
+						script = "document.getElementById('weather_city').innerHTML='#{weather["city"]}';"
+						script += "document.getElementById('weather_state').innerHTML='#{weather["state"]}';"
+						script += "document.getElementById('weather_country').innerHTML='#{weather["country"]}';"
+						script += "document.getElementById('weather_latitude').innerHTML='#{weather["latitude"]}';"
+						script += "document.getElementById('weather_longitude').innerHTML='#{weather["longitude"]}';"
+						script += "document.getElementById('weather_timezone').innerHTML='GMT #{weather["timezone"]}';"
+						web_dialog.execute_script(script)
 					end
 				end
 

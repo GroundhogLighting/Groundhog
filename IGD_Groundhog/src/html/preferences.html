@@ -8,50 +8,43 @@
 <link rel="stylesheet" type="text/css" href="css/tabs.css">
 <body>
 
+	<ul id="tabs">
+		<li>
+			<a class="selected" href="#project">Project</a>
+		</li>
+		<li>
+			<a href="#radiance">Simulation</a>
+		</li>
+		<li>
+			<a href="#workplanes">Workplanes</a>
+		</li>
+		<li>
+			<a href="#luminaires">Luminaires</a>
+		</li>
+		<li>
+			<a href="#terrain">Terrain</a>
+		</li>
+		<li>
+			<a href="#tdds">TDDs</a>
+		</li>
+	</ul>
 
-			<ul id="tabs">
-				<li>
-					<a class="selected" href="#project">Project</a>
-				</li>
-				<li>
-					<a href="#radiance">Simulation</a>
-				</li>
-				<li>
-					<a href="#workplanes">Workplanes</a>
-				</li>
-				<li>
-					<a href="#luminaires">Luminaires</a>
-				</li>
-				<li>
-					<a href="#terrain">Terrain</a>
-				</li>
-				<li>
-					<a href="#tdds">TDDs</a>
-				</li>
-
-			</ul>
 
 			<div id="project" class="tabContent">
 				<h2>Project Settings</h2>
 
-				<fieldset>
-					<legend>General Information</legend>
-				<table>
-					<!--tr>
-						<td>Project name</td>
-						<td><input class="long" type="text" id="project_name">
-						</td>
-					</tr-->
-					<tr>
-						<td>Weather file</td>
-						<td><input class="long" type = "text" id='weather_path' onclick='window.location.href = "skp:set_weather_path@msg"'></td>
-					</tr>
-					<!--tr>
-						<td>Client</td>
-						<td><input class="long" type = "text" id='client'></td>
-					</tr-->
+
+				<table id="weather_info" class="with_border">
+					<tr><td>City</td><td id="weather_city">not set</td></tr>
+					<tr><td>State</td><td id="weather_state">not set</td></tr>
+					<tr><td>Country</td><td id="weather_country">not set</td></tr>
+					<tr><td>Latitude</td><td id="weather_latitude">not set</td></tr>
+					<tr><td>Longitude</td><td id="weather_longitude">not set</td></tr>
+					<tr><td>Time Zone</td><td id="weather_timezone">not set</td></tr>
+
+					<a href="#" id='weather_path' onclick='window.location.href = "skp:set_weather_path@msg"'>CHANGE WEATHER FILE</a>
 					</table>
-				</fieldset><br>
+			<br>
 
 				<fieldset>
 					<legend>Working hours</legend>
@@ -155,7 +148,7 @@
 								<select class="long" id='static_calculation_method'>
 									<option value="RTRACE">Ray-tracing</option>
 									<option value="DC">Simple Daylight Coefficients</option>
-								</select>								
+								</select>
 							</td>
 						</tr>
 						<tr>
