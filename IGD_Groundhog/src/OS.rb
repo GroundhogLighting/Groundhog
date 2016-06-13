@@ -51,21 +51,11 @@ module IGD
 				array=dir.split("/")
 				array.push("support_files")
 				return File.join(array)
-			end
-
-			# Gets the path where a temporal Radiance project will be exported for analysis
-			# @author German Molina
-			# @return [String] The tmp groundhog path
-			def self.tmp_groundhog_path
-				dir=self.main_groundhog_path
-				array=dir.split("/")
-				array.push("tmp")
-				return File.join(array)
-			end
+			end	
 
 			# Gets the path where the Examples are stored
 			# @author German Molina
-			# @return [Void] The tmp groundhog path
+			# @return [Void] The examples groundhog path
 			def self.examples_groundhog_path
 				dir=self.main_groundhog_path
 				array=dir.split("/")
@@ -100,7 +90,7 @@ module IGD
 			# @version 0.3
 			# @author German Molina
 			def self.clear_actual_path
-				FileUtils.rm_rf(Dir.glob('./*'))
+				FileUtils.rm_rf(Dir.glob('./*'), secure: true)
 				return true
 			end
 
@@ -109,8 +99,6 @@ module IGD
 			# @param cmd [String] The command to execute.
 			# @return [Boolean] success
 			def self.run_command(cmd)
-				UI.messagebox("Either your Radiance configuration is incorrect or inexistent.\n\nPlease reconfigure.") if not Config.radiance_path
-				return false if Config.radiance_path == nil
 
 				exit_status=""
 				warn ">> #{cmd}"
@@ -145,15 +133,7 @@ module IGD
 				return true
 			end
 
-			# Receives the name of a program... adds .exe if necessary
-			# @author German Molina
-			# @param program [String] The name of the program to check
-			# @return [String] True if Radiance was installed... if not, it offers to do it, and return false
-			def self.program(program)
-				sys = self.getsystem
-				return program if sys == "MAC"
-				return "#{program}.exe" if sys == "WIN"
-			end
+
 
 
 		end

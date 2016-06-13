@@ -24,6 +24,10 @@ table.with_border tr:first-child,table.with_border td:first-child{
   font-weight: bold;
 }
 
+table#weather_info tr:first-child{
+  font-weight: normal;
+}
+
 h2{
     color: rgb(40,40,40);
 }

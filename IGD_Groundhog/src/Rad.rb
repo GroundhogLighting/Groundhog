@@ -63,7 +63,7 @@ module IGD
 			# @param da [Boolean] Parameter that sais if we are calculating DA or UDI.
 			# @return [Boolean] Success
 			def self.calc_UDI(da)
-				path=OS.tmp_groundhog_path
+				path=Sketchup.temp_dir
 				FileUtils.cd(path) do
 					return false if not OS.execute_script(self.calc_annual_illuminance)
 					wps=Dir["Workplanes/*.pts"]
@@ -72,10 +72,10 @@ module IGD
 					wps.each do |workplane| #calculate UDI for each workplane
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
-						values=Results.annual_to_UDI("#{OS.tmp_groundhog_path}/Results/#{name}_DC.txt", "#{OS.tmp_groundhog_path}/Workplanes/#{name}.pts", Config.min_illuminance, max, Config.early, Config.late)
+						values=Results.annual_to_UDI("#{Sketchup.temp_dir}/Results/#{name}_DC.txt", "#{Sketchup.temp_dir}/Workplanes/#{name}.pts", Config.min_illuminance, max, Config.early, Config.late)
 						return if not values #if the format was wrong, for example
 
-						pixels = Utilities.readTextFile("#{OS.tmp_groundhog_path}/Workplanes/#{name}.pxl",",",0)
+						pixels = Utilities.readTextFile("#{Sketchup.temp_dir}/Workplanes/#{name}.pxl",",",0)
 						metric = "U.D.I."
 						metric = "Daylight authonomy" if da
 						Results.draw_pixels(values,pixels,name.tr("_"," "),metric)
@@ -98,7 +98,7 @@ module IGD
 			# @author German Molina
 			# @return [Boolean] Success
 			def self.calc_annual_illuminance
-				path=OS.tmp_groundhog_path
+				path=Sketchup.temp_dir
 				script=[]
 
 				FileUtils.cd(path) do
@@ -109,13 +109,13 @@ module IGD
 					end
 
 					#Calculate DC matrices
-					case Config.annual_calculation_method
+					case Config.dynamic_calculation_method
 					when "DC"
-						dc=self.calc_DC
+						dc=self.calc_DC(Config.dynamic_sky_bins)
 						return false if not dc
 						script += dc
 					else
-						UI.messagebox "Calculation method not recognized when trying to calculate the Annual Illuminance"
+						UI.messagebox "Calculation method not recognized when trying to assess the Annual Illuminance"
 						return false
 					end
 
@@ -127,9 +127,15 @@ module IGD
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
 						#OSX
-						script << "#{OS.program("gendaymtx")} -m #{Config.sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} Skies/weather.wea | dctimestep DC/#{name}.dc | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
+						script << "gendaymtx -m #{Config.dynamic_sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} Skies/weather.wea > tmp1.tmp"
+						script << "dctimestep DC/#{name}.dc tmp1.tmp > tmp2.tmp"
+						script << "rmtxop -fa tmp2.tmp > tmp3.tmp"
+						script << "rcollate -ho -oc 1 tmp3.tmp > tmp4.tmp "
+
+						#OSX
+						script << "rcalc -e '$1=179*(0.265*$1+0.67*$2+0.065*$3)' tmp4.tmp > Results/#{name}_DC.txt" if OS.getsystem=="MAC"
 						#WIN
-						script << "#{OS.program("gendaymtx")} -m #{Config.sky_bins} -g #{Config.albedo} #{Config.albedo} #{Config.albedo} Skies/weather.wea | dctimestep DC/#{name}.dc | rmtxop -fa - | rcollate -ho -oc 1 | rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
+						script << "rcalc -e \"$1=179*(0.265*$1+0.67*$2+0.065*$3)\" tmp4.tmp > Results/#{name}_DC.txt" if OS.getsystem=="WIN"
 					end
 				end
 				return script
@@ -137,10 +143,12 @@ module IGD
 
 
 			# Exports the files and creates the script for calculating the simplest DC
+			# this will include the TDDs (if any) and the sky.
 			# @author German Molina
+			# @param bins [Integer] The number of MF Reinhart subdivitions
 			# @return [Array<String>] The Script if success, false if not.
-			def self.calc_DC
-				path=OS.tmp_groundhog_path
+			def self.calc_DC(bins)
+				path=Sketchup.temp_dir
 
 				FileUtils.cd(path) do
 					if not File.directory?("Workplanes") then
@@ -152,26 +160,21 @@ module IGD
 
 					#modify sky
 					File.open("Skies/sky.rad",'w+'){ |f| #The file is opened
-						f.write(Exporter.white_sky(Config.sky_bins))
+						f.write(Exporter.white_sky(Config.dynamic_sky_bins))
 					}
 
 					#build the script
 					script=[]
 
 					# first, the workplanes to the sky... this will not add the TDDs contribution
-					wps=Dir["Workplanes/*.pts"]
-					wps.each { |workplane|
-						info=workplane.split("/")
-						name=info[1].split(".")[0]
-						nsensors = File.readlines(workplane).length
-						script << "#{OS.program("rfluxmtx")} -I+ -y #{nsensors} #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.dc"
-					}
+					script += self.calc_SKY_contribition
 
 					#second, add the TDD contribution if exists.
 					script += self.calc_TDD_contributions if File.directory? "TDDs"
 
 					#Third, calculate the total contribution
 					unique_tdds=Dir["TDDs/*.pipe"].map{|x| x.split("/").pop.split(".").shift.split("-").pop}.uniq
+					wps=Dir["Workplanes/*.pts"]
 					wps.each {|workplane|
 						info=workplane.split("/")
 						name=info[1].split(".")[0]
@@ -185,12 +188,31 @@ module IGD
 							end
 						}
 
-						script << "#{OS.program("rmtxop")} #{all_tdds.join(" + ")} > DC/#{wp_name}.dc"
+						script << "rmtxop #{all_tdds.join(" + ")} > DC/#{wp_name}.dc"
 					}
 					return script
 				end
 			end
 
+			# Calculates the DC from the workplanes to the Sky, ignoring TDDs and Luminaires
+			# @author German Molina
+			# @return [Array<String>] The Script if success, false if not.
+			def self.calc_SKY_contribition
+				script = []
+				wps=Dir["Workplanes/*.pts"]
+				wps.each { |workplane|
+					info=workplane.split("/")
+					name=info[1].split(".")[0]
+					nsensors = File.readlines(workplane).length
+					script << "rfluxmtx -I+ -y #{nsensors} #{Config.rcontrib_options} < #{workplane} - Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.dc"
+				}
+				return script
+			end
+
+			# Calculates the DC from the workplanes to the sky THROUGH THE TDDs, ignoring
+			#  light entering thorugh windows and contribution from luminaires
+			# @author German Molina
+			# @return [Array<String>] The Script if success, false if not.
 			def self.calc_TDD_contributions
 				script = []
 				unique_tdds=Dir["TDDs/*.pipe"].map{|x| x.split("/").pop.split(".").shift.split("-").pop}.uniq
@@ -201,12 +223,12 @@ module IGD
 					sender = tdds.shift
 					info=sender.split("/")
 					name=info[1].split(".")[0]
-					script << "#{OS.program("rfluxmtx")} #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/ALL_TDDs-sky.mtx"
+					script << "rfluxmtx #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/ALL_TDDs-sky.mtx"
 				else
 					tdds.each do |sender|
 						info=sender.split("/")
 						name=info[1].split(".")[0]
-						script << "#{OS.program("rfluxmtx")} #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.mtx"
+						script << "rfluxmtx #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.mtx"
 					end
 				end
 
@@ -227,7 +249,7 @@ module IGD
 
 					File.open("DC/#{wp_name}_receiver.rad",'w'){|x| x.puts bottoms}
 
-					script << "#{OS.program("rfluxmtx")} -y #{nsensors} -I+ #{Config.tdd_view_rfluxmtx} < #{workplane} - DC/#{wp_name}_receiver.rad Materials/materials.mat scene.rad #{self.gather_windows}"
+					script << "rfluxmtx -y #{nsensors} -I+ #{Config.tdd_view_rfluxmtx} < #{workplane} - DC/#{wp_name}_receiver.rad Materials/materials.mat scene.rad #{self.gather_windows}"
 				end
 
 				### Third, calculate the flux matrix from one lens to the other.
@@ -239,7 +261,7 @@ module IGD
 						b.puts "\#@rfluxmtx h=kf u=Y\n"
 						b.puts File.open("TDDs/0-#{x}.bottom", "rb").read
 					}
-					script << "#{OS.program("rfluxmtx")} #{Config.tdd_pipe_rfluxmtx} #{sender} #{receiver} #{pipe} > DC/#{x}-pipe.mtx"
+					script << "rfluxmtx #{Config.tdd_pipe_rfluxmtx} #{sender} #{receiver} #{pipe} > DC/#{x}-pipe.mtx"
 				}
 
 				### Fourth: Multiply all the parts of all TDDs
@@ -254,7 +276,7 @@ module IGD
 							bottom_lens_bsdf= "./TDDs/#{tdd_name}_bottom.xml"
 							daymtx = "DC/#{index}-#{wp_name}-sky.mtx"
 							daymtx = "DC/ALL_TDDs-sky.mtx" if Config.tdd_singledaymtx
-							script << "#{OS.program("rmtxop")} DC/#{wp_name}-#{index}-#{tdd_name}.vmx #{bottom_lens_bsdf.strip} DC/#{tdd_name}-pipe.mtx #{top_lens_bsdf.strip} #{daymtx} > DC/#{wp_name}-#{index}-#{tdd_name}.dc"
+							script << "rmtxop DC/#{wp_name}-#{index}-#{tdd_name}.vmx #{bottom_lens_bsdf.strip} DC/#{tdd_name}-pipe.mtx #{top_lens_bsdf.strip} #{daymtx} > DC/#{wp_name}-#{index}-#{tdd_name}.dc"
 							index+=1
 						end
 					}
@@ -266,10 +288,11 @@ module IGD
 
 			# Writes the files and return the script for calculating the Actual illuminance
 			# @author German Molina
-			# @param options [Hash] A Hash with the sky type and the ground reflectance
+			# @param sky [String] A String with the sky command
 			# @return [Array<String>] Script if succesfull, false if not.
-			def self.instant_illuminance(options)
-				path=OS.tmp_groundhog_path
+			def self.instant_illuminance(sky, lights_on, daytime)
+
+				path=Sketchup.temp_dir
 				script=[]
 
 				FileUtils.cd(path) do
@@ -278,65 +301,51 @@ module IGD
 						return false
 					end
 
-					#sky can change from the wizard
-					info=Sketchup.active_model.shadow_info
-					sun=info["SunDirection"]
-					floor=Geom::Vector3d.new(sun.x, sun.y, 0)
-					alt=sun.angle_between(floor).radians
-					azi=floor.angle_between(Geom::Vector3d.new(0,-1,0)).radians
-					azi=-azi if sun.x>0
-					if alt >= 3 then
+					case Config.static_calculation_method
+					when "RTRACE"
 						File.open("Skies/sky.rad",'w+'){ |f| #The file is opened
-							f.write("!gensky -ang #{alt} #{azi} #{options["sky"]} -g #{Config.albedo}\n\n")
+							f.write("!#{sky}\n\n")
 							f.write(Exporter.sky_complement)
 						}
-					end
+						script << "oconv ./Materials/materials.mat ./scene.rad ./Skies/sky.rad #{self.gather_windows} > octree.oct"
+						wps=Dir["Workplanes/*.pts"]
+						wps.each do |workplane|
+							info=workplane.split("/")
+							name=info[1].split(".")[0]
+							script << "rtrace -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} > tmp1.tmp"
 
-					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad ./Skies/sky.rad #{self.gather_windows} > octree.oct"
-
-					wps=Dir["Workplanes/*.pts"]
-					wps.each do |workplane|
-						info=workplane.split("/")
-						name=info[1].split(".")[0]
-						#for OSX
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)' >> Results/#{name}.txt" if OS.getsystem=="MAC"
-						#for Windows
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)\" >> Results/#{name}.txt" if OS.getsystem=="WIN"
-					end
-
-				end
-				return script
-			end
-
-			# Writes the files and return the script for calculating the Daylight Factor
-			# @author German Molina
-			# @return [Array<String>] Script... FALSE if not success
-			def self.daylight_factor
-				path=OS.tmp_groundhog_path
-				script=[]
-				FileUtils.cd(path) do
-					if not File.directory?("Workplanes")
-						UI.messagebox("There are no workplanes to calculate")
+							#for OSX
+							script << "rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)' tmp1.tmp > Results/#{name}.txt" if OS.getsystem=="MAC"
+							#for Windows
+							script << "rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)\" tmp1.tmp > Results/#{name}.txt" if OS.getsystem=="WIN"
+						end
+					when "DC"
+						#UI.messagebox "This feature is still under development. We are sorry!"
+						#return true
+						skyvecfile = "skyvec.rad"
+						#generate the sky vector
+						File.open(skyvecfile,'w'){|s|
+							vec = self.genskyvec(Config.static_sky_bins, [0.960, 1.004, 1.118],true,true, sky)
+							warn vec.length
+							vec.each do |line|
+								s.puts line
+							end
+						}
+						# Calc DC
+						dc = self.calc_DC(Config.static_sky_bins)
+						return false if not dc
+						script += dc
+						wps=Dir["Workplanes/*.pts"]
+						wps.each do |workplane|
+							info=workplane.split("/")
+							name=info[1].split(".")[0]
+							script << "rmtxop DC/#{name}.dc #{skyvecfile} > tmp1.tmp "
+							script << "rmtxop -fa -c 47.4 119.9 11.6 tmp1.tmp > tmp2.tmp "
+							script << "rcollate -oc 1 -ho > Results/#{name}.txt"
+						end
+					else
+						UI.messagebox "Unkown method for calculating Instant Illuminance"
 						return false
-					end
-
-					#modify sky
-					File.open("Skies/sky.rad",'w+'){ |f| #The file is opened
-						f.write("!gensky -ang 45 40 -c -B 55.86592 -g #{Config.albedo}\n\n")
-						f.write("skyfunc glow skyglow\n0\n0\n4 1 1 1 0\n\nskyglow source skyball\n0\n0\n 4 0 0 1 360")
-					}
-
-					#oconv
-					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad #{self.gather_windows}  ./Skies/sky.rad  > octree.oct"
-
-					wps=Dir["Workplanes/*.pts"]
-					wps.each do |workplane|
-						info=workplane.split("/")
-						name=info[1].split(".")[0]
-						#for OSX
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e '$1=179*(0.265*$4+0.67*$5+0.065*$6)/100' > Results/#{name}.txt" if OS.getsystem=="MAC"
-						#for Windows
-						script << "#{OS.program("rtrace")} -h -I+ -af ambient.amb -oov #{Config.rtrace_options} octree.oct < #{workplane} | rcalc -e \"$1=179*(0.265*$4+0.67*$5+0.065*$6)/100\" > Results/#{name}.txt" if OS.getsystem=="WIN"
 					end
 
 				end
@@ -345,21 +354,15 @@ module IGD
 
 			# Creates the script for calling RVU and previewing the model
 			# @author German Molina
-			# @param msg [String] json with the options
+			# @param scene [String] The scene to review
 			# @return [Array<String>] Script
-			def self.rvu(msg)
-				options=JSON.parse(msg)
-				scene = options["scene"]
-				path=OS.tmp_groundhog_path
-
-				#success=false
+			def self.rvu(scene)
+				path=Sketchup.temp_dir
 				script=[] #
 				FileUtils.cd(path) do
-					script=[]
-
 					#oconv
-					script << "#{OS.program("oconv")} ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{self.gather_windows} #{self.gather_tdds} > octree.oct"
-					script << "#{OS.program("rvu")} #{Config.rvu_options} -vf Views/#{scene}.vf octree.oct"
+					script << "oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{self.gather_windows} #{self.gather_tdds} > octree.oct"
+					script << "rvu #{Config.rvu_options} -vf Views/#{scene}.vf octree.oct"
 				end
 				return script
 			end
@@ -511,10 +514,11 @@ module IGD
 				end
 
 				wd.add_action_callback("rvu") do |web_dialog,msg|
-					next if not Exporter.export(OS.tmp_groundhog_path, true)
-					FileUtils.cd(OS.tmp_groundhog_path) do
+					next if not Exporter.export(Sketchup.temp_dir)
+					FileUtils.cd(Sketchup.temp_dir) do
 						begin
-							OS.execute_script(self.rvu(msg))
+							view = JSON.parse(msg)
+							OS.execute_script(self.rvu(view["scene"]))
 							OS.clear_actual_path
 						rescue Exception => ex
 							UI.messagebox ex
@@ -524,12 +528,13 @@ module IGD
 				end
 
 				wd.add_action_callback("calc_DF") do |web_dialog,msg|
-					next if not Exporter.export(OS.tmp_groundhog_path,false) #lights off
-					FileUtils.cd(OS.tmp_groundhog_path) do
+					next if not Exporter.export(Sketchup.temp_dir)
+					FileUtils.cd(Sketchup.temp_dir) do
 						begin
-							OS.mkdir("Results")
-							OS.execute_script(self.daylight_factor)
+							sky = "gensky -ang 45 40 -c -B 0.5586592 -g #{Config.albedo}"
 
+							OS.mkdir("Results")
+							OS.execute_script(self.instant_illuminance(sky, false, true)) #lights off and daytime
 							wps=Dir["Workplanes/*.pts"]
 							results=[]
 							wps.each do |workplane|
@@ -540,7 +545,7 @@ module IGD
 
 							metric = "Daylight factor"
 							results.each do |res|
-								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt",metric)
+								Results.import_results("#{Sketchup.temp_dir}/Results/#{res}.txt",metric)
 							end
 							Utilities.remark_solved_workplanes(metric)
 							min_max=Results.get_min_max_from_model(metric)
@@ -555,12 +560,14 @@ module IGD
 
 				wd.add_action_callback("calc_instant_illuminance") do |web_dialog,msg|
 
-					next if not Exporter.export(OS.tmp_groundhog_path,true)
+					next if not Exporter.export(Sketchup.temp_dir)
 					options=JSON.parse(msg)
-					FileUtils.cd(OS.tmp_groundhog_path) do
+					FileUtils.cd(Sketchup.temp_dir) do
 						begin
+							sky = Utilities.get_current_sky(options["sky"])
+
 							OS.mkdir("Results")
-							OS.execute_script(self.instant_illuminance(options))
+							OS.execute_script(self.instant_illuminance(sky, options["lights_on"], options["daytime"]))
 							wps=Dir["Workplanes/*.pts"]
 							results=[]
 							wps.each do |workplane|
@@ -571,7 +578,7 @@ module IGD
 
 							metric = "Instant illuminance"
 							results.each do |res|
-								Results.import_results("#{OS.tmp_groundhog_path}/Results/#{res}.txt",metric)
+								Results.import_results("#{Sketchup.temp_dir}/Results/#{res}.txt",metric)
 							end
 							Utilities.remark_solved_workplanes(metric)
 							min_max=Results.get_min_max_from_model(metric)
@@ -584,7 +591,7 @@ module IGD
 				end
 
 				wd.add_action_callback("calc_DA") do |web_dialog,msg|
-					next if not Exporter.export(OS.tmp_groundhog_path, false)
+					next if not Exporter.export(Sketchup.temp_dir)
 					self.calc_DA
 					metric = "Daylight authonomy"
 					Utilities.remark_solved_workplanes(metric)
@@ -594,7 +601,7 @@ module IGD
 				end
 
 				wd.add_action_callback("calc_UDI") do |web_dialog,msg|
-					next if not Exporter.export(OS.tmp_groundhog_path, false)
+					next if not Exporter.export(Sketchup.temp_dir)
 					self.calc_UDI(false)
 					metric="U.D.I."
 					Utilities.remark_solved_workplanes(metric)
@@ -606,6 +613,171 @@ module IGD
 				wd.show()
 			end
 
+
+			def self.genskyvec(mf, skycolor, dosky, headout, sky)
+				OS.run_command "#{sky} > t.tmp"
+				skydesc = File.read("t.tmp")
+				FileUtils.rm("t.tmp")
+				if not skydesc then
+					warn "Error: No sky description!"
+					return false
+				end
+
+				#all these were defined in PERL
+				skydesc = skydesc.split( /\r?\n/ ) #this was created empty, and "pushed" each line.
+				lightline=false
+				sunval = []
+				sunline = false
+				skyOK = false
+				srcmod = false
+
+				skydesc.each_with_index {|line, index|
+					if line.include? "light" then
+						lightline = index
+						sunval = skydesc[index+3].split(" ")[1..4].map{|x| x.to_f}
+						srcmod = line.split(" ").pop
+					elsif line.include? "source"
+						sunline = index
+					elsif line.include? "skyfunc"
+						skyOK = true
+					end
+				}
+
+				# Strip out the solar source if present
+				sundir = false
+				if sunline then
+					sundir = skydesc[sunline+3].split(" ").map{|x| x.to_f}
+					sundir.shift
+					sundir = false if sundir[2] <= 0 #if the sun is below the horizon
+					#remove the sun... did not find how to splice (as in Perl)
+					5.times{skydesc.delete_at(sunline)}
+				end
+
+				# Reinhart sky sample generator
+				rhcal = 'DEGREE : PI/180;'
+				rhcal +='x1 = .5; x2 = .5;'
+				rhcal +='alpha : 90/(MF*7 + .5);'
+				rhcal +='tnaz(r) : select(r, 30, 30, 24, 24, 18, 12, 6);'
+				rhcal +='rnaz(r) : if(r-(7*MF-.5), 1, MF*tnaz(floor((r+.5)/MF) + 1));'
+				rhcal +='raccum(r) : if(r-.5, rnaz(r-1) + raccum(r-1), 0);'
+				rhcal +='RowMax : 7*MF + 1;'
+				rhcal +='Rmax : raccum(RowMax);'
+				rhcal +='Rfindrow(r, rem) : if(rem-rnaz(r)-.5, Rfindrow(r+1, rem-rnaz(r)), r);'
+				rhcal +='Rrow = if(Rbin-(Rmax-.5), RowMax-1, Rfindrow(0, Rbin));'
+				rhcal +='Rcol = Rbin - raccum(Rrow) - 1;'
+				rhcal +='Razi_width = 2*PI / rnaz(Rrow);'
+				rhcal +='RAH : alpha*DEGREE;'
+				rhcal +='Razi = if(Rbin-.5, (Rcol + x2 - .5)*Razi_width, 2*PI*x2);'
+				rhcal +='Ralt = if(Rbin-.5, (Rrow + x1)*RAH, asin(-x1));'
+				rhcal +='Romega = if(.5-Rbin, 2*PI, if(Rmax-.5-Rbin, '
+				rhcal +='	Razi_width*(sin(RAH*(Rrow+1)) - sin(RAH*Rrow)),'
+				rhcal +='	2*PI*(1 - cos(RAH/2)) ) );'
+				rhcal +='cos_ralt = cos(Ralt);'
+				rhcal +='Dx = sin(Razi)*cos_ralt;'
+				rhcal +='Dy = cos(Razi)*cos_ralt;'
+				rhcal +='Dz = sin(Ralt);'
+
+				nbins=false
+				octree="oct.tmp"
+				file = "sky.tmp"
+				tmp1 = "tmp1.tmp"
+				tmp2 = "tmp2.tmp"
+				tregcommand=false
+				suncmd=false
+				if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil then #if windows
+					OS.run_command "rcalc -n -e MF:#{mf} -e \"#{rhcal}\" -e \"\$1=Rmax+1\" > t.tmp"
+					nbins = File.read "t.tmp"
+					FileUtils.rm "t.tmp"
+					nbins = nbins.to_i
+					tregcommand = "cnt #{nbins} 16 | rcalc -e MF:#{mf} -e \"#{rhcal}\" "
+					tregcommand +="-e \"Rbin=$1;x1=rand(recno*.37-5.3);x2=rand(recno*-1.47+.86)\" "
+					tregcommand +="-e \"$1=0;$2=0;$3=0;$4=Dx;$5=Dy;$6=Dz\" "
+					tregcommand +=" | rtrace -h -ab 0 -w #{octree} | total -16 -m"
+					if sundir then
+						suncmd = "cnt  #{nbins-1}"
+						suncmd +=	" | rcalc -e MF:#{mf} -e \"#{rhcal}\" -e Rbin=recno "
+						suncmd +=	"-e \"dot=Dx*#{sundir[0]} + Dy*#{sundir[1]} + Dz*#{sundir[2]}\" "
+						suncmd +=	"-e \"cond=dot-.866\" "
+						suncmd +=	" -e \"$1=if(1-dot,acos(dot),0);$2=Romega;$3=recno\" "
+					end
+				else
+					OS.run_command "rcalc -n -e MF:#{mf} -e \'#{rhcal}\' -e \'\$1=Rmax+1\' > t.tmp"
+					nbins = File.read "t.tmp"
+					FileUtils.rm "t.tmp"
+					nbins = nbins.to_i
+					tregcommand = "cnt #{nbins} 16 | rcalc -of -e MF:#{mf} -e '#{rhcal}' "
+					tregcommand +="-e 'Rbin=$1;x1=rand(recno*.37-5.3);x2=rand(recno*-1.47+.86)' "
+					tregcommand +="-e '$1=0;$2=0;$3=0;$4=Dx;$5=Dy;$6=Dz' "
+					tregcommand +="| rtrace -h -ff -ab 0 -w #{octree} | total -if3 -16 -m "
+					if sundir then
+						suncmd = "cnt  #{nbins-1} "
+						suncmd +=" | rcalc -e MF:#{mf} -e '#{rhcal}' -e Rbin=recno "
+						suncmd +="-e 'dot=Dx*#{sundir[0]} + Dy*#{sundir[1]} + Dz*#{sundir[2]}' "
+						suncmd +="-e 'cond=dot-.866' "
+						suncmd +=" -e '$1=if(1-dot,acos(dot),0);$2=Romega;$3=recno'"
+					end
+				end
+				tregval = false
+				if dosky then
+					# Create octree for rtrace
+					File.open(file,'w'){|f|
+						f.puts skydesc
+						f.puts "skyfunc glow skyglow 0 0 4 #{skycolor.join(" ")} 0\n"
+						f.puts "skyglow source sky 0 0 4 0 0 1 360\n"
+					}
+					OS.run_command "oconv #{file} > #{octree}"
+
+					# Run rtrace and average output for every 16 samples
+					OS.run_command "#{tregcommand} > #{tmp1}"
+					tregval = File.readlines(tmp1)
+				else
+					nbins.times{tregval.push "0\t0\t0\n"}
+				end
+
+				if sundir then
+					somega = (sundir[3]/360)**2 * 3.141592654**3
+					OS.run_command "#{suncmd} > #{tmp2}"
+					bestdir = File.readlines(tmp2).map{|x| x.split(" ").map{|y| y.to_f}}
+					FileUtils.rm(tmp2)
+					bestdir = bestdir.sort {|a,b| a[0] <=> b[0]}
+
+					ang=[]
+					dom=[]
+					ndx=[]
+					wtot = 0
+					3.times{|i|
+						ang[i]=bestdir[i][0]
+						dom[i]=bestdir[i][1]
+						ndx[i]=bestdir[i][2]
+						wtot += 1.0/(ang[i]+0.02)
+					}
+					3.times{|i|
+						wt = 1.0/(ang[i]+0.02)/wtot * somega / dom[i]
+						scolor = tregval[ndx[i]].split(" ").map{|x| x.to_f}
+						3.times{|j| scolor[j] += wt * sunval[j] }
+						tregval[ndx[i]] = "#{scolor[0]}\t#{scolor[1]}\t#{scolor[2]}\n";
+					}
+				end
+
+					ret = []
+					# Output header if requested
+					if headout then
+						ret.push "#?RADIANCE"
+						ret.push "genskyvec ... to do."
+						ret.push "NROWS=#{tregval.length}"
+						ret.push "NCOLS=1"
+						ret.push "NCOMP=3"
+						ret.push "FORMAT=ascii"
+						ret.push ""
+					end
+					# Output our final vector
+					ret = ret + tregval
+					FileUtils.rm(file)
+					FileUtils.rm(octree)
+					FileUtils.rm(tmp1)
+
+					return ret
+			end #end genskyvec
 
 		end #end class
 	end #end module
