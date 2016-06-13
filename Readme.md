@@ -23,11 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses>.
 
 **Contact:** gmolina1@uc.cl
 
-## Suport scripts
-In [THIS REPOSITORY](https://github.com/IGD-Labs/GroundhogScripts) you will find
-support scripts for performing some tasks automatically in Linux computers or
-just outside of SketchUp.
-
 ## Groundhog philosophy
 The idea here is that people help on everything. From fixing the web-page and its
 tutorials, to enhancing the source code and proposing new ideas on what to add,
