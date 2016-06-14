@@ -5,6 +5,7 @@ module IGD
 		module Exporter
 
 
+
 			# Gets the path where the SketchUp model is saved. If it is not saved, it will return false.
 			# @author German Molina
 			# @version 1.0
@@ -590,7 +591,10 @@ module IGD
 							instances.each do |inst|
 								next if not inst.parent.is_a? Sketchup::Model
 								next if Labeler.tdd?(inst)
-								f.write(self.get_component_string(comp_path,inst,hName))
+								f.puts "#{self.get_component_string(inst)} #{comp_path}#{hName}.rad"
+								if Labeler.local_luminaire?(inst.definition) then
+									geom_string += "#{xform} ./Components/dat/#{Labeler.get_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, "./Components")
+								end
 							end
 						end
 					end
@@ -693,7 +697,6 @@ module IGD
 			# @return [Boolean] Success
 			def self.export_component_definitions(path)
 				defi=Sketchup.active_model.definitions.select{|x| x.instances.count!=0}
-				comp_path="#{path}/Components"
 
 				return true if defi.length == 0 #dont do anything if there are no components
 
@@ -703,7 +706,9 @@ module IGD
 					next if Labeler.solved_workplane?(h)
 					next if Labeler.illuminance_sensor?(h)
 
-					comp_path="#{path}/TDDs" if Labeler.tdd?(h)
+					folder = "Components"
+					folder="TDDs" if Labeler.tdd?(h)
+					comp_path="#{path}/#{folder}"
 
 					hName=Utilities.fix_name(h.name)
 					filename = "#{comp_path}/#{hName}.rad"
@@ -713,13 +718,14 @@ module IGD
 					instances=Utilities.get_component_instances(entities)
 
 					geom_string=""
-
+=begin
+					SECTION DEPRECATED BECAUSE NOW WE ASSUME EACH INSTANCE MAY HAVE DIFFERENT POWER INPUTS (A.K.A MULTIPLIER)
 					# Add the illum if it is a luminaire
 					if Labeler.local_luminaire?(h) then #add the illum
 						mult = 1.0
 						geom_string += Lamps.ies2rad(mult,h, comp_path)
 					end
-
+=end
 					# write and next if it is a TDD
 					if Labeler.tdd?(h) then
 						TDD.write_tdd("#{path}/TDDs",h)
@@ -727,7 +733,12 @@ module IGD
 					end
 
 					instances.each do |inst| #include the nested components
-						geom_string=geom_string+self.get_component_string(" ./",inst,Utilities.fix_name(inst.definition.name))
+						name = Utilities.fix_name(inst.definition.name)
+						xform = self.get_component_string(inst)
+						geom_string += "#{xform} ./#{name}.rad#{$/}"
+						if Labeler.local_luminaire?(inst.definition) then
+							geom_string += "#{xform} ./dat/#{Labeler.get_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, comp_path)
+						end
 					end
 					geom_string+="\n\n"
 
@@ -792,9 +803,10 @@ module IGD
 			# @version 0.4
 			# @param comp [Sketchup::ComponentInstance]
 			# @return [string] xform comand
-			def self.get_component_string(path,comp,name)
+			def self.get_component_string(comp)
 
 				t=comp.transformation.to_a
+				definition = comp.definition
 
 				x=t[12].to_m
 				y=t[13].to_m
@@ -808,7 +820,7 @@ module IGD
 				rz=Math::atan2(-t[4],t[0])
 
 
-				ret="!xform -rz "+rz.radians.to_s+" -ry "+ry.radians.to_s+" -rx "+rx.radians.to_s+" -t "+x.to_s+" "+y.to_s+" "+z.to_s+path+name+".rad\n"
+				ret="!xform -rz #{rz.radians} -ry #{ry.radians} -rx #{rx.radians} -t #{x} #{y} #{z}"
 
 				return ret
 			end

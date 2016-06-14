@@ -32,7 +32,7 @@ module IGD
 			def self.show_material_wizard
 				wd=UI::WebDialog.new(
 					"Materials", false, "",
-					530, 450, 100, 100, false )
+					530, 450, 100, 100, true )
 
 				wd.set_file("#{OS.main_groundhog_path}/src/html/materials_wizard.html" )
 
