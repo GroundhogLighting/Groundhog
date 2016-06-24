@@ -23,6 +23,34 @@ module IGD
 				return os
 			end
 
+			# Gets the path where the Radiance programs are installed.
+			# @author German Molina
+			# @return [String] The radiance bin path
+			def self.radiance_path
+				"#{self.main_groundhog_path}/src/Radiance/bin"
+			end
+
+			# Gets the path where the Radiance library is installed
+			# @author German Molina
+			# @return [String] The radiance bin path
+			def self.raypath
+				"#{OS.main_groundhog_path}/src/Radiance/lib"
+			end
+
+			# Adds the Radiance Path and the Raypath to the environmental variables.
+			# @author German Molina
+			def self.setup_radiance
+				# ADD RADIANCE_PATH
+				if self.radiance_path then
+					divider = ":"
+					divider = ";" if self.getsystem == "WIN"
+					ENV["PATH"]=self.radiance_path+divider << ENV["PATH"]
+					ENV["RAYPATH"] = "#{self.raypath}"
+				else
+					UI.messagebox "There was a problem loading Radiance"
+				end
+			end
+
 
 			# Creates a directory in the selected path
 			# @author German Molina

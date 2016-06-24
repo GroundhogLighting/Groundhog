@@ -32,7 +32,7 @@ module IGD
 				extension=""
 				extension= "_"+name if name
 				mat_array.each do |mat|
-					ret+=Exporter.get_mat_string(mat, Utilities.fix_name(mat.name)+extension)+"\n\n"
+					ret+=Materials.get_mat_string(mat, Utilities.fix_name(mat.name)+extension)+"\n\n"
 				end
 				return ret
 			end
@@ -381,7 +381,7 @@ module IGD
 			# @param entities [Array<SketchUp::Entities>]
 			# @return [Array <SketchUp::Entities>] An array with the entities that are SketchUp::ComponentDefinition
 			def self.get_workplanes(entities)
-				return entities.select{|x| Labeler.workplane? x}
+				return entities.select{|x| Labeler.get_label(x)=="workplane"}
 			end
 
 			# Gets the workplanes
@@ -389,7 +389,7 @@ module IGD
 			# @param entities [Array<SketchUp::Entities>]
 			# @return [Array <SketchUp::Entities>] An array with the entities that are SketchUp::ComponentDefinition
 			def self.get_solved_workplanes(entities)
-				return entities.select{|x| Labeler.solved_workplane? x}
+				return entities.select{|x| Labeler.get_label(x)=="solved_workplane"}
 			end
 
 

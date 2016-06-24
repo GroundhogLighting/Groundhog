@@ -115,7 +115,7 @@ module IGD
         ret = []
 
         OS.mkdir("#{path}/dat")
-        illum_file = File.open("#{path}/dat/#{Labeler.get_name(instance)}.rad",'w')
+        illum_file = File.open("#{path}/dat/#{Labeler.get_fixed_name(instance)}.rad",'w')
 
         illum_file.puts "### BEGINNING OF GROUNDHOG'S IES2RAD OUTPUT#{$/}#{$/}" if verbose
 

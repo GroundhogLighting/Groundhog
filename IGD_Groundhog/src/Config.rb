@@ -8,25 +8,11 @@ module IGD
 			@@default_config = {
 				"DESIRED_PIXEL_AREA" => 0.25,
 				"ALBEDO" => 0.2,
-				"RVU" => "-ab 3",
-				"RCONTRIB" => "-ab 4 -ad 512 -lw 1e-3",
-				"RTRACE" => "-ab 4 -ad 512 -lw 1e-3",
+				"RVU" => "-ab 3",			
 				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7,
-				"TERRAIN_OVERSIZE" => 4,
-				"TDD_DAYLIGHT_RFLUXMTX" => "-ab 4 -ad 128 -lw 1e-3",
-				"TDD_VIEW_RFLUXMTX" => "-ab 4 -ad 512 -lw 1e-3",
-				"TDD_PIPE_RFLUXMTX" => "-ab 4 -ad 128 -lw 1e-3",
+				"TERRAIN_OVERSIZE" => 4,			
 				"PROJECT_NAME" => nil,
-				"EARLY" => 8.0,
-				"LATE" => 18.0,
-				"MIN_ILLUMINANCE" => 300,
-				"MAX_ILLUMINANCE" => 2000,
-				"DYNAMIC_CALCULATION_METHOD" => "DC",
-				"STATIC_CALCULATION_METHOD" => "RTRACE",
-				"STATIC_SKY_BINS" => 1,
-				"DYNAMIC_SKY_BINS" => 1,
-				"TDD_SINGLEDAYMTX" => "true",
-				"TDD_PIPE_REFLECTANCE" => 0.95,
+				"TDD_PIPE_REFLECTANCE" => 0.95,			
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -65,7 +51,7 @@ module IGD
 			def self.desired_pixel_area
 				self.get_element("DESIRED_PIXEL_AREA").to_f
 			end
-
+=begin
 			# Returns the desired options for ray-tracing within a TDD pipe
 			# @author German Molina
 			# @return [String] The selected options
@@ -80,12 +66,7 @@ module IGD
 				self.get_element("TDD_VIEW_RFLUXMTX")
 			end
 
-			# Returns the desired options for a TDD pipe reflectance
-			# @author German Molina
-			# @return [String] The selected options
-			def self.tdd_pipe_reflectance
-				self.get_element("TDD_PIPE_REFLECTANCE")
-			end
+			
 
 			# Returns the desired options for ray-tracing for a TDD daylight matrix
 			# @author German Molina
@@ -93,52 +74,15 @@ module IGD
 			def self.tdd_daylight_rfluxmtx
 				self.get_element("TDD_DAYLIGHT_RFLUXMTX")
 			end
-
-
-			# Asks for a EPW or WEA file to be inputed.
+=end
+			# Returns the desired options for a TDD pipe reflectance
 			# @author German Molina
-			# @return [String] The weather file path, False if not
-			def self.ask_for_weather_file
-				path = UI.openpanel("Choose a weather file", "c:/", "weather file (.epw, .wea) | *.epw; *.wea ||")
-				return false if not path
-
-				while path.split('.').pop!='epw' do
-					UI.messagebox("Invalid file extension. Please input a WEA or EPW file")
-					path = UI.openpanel("Choose a weather file", path, "*.epw; *.wea")
-					return false if not path
-				end
-
-				return path
+			# @return [String] The selected options
+			def self.tdd_pipe_reflectance
+				self.get_element("TDD_PIPE_REFLECTANCE")
 			end
-
-			# Gets the path where the Radiance programs are installed.
-			# @author German Molina
-			# @return [String] The radiance bin path
-			def self.radiance_path
-				"#{OS.main_groundhog_path}/src/Radiance/bin"
-			end
-
-			# Adds the Radiance Path and the Raypath to the environmental variables.
-			# @author German Molina
-			def self.setup_radiance
-				# ADD RADIANCE_PATH
-				if Config.radiance_path then
-					divider = ":"
-					divider = ";" if OS.getsystem == "WIN"
-					ENV["PATH"]=Config.radiance_path+divider << ENV["PATH"]
-					ENV["RAYPATH"] = "#{Config.raypath}"
-				else
-					UI.messagebox "There was a problem loading Radiance"
-				end
-			end
-
-			# Gets the path where the Radiance library is installed
-			# @author German Molina
-			# @return [String] The radiance bin path
-			def self.raypath
-				"#{OS.main_groundhog_path}/src/Radiance/lib"
-			end
-
+			
+=begin
 			# Gets the path where the weather files are supposed to be stored... must be configured by the user.
 			# @author German Molina
 			# @return [Depends] The weather path if successful, nil (false) if not.
@@ -148,7 +92,7 @@ module IGD
 				return false if path == nil
 				return path
 			end
-
+=end
 			# Gets the albedo
 			# @author German Molina
 			# @return [String] The albedo
@@ -163,28 +107,8 @@ module IGD
 				self.get_element("TERRAIN_OVERSIZE").to_f
 			end
 
-			# Opens, reads and parses a weather file. The file gets fixed into the model
-			# @author German Molina
-			# @param path [String] the path to the weather file
-			# @return void
-			def self.set_weather(path)
-				return false if not path
-				if Sketchup.active_model.georeferenced? then
-					result = UI.messagebox('This model is already georeferenced. Choosing a weather file will overwrite this location.Do you want to continue?', MB_YESNO)
-					return false if result == IDNO
-				end
-				weather = Weather.parse_epw(path)
-				Sketchup.active_model.set_attribute("Groundhog","Weather",weather.to_json)
-				shadow_info = Sketchup.active_model.shadow_info
-				shadow_info["City"]=weather["city"]
-				shadow_info["Country"] = weather["country"]
-				shadow_info["Latitude"] = weather["latitude"]
-				shadow_info["Longitude"] = weather["longitude"]
-				shadow_info["TZOffset"] = weather["timezone"]
-
-				return true
-			end
-
+			
+=begin
 			# Sets the list of active addons
 			# @author German Molina
 			# @param msg [String] The names of the active add-ons separated by commas
@@ -202,7 +126,7 @@ module IGD
 				return @@config["ACTIVE_ADDONS"].split(",") if @@config["ACTIVE_ADDONS"]
 				return []
 			end
-
+=end
 
 			# Gets the preconfigured RVU options for previsualization
 			# @author German Molina
@@ -210,7 +134,7 @@ module IGD
 			def self.rvu_options
 				self.get_element("RVU")
 			end
-
+=begin
 			# Gets the Annual calculation method
 			# @author German Molina
 			# @return [String] The method
@@ -259,16 +183,16 @@ module IGD
 			def self.luminaire_shape_threshold
 				self.get_element("LUMINAIRE_SHAPE_THRESHOLD")
 			end
+=end
 
-
-			# Gets the spacing between workplane sensors
+			# Gets the desired pixel area
 			# @author German Molina
 			# @return [Float] Sensor Spacing
 			def self.desired_pixel_area
 				self.get_element("DESIRED_PIXEL_AREA").to_f
 			end
 
-
+=begin
 			# Gets the early working hour (i.e. when people start working)
 			# @author German Molina
 			# @return [Float] Early
@@ -296,7 +220,7 @@ module IGD
 			def self.max_illuminance
 				self.get_element("MAX_ILLUMINANCE").to_f
 			end
-
+=end
 
 			# Loads the configuration file into the configuration hash.
 			# If the file does not exist, it ask you to fill it.
@@ -321,7 +245,32 @@ module IGD
 				"#{OS.main_groundhog_path}/config"
 			end
 
-			# Returns true if
+
+			def self.get
+				wd = UI::WebDialog.new("Preferences", false, "Preferences",595, 490, 100, 100, true )
+				wd.set_file("#{OS.main_groundhog_path}/src/html/preferences.html" )
+
+				wd.add_action_callback("on_load") do |web_dialog,msg|
+					script=""
+					@@default_config.each do |field|
+						id = field[0].downcase
+						script += Utilities.set_element_value(id,@@config,field[1])
+					end					
+					web_dialog.execute_script(script);
+				end
+
+				wd.set_on_close{
+					@@default_config.each do |field|
+						id = field[0].downcase
+						@@config[field[0]] = wd.get_element_value(id).strip
+					end
+					self.write_config_file
+				}
+
+				return wd
+			end
+=begin
+			# Returns true if the user wants 
 			#
 			# @author German Molina
 			# @return [String] Configuration file path
@@ -331,7 +280,6 @@ module IGD
 				return true if ret == "true"
 				return false if ret == "false"
 			end
-
 
 
 			# Opens the configuration web dialog and adds the appropriate action_callback
@@ -397,6 +345,7 @@ module IGD
 				end
 
 			end
+=end
 
 
 

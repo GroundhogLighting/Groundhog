@@ -9,8 +9,9 @@ module IGD
 				#Add the default materials to the model
 				Sketchup.active_model.materials.add "GH_default_material"
 				Sketchup.active_model.materials["GH_default_material"].color=[0.7,0.7,0.7]
-				Labeler.to_local_material(Sketchup.active_model.materials["GH_default_material"])
-				Labeler.set_local_material_value(Sketchup.active_model.materials["GH_default_material"],["void\tplastic","\n0\n0\n5\t0.6\t0.6\t0.6\t0\t0"])
+				Labeler.to_rad_material(Sketchup.active_model.materials["GH_default_material"])
+				val = {"rad" => "void plastic %MAT_NAME% 0 0 5 0.6 0.6 0.6 0 0"}
+				Labeler.set_rad_material_value(Sketchup.active_model.materials["GH_default_material"],val.to_json)
 			end
 
 			# Adds the glass material to the model
@@ -20,10 +21,68 @@ module IGD
 				Sketchup.active_model.materials.add "GH_default_glass"
 				Sketchup.active_model.materials["GH_default_glass"].color=[0.0,0.0,1.0]
 				Sketchup.active_model.materials["GH_default_glass"].alpha=0.2
-				Labeler.to_local_material(Sketchup.active_model.materials["GH_default_glass"])
-				Labeler.set_local_material_value(Sketchup.active_model.materials["GH_default_glass"],["void\tglass","\n0\n0\n3\t0.86\t0.86\t0.86"])
+				Labeler.to_rad_material(Sketchup.active_model.materials["GH_default_glass"])
+				val = {"rad" => "void glass %MAT_NAME% 0 0 3 0.86 0.86 0.86"}
+				Labeler.set_rad_material_value(Sketchup.active_model.materials["GH_default_glass"], val.to_json)
 			end
 
+			# Returns the Radiance primitive of a SketchUp material.
+			#  It first checks if it is available in the library, and if not, it guesses it.
+			#  If inputted a name (instead of "False"), the primitive's name will be forced to be
+			#  the inputted value. This is useful for exporting components.
+			# @author German Molina
+			# @version 0.4
+			# @param material [Sketchup::Material] SketchUp material
+			# @param name [String] The desired name for the final Radiance material
+			# @return [String] Radiance primivite definition for the material
+			def self.get_mat_string(material,name)
+				matName=Utilities.fix_name(material.name)
+				matName=Utilities.fix_name(name) if name #if inputted a name, overwrite.
+
+				if Labeler.rad_material?(material) then
+					# if it is a rad_material, get the value... and verify it
+					value = Labeler.get_value(material)
+					if value == nil then
+						UI.messagebox "rad_material without value!"
+						return false
+					end
+					value=JSON.parse(value)
+					if value["rad"] == nil then
+						UI.messagebox "rad_material with incorrect value! no 'rad' field"
+						return false
+					end
+					File.open("#{matName}.mat",'w'){|f| f.puts value["rad"].gsub("%MAT_NAME%", matName) }										
+					return "!xform ./Materials/#{matName}.mat"
+				else #not local, then guess the material
+					mat_string=""
+
+					if material.texture==nil then
+						color=material.color
+					else
+						color=material.texture.average_color
+					end
+					r=color.red/255.0
+					g=color.green/255.0
+					b=color.blue/255.0
+
+					mat_string=mat_string+"## guessed Material\n\n"
+					if material.alpha < 1 then #then this is a glass
+						r=r*material.alpha #This is probably wrong... but it does the job.
+						g=g*material.alpha
+						b=b*material.alpha
+						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s
+						mat_string=mat_string+"void\tglass\t"+matName+"\n0\n0\n3\t"+rgb+"\n"
+					else #This is an opaque material
+						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s+"\t0\t0"
+						mat_string=mat_string+"void\tplastic\t"+matName+"\n0\n0\n5\t"+rgb+"\n"
+					end
+					return mat_string
+				end
+
+			end
+
+
+=begin
 			# Opens the materials wizard web dialog and adds the appropriate action_callback
 			#
 			# @author German Molina
@@ -112,6 +171,8 @@ module IGD
 					return false
 				end
 			end
+=end
+
 
 
 		end

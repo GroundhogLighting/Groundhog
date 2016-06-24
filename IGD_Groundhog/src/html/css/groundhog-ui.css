@@ -1,0 +1,148 @@
+
+@import url("opensans.css");
+body {margin:0;padding:10px; width: 100%; box-sizing: border-box; font-size: 80%; font-family: 'Open Sans', Sans-Serif; 	text-align: justify; background-color: #f1f0ee;}
+
+body, html {
+    background-color: #E6E6E6;
+    box-sizing: border-box;
+    padding: 0;
+    margin:0;
+    min-height: 100vh;
+    overflow: hidden; 
+}
+
+#sidenav p{
+    display:block;
+    background: #DEDBDE;
+    border-radius: 0;
+    margin:0;
+    font-size: 12pt;
+}
+
+
+#sidenav p:hover, #sidenav p.selected{
+    color: black;
+    background: #E6E6E6;
+}
+
+#sidenav p.selected{
+    border-right: 0;
+}
+
+#sidenav{
+    margin:0;
+    padding:0;
+    position:absolute;
+    left:0;
+    background: rgb(190,190,190);
+    width:auto;
+    min-height: 100vh;    
+}
+
+div.display{
+    position:absolute;
+    background: transparent;
+    right:0;
+    width:auto;
+    height: 100vh;
+    overflow: scroll;    
+    padding: 0 15px 15px 15px;
+}
+
+p.tooltip{
+    display:inline;
+    font-weight: bold;
+}
+
+legend{
+    font-weight: bold;
+}
+
+input, select{
+    margin: 0 1em 0 .5em;
+}
+
+input[type="number"]{
+    width: 5em;
+}
+
+table {
+    border-collapse: collapse;        
+}
+
+table.selectable{
+    margin: 10px auto;
+     text-align:center;
+}
+
+table.selectable tr:first-child{
+    background-color: #8B8B8B;
+    color:white;
+    font-weight: bold;
+    cursor: default;
+}
+table.selectable tr:first-child:hover{
+    background-color: #8B8B8B;
+    color:white;
+    font-weight: bold;
+}
+table.selectable td{
+    padding: 3px 7px 3px 7px;
+}
+
+table.selectable tr{
+    cursor: pointer;
+    border-bottom: 1px solid #E4E4E4;
+}
+table.selectable tr:hover{
+    background-color: #E4E4E4
+}
+
+table.bold_header tr:first-child{
+    font-weight:bold;
+}
+
+table.bold_first_row td:first-child{
+    font-weight:bold;
+}
+
+table.with_border, table.with_border  * {   
+    border: 1px solid black;
+    padding: 0.3em;
+    text-align:center;
+    margin: 0 auto; 
+    margin-top: 1em;
+    margin-bottom: 1em;       
+}
+
+.center{
+    text-align: center;
+    height: auto;
+    margin:1em;
+}
+
+fieldset{
+    margin-top: 0.5em;
+}
+
+a, a:visited{
+    text-decoration: none;
+    color: #DC2829;
+    font-weight: bold;
+}
+
+#material_list td.icons {
+    margin: 2px;
+    position: relative;
+    padding: 4px 0;		
+    float: left;
+    border:none;
+}
+span.ui-icon {
+    cursor: pointer;
+    float: left;
+    margin: 0 4px;
+    border:none;        
+    padding:0;
+}
+
