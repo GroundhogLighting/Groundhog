@@ -102,7 +102,7 @@ module IGD
                                         
                     FileUtils.cd(path) do   
                         script=[]                      
-                        script << "oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{Rad.gather_windows} #{Rad.gather_tdds} > octree.oct"
+                        script << "oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  ./Windows/windows.rad  > octree.oct"
                         script << "rvu #{Config.rvu_options} -vf Views/view.vf octree.oct"
                         OS.execute_script(script)
 						OS.clear_actual_path

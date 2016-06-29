@@ -410,11 +410,41 @@ module IGD
 			# @return [Boolean] Success
 			def self.write_window_groups(path,windows)
 
-				return true if windows.length < 1 #it did success... but there were not any windows
-
-				OS.mkdir("#{path}/Windows")
+				return true if windows.length <= 0 #it did success... but there were not any windows
+				path = "#{path}/Windows"
+				OS.mkdir(path)
 				groups=Utilities.get_win_groups(windows)
-				ngroups=groups.length
+				
+				File.open("#{path}/windows.rad",'w'){|wins|
+					#Write the windows that have a group
+					groups.each{|group|
+						file_name = Utilities.fix_name(group)
+						group_path = "#{path}/#{file_name}.rad"						
+						wins.puts "!xform ./Windows/#{file_name}.rad"
+						group_file =  File.open(group_path,'w')
+						windows.select{|x| Labeler.get_win_group(x) == group}.each {|win|
+							info=self.get_rad_string(win)
+							group_file.puts Material.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
+							group_file.puts "#{Labeler.get_name(win)}_mat "+info[0]
+						}
+						group_file.close
+					}
+
+					windows.select{|x| Labeler.get_win_group(x) == nil}.each {|win|
+						file_name = Utilities.fix_name(Labeler.get_name(win))
+						group_path = "#{path}/#{file_name}.rad"						
+						wins.puts "!xform ./Windows/#{file_name}.rad"
+						group_file =  File.open(group_path,'w')
+						info=self.get_rad_string(win)
+						group_file.puts Materials.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
+						group_file.puts "#{Labeler.get_name(win)}_mat "+info[0]
+						group_file.close
+					
+					}
+				}
+
+
+=begin
 				rad_strings=Array.new(ngroups,"") #store the geometry of the windows
 				materials=Array.new(ngroups,[]) #store the materials of the windows
 				nwin=1 #this will count the windows
@@ -467,7 +497,7 @@ module IGD
 				end
 
 				return true
-
+=end
 			end
 
 			# Writes the sensors that are over a certain workplane. Creates a Workplanes folder on the directory.
@@ -550,7 +580,7 @@ module IGD
 				FileUtils.cd(path) do
 					File.open("materials.mat",'w+'){ |f| #The file is opened
 						mat_array.each do |mat|
-							mat_string = Materials.get_mat_string(mat,false)
+							mat_string = Materials.get_mat_string(mat,false, true)
 							return false if not mat_string
 							f.puts(mat_string)
 						end
@@ -683,15 +713,7 @@ module IGD
 				return 	"skyfunc\tglow\tskyglow\n0\n0\n4\t0.99\t0.99\t1.1\t0\n\nskyglow\tsource\tskyball\n0\n0\n4\t0\t0\t1\t360\n\n"
 			end
 
-			# Get the white sky, for calculating DC matrix, for example
-			#
-			# @author German Molina
-			# @version 1.0
-			# @param bins [Integer] The number of reinhart subdivitions of the sky
-			# @return  [String] white sky definition
-			def self.white_sky(bins)
-				return 	"\#@rfluxmtx h=u u=Y\nvoid glow ground_glow\n0\n0\n4 1 1 1 0\n\nground_glow source ground\n0\n0\n4 0 0 -1 180\n\n\#@rfluxmtx h=r#{bins} u=Y\nvoid glow sky_glow\n0\n0\n4 1 1 1 0\n\nsky_glow source sky\n0\n0\n4 0 0 1 180"
-			end
+			
 
 			# Export the ComponentDefinitions into separate files into "Components" folder.
 			# Each file is autocontained, although some materials might be repeated in the "materials.mat" file.
@@ -748,8 +770,7 @@ module IGD
 
 					mat_array=[]
 					faces.each do |fc| #then the rest of the faces
-						if Labeler.workplane? (fc) then
-							wps = []
+						if Labeler.workplane? (fc) then							
 							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
 							tr.each_with_index{|t,index|
 								#if it is workplane, export
@@ -770,13 +791,16 @@ module IGD
 							}
 						elsif Labeler.window? (fc) then
 							OS.mkdir("#{path}/Windows")
+							winfile = File.open("#{path}/Windows/windows.rad",'a')
 							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
 							tr.each_with_index{|t,index|
 								File.open("#{path}/Windows/#{hName}_#{index}.rad",'w'){ |file|
+									winfile.puts "!xform ./Windows/#{hName}_#{index}.rad"
 									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_fixed_name(fc)}_#{index}")
-									file.write(Materials.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
+									file.write(Materials.get_mat_string(info[1],false, false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
 								}
 							}
+							winfile.close
 						else #common surfaces
 							info=self.get_rad_string(fc)
 							matName=Utilities.fix_name(info[1].name)+"_"+hName

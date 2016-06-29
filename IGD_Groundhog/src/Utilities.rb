@@ -32,7 +32,7 @@ module IGD
 				extension=""
 				extension= "_"+name if name
 				mat_array.each do |mat|
-					ret+=Materials.get_mat_string(mat, Utilities.fix_name(mat.name)+extension)+"\n\n"
+					ret+=Materials.get_mat_string(mat, Utilities.fix_name(mat.name)+extension, false)+"\n\n"
 				end
 				return ret
 			end
@@ -223,6 +223,7 @@ module IGD
 						end
 					else
 						UI.messagebox("All selected windows must have the same normal")
+						model.abort_operation
 					end
 
 					model.commit_operation
@@ -237,17 +238,9 @@ module IGD
 			# @author German Molina
 			# @param entities [Array<entities>] Array of entities
 			# @return [Array <Int>] Array with the unique window groups
-			def self.get_win_groups(entities)
-				groups=[]
-				windows=self.get_windows(entities)
-				windows.each do |i|
-					a=Labeler.get_win_group(i)
-					if a!=nil
-						groups=groups+[a]
-					end
-				end
-
-				return groups.uniq
+			def self.get_win_groups(entities)				
+				windows=self.get_windows(entities).select{|x| Labeler.get_win_group(x) != nil}
+				windows.map{|x| Labeler.get_win_group(x)}.uniq
 			end
 
 
