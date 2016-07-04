@@ -24,5 +24,5 @@ $("#set_high_tdd").on("click", function () {
 });
 
 $("#simulate_button").on("click", function () {
-    alert("Simulating!");
+    window.location.href = 'skp:calculate@'+JSON.stringify(workplanes);
 });

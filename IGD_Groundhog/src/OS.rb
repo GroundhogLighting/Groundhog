@@ -90,7 +90,7 @@ module IGD
 				array.push("Examples")
 				return File.join(array)
 			end
-
+=begin
 			# Gets the path where the Add-ons are stored
 			# @author German Molina
 			# @return [Void] The add-on groundhog path
@@ -100,7 +100,7 @@ module IGD
 				array.push("Addons")
 				return File.join(array)
 			end
-
+=end
 			# Removes everything from the input path
 			# The commands need to be strings.
 			# @author German Molina

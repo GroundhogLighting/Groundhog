@@ -61,7 +61,7 @@ module IGD
 			# @param workplane [SketchUp::ComponentDefinition] The workplane to be assigned the value
 			# @param value [Hash] Hash with minimum, maximum and metric
 			# @return [Void]
-			def self.set_solved_workplane_value(workplane,value)
+			def self.set_workplane_value(workplane,value)
 				if not self.solved_workplane?(workplane) then
 					warn "Trying to assign a solved_workplane value to a non-solved_workplane entity!"
 					return false 
@@ -263,9 +263,12 @@ module IGD
 			# @return [Void]
 			# @version 0.1
 			def self.set_pixel_value(pixel,value)				
-				pixel.set_attribute("Groundhog","Value",value)
+				warn "Trying to assign a pixel value to a non-result_pixel" if not self.result_pixel?(pixel) 
+				return false if not self.result_pixel?(pixel) 
+				self.set_value(pixel,value)														
 			end
 
+			
 			# Label selected faces as illums
 			# @author German Molina
 			# @param entities [Array<entities>] An array with the entities to be transformed into illums.
@@ -462,6 +465,7 @@ module IGD
 			# @param value [] The value to be assigned
 			def self.set_value(entity, value)
 				entity.set_attribute("Groundhog","Value", value)
+				return true
 			end
 
 			# Sets the Groundhog-assigned label an entity						

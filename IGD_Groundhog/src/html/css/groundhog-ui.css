@@ -73,6 +73,7 @@ table {
 table.selectable{
     margin: 10px auto;
      text-align:center;
+     background: white;
 }
 
 table.selectable tr:first-child{

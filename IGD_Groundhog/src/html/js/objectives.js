@@ -69,7 +69,7 @@ objectiveModule.get_objective_text = function(metric) {
         case "DF":
             ret = ["DF(" + $("#metric_threshold").val() + "%)"];
             ret.push(goal);
-            return ret.join("");
+            return ret.join(del);
         case "Lux":
             ret = ["LUX(" + $("#min_lux").val() + "-" + $("#max_lux").val() + "lux)"];
             ret.push($("#time_to_sim").val() + "hrs of " + $("#day_to_sim").val());
@@ -157,5 +157,5 @@ $("#add_objective_to_worplane").button().on("click", function () {
 
 $("#day_to_sim").datepicker();
 
-objectiveModule.update_dialog();
+//objectiveModule.update_dialog();
 objectiveModule.adapt_objective_dialog("DA");

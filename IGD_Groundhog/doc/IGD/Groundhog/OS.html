@@ -114,30 +114,6 @@ Operating Systems, and system calls</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#addons_groundhog_path-class_method" title="addons_groundhog_path (class method)">+ (Void) <strong>addons_groundhog_path</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Gets the path where the Add-ons are stored.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#clear_actual_path-class_method" title="clear_actual_path (class method)">+ (Object) <strong>clear_actual_path</strong> </a>
     
 
@@ -433,88 +409,7 @@ Operating Systems, and system calls</p>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="addons_groundhog_path-class_method">
-  
-    + (<tt>Void</tt>) <strong>addons_groundhog_path</strong> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Gets the path where the Add-ons are stored</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>Void</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The add-on groundhog path</p>
-</div>
-      
-    </li>
-  
-</ul>
-<p class="tag_title">Author:</p>
-<ul class="author">
-  
-    <li>
-      
-      
-      
-      
-        
-        <div class='inline'>
-<p>German Molina</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-97
-98
-99
-100
-101
-102</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 97</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_addons_groundhog_path'>addons_groundhog_path</span>
-	<span class='id identifier rubyid_dir'>dir</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span>
-	<span class='id identifier rubyid_array'>array</span><span class='op'>=</span><span class='id identifier rubyid_dir'>dir</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_array'>array</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Addons</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-	<span class='kw'>return</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_array'>array</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="clear_actual_path-class_method">
+  <h3 class="signature first" id="clear_actual_path-class_method">
   
     + (<tt>Object</tt>) <strong>clear_actual_path</strong> 
   
@@ -1557,7 +1452,7 @@ if everything went well, and false if it did not.</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Jun 29 16:36:41 2016 by
+  Generated on Mon Jul  4 13:43:02 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

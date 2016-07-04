@@ -3,66 +3,41 @@ module IGD
 		# This class is meant to help importing results from a grid into a Workplane.
 
 		module Results
+						
 
+			def self.annual_to_udi(path,min_lux, max_lux, early,late,month_ini, month_end)
 
-			# Converts a very long file of annual results into a 2d array for
-			# plotting as a heatmap of UDI.
-			#
-			# It reads the workplane path for getting the position of each sensor.
-			#
-			# The positions are assumed to be in meters.
-			#
-			# @author German Molina
-			# @param results_path [String] the path to the results file
-			# @param workplane_file [String] the path to the workplane file
-			# @param min [Float] The minimum acceptable illuminance
-			# @param max [Float] The maximum acceptable illuminance
-			# @return [Depends] An array with the values when succesful, "false" if not.
-			# @version 0.2
-			def self.annual_to_UDI(results_path, workplane_file, min, max, early, late)
+				
+				annual = File.readlines(path)
+				#remove header
+				7.times {annual.shift}
+				
+				#for calculating the UDI
+				max_lux = 9e15 if not max_lux
+				
+				#process each sensor
+				ret = []
+				annual.each{|sensor_data|
+					data = sensor_data.split(" ").map{|x| x.to_f}        
+					working_hours = data.each_with_index.select{|val, index| 
+						hour = (index+0.5)%24
+						hour >= early and hour <= late
+					}.map{|value,index| value}
+					
+					working_hours = data.each_with_index.select{|val, index| 
+						hour = (index+0.5)%24
+						hour >= early and hour <= late
+					}.map{|value,index| value}
+					
+					
+					good_hours = working_hours.select{|x| x >= min_lux and x<= max_lux }
+					
+					ret << (100.0 * good_hours.length.to_f / working_hours.length.to_f)
 
-				return false if not File.exist?(results_path)
-				return false if not File.exist?(workplane_file)
-
-				results=File.open(results_path).read.split("\n").collect!{|x| x.to_f}
-				n_results=results.length
-
-				sensors=File.open(workplane_file).read.split("\n")
-				n_sensors=sensors.length
-
-				n_samples = n_results/n_sensors
-				warn "Weather file does not seem to have 8760 hours!!" if n_samples != 8760
-
-				timestep=8760.0/n_samples
-
-				ret=[]
-				#sensors.each do |line|
-				#	line.strip!
-				#	sensor=line.split("\t")
-				#	ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
-				#end
-
-				#they alternate hour
-				#ret.each do |sensor|
-				sensors.each do |sensor|
-					time=-timestep/2.0 #say, -0.5 is the time
-					ac=0.0
-					good = 0.0
-					for i in 1..n_samples
-						time+=timestep # now it will be 0.5
-						ill=results.shift
-						next if (time%24.0) < early or (time%24.0) > late
-						ac+=1.0
-						next if ill > max
-						next if ill < min
-						good+=100.0
-					end
-					ret.push([good/ac])
-				end
-
+				}
 				return ret
+				
 			end
-
 
 			# Returns an array with the names of the metrics within the solved-workplanes, obtained from the Solved Workplanes
 			# @author German Molina
@@ -145,8 +120,9 @@ module IGD
 					min=9999999999999
 
 					#draw every line. Each pixel is a polygon.
-					pixels.each do |data|
+					pixels.each do |data|						
 						value = values.shift[0].to_f
+										
 						#check minimum and maximum
 						min=value.to_f if min>value.to_f
 						max=value.to_f if max<value.to_f
@@ -183,6 +159,7 @@ module IGD
 					Labeler.set_workplane_value(group,wp_value.to_json)
 
 					group.casts_shadows=false
+					group.receives_shadows=false
 
 					#hide the edges
 					group.entities.select{|x| x.is_a? Sketchup::Edge}.each{|x| x.hidden=true}
@@ -325,33 +302,22 @@ module IGD
 			# in a plane in the model.
 			#
 			# @author German Molina
-			# @param path [String]
-			# @param metric [String]
+			# @param path [String] the path to the values to import
+			# @param pixels_file [String] the path to the pixels corresponding to the values
+			# @param metric [String] the metric imported
 			# @return void
 			# @version 0.3
-			def self.import_results(path,metric)
-
-				model=Sketchup.active_model
+			def self.import_results(path,pixels_file,metric)
+				
 				name=path.tr("\\","/").split("/").pop.split(".")[0]
 				values = Utilities.readTextFile(path,",",0)
 				return if not values #if the format was wrong, for example
-
-				pixels_file = values[0][0]
-				if not File.exist?(pixels_file) then
-					#Assume there is no file there.
-					#Try to find the probable pixel file in the GH export.
-					pixels_file = path.tr("\\","/").split("/")
-					pixels_file.pop
-					pixels_file.pop
-					pixels_file = "#{pixels_file.join("/")}/Workplanes/#{name}.pxl"
-					if not File.exist?(pixels_file) then
-						#Now... if THIS does not exist, return.
-						UI.messagebox("Pixels file '#{pixels_file}' not found.")
-						return false
-					end
-				else
-					values.shift #remove the name of the file
+				
+				if not File.exist?(pixels_file) then					
+					UI.messagebox("Pixels file '#{pixels_file}' not found.")
+					return false				
 				end
+
 				pixels = Utilities.readTextFile(pixels_file,",",0)
 				name = name.tr("_"," ")
 				metric = self.draw_pixels(values,pixels,name,metric)
@@ -378,7 +344,7 @@ module IGD
 				min=max
 
 				pixels.each do |pixel|
-					value = Labeler.get_value(pixel)
+					value = Labeler.get_value(pixel)					
 					area = pixel.area
 					max = value if value > max
 					min = value if value < min

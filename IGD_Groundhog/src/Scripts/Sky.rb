@@ -6,20 +6,19 @@ module IGD
             def initialize
                 @proc = Proc.new { |options|
                     n_bins = options["sky_bins"]
-                    File.open("white_sky.rad",'w'){|f| f.puts "\#@rfluxmtx h=u u=Y\nvoid glow ground_glow\n0\n0\n4 1 1 1 0\n\nground_glow source ground\n0\n0\n4 0 0 -1 180\n\n\#@rfluxmtx h=r#{n_bins} u=Y\nvoid glow sky_glow\n0\n0\n4 1 1 1 0\n\nsky_glow source sky\n0\n0\n4 0 0 1 180" }
+                    File.open("./Skies/white_sky.rad",'w'){|f| f.puts "\#@rfluxmtx h=u u=Y\nvoid glow ground_glow\n0\n0\n4 1 1 1 0\n\nground_glow source ground\n0\n0\n4 0 0 -1 180\n\n\#@rfluxmtx h=r#{n_bins} u=Y\nvoid glow sky_glow\n0\n0\n4 1 1 1 0\n\nsky_glow source sky\n0\n0\n4 0 0 1 180" }
                     next [] #does not return any script... just writes file
                 }                
             end           
         end
 
         class WriteSky < Task
-            def initialize(sky)                
-                sky = Utilities.fix_name(sky)
-                @target = sky
+            def initialize(sky)                                
+                @target = sky                
                 @proc = Proc.new{
-                    warn "wrote #{sky}!"
+                    sky = Utilities.fix_name(@target)                    
                     File.open("./Skies/#{sky}.rad",'w'){|file|
-                        file.puts "#{sky}"
+                        file.puts "!#{ @target}"
                         file.puts "skyfunc glow skyglow 0 0 4 0.99 0.99 1.1 0"
                         file.puts "skyglow source skyball 0 0 4 0 0 1 360"
                     }
@@ -28,6 +27,15 @@ module IGD
             end
         end
 
+        class GenDayMtx < Task
+            def initialize 
+                @proc = Proc.new{ |options|
+                    albedo = 0.2 # Config.albedo
+                    mf = options["sky_bins"] 
+                    next ["gendaymtx -m #{mf} -g #{albedo} #{albedo} #{albedo} ./Skies/weather.wea > ./Skies/weather.daymtx"]                    
+                }               
+            end
+        end
 
         class GenSkyVec < Task
             def initialize(sky)                
@@ -149,9 +157,6 @@ module IGD
                             f.puts "skyfunc glow skyglow 0 0 4 #{skycolor.join(" ")} 0\n"
                             f.puts "skyglow source sky 0 0 4 0 0 1 360\n"
                         }
-                        OS.run_command "oconv #{file} > #{octree}"
-
-                        # Run rtrace and average output for every 16 samples
                         OS.run_command "#{tregcommand} > #{tmp1}"
                         tregval = File.readlines(tmp1)
                     else
@@ -200,7 +205,12 @@ module IGD
                         FileUtils.rm(octree)
                         FileUtils.rm(tmp1)
 
-                        File.open("./Skies/#{Utilities.fix_name(sky)}.skv")
+                        File.open("./Skies/#{Utilities.fix_name(sky)}.skv",'w'){|file|
+                            ret.each{|line|
+                                file.puts line
+                            }                             
+                        }
+                        next []
                 }
 			end 
         end #end genskyvec

@@ -264,7 +264,6 @@ module IGD
 					norm=norm.+(v3)
 				end
 
-				badvert=0
 				offset=norm.dot(Geom::Vector3d.new(vertices[0].position.x,vertices[0].position.y,vertices[0].position.z))
 				verteps=0.0000015
 				smalloff=offset.abs <= verteps
@@ -382,7 +381,7 @@ module IGD
 			# @param entities [Array<SketchUp::Entities>]
 			# @return [Array <SketchUp::Entities>] An array with the entities that are SketchUp::ComponentDefinition
 			def self.get_solved_workplanes(entities)
-				return entities.select{|x| Labeler.get_label(x)=="solved_workplane"}
+				return entities.select{|x| Labeler.solved_workplane?(x)}
 			end
 
 
@@ -391,9 +390,7 @@ module IGD
 			# @param metric [String]
 			# @version 0.1
 			def self.remark_solved_workplanes(metric)
-				#hide them all, except those with the metric we are interested in
-				scale_min=false
-				scale_max=false
+				#hide them all, except those with the metric we are interested in				
 				self.get_solved_workplanes(Sketchup.active_model.entities).each{|x|
 					value=JSON.parse(Labeler.get_value(x))
 					if value["metric"]==metric

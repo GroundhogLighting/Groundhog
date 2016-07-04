@@ -91,6 +91,129 @@
     </div>
 
 
+    <div class="display" id="daylight_simulation">
+        <h2>Daylight</h2>
+        <div class="center"><button id="simulate_button">Simulate</button></div>
+        <div class="accordion">
+            <h3>Static simulation options</h3>
+            <div>
+                <table>
+                    <tr>
+                        <td>Calculation method</td>
+                        <td>
+                            <select id='static_calculation_method'>
+							<option value="RTRACE">Ray-tracing</option>
+							<option value="DC">Simple Daylight Coefficients</option>
+						</select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Parameters</td>
+                        <td>
+                            <input type="text" id="static_parameters">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sky subdivition</td>
+                        <td>
+                            <input id='static_sky_bins' type='number' value='1' step='1' min='1'></input>
+                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
+                        </td>
+                    </tr>
+
+                </table>
+                <div class="center">
+                    <button id="set_low_static">Set to low</button>
+                    <button id="set_med_static">Set to medium</button>
+                    <button id="set_high_static">Set to high</button>
+                </div>
+            </div>
+
+            <h3>Dynamic simulation options</h3>
+            <div>
+                <table>
+                    <tr>
+                        <td>Calculation method</td>
+                        <td>
+                            <select id='dynamic_calculation_method'>
+							<option value="DC">Simple Daylight Coefficients</option>
+						</select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Parameters</td>
+                        <td>
+                            <input type="text" id="dynamic_parameters">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sky subdivition</td>
+                        <td>
+                            <input id='dynamic_sky_bins' type='number' value='1' step='1' min='1'></input>
+                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
+                        </td>
+                    </tr>
+
+                </table>
+                <div class="center">
+                    <button id="set_low_dynamic">Set to low</button>
+                    <button id="set_med_dynamic">Set to medium</button>
+                    <button id="set_high_dynamic">Set to high</button>
+                </div>
+            </div>
+
+            <h3>Tubular Daylight Devices options</h3>
+            <div>
+                <table>
+                    <tr>
+                        <td>Daylight matrix parameters</td>
+                        <td><input type="text" id="tdd_daylight_parameters"></td>
+                    </tr>
+                    <tr>
+                        <td>Pipe interior parameters</td>
+                        <td><input type="text" id="tdd_pipe_parameters"></td>
+                    </tr>
+                    <tr>
+                        <td>View matrix parameters</td>
+                        <td><input type="text" id="tdd_view_parameters"></td>
+                    </tr>
+                    <tr>
+                        <td>Assume one Daylight Matrix</td>
+                        <td><input type="checkbox" id="tdd_singledaymtx">
+                            <p class="tooltip" title="Calculate a single daylight matrix and use it for all the TDDs. This works well if all the TDDs basically see the same sky and obstructions.">?</p>
+                        </td>
+                    </tr>
+                </table>
+                <div class="center">
+                    <button id="set_low_tdd">Set to low</button>
+                    <button id="set_med_tdd">Set to medium</button>
+                    <button id="set_high_tdd">Set to high</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="display" id="luminaires">
+        <h2>Luminaires</h2>
+    </div>
+
+    <div class="display" id="report">
+        <h2>Report</h2>
+        <div class="center">
+            <table class="selectable">
+                <tr>
+                    <td>Header</td>
+                </tr>
+                <tr>
+                    <td>Row 1</td>
+                </tr>
+                 <tr>
+                    <td>Row 2</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
     <!-- ADD OBJECTIVE DIALOG -->
     <div id="add_metric_dialog" title="Add objective">
@@ -200,113 +323,11 @@
     </div>
 
 
-    <div class="display" id="daylight_simulation">
-        <h2>Daylight</h2>
-        <div class="center"><button id="simulate_button">Simulate</button></div>
-        <div class="accordion">
-            <h3>Static simulation options</h3>
-            <div>
-                <table>
-                    <tr>
-                        <td>Calculation method</td>
-                        <td>
-                            <select id='static_calculation_method'>
-							<option value="RTRACE">Ray-tracing</option>
-							<option value="DC">Simple Daylight Coefficients</option>
-						</select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Parameters</td>
-                        <td>
-                            <input type="text" id="static_parameters">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sky subdivition</td>
-                        <td>
-                            <input id='static_sky_bins' type='number' value='1' step='1' min='1'></input>
-                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
-                        </td>
-                    </tr>
-
-                </table>
-                <div class="center">
-                    <button id="set_low_static">Set to low</button>
-                    <button id="set_med_static">Set to medium</button>
-                    <button id="set_high_static">Set to high</button>
-                </div>
-            </div>
-
-            <h3>Dynamic simulation options</h3>
-            <div>
-                <table>
-                    <tr>
-                        <td>Calculation method</td>
-                        <td>
-                            <select id='dynamic_calculation_method'>
-							<option value="DC">Simple Daylight Coefficients</option>
-						</select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Parameters</td>
-                        <td>
-                            <input type="text" id="dynamic_parameters">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sky subdivition</td>
-                        <td>
-                            <input id='dynamic_sky_bins' type='number' value='1' step='1' min='1'></input>
-                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
-                        </td>
-                    </tr>
-
-                </table>
-                <div class="center">
-                    <button id="set_low_dynamic">Set to low</button>
-                    <button id="set_med_dynamic">Set to medium</button>
-                    <button id="set_high_dynamic">Set to high</button>
-                </div>
-            </div>
-
-            <h3>Tubular Daylight Devices options</h3>
-            <div>
-                <table>
-                    <tr>
-                        <td>Daylight matrix parameters</td>
-                        <td><input type="text" id="tdd_daylight_parameters"></td>
-                    </tr>
-                    <tr>
-                        <td>Pipe interior parameters</td>
-                        <td><input type="text" id="tdd_pipe_parameters"></td>
-                    </tr>
-                    <tr>
-                        <td>View matrix parameters</td>
-                        <td><input type="text" id="tdd_view_parameters"></td>
-                    </tr>
-                    <tr>
-                        <td>Assume one Daylight Matrix</td>
-                        <td><input type="checkbox" id="tdd_singledaymtx">
-                            <p class="tooltip" title="Calculate a single daylight matrix and use it for all the TDDs. This works well if all the TDDs basically see the same sky and obstructions.">?</p>
-                        </td>
-                    </tr>
-                </table>
-                <div class="center">
-                    <button id="set_low_tdd">Set to low</button>
-                    <button id="set_med_tdd">Set to medium</button>
-                    <button id="set_high_tdd">Set to high</button>
-                </div>
-            </div>
-        </div>
-
-    </div>
 
 </body>
 <script>
     
-    var workplanes = {};
+    var workplanes = {"Le Workplane": ["AAA", "BBB"], "Another WP": ["UUU","EEE"]};
     var materials = {};
 
 </script>
@@ -317,7 +338,10 @@
 <script src="js/objectives.js"></script>
 <script src="js/daylight-simulation.js"></script>
 <script src="js/materials.js"></script>
+<script src="js/report.js"></script>
 <script>
-    window.location.href = 'skp:on_load@message';   
+    
+    objectiveModule.update_dialog();
+    //window.location.href = 'skp:on_load@message';   
 </script>
 </html>

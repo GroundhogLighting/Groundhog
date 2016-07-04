@@ -212,6 +212,69 @@ module IGD
                     web_dialog.execute_script(script)              
                 end
 
+                wd.add_action_callback("calculate") do |web_dialog, workplanes|
+                    next if not Exporter.export(Sketchup.temp_dir)
+					FileUtils.cd(Sketchup.temp_dir) do
+                        options = {
+                            "rtrace" => "-ab 2 -ad 128",
+                            "rcontrib" => "-ab 2 -ad 128",
+                            "sky_bins" => 1,
+                            "static_calculation_method" => "RTRACE"
+                        }   
+
+                        workplanes = JSON.parse(workplanes)
+                        workplanes.each{|workplane, objectives|
+                            workplanes[workplane] = objectives.map{|x| Objective.new(x)}
+                        }
+
+                        #Pre-process information
+                        sim = SimulationManager.new(options)
+                        sim.set_objectives(workplanes)
+                        script = sim.solve
+
+                        #Process data
+                        OS.execute_script(script)
+
+                        #post-process and load results
+                        workplanes.each{|workplane, objectives|
+                            objectives.each{|objective|
+                                albedo = Config.albedo
+                                pixel_file = "./Workplanes/#{Utilities.fix_name(workplane)}.pxl"
+                                if objective.dynamic then
+                                    path = "./Results/#{Utilities.fix_name(workplane)}-daylight.annual"
+                                    early = objective.working_time.min  
+                                    late = objective.working_time.max  
+                                    min_lux = objective.light_range.min
+                                    max_lux = objective.light_range.max
+                                    month_ini = 1
+                                    month_end = 12
+
+                                    results = "./Results/#{Utilities.fix_name(workplane)}-#{objective.metric}.txt"
+                                    File.open(results,'w'){ |f|
+                                        f.puts Results.annual_to_udi(path,min_lux, max_lux, early,late,month_ini, month_end)
+                                    } 
+                                    Results.import_results(results,pixel_file,objective.metric)
+                                else                                    
+                                    sky = "gensky -ang 45 40 -c -B 0.5586592 -g #{albedo}"
+                                    if objective.calc == "LUX" then
+                                        month = objective.date.month
+                                        day = objective.date.day
+                                        hour = objective.hour
+                                        lat = Sketchup.active_model.shadow_info["Latitude"]
+                                        lon = -Sketchup.active_model.shadow_info["Longitude"]
+                                        mer = -Sketchup.active_model.shadow_info["TZOffset"]
+                                        sky = "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo} +s"                                        
+                                    end
+                                    results = "./Results/#{Utilities.fix_name(workplane)}-#{Utilities.fix_name(sky)}.txt"                                    
+                                    Results.import_results(results,pixel_file,objective.metric)
+                                end
+                            }
+                        }
+
+                    end
+                    
+                end
+
 
                 return wd
             end

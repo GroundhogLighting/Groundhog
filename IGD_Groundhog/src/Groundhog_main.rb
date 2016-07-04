@@ -33,12 +33,26 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Tdd'
 		Sketchup::require 'IGD_Groundhog/src/Weather'
 		Sketchup::require 'IGD_Groundhog/src/DesignAssistant'
+		Sketchup::require 'IGD_Groundhog/src/SimulationManager'
+		Sketchup::require 'IGD_Groundhog/src/Objectives'
+
+
+		Sketchup::require 'IGD_Groundhog/src/Scripts/AnnualIlluminance'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/CalcDC'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/InstantIlluminance'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/Sky'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/SkyContribution'
+		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDContribution'
+		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDDaylight'
+		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDPipe'
+		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDView'
 
 
 
 		require 'json'
 		require 'Open3'
 		require 'fileutils'
+		require 'date'
 
 		#########################################
 		model=Sketchup.active_model
