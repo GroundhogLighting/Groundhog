@@ -26,7 +26,7 @@ module IGD
 
 						File.open("DC/#{wp_name}_receiver.rad",'w'){|x| x.puts bottoms}
 
-						script << "rfluxmtx -y #{nsensors} -I+ #{Config.tdd_view_rfluxmtx} < #{workplane} - DC/#{wp_name}_receiver.rad Materials/materials.mat scene.rad #{self.gather_windows}"
+						script << "rfluxmtx -y #{nsensors} -I+ #{options["tdd_view_parameters"]} < #{workplane} - DC/#{wp_name}_receiver.rad Materials/materials.mat scene.rad #{self.gather_windows}"
 					end                
                 }
 

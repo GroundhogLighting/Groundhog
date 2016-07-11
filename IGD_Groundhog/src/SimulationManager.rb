@@ -6,27 +6,36 @@ module IGD
             def initialize(options)
                 @options = options
                 @tasks = []
-            end
-
-            def set_objectives(objectives)
-                objectives.each{|workplane, array|
-                    array.each{|objective|                        
-                        return false if not self.add_objective(objective, workplane)
-                    }
+                hash = DesignAssistant.get_workplanes_hash
+                workplanes = hash["workplanes"]
+                objectives=hash["objectives"]
+                workplanes.each{|workplane,obj_array|
+                    obj_array.each{|obj_name|
+                        objective = objectives[obj_name]
+                        task = self.get_task(workplane,objective)
+                        if not task then
+                            UI.messagebox("Error at workplane '#{workplane}' - objective '#{obj_name}' while building the Simulation Manager.")
+                            return false
+                        end
+                        @tasks << task
+                    }                    
                 }
-            end
 
-            def add_objective(objective, workplane)                                              
+            end
+           
+
+            def get_task(workplane,objective)                                             
                 task = false
                 albedo = Config.albedo
-                if objective.dynamic then
+                if objective["dynamic"] then
                     task = DCAnnualIlluminance.new(workplane)
                 else
                     sky = "gensky -ang 45 40 -c -B 0.5586592 -g #{albedo}"
-                    if objective.calc == "LUX" then
-                        month = objective.date.month
-                        day = objective.date.day
-                        hour = objective.hour
+                    if objective["metric"] == "LUX" then
+                        date = Date.strptime(objective["date"], '%m/%d/%Y')
+                        month = date.month
+                        day = date.day
+                        hour = objective["hour"]
                         lat = Sketchup.active_model.shadow_info["Latitude"]
                         lon = -Sketchup.active_model.shadow_info["Longitude"]
                         mer = -Sketchup.active_model.shadow_info["TZOffset"]
@@ -42,8 +51,8 @@ module IGD
                         return false
                     end 
                 end
-                @tasks << task
-                return true
+
+                return task
             end
 
 
@@ -76,7 +85,9 @@ module IGD
                 self.expand!
                 self.uniq!                    
                 @tasks.each{|task|
-                    ret = ret + task.solve(@options)
+                    new_tasks = task.solve(@options)
+                    ret = ret + new_tasks if new_tasks
+                    return false if not new_tasks
                 }
             
                 return ret

@@ -387,13 +387,13 @@ module IGD
 
 			# Hides all solved workplanes with the exception of those with the input metric
 			# @author German Molina
-			# @param metric [String]
+			# @param objective [String] The name of the objective to remark
 			# @version 0.1
-			def self.remark_solved_workplanes(metric)
+			def self.remark_solved_workplanes(objective)
 				#hide them all, except those with the metric we are interested in				
 				self.get_solved_workplanes(Sketchup.active_model.entities).each{|x|
 					value=JSON.parse(Labeler.get_value(x))
-					if value["metric"]==metric
+					if value["objective"]==objective
 						x.hidden=false
 					else
 						x.hidden=true

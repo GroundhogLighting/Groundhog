@@ -13,10 +13,10 @@ module IGD
                         if File.file? "DC/ALL_TDDs-sky.mtx" then #if it has been calculated
                             next []
                         else #calculate it
-                            next ["rfluxmtx #{Config.tdd_daylight_rfluxmtx} #{tdd_file} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/ALL_TDDs-sky.mtx"]
+                            next ["rfluxmtx #{options["tdd_daylight_parameters"]} #{tdd_file} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/ALL_TDDs-sky.mtx"]
                         end						
 					else
-						next ["rfluxmtx #{Config.tdd_daylight_rfluxmtx} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.mtx"]					
+						next ["rfluxmtx #{options["tdd_daylight_parameters"]} #{sender} Skies/sky.rad Materials/materials.mat scene.rad #{self.gather_windows} > DC/#{name}-sky.mtx"]					
 					end
                 }
 

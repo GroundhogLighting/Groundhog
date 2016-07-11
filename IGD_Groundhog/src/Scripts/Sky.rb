@@ -16,8 +16,8 @@ module IGD
             def initialize(sky)                                
                 @target = sky                
                 @proc = Proc.new{
-                    sky = Utilities.fix_name(@target)                    
-                    File.open("./Skies/#{sky}.rad",'w'){|file|
+                    fix_sky = Utilities.fix_name(@target)                    
+                    File.open("./Skies/#{fix_sky}.rad",'w'){|file|
                         file.puts "!#{ @target}"
                         file.puts "skyfunc glow skyglow 0 0 4 0.99 0.99 1.1 0"
                         file.puts "skyglow source skyball 0 0 4 0 0 1 360"
@@ -30,8 +30,12 @@ module IGD
         class GenDayMtx < Task
             def initialize 
                 @proc = Proc.new{ |options|
-                    albedo = 0.2 # Config.albedo
+                    albedo = Config.albedo
                     mf = options["sky_bins"] 
+                    if not File.file? "./Skies/weather.wea" then
+                        UI.messagebox("This model has no Weather File assigned... please select one that.")
+                        next false
+                    end
                     next ["gendaymtx -m #{mf} -g #{albedo} #{albedo} #{albedo} ./Skies/weather.wea > ./Skies/weather.daymtx"]                    
                 }               
             end

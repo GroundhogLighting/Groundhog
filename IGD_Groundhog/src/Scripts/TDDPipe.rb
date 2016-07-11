@@ -15,7 +15,7 @@ module IGD
                         b.puts "\#@rfluxmtx h=kf u=Y\n"
                         b.puts File.open("TDDs/0-#{tdd_name}.bottom", "rb").read
                     }
-                    next ["rfluxmtx #{Config.tdd_pipe_rfluxmtx} #{sender} #{receiver} #{pipe} > DC/#{tdd_name}-pipe.mtx"]                
+                    next ["rfluxmtx #{options["tdd_pipe_parameters"]} #{sender} #{receiver} #{pipe} > DC/#{tdd_name}-pipe.mtx"]                
                 }
 
             end

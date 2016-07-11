@@ -14,11 +14,13 @@ module IGD
                     wp_file = "./Workplanes/#{Utilities.fix_name(@target["workplane"])}.pts"
                     workplane = Utilities.fix_name(@target["workplane"])
                     nsensors = File.readlines(wp_file).length
-                    script << "oconv ./Materials/materials.mat ./scene.rad ./Skies/#{sky}.rad ./Windows/windows.rad > octree.oct"
-                    script << "rtrace -I+ -h -af ambient.amb #{options["rtrace"]} ./octree.oct < #{wp_file} > tmp1.tmp"
-                    script << "rcollate -oc 1 -hi -or #{nsensors} -oc 1 ./tmp1.tmp > tmp2.tmp"                    
-                    script << "rmtxop -fa -c 47.4 119.9 11.6 ./tmp2.tmp > tmp3.tmp"
-                    script << "rcollate -oc 1 -ho  ./tmp3.tmp > ./Results/#{workplane}-#{sky}.txt"  
+                    win_string = ""
+                    win_string = "./Windows/windows.rad" if File.directory? "Windows" 
+                    script << "oconv ./Materials/materials.mat ./scene.rad ./Skies/#{sky}.rad #{win_string} > octree-#{sky}.oct"
+                    script << "rtrace -I+ -h -af ambient.amb #{options["static_parameters"]} ./octree-#{sky}.oct < #{wp_file} > tmp1-#{sky}.tmp"
+                    script << "rcollate -oc 1 -hi -or #{nsensors} -oc 1 ./tmp1-#{sky}.tmp > tmp2-#{sky}.tmp"                    
+                    script << "rmtxop -fa -c 47.435 119.93 11.635 ./tmp2-#{sky}.tmp > tmp3-#{sky}.tmp"
+                    script << "rcollate -oc 1 -ho  ./tmp3-#{sky}.tmp > ./Results/#{workplane}-#{sky}.txt"  
                     next script
                 }               
             end
@@ -37,9 +39,9 @@ module IGD
                     workplane = Utilities.fix_name(@target["workplane"])
                     sky = Utilities.fix_name(@target["sky"])                    
                     skyvecfile ="./Skies/#{Utilities.fix_name(@target["sky"])}.skv"
-                    script << "rmtxop ./DC/#{workplane}.dc #{skyvecfile} > tmp1.tmp "
-                    script << "rmtxop -fa -c 47.4 119.9 11.6 ./tmp1.tmp > tmp2.tmp "
-                    script << "rcollate -oc 1 -ho ./tmp2.tmp > ./Results/#{workplane}-#{sky}.txt"                    
+                    script << "rmtxop ./DC/#{workplane}.dc #{skyvecfile} > tmp1-#{sky}.tmp "
+                    script << "rmtxop -fa -c 47.435 119.93 11.635 ./tmp1-#{sky}.tmp > tmp2-#{sky}.tmp "
+                    script << "rcollate -oc 1 -ho ./tmp2-#{sky}.tmp > ./Results/#{workplane}-#{sky}.txt"                    
                     next script
                 }
 

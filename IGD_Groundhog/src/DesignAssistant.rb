@@ -25,7 +25,7 @@ module IGD
 			def self.set_weather(path)
 				return false if not path
 				if Sketchup.active_model.georeferenced? then
-					result = UI.messagebox('This model is already georeferenced. Choosing a weather file will overwrite this location.Do you want to continue?', MB_YESNO)
+					result = UI.messagebox('This model is already georeferenced. Choosing a weather file will replace this location. Do you want to continue?', MB_YESNO)
 					return false if result == IDNO
 				end
 				weather = Weather.parse_epw(path)
@@ -40,15 +40,38 @@ module IGD
 				return true
 			end
 
-            def self.get_workplanes_json
+            def self.get_workplanes_hash
                 workplanes = Utilities.get_workplanes(Sketchup.active_model.entities)
                 wp_hash = Hash.new
+                obj_hash = Hash.new                
                 workplanes.each { |wp|
                     value = Labeler.get_value(wp)
-                    value = [] if value == nil or not value
-                    wp_hash[Labeler.get_name(wp)] = value
+                    if value == nil or not value then
+                        wp_hash[Labeler.get_name(wp)] = []
+                    else
+                        value = JSON.parse(value)  #this should  be an array of Hash
+                        value.each {|objective|
+                            obj_hash[objective["name"]] = objective #will be replaced... it will be unique
+                        }                               
+                        aux = []    
+                        value.each{|x| aux << x["name"]}                          
+                        wp_hash[Labeler.get_name(wp)] = aux.uniq
+                    end                    
+                }                
+                return {"workplanes" => wp_hash, "objectives" => obj_hash}
+            end
+
+            def self.get_actual_report
+                report = Hash.new
+                wps = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+                wps.map{|x| Labeler.get_value(x)}.each{|val|
+                    value = JSON.parse(val)
+                    workplane = value["workplane"]
+                    objective = value["objective"]
+                    report[workplane] = Hash.new if report[workplane] == nil 
+                    report[workplane][objective] = value["approved_percentage"]
                 }
-                return wp_hash.to_json
+                return report
             end
 
             def self.get
@@ -56,20 +79,29 @@ module IGD
 		        wd.set_file("#{OS.main_groundhog_path}/src/html/design_assistant.html" )                
 
                 wd.add_action_callback("on_load") do |web_dialog,msg|
+                    hash = self.get_workplanes_hash                    
+                    workplanes = hash["workplanes"].to_json                                         
+                    objectives = hash["objectives"].to_json
                     script = ""                    
-                    script += "workplanes = JSON.parse('#{self.get_workplanes_json}');"
-                    script += "objectiveModule.update_objectives();"
-                    script += "objectiveModule.update_dialog();"                    
+                    script += "workplanes = JSON.parse('#{workplanes}');" 
+                    script += "objectives = JSON.parse('#{objectives}');"                       
+                    script += "objectiveModule.update_workplanes();" 
+                    script += "objectiveModule.update_objectives();"                                      
                     weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
                     if weather != nil then
                         weather = JSON.parse(weather)
-                        script = "document.getElementById('weather_city').innerHTML='#{weather["city"]}';"
+                        script += "document.getElementById('weather_city').innerHTML='#{weather["city"]}';"
                         script += "document.getElementById('weather_state').innerHTML='#{weather["state"]}';"
                         script += "document.getElementById('weather_country').innerHTML='#{weather["country"]}';"
                         script += "document.getElementById('weather_latitude').innerHTML='#{weather["latitude"]}';"
                         script += "document.getElementById('weather_longitude').innerHTML='#{weather["longitude"]}';"
                         script += "document.getElementById('weather_timezone').innerHTML='GMT #{weather["timezone"]}';"                        
                     end
+                    
+                    report = self.get_actual_report
+                    script += "results = JSON.parse('#{report.to_json}');"        
+                    script += "reportModule.update_compliance_summary();"                     
+                    
                     web_dialog.execute_script(script)
                 end
 
@@ -89,20 +121,22 @@ module IGD
                     end
                 end
 
-                wd.add_action_callback("go_to_eplus_weathers") do |web_dialog,msg|
-                    UI.openURL("http://www.energyplus.net/weather")
+                wd.add_action_callback("follow_link") do |web_dialog,msg|
+                    UI.openURL(msg)
                 end
 
                 wd.add_action_callback("preview") do |web_dialog,msg| 
                     path=Sketchup.temp_dir                   
                     export = Exporter.export(path)
                     if not export then
-                        UI.messagebox "Error while exporting... sorry"
+                        UI.messagebox "Error while exporting... Sorry! Contact us to gmolina@igd.cl if the problem persists."
                     end
                                         
                     FileUtils.cd(path) do   
-                        script=[]                      
-                        script << "oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  ./Windows/windows.rad  > octree.oct"
+                        script=[]     
+                        win_string = ""
+                        win_string = "./Windows/windows.rad" if File.directory? "Windows"      
+                        script << "oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{win_string}  > octree.oct"
                         script << "rvu #{Config.rvu_options} -vf Views/view.vf octree.oct"
                         OS.execute_script(script)
 						OS.clear_actual_path
@@ -126,12 +160,14 @@ module IGD
                     faces = Utilities.get_faces(Sketchup.active_model.selection)
                     begin
 						op_name = "Label as Workplane"
+                        
 						Sketchup.active_model.start_operation( op_name ,true)
 						Labeler.to_workplane(faces)
+                        hash = self.get_workplanes_hash
+                        workplanes = hash["workplanes"].to_json                       
                         script = ""                    
-                        script += "workplanes = JSON.parse('#{self.get_workplanes_json}');"
-                        script += "objectiveModule.update_objectives();"
-                        script += "objectiveModule.update_dialog();"  
+                        script += "workplanes = JSON.parse('#{workplanes}');"                        
+                        script += "objectiveModule.update_workplanes();"  
                         web_dialog.execute_script(script)
 						Sketchup.active_model.commit_operation
 					rescue Exception => ex
@@ -177,100 +213,127 @@ module IGD
 
                 wd.add_action_callback("add_objective") do |web_dialog,msg|
                     obj = JSON.parse(msg)
-                    selected_workplane = obj["workplane"]
+                    wp_name = obj["workplane"]
                     objective = obj["objective"]
-                    wps = Utilities.get_workplanes(Sketchup.active_model.entities)                                        
-                    wps = wps.select{|x| Labeler.get_name(x)==selected_workplane} if selected_workplane != "all"
+                    
+                    wp = Utilities.get_workplanes(Sketchup.active_model.entities).select{|x| Labeler.get_name(x)==wp_name}                                        
+                    wp=wp[0]
+                    value = Labeler.get_value(wp)
+                    value = "[]" if value == nil or not value
+                    value = JSON.parse(value)
+                    value << objective                    
+                    Labeler.set_value(wp,value.to_json)
                                         
-                    wps.each {|workplane|                        
-                        value = Labeler.get_value(workplane)
-                        value = [] if value==nil
-                        value.push(objective)
-                        Labeler.set_value(workplane, value)
-                    }
-                    script = ""                    
-                    script += "workplanes = JSON.parse('#{self.get_workplanes_json}');"
-                    script += "objectiveModule.update_objectives();"
-                    web_dialog.execute_script(script)
                 end
 
                 wd.add_action_callback("remove_objective") do |web_dialog,msg|
                     obj = JSON.parse(msg)
                     workplane = obj["workplane"]
-                    objective = obj["objective"]
-                    
+                    objective = obj["objective"]    
+
                     wps = Utilities.get_workplanes(Sketchup.active_model.entities)                                                            
                     wps = wps.select{|x| Labeler.get_name(x)==workplane}
+                    workplane = wps[0]   
+                    #delete the objective from the workplane value                                                 
+                    value = JSON.parse Labeler.get_value(workplane)   #this is an array of hash
+                    del = value.select{|x| x["name"]==objective}
+                    value.delete(del.shift) #delete the first one.
+                    Labeler.set_value(workplane, value.to_json) 
 
-                    workplane = wps[0]                                                    
-                    value = Labeler.get_value(workplane)                    
-                    value.delete(objective)
-                    Labeler.set_value(workplane, value)  
+                    #delete the solved workplane if it exist.                   
+					IGD::Groundhog::Utilities.get_solved_workplanes(Sketchup.active_model.entities).select{|x|
+						JSON.parse(IGD::Groundhog::Labeler.get_value(x))["objective"]==obj["objective"]
+					}.select {|x|
+						JSON.parse(IGD::Groundhog::Labeler.get_value(x))["workplane"]==obj["workplane"]
+					}.each{|x|
+						x.erase!
+					}
+
+                    #update design assistant.
+                    hash = self.get_workplanes_hash
+                    workplanes = hash["workplanes"].to_json                       
                     script = ""                    
-                    script += "workplanes = JSON.parse('#{self.get_workplanes_json}');"
-                    script += "objectiveModule.update_objectives();"
-                    web_dialog.execute_script(script)              
+                    script += "workplanes = JSON.parse('#{workplanes}');"                        
+                    script += "objectiveModule.update_workplanes();"  
+                    web_dialog.execute_script(script)                                                   
                 end
 
-                wd.add_action_callback("calculate") do |web_dialog, workplanes|
-                    next if not Exporter.export(Sketchup.temp_dir)
-					FileUtils.cd(Sketchup.temp_dir) do
-                        options = {
-                            "rtrace" => "-ab 2 -ad 128",
-                            "rcontrib" => "-ab 2 -ad 128",
-                            "sky_bins" => 1,
-                            "static_calculation_method" => "RTRACE"
-                        }   
+                wd.add_action_callback("remark") do |web_dialog, objective|                                     
+                    Utilities.remark_solved_workplanes(objective)
+                end
 
-                        workplanes = JSON.parse(workplanes)
-                        workplanes.each{|workplane, objectives|
-                            workplanes[workplane] = objectives.map{|x| Objective.new(x)}
-                        }
+                wd.add_action_callback("calculate") do |web_dialog, options|
+                    path = "#{Sketchup.temp_dir}/Groundhog_#{Time.now.to_i}"
+                    OS.mkdir(path)
+                    next if not Exporter.export(path)
+					FileUtils.cd(path) do
+                        options = JSON.parse(options)
 
                         #Pre-process information
-                        sim = SimulationManager.new(options)
-                        sim.set_objectives(workplanes)
+                        sim = SimulationManager.new(options) 
+                        next if not sim                       
                         script = sim.solve
 
                         #Process data
                         OS.execute_script(script)
 
                         #post-process and load results
-                        workplanes.each{|workplane, objectives|
-                            objectives.each{|objective|
-                                albedo = Config.albedo
+                        report = Hash.new
+                        all_objectives = []
+
+                        hash = self.get_workplanes_hash
+                        workplanes = hash["workplanes"]
+                        objectives=hash["objectives"]
+                         workplanes.each{|workplane,obj_array|
+                            #initialize the object where the information to report will be stored
+                            report[workplane]=Hash.new 
+
+                            #then go through the objectives
+                            obj_array.each{|obj_name|
+                                all_objectives << obj_name
+                                objective = objectives[obj_name]
                                 pixel_file = "./Workplanes/#{Utilities.fix_name(workplane)}.pxl"
-                                if objective.dynamic then
+                                min_lux = objective["good_light"]["min"]
+                                max_lux = objective["good_light"]["max"]
+
+                                if objective["dynamic"] then
                                     path = "./Results/#{Utilities.fix_name(workplane)}-daylight.annual"
-                                    early = objective.working_time.min  
-                                    late = objective.working_time.max  
-                                    min_lux = objective.light_range.min
-                                    max_lux = objective.light_range.max
+                                    early = objective["occupied"]["min"]
+                                    late = objective["occupied"]["max"]                                    
                                     month_ini = 1
                                     month_end = 12
 
-                                    results = "./Results/#{Utilities.fix_name(workplane)}-#{objective.metric}.txt"
+                                    results = "./Results/#{Utilities.fix_name(workplane)}-#{objective["name"]}.txt"
                                     File.open(results,'w'){ |f|
                                         f.puts Results.annual_to_udi(path,min_lux, max_lux, early,late,month_ini, month_end)
-                                    } 
-                                    Results.import_results(results,pixel_file,objective.metric)
+                                    }                                     
                                 else                                    
-                                    sky = "gensky -ang 45 40 -c -B 0.5586592 -g #{albedo}"
-                                    if objective.calc == "LUX" then
-                                        month = objective.date.month
-                                        day = objective.date.day
-                                        hour = objective.hour
+                                    sky = "gensky -ang 45 40 -c -B 0.5586592 -g #{Config.albedo}"
+                                    if objective["metric"] == "LUX" then
+                                        date = Date.strptime(objective["date"], '%m/%d/%Y')
+                                        month = date.month
+                                        day = date.day
+                                        hour = objective["hour"]
                                         lat = Sketchup.active_model.shadow_info["Latitude"]
                                         lon = -Sketchup.active_model.shadow_info["Longitude"]
                                         mer = -Sketchup.active_model.shadow_info["TZOffset"]
-                                        sky = "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo} +s"                                        
+                                        sky = "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{Config.albedo} +s"                        
                                     end
-                                    results = "./Results/#{Utilities.fix_name(workplane)}-#{Utilities.fix_name(sky)}.txt"                                    
-                                    Results.import_results(results,pixel_file,objective.metric)
-                                end
+                                    results = "./Results/#{Utilities.fix_name(workplane)}-#{Utilities.fix_name(sky)}.txt"                                                                        
+                                end                               
+                                report[workplane][obj_name]=Results.import_results(results,pixel_file,workplane,objective)
                             }
-                        }
-
+                         }
+                        objectives.keys.each{|obj|
+                            min_max=Results.get_min_max_from_model(obj)
+                            Results.update_pixel_colors(0,min_max[1],obj)	#minimum is 0 by default
+                            Utilities.remark_solved_workplanes(obj)
+                         }  
+                         warn report.to_json
+                         script = ""
+                         script += "results = JSON.parse('#{report.to_json}');"        
+                         script += "reportModule.update_compliance_summary();"
+                         web_dialog.execute_script(script)   
                     end
                     
                 end

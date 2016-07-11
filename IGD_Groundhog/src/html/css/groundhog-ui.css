@@ -147,3 +147,16 @@ span.ui-icon {
     padding:0;
 }
 
+td.success{
+    background: #F1FEEA;
+    color: #373737;
+}
+
+td.not-success{
+    background: #FFCFCF;
+    color: #A63E7A;
+}
+
+input.color {
+    width: 4em
+}

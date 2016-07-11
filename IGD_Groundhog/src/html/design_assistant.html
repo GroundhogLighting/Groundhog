@@ -8,11 +8,6 @@
 <link href="css/jquery-ui.css" rel="stylesheet">
 <link href="css/groundhog-ui.css" rel="stylesheet">
 <link rel='stylesheet' href='css/spectrum.css' />
-<style>
-    input.color {
-        width: 4em
-    }
-</style>
 
 <body>
 
@@ -30,7 +25,7 @@
         <h2>Location</h2>
 
         <div class="center">
-            <button type="button" onclick='window.location.href = "skp:set_weather_path@msg"'>Change weather file</button>
+            <button type="button" onclick='window.location.href ="skp:set_weather_path@msg"'>Change weather file</button>
             <table id="weather_info" class="with_border bold_first_row">
                 <tr>
                     <td>City</td>
@@ -57,7 +52,7 @@
                     <td id="weather_timezone">not set</td>
                 </tr>
             </table>
-            <a class="" href="#" onclick='window.location.href = "skp:go_to_eplus_weathers@msg"'>Find weather files here</a>
+            <a class="" href="#" onclick='window.location.href ="skp:follow_link@http://www.energyplus.net/weather"'>Find weather files here</a>
         </div>
 
     </div>
@@ -86,22 +81,36 @@
 
     <div class="display" id="objectives">
         <h2>Objectives</h2>
-        <div class="center"><button id="add_objective_to_worplane">Add objective</button></div>
+        <table id="objectives_table" class="draggable selectable"></table>
+        
+        <div class="center"><button id="add_objective_to_worplane">New objective</button></div>
         <div class="accordion" id="workplane_objectives"></div>
     </div>
 
 
     <div class="display" id="daylight_simulation">
         <h2>Daylight</h2>
-        <div class="center"><button id="simulate_button">Simulate</button></div>
-        <div class="accordion">
-            <h3>Static simulation options</h3>
+        <div class="center"><button id="simulate_button">Calculate</button></div>
+        <div id="simulation_options" class="accordion">
+            <h3>Sky subdivition</h3>
             <div>
+                <table>
+                    <tr>
+                        <td>Sky subdivition</td>
+                        <td>
+                            <input title="option" id='sky_bins' type='number' value='1' step='1' min='1'></input>
+                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <h3>Static simulation options</h3>
+            <div >
                 <table>
                     <tr>
                         <td>Calculation method</td>
                         <td>
-                            <select id='static_calculation_method'>
+                            <select title="option" id='static_calculation_method'>
 							<option value="RTRACE">Ray-tracing</option>
 							<option value="DC">Simple Daylight Coefficients</option>
 						</select>
@@ -110,16 +119,9 @@
                     <tr>
                         <td>Parameters</td>
                         <td>
-                            <input type="text" id="static_parameters">
+                            <input title="option" type="text" id="static_parameters">
                         </td>
-                    </tr>
-                    <tr>
-                        <td>Sky subdivition</td>
-                        <td>
-                            <input id='static_sky_bins' type='number' value='1' step='1' min='1'></input>
-                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
-                        </td>
-                    </tr>
+                    </tr>                    
 
                 </table>
                 <div class="center">
@@ -135,7 +137,7 @@
                     <tr>
                         <td>Calculation method</td>
                         <td>
-                            <select id='dynamic_calculation_method'>
+                            <select title="option" id='dynamic_calculation_method'>
 							<option value="DC">Simple Daylight Coefficients</option>
 						</select>
                         </td>
@@ -143,16 +145,9 @@
                     <tr>
                         <td>Parameters</td>
                         <td>
-                            <input type="text" id="dynamic_parameters">
+                            <input title="option" type="text" id="dynamic_parameters">
                         </td>
-                    </tr>
-                    <tr>
-                        <td>Sky subdivition</td>
-                        <td>
-                            <input id='dynamic_sky_bins' type='number' value='1' step='1' min='1'></input>
-                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
-                        </td>
-                    </tr>
+                    </tr>                   
 
                 </table>
                 <div class="center">
@@ -167,19 +162,19 @@
                 <table>
                     <tr>
                         <td>Daylight matrix parameters</td>
-                        <td><input type="text" id="tdd_daylight_parameters"></td>
+                        <td><input title="option" type="text" id="tdd_daylight_parameters"></td>
                     </tr>
                     <tr>
                         <td>Pipe interior parameters</td>
-                        <td><input type="text" id="tdd_pipe_parameters"></td>
+                        <td><input title="option" type="text" id="tdd_pipe_parameters"></td>
                     </tr>
                     <tr>
                         <td>View matrix parameters</td>
-                        <td><input type="text" id="tdd_view_parameters"></td>
+                        <td><input title="option" type="text" id="tdd_view_parameters"></td>
                     </tr>
                     <tr>
                         <td>Assume one Daylight Matrix</td>
-                        <td><input type="checkbox" id="tdd_singledaymtx">
+                        <td><input title="option" type="checkbox" id="tdd_singledaymtx">
                             <p class="tooltip" title="Calculate a single daylight matrix and use it for all the TDDs. This works well if all the TDDs basically see the same sky and obstructions.">?</p>
                         </td>
                     </tr>
@@ -200,48 +195,46 @@
 
     <div class="display" id="report">
         <h2>Report</h2>
-        <div class="center">
-            <table class="selectable">
-                <tr>
-                    <td>Header</td>
-                </tr>
-                <tr>
-                    <td>Row 1</td>
-                </tr>
-                 <tr>
-                    <td>Row 2</td>
-                </tr>
-            </table>
+        <div class="accordion">
+            <h3>Compliance</h3>
+            <div>
+                <table id="compliance_summary" class="selectable"></table>
+            </div>
+            
         </div>
+        
+        
     </div>
 
     <!-- ADD OBJECTIVE DIALOG -->
-    <div id="add_metric_dialog" title="Add objective">
-        <div class="center"><select id="workplane_to_add_objective"></select></div>
-
+    <div id="add_metric_dialog" title="Add objective">       
+        <div class="center">
+            <label for="metric_name">Name: </label>
+            <input type="text" id="objective_name">   
+        </div>
         <fieldset class="center" id="metric_field">
             <legend>Metric</legend>
             <select id="metric">
                 <option value="DA">Daylight Autonomy</option>
                 <option value="UDI">Useful Daylight Illminance</option>
                 <option value="DF">Daylight Factor</option>
-                <option value="Lux">Illuminance at time</option>
+                <option value="LUX">Illuminance at time</option>
             </select>
         </fieldset>
         <fieldset id="fulfillment_field">
             <legend>Workplane is in compliance when:</legend>
-            <input type="number" min="0" max="100" id="spatial_threshold">
-            <label for="spatial_threshold">% of the space</label>
+            <input type="number" min="0" max="100" id="objective_goal">
+            <label for="objective_goal">% of the space</label>
             <input type="number" min="0" max="100" id="metric_threshold">
             <label for="metric_threshold"></label>
         </fieldset>
 
         <fieldset id="working_hours_field">
-            <legend>Working hours</legend>
-            <label for="early">From: </label>
-            <input type="number" value="8" min="0" max="24" id="early">
-            <label for="late">To:</label>
-            <input type="number" value="18" min="0" max="24" id="late">
+            <legend>Occupancy hours</legend>
+            <label for="occupied_min">From: </label>
+            <input type="number" value="8" min="0" max="24" id="occupied_min">
+            <label for="occupied_max">To:</label>
+            <input type="number" value="18" min="0" max="24" id="occupied_max">
         </fieldset>
 
         <fieldset id="ill_goal_field">
@@ -250,14 +243,16 @@
             <input type="number" value="300" min="0" id="min_lux">
             <label for="max_lux">To:</label>
             <input type="number" value="2000" min="0" id="max_lux">
+            <label for="no_maximum">Ignore maximum:</label>
+            <input type="checkbox" id="no_maximum">
         </fieldset>
 
         <fieldset id="sim_period_field">
             <legend>Simulation period (months)</legend>
-            <label for="month_ini">From: </label>
-            <input type="number" value="2" min="0" step="1" id="month_ini">
-            <label for="month_end">To:</label>
-            <input type="number" value="12" min="1" step="150" id="month_end">
+            <label for="sim_min">From: </label>
+            <input type="number" value="2" min="0" step="1" id="sim_min">
+            <label for="sim_max">To:</label>
+            <input type="number" value="12" min="1" step="150" id="sim_max">
         </fieldset>
 
         <fieldset id="day_to_sim_field">
@@ -294,14 +289,14 @@
             <legend>Reflectance</legend>
             <label for="monochromatic">Monochromatic material</label>
             <input class="color" type="checkbox" id="monochromatic">
-            <table>                
-                <tr>                    
+            <table>
+                <tr>
                     <td><label for="red">R: </label></td>
                     <td><input class="color" type="number" min="0" max="1" step="0.01" id="red"></td>
                     <td><label for="green">G: </label></td>
                     <td><input class="color" type="number" min="0" max="1" step="0.01" id="green"></td>
                     <td><label for="blue">B: </label></td>
-                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="blue" ></td>
+                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="blue"></td>
                     <td><input type='text' id="color_pick" /> </td>
                 </tr>
             </table>
@@ -310,11 +305,11 @@
         <fieldset>
             <legend>Other properties</legend>
             <table>
-                <tr>                                       
+                <tr>
                     <td><label for="specularity">Specularity: </label></td>
-                    <td><input class="color" type="number"  min="0" max="1" step="0.01" id="specularity"></td>
+                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="specularity"></td>
                     <td><label for="roughness">Roughness: </label></td>
-                    <td><input  class="color" type="number" min="0" max="1" step="0.01" id="roughness"></td>
+                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="roughness"></td>
                 </tr>
             </table>
         </fieldset>
@@ -327,8 +322,10 @@
 </body>
 <script>
     
-    var workplanes = {"Le Workplane": ["AAA", "BBB"], "Another WP": ["UUU","EEE"]};
+    var workplanes = {};
     var materials = {};
+    var objectives = {};
+    var results = {};
 
 </script>
 <script src="js/JQuery/jquery-3.0.0.js"></script>
@@ -341,7 +338,7 @@
 <script src="js/report.js"></script>
 <script>
     
-    objectiveModule.update_dialog();
-    //window.location.href = 'skp:on_load@message';   
+    window.location.href = 'skp:on_load@message';   
 </script>
+
 </html>

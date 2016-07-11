@@ -12,10 +12,12 @@ module IGD
 						UI.messagebox("File '#{wp_file}' does not exist")
 						next false
 				    end
+                    win_string = ""
+                    win_string = "./Windows/windows.rad" if File.directory? "Windows"  
                     
                     name=Utilities.fix_name(target)
                     nsensors = File.readlines(wp_file).length
-                    script = "rfluxmtx -I+ -y #{nsensors} #{options["rcontrib"]} < ./#{wp_file} - ./Skies/white_sky.rad ./Materials/materials.mat ./scene.rad ./Windows/windows.rad > ./DC/#{name}-sky.dc" 
+                    script = "rfluxmtx -I+ -y #{nsensors} #{options["dynamic_parameters"]} < ./#{wp_file} - ./Skies/white_sky.rad ./Materials/materials.mat ./scene.rad #{win_string} > ./DC/#{name}-sky.dc" 
                     
                     next [script]
                 }
