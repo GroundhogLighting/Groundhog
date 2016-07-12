@@ -1,5 +1,8 @@
 module IGD
     module Groundhog
+
+        # This module is the one that creates and has all the methods within the Design Assistant; the main
+        # Groundhog UI.		
         module DesignAssistant
 
             # Asks for a EPW or WEA file to be inputed.
@@ -40,6 +43,11 @@ module IGD
 				return true
 			end
 
+            # Search for workplanes in the model and find their objectives. Returns an array
+            # with the corresponding format.
+			# @author German Molina			
+			# @return [Hash] the workplanes and objectives
+            # @todo Allow it gathering workplanes inside groups and components
             def self.get_workplanes_hash
                 workplanes = Utilities.get_workplanes(Sketchup.active_model.entities)
                 wp_hash = Hash.new
@@ -51,7 +59,7 @@ module IGD
                     else
                         value = JSON.parse(value)  #this should  be an array of Hash
                         value.each {|objective|
-                            obj_hash[objective["name"]] = objective #will be replaced... it will be unique
+                            obj_hash[objective["name"]] = objective #does not requie "uniq"
                         }                               
                         aux = []    
                         value.each{|x| aux << x["name"]}                          
@@ -61,6 +69,11 @@ module IGD
                 return {"workplanes" => wp_hash, "objectives" => obj_hash}
             end
 
+            # Search for workplanes in the model and finds out weather they fulfil their
+            # goals or not.
+			# @author German Molina			
+			# @return [Hash] the report
+            # @todo Allow it gathering workplanes inside groups and components
             def self.get_actual_report
                 report = Hash.new
                 wps = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
@@ -74,6 +87,10 @@ module IGD
                 return report
             end
 
+            # Returns the Design Assistant.
+			#
+			# @author German Molina
+			# @return [SketchUp::UI::WebDialog] the Design Assistant web dialog
             def self.get
                 wd = UI::WebDialog.new("Design Assistant",false,"DAsistant",500,500,130,120,true)
 		        wd.set_file("#{OS.main_groundhog_path}/src/html/design_assistant.html" )                
@@ -126,11 +143,12 @@ module IGD
                 end
 
                 wd.add_action_callback("preview") do |web_dialog,msg| 
-                    path=Sketchup.temp_dir                   
-                    export = Exporter.export(path)
-                    if not export then
+                    path = "#{Sketchup.temp_dir}/Groundhog"
+                    OS.mkdir(path)
+
+                    if not Exporter.export(path) then
                         UI.messagebox "Error while exporting... Sorry! Contact us to gmolina@igd.cl if the problem persists."
-                    end
+                    end                                   
                                         
                     FileUtils.cd(path) do   
                         script=[]     
@@ -262,10 +280,12 @@ module IGD
                     Utilities.remark_solved_workplanes(objective)
                 end
 
+
                 wd.add_action_callback("calculate") do |web_dialog, options|
-                    path = "#{Sketchup.temp_dir}/Groundhog_#{Time.now.to_i}"
+                    path = "#{Sketchup.temp_dir}/Groundhog"
                     OS.mkdir(path)
                     next if not Exporter.export(path)
+
 					FileUtils.cd(path) do
                         options = JSON.parse(options)
 
@@ -284,7 +304,8 @@ module IGD
                         hash = self.get_workplanes_hash
                         workplanes = hash["workplanes"]
                         objectives=hash["objectives"]
-                         workplanes.each{|workplane,obj_array|
+
+                        workplanes.each{|workplane,obj_array|
                             #initialize the object where the information to report will be stored
                             report[workplane]=Hash.new 
 
@@ -324,12 +345,13 @@ module IGD
                                 report[workplane][obj_name]=Results.import_results(results,pixel_file,workplane,objective)
                             }
                          }
+
                         objectives.keys.each{|obj|
                             min_max=Results.get_min_max_from_model(obj)
                             Results.update_pixel_colors(0,min_max[1],obj)	#minimum is 0 by default
                             Utilities.remark_solved_workplanes(obj)
-                         }  
-                         warn report.to_json
+                        }  
+                         
                          script = ""
                          script += "results = JSON.parse('#{report.to_json}');"        
                          script += "reportModule.update_compliance_summary();"
@@ -342,8 +364,7 @@ module IGD
                 return wd
             end
 
-
-
+            
 
 
         end

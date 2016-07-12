@@ -1,6 +1,7 @@
 module IGD
 	module Groundhog
-		# This file contains the system related topics related to the different Operating Systems, and system calls
+		
+		# This module contains the system related topics related to the different Operating Systems, and system calls
 		module OS
 
 			# Identifies the OS. Returns "MAC", "WIN" or "OTHER" when used.
@@ -90,17 +91,7 @@ module IGD
 				array.push("Examples")
 				return File.join(array)
 			end
-=begin
-			# Gets the path where the Add-ons are stored
-			# @author German Molina
-			# @return [Void] The add-on groundhog path
-			def self.addons_groundhog_path
-				dir=self.main_groundhog_path
-				array=dir.split("/")
-				array.push("Addons")
-				return File.join(array)
-			end
-=end
+
 			# Removes everything from the input path
 			# The commands need to be strings.
 			# @author German Molina

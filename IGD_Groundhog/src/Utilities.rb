@@ -1,6 +1,7 @@
 module IGD
 	module Groundhog
-		# This class contains the methods that are useful other methods.
+		
+		# This modiule contains the methods that are useful other methods.
 		#
 		# For example, obtain all the faces within an array, or all the windows, or delete all the
 		# entities with a certain label.

@@ -99,7 +99,32 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>This class is the parent of all the pre-defined tasks (i.e. calculate DC
+matrix). it contains basic methods that are common for every task.</p>
 
+<p>Every task contains a target, a proc and dependencies.</p>
+
+<p>The target is what makes it unique when compared to other similar tasks
+(i.e. calculating the luminaire contribution for one workplane is different
+from calculating the luminaire contribution to another workplane).</p>
+
+<p>The proc is a Proc object that is run when solved. It is intended to return
+the necessary commands that, when run, will accomplish such task (i.e.
+rfluxmtx -ab …)</p>
+
+<p>The dependencies is an array with other Tasks that must be run before this
+task</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
 
 
@@ -203,7 +228,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#expand-instance_method" title="#expand (instance method)">- (Object) <strong>expand</strong> </a>
+      <a href="#expand-instance_method" title="#expand (instance method)">- (Array) <strong>expand</strong> </a>
     
 
     
@@ -217,7 +242,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Expand a task means returning an array of itself (that task) as well as all
+its dependencies and, recursively, its dependencies&#39; dependencies.</p>
+</div></span>
   
 </li>
 
@@ -242,7 +270,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of Task.</p>
+<p>initialize.</p>
 </div></span>
   
 </li>
@@ -251,7 +279,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#solve-instance_method" title="#solve (instance method)">- (Object) <strong>solve</strong>(options) </a>
+      <a href="#solve-instance_method" title="#solve (instance method)">- (Boolean) <strong>solve</strong>(options) </a>
     
 
     
@@ -265,7 +293,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Solve a task is running its proc by using the options given to the
+SimulationManager object that solves all tasks.</p>
+</div></span>
   
 </li>
 
@@ -288,13 +319,29 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns a new instance of Task</p>
+<p>initialize.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>Germán Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -302,14 +349,14 @@
       <pre class="lines">
 
 
-103
-104
-105
-106
-107</pre>
+136
+137
+138
+139
+140</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 103</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 136</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
     <span class='ivar'>@target</span> <span class='op'>=</span> <span class='kw'>false</span>
@@ -354,12 +401,12 @@
       <pre class="lines">
 
 
-101
-102
-103</pre>
+132
+133
+134</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 132</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dependencies'>dependencies</span>
   <span class='ivar'>@dependencies</span>
@@ -397,12 +444,12 @@
       <pre class="lines">
 
 
-101
-102
-103</pre>
+132
+133
+134</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 132</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_proc'>proc</span>
   <span class='ivar'>@proc</span>
@@ -440,12 +487,12 @@
       <pre class="lines">
 
 
-101
-102
-103</pre>
+132
+133
+134</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 132</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_target'>target</span>
   <span class='ivar'>@target</span>
@@ -465,32 +512,62 @@
       <div class="method_details first">
   <h3 class="signature first" id="expand-instance_method">
   
-    - (<tt>Object</tt>) <strong>expand</strong> 
+    - (<tt>Array</tt>) <strong>expand</strong> 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Expand a task means returning an array of itself (that task) as well as all
+its dependencies and, recursively, its dependencies&#39; dependencies.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>all the tasks</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126</pre>
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 116</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 158</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_expand'>expand</span>
     <span class='kw'>if</span> <span class='op'>!</span><span class='ivar'>@dependencies</span> <span class='kw'>or</span> <span class='ivar'>@dependencies</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>==</span> <span class='int'>0</span> <span class='kw'>then</span>                
@@ -511,27 +588,93 @@
       <div class="method_details ">
   <h3 class="signature " id="solve-instance_method">
   
-    - (<tt>Object</tt>) <strong>solve</strong>(options) 
+    - (<tt>Boolean</tt>) <strong>solve</strong>(options) 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Solve a task is running its proc by using the options given to the
+SimulationManager object that solves all tasks.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The options… usually a SimulationManager attribute</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Success</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>Germán Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-109
-110
-111
-112
-113
-114</pre>
+147
+148
+149
+150
+151
+152</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 109</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 147</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_solve'>solve</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_success'>success</span> <span class='op'>=</span> <span class='ivar'>@proc</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -549,7 +692,7 @@
 </div>
 
     <div id="footer">
-  Generated on Mon Jul 11 17:27:20 2016 by
+  Generated on Tue Jul 12 17:18:28 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

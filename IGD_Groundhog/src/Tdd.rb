@@ -1,8 +1,8 @@
 module IGD
   module Groundhog
+
+    # This module contains the methods that allow handling and exporting Tubular Daylight Devices (TDDs)
     module TDD
-
-
 
       # Returns the lens default material
       # @author German Molina
@@ -23,7 +23,7 @@ module IGD
 
 
       # Export the Tubular Daylight Devices into separate files, separating
-      #   the Pipe, the Upper Lens and the Lower Lens.
+      # the Pipe, the Upper Lens and the Lower Lens.
       # @author German Molina
       # @version 0.1
       # @param path [String] Directory where the Component Definitions are located

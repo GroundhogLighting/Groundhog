@@ -1,8 +1,15 @@
 module IGD
     module Groundhog
         
-         
-        class SimulationManager           
+        # This class is the core of Groundhog simulation management. A SimulationManager
+        # object will handle different Tasks, intending to reuse calculations as much as possible.
+        # 
+        # The idea was to create a sort of Make or Rake; defining requirements for each task
+        class SimulationManager     
+
+            # This method initializes the Simulation Manager
+            # @author Germán Molina
+            # @param options [Hash] The options sent from the WebDialog for the simulation
             def initialize(options)
                 @options = options
                 @tasks = []
@@ -23,7 +30,10 @@ module IGD
 
             end
            
-
+            # Receives an objective and creates a task to be performed from it.
+            # @param workplane [String] The name of the workplane to which the task is being created
+            # @param objective [Hash] The objective from which the task will be assembled.
+            # @author Germán Molina
             def get_task(workplane,objective)                                             
                 task = false
                 albedo = Config.albedo
@@ -56,7 +66,8 @@ module IGD
             end
 
 
-
+            # Expands all the simulation manager tasks, obtaining their subtasks (requirements).
+            # @author Germán Molina
             def expand!
                 ret = []
                 @tasks.each {|task|
@@ -65,6 +76,11 @@ module IGD
                 @tasks = ret                
             end
 
+            # Removes the repeated tasks; keeping just the first one required.
+            # That is, if calculating the Sky Contribution DC matrix over a workplane
+            # is required twice, it will be done just once and the information generated
+            # will be reused.
+            # @author Germán Molina
             def uniq!                                               
                 ret = []
                 @tasks.reverse_each {|task|                                   
@@ -76,8 +92,10 @@ module IGD
                 @tasks =  ret
             end
               
-            #This is meant to be called from the directory where the Radiance
+            # This is meant to be called from the directory where the Radiance
             # model was exported
+            # @author Germán Molina
+            # @return [Array] An array of commands that, when run, will perform all the needed calculations
             def solve                
                 ret = [] 
                 OS.mkdir("DC")
@@ -95,17 +113,37 @@ module IGD
         end
 
 
-
+        # This class is the parent of all the pre-defined tasks (i.e. calculate DC matrix).
+        # it contains basic methods that are common for every task.
+        #
+        # Every task contains a target, a proc and dependencies.
+        #
+        # The target is what makes it
+        # unique when compared to other similar tasks (i.e. calculating the luminaire contribution
+        # for one workplane is different from calculating the luminaire contribution to another
+        # workplane).
+        #
+        # The proc is a Proc object that is run when solved. It is intended to return the necessary
+        # commands that, when run, will accomplish such task (i.e. rfluxmtx -ab ...)
+        #
+        # The dependencies is an array with other Tasks that must be run before this task
         class Task            
            	
             attr_accessor :proc, :target, :dependencies
 
+            # initialize.
+            # @author Germán Molina
             def initialize
                 @target = false
                 @proc = false
                 @dependencies = false                                     
             end                        
 
+            # Solve a task is running its proc by using the options given to the
+            # SimulationManager object that solves all tasks.
+            # @param options [Hash] The options... usually a SimulationManager attribute
+            # @return [Boolean] Success
+            # @author Germán Molina
             def solve(options)
                 success = @proc.call(options)
                 warn "Fatal: Impossible to solve #{self}" if not success
@@ -113,6 +151,10 @@ module IGD
                 return success
             end
 
+            # Expand a task means returning an array of itself (that task)
+            # as well as all its dependencies and, recursively, its dependencies'
+            # dependencies.
+            # @return [Array] all the tasks
             def expand
                 if !@dependencies or @dependencies.length == 0 then                
                     return [self]

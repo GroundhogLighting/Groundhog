@@ -1,5 +1,7 @@
 module IGD
 	module Groundhog
+		
+		# This module handles everything related to the Materials.
 		module Materials
 
 			# Adds the default material to the model

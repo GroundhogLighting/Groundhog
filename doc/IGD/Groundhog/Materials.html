@@ -84,7 +84,18 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>This module handles everything related to the Materials.</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
 
 
@@ -235,17 +246,17 @@
       <pre class="lines">
 
 
-20
-21
 22
 23
 24
 25
 26
-27</pre>
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 20</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 22</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_add_default_glass'>add_default_glass</span>
 	<span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>GH_default_glass</span><span class='tstring_end'>&quot;</span></span>
@@ -315,17 +326,17 @@
       <pre class="lines">
 
 
-8
-9
 10
 11
 12
 13
 14
-15</pre>
+15
+16
+17</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 8</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 10</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_add_default_material'>add_default_material</span>
 	<span class='comment'>#Add the default materials to the model
@@ -475,8 +486,6 @@ and the return value will be the !xform ... line needed for referencing it.</cod
       <pre class="lines">
 
 
-43
-44
 45
 46
 47
@@ -525,10 +534,12 @@ and the return value will be the !xform ... line needed for referencing it.</cod
 90
 91
 92
-93</pre>
+93
+94
+95</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 43</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Materials.rb', line 45</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_mat_string'>get_mat_string</span><span class='lparen'>(</span><span class='id identifier rubyid_material'>material</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_xform'>xform</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_mat_name'>mat_name</span><span class='op'>=</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_material'>material</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
@@ -591,7 +602,7 @@ and the return value will be the !xform ... line needed for referencing it.</cod
 </div>
 
     <div id="footer">
-  Generated on Mon Jul 11 17:27:19 2016 by
+  Generated on Tue Jul 12 17:18:27 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

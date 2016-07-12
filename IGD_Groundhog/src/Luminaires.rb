@@ -1,10 +1,13 @@
 module IGD
   module Groundhog
+
+    # This module controls the behavior of luminaires... it reads the IES file and 
+    # transforms it into Radiance representation
     module Lamps
 
       # Compares two numbers.
       #
-      #  This is a function present within Radiance's code that I just replicated.
+      # This is a function present within Radiance's code that I just replicated.
       # @author German Molina based on Radiance's code
       # @param a [<float>] a number to compare
       # @param b [<float>] the other number to compare
@@ -57,9 +60,13 @@ module IGD
         /\<HID\>/ => [0.519, 0.418, 0.9]
       }
 
-      def self.match_lamp(lamp)
+      # Finds the color of the lamp type from the lamp description
+      # @author German Molina based on Radiance's code
+      # @param lamptype [String] the lamp type
+      # @return [Array] an RGB vector
+      def self.match_lamp(lamptype)
         @lamp_table.each do |l|
-          if lamp=~ l[0] then #if it matches
+          if lamptype=~ l[0] then #if it matches
             return l[1]
           end
           return [1.0/3.0, 1.0/3.0, 1.0/3.0] #if not found
@@ -67,7 +74,7 @@ module IGD
       end
 
 
-      #  Decides weather the illum surrounding one luminaire is a sphere or a box
+      # Decides weather the illum surrounding one luminaire is a sphere or a box
       # @author German Molina based on Radiance's code
       # @param definition [SketchUp::ComponentDefinition] the definition to surround with illum
       # @return [Hash] A Hash with the information about the shape
@@ -100,7 +107,7 @@ module IGD
         return ret
       end
 
-      #  Transform an IES file into a Radiance understood data file
+      # Transform an IES file into a Radiance understood data file
       # @author German Molina based on Radiance's code
       # @param instance [Sketchup::ComponentInstance] The instance to which the IES will be assigned
       # @param path [String] The actual path on which we are working.
@@ -281,7 +288,13 @@ module IGD
       end
 
 
-
+      # Writes the datfile that Radiance requires to create the Light source (illum)
+      # @author German Molina based on Radiance's code
+      # @param vang [Integer] The number of measured vertical angles in the IES file.
+      # @param hang [Integer] The number of measured horizontal angles in the IES file.
+      # @param iesname [Integer] The name of the .dat file
+      # @param ies_content [String] The data in the IES file.
+      # @note a .dat file is written in the process
       def self.write_dat_file(vang,hang,iesname, ies_content)
 
         total = 1

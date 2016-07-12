@@ -1,7 +1,7 @@
 module IGD
 	module Groundhog
 
-		# This class contains the methods that handle Labels.
+		# This module contains the methods that handle Labels.
 		#
 		# Labels are some class-like organization that Groundhog has. Instead of creating a new instance
 		# each time we create a window, we just "Label" it by setting an attribute using the set_attribute SketchUp API method.
@@ -364,8 +364,7 @@ module IGD
 			# @version 0.2
 			# @return [Void]
 			def self.to_workplane(entities)
-				faces=Utilities.get_horizontal_faces(entities)
-				not_sutable=false
+				faces=Utilities.get_horizontal_faces(entities)				
 				correct=[]
 				name = Utilities.get_name
 				return if not name

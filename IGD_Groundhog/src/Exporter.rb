@@ -1,10 +1,8 @@
 module IGD
 	module Groundhog
 
-		# This class has the methods that allow exporting the SketchUp model.
+		# This module has the methods that allow exporting the SketchUp model.
 		module Exporter
-
-
 
 			# Gets the path where the SketchUp model is saved. If it is not saved, it will return false.
 			# @author German Molina
@@ -217,10 +215,10 @@ module IGD
 			# @return [Boolean] Success
 			def self.export(path)
 				OS.clear_path(path)
-				#begin
-				#	model=Sketchup.active_model
-				#	op_name = "Export"
-				#	model.start_operation( op_name,true )
+				begin
+					model=Sketchup.active_model
+					op_name = "Export"
+					model.start_operation( op_name,true )
 
 					#Export the faces and obtain the modifiers
 					mod_list=self.export_layers(path)
@@ -235,10 +233,10 @@ module IGD
 
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 
-				#	model.commit_operation
-				#rescue Exception => ex
-				#	UI.messagebox ex
-				#end
+					model.commit_operation
+				rescue Exception => ex
+					UI.messagebox ex
+				end
 				return true
 			end
 
@@ -444,60 +442,6 @@ module IGD
 				}
 
 
-=begin
-				rad_strings=Array.new(ngroups,"") #store the geometry of the windows
-				materials=Array.new(ngroups,[]) #store the materials of the windows
-				nwin=1 #this will count the windows
-
-				windows.each do |win|
-					c=Labeler.get_win_group(win)
-					info=self.get_rad_string(win)
-					if c!=nil then # if the window has a group
-						# We write using the writer of that group
-						i=0
-						while i<ngroups
-							if c==groups[i] then #if the group of the window is the same as the one in the array
-								materials[i]+=[info[1]]
-								rad_strings[i]+='#normal (points inside): '+win.normal.x.to_s+' '+win.normal.y.to_s+' '+win.normal.z.to_s+"\n"
-								rad_strings[i]+=info[1].name.tr(" ","_")+' '+info[0]+"\n\n" #Window with its material
-								break # we leave the loop
-							end
-							i+=1
-						end
-
-					else #if not
-						#we write using a new writer
-						winname=Labeler.get_fixed_name(win)
-						if winname==nil then
-							wr=File.open("#{path}/Windows/WindowSet_#{nwin}.rad",'w+')
-							nwin+=1
-						else
-							wr=File.open("#{path}/Windows/#{winname.tr(" ","_")}.rad",'w+')
-						end
-						wr.write(Material.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
-						wr.close
-					end
-				end
-
-				#Close the rest of the files
-				writers=[]
-				count=0
-				groups.each do |gr|
-					materials[count].uniq!
-					mat_string=""
-					materials[count].each do |mat|
-						mat_string+=Materials.get_mat_string(mat,false)
-					end
-					mat_string+="\n\n"
-
-					w=File.open("#{path}/Windows/#{gr.tr(" ","_")}.rad",'w+')
-					w.write(mat_string+rad_strings[count])
-					w.close
-					count=count+1
-				end
-
-				return true
-=end
 			end
 
 			# Writes the sensors that are over a certain workplane. Creates a Workplanes folder on the directory.
@@ -744,14 +688,7 @@ module IGD
 					instances=Utilities.get_component_instances(entities)
 
 					geom_string=""
-=begin
-					SECTION DEPRECATED BECAUSE NOW WE ASSUME EACH INSTANCE MAY HAVE DIFFERENT POWER INPUTS (A.K.A MULTIPLIER)
-					# Add the illum if it is a luminaire
-					if Labeler.local_luminaire?(h) then #add the illum
-						mult = 1.0
-						geom_string += Lamps.ies2rad(mult,h, comp_path)
-					end
-=end
+
 					# write and next if it is a TDD
 					if Labeler.tdd?(h) then
 						TDD.write_tdd("#{path}/TDDs",h)
@@ -834,15 +771,12 @@ module IGD
 			def self.get_component_string(comp)
 
 				t=comp.transformation.to_a
-				definition = comp.definition
 
 				x=t[12].to_m
 				y=t[13].to_m
 				z=t[14].to_m
 
 				rx=Math::atan2(-t[9],t[10])
-				s1=Math::sin(rx)
-				c1=Math::cos(rx)
 				c2=Math::sqrt(t[0]*t[0]+t[4]*t[4])
 				ry=Math::atan2(t[8],c2)
 				rz=Math::atan2(-t[4],t[0])
@@ -929,7 +863,7 @@ module IGD
 			
 
 
-		end #end class
+		end #end module
 
-	end #end module
+	end #end Groundhog
 end

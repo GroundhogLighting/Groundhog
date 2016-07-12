@@ -87,7 +87,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>This file contains the system related topics related to the different
+<p>This module contains the system related topics related to the different
 Operating Systems, and system calls</p>
 
 
@@ -466,13 +466,13 @@ Operating Systems, and system calls</p>
       <pre class="lines">
 
 
-120
-121
-122
-123</pre>
+111
+112
+113
+114</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 120</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 111</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_clear_actual_path'>clear_actual_path</span>
 	<span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_rm_rf'>rm_rf</span><span class='lparen'>(</span><span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_glob'>glob</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>./*</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span> <span class='label'>secure:</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -545,16 +545,16 @@ Operating Systems, and system calls</p>
       <pre class="lines">
 
 
-108
-109
-110
-111
-112
-113
-114</pre>
+99
+100
+101
+102
+103
+104
+105</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 99</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_clear_path'>clear_path</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span> <span class='kw'>do</span>
@@ -628,15 +628,15 @@ Operating Systems, and system calls</p>
       <pre class="lines">
 
 
-87
 88
 89
 90
 91
-92</pre>
+92
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 87</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 88</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_examples_groundhog_path'>examples_groundhog_path</span>
 	<span class='id identifier rubyid_dir'>dir</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span>
@@ -730,17 +730,17 @@ within SketchUp. The commands need to be strings.</p>
       <pre class="lines">
 
 
-155
-156
-157
-158
-159
-160
-161
-162</pre>
+146
+147
+148
+149
+150
+151
+152
+153</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 155</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 146</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_script'>script</span>
@@ -801,7 +801,6 @@ German Molina</p>
       <pre class="lines">
 
 
-10
 11
 12
 13
@@ -815,10 +814,11 @@ German Molina</p>
 21
 22
 23
-24</pre>
+24
+25</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_getsystem'>getsystem</span>
 
@@ -900,16 +900,16 @@ German Molina</p>
       <pre class="lines">
 
 
-66
 67
 68
 69
 70
 71
-72</pre>
+72
+73</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 66</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 67</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span>
 	<span class='id identifier rubyid_files'>files</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_find_support_file'>find_support_file</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>IGD_Groundhog.rb</span><span class='tstring_end'>&quot;</span></span> <span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Plugins</span><span class='tstring_end'>&quot;</span></span>
@@ -998,12 +998,12 @@ German Molina</p>
       <pre class="lines">
 
 
-59
 60
-61</pre>
+61
+62</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 59</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 60</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 	<span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_directory?'>directory?</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
@@ -1073,12 +1073,12 @@ German Molina</p>
       <pre class="lines">
 
 
-29
 30
-31</pre>
+31
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 30</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_radiance_path'>radiance_path</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/src/Radiance/bin</span><span class='tstring_end'>&quot;</span></span>
@@ -1148,12 +1148,12 @@ German Molina</p>
       <pre class="lines">
 
 
-36
 37
-38</pre>
+38
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 36</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 37</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_raypath'>raypath</span>
 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/src/Radiance/lib</span><span class='tstring_end'>&quot;</span></span>
@@ -1244,6 +1244,15 @@ if everything went well, and false if it did not.</p>
       <pre class="lines">
 
 
+120
+121
+122
+123
+124
+125
+126
+127
+128
 129
 130
 131
@@ -1254,19 +1263,10 @@ if everything went well, and false if it did not.</p>
 136
 137
 138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148</pre>
+139</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 129</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 120</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_run_command'>run_command</span><span class='lparen'>(</span><span class='id identifier rubyid_cmd'>cmd</span><span class='rparen'>)</span>
 
@@ -1335,7 +1335,6 @@ if everything went well, and false if it did not.</p>
       <pre class="lines">
 
 
-42
 43
 44
 45
@@ -1345,10 +1344,11 @@ if everything went well, and false if it did not.</p>
 49
 50
 51
-52</pre>
+52
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 43</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_setup_radiance'>setup_radiance</span>
 	<span class='comment'># ADD RADIANCE_PATH
@@ -1426,15 +1426,15 @@ if everything went well, and false if it did not.</p>
       <pre class="lines">
 
 
-77
 78
 79
 80
 81
-82</pre>
+82
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 77</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/OS.rb', line 78</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_support_files_groundhog_path'>support_files_groundhog_path</span>
 	<span class='id identifier rubyid_dir'>dir</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span>
@@ -1452,7 +1452,7 @@ if everything went well, and false if it did not.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon Jul 11 17:27:19 2016 by
+  Generated on Tue Jul 12 17:18:27 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

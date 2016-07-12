@@ -1,6 +1,8 @@
 
 module IGD
   module Groundhog
+
+    # This module is meant to read and write weather files
     module Weather
 
       # Reads an EPW file and returns a HASH containing the weather

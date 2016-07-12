@@ -1,5 +1,7 @@
 module IGD
   module Groundhog
+
+    # This module is in charge of triangulating and refining all  Workplane meshes... far from perfect, but works.
     module Triangle
 
       # Transforms a set of points and polygons into an array of

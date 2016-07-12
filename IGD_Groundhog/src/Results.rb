@@ -1,10 +1,21 @@
 module IGD
 	module Groundhog
-		# This class is meant to help importing results from a grid into a Workplane.
 
+		# This module intends to handle results; that is, drawing them, coloring them, etc.
 		module Results
 						
-
+			# Reads the file with annual illuminance results (in "path") and
+			# calculates the UDI of them, according to the rest of the parameters. 
+			# @author German Molina
+			# @param path [String] The path to the file with the annual results
+			# @param min_lux [Float] The minimum required illuminance
+			# @param max_lux [Float] The maximum required illuminance
+			# @param early [Float] The time of the beggining of the occupied time
+			# @param late [Float] The time of the end of the occupied time
+			# @param month_ini [Integer] The first month to consider in the simulation
+			# @param month_end [Integer] The final month to consider in the simulation
+			# @return [Array <String>] An array with the names of the metrics
+			# @todo Allow calculating UDI for parts of the year.
 			def self.annual_to_udi(path,min_lux, max_lux, early,late,month_ini, month_end)
 
 				
