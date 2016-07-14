@@ -33,7 +33,7 @@ module IGD
 				extension=""
 				extension= "_"+name if name
 				mat_array.each do |mat|
-					ret+=Materials.get_mat_string(mat, Utilities.fix_name(mat.name)+extension, false)+"\n\n"
+					ret+=Materials.get_mat_string(mat, self.fix_name(mat.name)+extension, false)+"\n\n"
 				end
 				return ret
 			end
