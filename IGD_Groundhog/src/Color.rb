@@ -1,7 +1,9 @@
 module IGD
 	module Groundhog
+    
+        # Module meant to handle color transformation between one colorspace to another.      
 		module Color
-
+            
             @CIE_x_r	=	0.640
             @CIE_y_r	=	0.330
             @CIE_x_g	=	0.290

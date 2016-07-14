@@ -1,6 +1,7 @@
 module IGD
 	module Groundhog
-		# This class contains the methods that are useful other methods.
+		
+		# This modiule contains the methods that are useful other methods.
 		#
 		# For example, obtain all the faces within an array, or all the windows, or delete all the
 		# entities with a certain label.
@@ -32,7 +33,7 @@ module IGD
 				extension=""
 				extension= "_"+name if name
 				mat_array.each do |mat|
-					ret+=Exporter.get_mat_string(mat, Utilities.fix_name(mat.name)+extension)+"\n\n"
+					ret+=Materials.get_mat_string(mat, Utilities.fix_name(mat.name)+extension, false)+"\n\n"
 				end
 				return ret
 			end
@@ -117,6 +118,17 @@ module IGD
 				return entities.select {|x| x.is_a? Sketchup::Face }
 			end
 
+			# Sets of entities to be exported contain groups or faces or component definitions.
+			# This method tells us if the entities passed as arguments have those or not.
+			# @author German Molina
+			# @param entities [Array<SketchUp::Entities>] Array with entities.
+			# @return [Boolean] The answer
+			def self.has_relevant_content?(entities)
+				groups = entities.select{|x| x.is_a? Sketchup::Group}.length
+				faces = self.get_faces(entities).length
+				comps = entities.select{|x| x.is_a? Sketchup::ComponentInstance}.length
+				(groups+faces+comps) > 0
+			end
 
 			# Returns all the Sketchup::Group within an array.
 			# @author German Molina
@@ -223,6 +235,7 @@ module IGD
 						end
 					else
 						UI.messagebox("All selected windows must have the same normal")
+						model.abort_operation
 					end
 
 					model.commit_operation
@@ -237,17 +250,9 @@ module IGD
 			# @author German Molina
 			# @param entities [Array<entities>] Array of entities
 			# @return [Array <Int>] Array with the unique window groups
-			def self.get_win_groups(entities)
-				groups=[]
-				windows=self.get_windows(entities)
-				windows.each do |i|
-					a=Labeler.get_win_group(i)
-					if a!=nil
-						groups=groups+[a]
-					end
-				end
-
-				return groups.uniq
+			def self.get_win_groups(entities)				
+				windows=self.get_windows(entities).select{|x| Labeler.get_win_group(x) != nil}
+				windows.map{|x| Labeler.get_win_group(x)}.uniq
 			end
 
 
@@ -271,7 +276,6 @@ module IGD
 					norm=norm.+(v3)
 				end
 
-				badvert=0
 				offset=norm.dot(Geom::Vector3d.new(vertices[0].position.x,vertices[0].position.y,vertices[0].position.z))
 				verteps=0.0000015
 				smalloff=offset.abs <= verteps
@@ -381,7 +385,7 @@ module IGD
 			# @param entities [Array<SketchUp::Entities>]
 			# @return [Array <SketchUp::Entities>] An array with the entities that are SketchUp::ComponentDefinition
 			def self.get_workplanes(entities)
-				return entities.select{|x| Labeler.workplane? x}
+				return entities.select{|x| Labeler.get_label(x)=="workplane"}
 			end
 
 			# Gets the workplanes
@@ -389,21 +393,19 @@ module IGD
 			# @param entities [Array<SketchUp::Entities>]
 			# @return [Array <SketchUp::Entities>] An array with the entities that are SketchUp::ComponentDefinition
 			def self.get_solved_workplanes(entities)
-				return entities.select{|x| Labeler.solved_workplane? x}
+				return entities.select{|x| Labeler.solved_workplane?(x)}
 			end
 
 
 			# Hides all solved workplanes with the exception of those with the input metric
 			# @author German Molina
-			# @param metric [String]
+			# @param objective [String] The name of the objective to remark
 			# @version 0.1
-			def self.remark_solved_workplanes(metric)
-				#hide them all, except those with the metric we are interested in
-				scale_min=false
-				scale_max=false
+			def self.remark_solved_workplanes(objective)
+				#hide them all, except those with the metric we are interested in				
 				self.get_solved_workplanes(Sketchup.active_model.entities).each{|x|
 					value=JSON.parse(Labeler.get_value(x))
-					if value["metric"]==metric
+					if value["objective"]==objective
 						x.hidden=false
 					else
 						x.hidden=true

@@ -24,20 +24,31 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Exporter'
 		Sketchup::require 'IGD_Groundhog/src/Results'
 		Sketchup::require 'IGD_Groundhog/src/Materials'
-		Sketchup::require 'IGD_Groundhog/src/Rad'
 		Sketchup::require 'IGD_Groundhog/src/LoadHandler'
-		Sketchup::require 'IGD_Groundhog/src/Addons'
 		Sketchup::require 'IGD_Groundhog/src/Color'
 		Sketchup::require 'IGD_Groundhog/src/Luminaires'
-		Sketchup::require 'IGD_Groundhog/src/Report'
 		Sketchup::require 'IGD_Groundhog/src/Tdd'
 		Sketchup::require 'IGD_Groundhog/src/Weather'
+		Sketchup::require 'IGD_Groundhog/src/DesignAssistant'
+		Sketchup::require 'IGD_Groundhog/src/SimulationManager'
+
+
+		Sketchup::require 'IGD_Groundhog/src/Scripts/AnnualIlluminance'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/CalcDC'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/InstantIlluminance'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/Sky'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/SkyContribution'
+		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDContribution'
+		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDDaylight'
+		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDPipe'
+		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDView'
 
 
 
 		require 'json'
 		require 'Open3'
 		require 'fileutils'
+		require 'date'
 
 		#########################################
 		model=Sketchup.active_model
@@ -45,7 +56,7 @@ module IGD
 		entities=model.entities
 
 		#Add Radiance to Path as well as RAYPATH
-		Config.setup_radiance
+		OS.setup_radiance
 
 		#######################
 		### CONTEXT MENUS
@@ -237,8 +248,9 @@ module IGD
 		}
 
 
-		groundhog_menu.add_item("Simulation Wizard"){
-			Rad.show_sim_wizard
+		@design_assistant = DesignAssistant.get
+		groundhog_menu.add_item("Open Design Assistant"){
+			@design_assistant.show
 		}
 
 		groundhog_menu.add_item("Import results"){
@@ -250,10 +262,6 @@ module IGD
 		### INSERT SUBMENU
 
 		gh_insert_menu=groundhog_menu.add_submenu("Insert")
-
-		gh_insert_menu.add_item("Materials"){
-			Materials.show_material_wizard
-		}
 
 		gh_insert_menu.add_item("Illuminance Sensor"){
 			Loader.load_illuminance_sensor
@@ -278,26 +286,23 @@ module IGD
 
 
 		### PREFERENCES MENU
-		groundhog_menu.add_item("Preferences") {
-			Config.show_config
+		
+		@preferences_dialog = Config.get		
+		groundhog_menu.add_item("Preferences") {			
+				@preferences_dialog.show
 		}
-
-		### ADD-ONS MENU
-		@gh_addons_menu=groundhog_menu.add_submenu("Add-ons")
-		@gh_addons_menu.add_item("Add-on manager") {
-			Addons.show_addons_manager
-		}
-
-		def self.addon_menu
-			return @gh_addons_menu
-		end
 
 		### EXAMPLES MENU
 		gh_examples_menu=groundhog_menu.add_submenu("Example files")
-		gh_examples_menu.add_item("University Hall") {
-			path = "#{OS.examples_groundhog_path}/UniversityHall.skp"
-			UI.messagebox("Unable to open Example File.") if not Sketchup.open_file path
+		examples = Dir["#{OS.examples_groundhog_path}/*.skp"]
+		examples.each{|file|
+			example = file.split("/").pop.gsub(".skp","").tr("_"," ")
+			gh_examples_menu.add_item(example) {
+				path = file
+				UI.messagebox("Unable to open '#{example}' Example File.") if not Sketchup.open_file path
+			}
 		}
+		
 
 		### HELP MENU
 
@@ -309,7 +314,7 @@ module IGD
 		# Add the About.
 		groundhog_menu.add_item("About Groundhog"){
 
-			str="Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+" with Radiance binaries which are a courtesy of NREL (www.nrel.gov)\n\nGroundhog was created and it is mainly developed by "+Sketchup.extensions["Groundhog"].creator+", currently working at IGD.\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
+			str="Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+". The Radiance binaries you are using are a courtesy of NREL (www.nrel.gov)\n\nGroundhog was created and it is mainly developed by "+Sketchup.extensions["Groundhog"].creator+", currently working at IGD.\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
 			str+="\n\nLicense:\nGroundhog is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
 
 			This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -327,7 +332,6 @@ module IGD
 		#########################################
 		if File.exists? Config.config_path then #if a configuration file was once created
 			Config.load_config
-
 		end
 
 

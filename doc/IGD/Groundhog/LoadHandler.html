@@ -99,7 +99,18 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>This class was obtained directly from SketchUp&#39;s examples</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
 
 
@@ -131,7 +142,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>AAA.</p>
+</div></span>
   
 </li>
 
@@ -153,7 +166,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>AAA.</p>
+</div></span>
   
 </li>
 
@@ -175,7 +190,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>AAA.</p>
+</div></span>
   
 </li>
 
@@ -197,7 +214,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>AAA.</p>
+</div></span>
   
 </li>
 
@@ -223,6 +242,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
+<p>AAA</p>
+
 
   </div>
 </div>
@@ -248,21 +269,21 @@
       <pre class="lines">
 
 
-10
-11
-12
 13
 14
-15</pre>
+15
+16
+17
+18</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/LoadHandler.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/LoadHandler.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_cancelled?'>cancelled?</span>
-  <span class='comment'># You could, for example, show a messagebox after X seconds asking if the
-</span>  <span class='comment'># user wants to cancel the download. If this method returns true, then
-</span>  <span class='comment'># the download cancels.
-</span>  <span class='kw'>return</span> <span class='kw'>false</span>
+	<span class='comment'># You could, for example, show a messagebox after X seconds asking if the
+</span>	<span class='comment'># user wants to cancel the download. If this method returns true, then
+</span>	<span class='comment'># the download cancels.
+</span>	<span class='kw'>return</span> <span class='kw'>false</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -278,27 +299,38 @@
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>AAA</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-21
-22
-23
-24
-25
-26</pre>
+26
+27
+28
+29
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/LoadHandler.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/LoadHandler.rb', line 26</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_onFailure'>onFailure</span><span class='lparen'>(</span><span class='id identifier rubyid_error_message'>error_message</span><span class='rparen'>)</span>
-  <span class='comment'># A real implementation would probably not use a global variable,
-</span>  <span class='comment'># but this demonstrates storing any error we receive.
-</span>  <span class='gvar'>$last_error</span> <span class='op'>=</span> <span class='id identifier rubyid_error_message'>error_message</span>
-			 <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ERROR: &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_error_message'>error_message</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; while trying to load the component.\n\nPlease contact </span><span class='embexpr_beg'>#{</span><span class='const'>Groundhog</span><span class='period'>.</span><span class='id identifier rubyid_creator'>creator</span><span class='embexpr_end'>}</span><span class='tstring_content'> to tell us what happened.\n\nTHANKS!</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='comment'># A real implementation would probably not use a global variable,
+</span>	<span class='comment'># but this demonstrates storing any error we receive.
+</span>	<span class='gvar'>$last_error</span> <span class='op'>=</span> <span class='id identifier rubyid_error_message'>error_message</span>
+	<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ERROR: &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_error_message'>error_message</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; while trying to load the component.\n\nPlease contact </span><span class='embexpr_beg'>#{</span><span class='const'>Groundhog</span><span class='period'>.</span><span class='id identifier rubyid_creator'>creator</span><span class='embexpr_end'>}</span><span class='tstring_content'> to tell us what happened.\n\nTHANKS!</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -314,21 +346,32 @@
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>AAA</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-6
-7
-8</pre>
+8
+9
+10</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/LoadHandler.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/LoadHandler.rb', line 8</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_onPercentChange'>onPercentChange</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span><span class='rparen'>)</span>
-  <span class='const'>Sketchup</span><span class='op'>::</span><span class='id identifier rubyid_set_status_text'>set_status_text</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>LOADING:    </span><span class='tstring_end'>&quot;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>%</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+	<span class='const'>Sketchup</span><span class='op'>::</span><span class='id identifier rubyid_set_status_text'>set_status_text</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>LOADING:    </span><span class='tstring_end'>&quot;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>%</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -344,21 +387,32 @@
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>AAA</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-17
-18
-19</pre>
+21
+22
+23</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/LoadHandler.rb', line 17</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/LoadHandler.rb', line 21</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_onSuccess'>onSuccess</span>
-  <span class='const'>Sketchup</span><span class='op'>::</span><span class='id identifier rubyid_set_status_text'>set_status_text</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Loading completed succesfully.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+	<span class='const'>Sketchup</span><span class='op'>::</span><span class='id identifier rubyid_set_status_text'>set_status_text</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Loading completed succesfully.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -370,7 +424,7 @@
 </div>
 
     <div id="footer">
-  Generated on Tue Jun 14 17:51:10 2016 by
+  Generated on Thu Jul 14 10:04:48 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

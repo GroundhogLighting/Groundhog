@@ -1,68 +1,54 @@
 module IGD
 	module Groundhog
-		# This class is meant to help importing results from a grid into a Workplane.
 
+		# This module intends to handle results; that is, drawing them, coloring them, etc.
 		module Results
-
-
-			# Converts a very long file of annual results into a 2d array for
-			# plotting as a heatmap of UDI.
-			#
-			# It reads the workplane path for getting the position of each sensor.
-			#
-			# The positions are assumed to be in meters.
-			#
+						
+			# Reads the file with annual illuminance results (in "path") and
+			# calculates the UDI of them, according to the rest of the parameters. 
 			# @author German Molina
-			# @param results_path [String] the path to the results file
-			# @param workplane_file [String] the path to the workplane file
-			# @param min [Float] The minimum acceptable illuminance
-			# @param max [Float] The maximum acceptable illuminance
-			# @return [Depends] An array with the values when succesful, "false" if not.
-			# @version 0.2
-			def self.annual_to_UDI(results_path, workplane_file, min, max, early, late)
+			# @param path [String] The path to the file with the annual results
+			# @param min_lux [Float] The minimum required illuminance
+			# @param max_lux [Float] The maximum required illuminance
+			# @param early [Float] The time of the beggining of the occupied time
+			# @param late [Float] The time of the end of the occupied time
+			# @param month_ini [Integer] The first month to consider in the simulation
+			# @param month_end [Integer] The final month to consider in the simulation
+			# @return [Array <String>] An array with the names of the metrics
+			# @todo Allow calculating UDI for parts of the year.
+			def self.annual_to_udi(path,min_lux, max_lux, early,late,month_ini, month_end)
 
-				return false if not File.exist?(results_path)
-				return false if not File.exist?(workplane_file)
+				
+				annual = File.readlines(path)
+				#remove header
+				7.times {annual.shift}
+				
+				#for calculating the UDI
+				max_lux = 9e15 if not max_lux
+				
+				#process each sensor
+				ret = []
+				annual.each{|sensor_data|
+					data = sensor_data.split(" ").map{|x| x.to_f}        
+					working_hours = data.each_with_index.select{|val, index| 
+						hour = (index+0.5)%24
+						hour >= early and hour <= late
+					}.map{|value,index| value}
+					
+					working_hours = data.each_with_index.select{|val, index| 
+						hour = (index+0.5)%24
+						hour >= early and hour <= late
+					}.map{|value,index| value}
+					
+					
+					good_hours = working_hours.select{|x| x >= min_lux and x<= max_lux }
+					
+					ret << (100.0 * good_hours.length.to_f / working_hours.length.to_f)
 
-				results=File.open(results_path).read.split("\n").collect!{|x| x.to_f}
-				n_results=results.length
-
-				sensors=File.open(workplane_file).read.split("\n")
-				n_sensors=sensors.length
-
-				n_samples = n_results/n_sensors
-				warn "Weather file does not seem to have 8760 hours!!" if n_samples != 8760
-
-				timestep=8760.0/n_samples
-
-				ret=[]
-				#sensors.each do |line|
-				#	line.strip!
-				#	sensor=line.split("\t")
-				#	ret=ret+[[sensor[0].to_f.m, sensor[1].to_f.m, sensor[2].to_f.m, 0]]
-				#end
-
-				#they alternate hour
-				#ret.each do |sensor|
-				sensors.each do |sensor|
-					time=-timestep/2.0 #say, -0.5 is the time
-					ac=0.0
-					good = 0.0
-					for i in 1..n_samples
-						time+=timestep # now it will be 0.5
-						ill=results.shift
-						next if (time%24.0) < early or (time%24.0) > late
-						ac+=1.0
-						next if ill > max
-						next if ill < min
-						good+=100.0
-					end
-					ret.push([good/ac])
-				end
-
+				}
 				return ret
+				
 			end
-
 
 			# Returns an array with the names of the metrics within the solved-workplanes, obtained from the Solved Workplanes
 			# @author German Molina
@@ -96,12 +82,13 @@ module IGD
 			#
 			# @author German Molina
 			# @param values [array] The array (2D but 1 columns) with the data to show.
-			# @param pixels [array] The array (2D, 9 columns) with the positions of the vertices of triangles (pixels).
-			# @param workplane [String] The name that will be given to the group that contains the pixels
-			# @param metric [String] The name that will be given to the group that contains the pixels
-			# @return [String] the metric
+			# @param pixels [array] The array (2D) with the positions of the vertices of pixels.
+			# @param workplane [String] The name of the workplane to which this is solution
+			# @param objective [Hash] The objective
+			# @return [Float] The percentage of approved area
 			# @version 0.6
-			def self.draw_pixels(values,pixels,workplane,metric)
+			def self.draw_pixels(values,pixels,workplane,objective)
+				ret = false
 				model=Sketchup.active_model
 				if values.length != pixels.length then
 					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match")
@@ -114,21 +101,13 @@ module IGD
 					return false
 				end
 
-				if not metric then
-					answer = UI.inputbox(["Metric name","Workplane name"],["",workplane], "What are your results?")
-					return false if not answer
-					workplane=answer[1]
-					metric=answer[0]
-				end
-
-
 				op_name="Draw pixels"
 				begin
 					model.start_operation(op_name,true)
 
 					#delete previous workplane.
 					Utilities.get_solved_workplanes(Sketchup.active_model.entities).select{|x|
-						JSON.parse(Labeler.get_value(x))["metric"]==metric
+						JSON.parse(Labeler.get_value(x))["objective"]==objective["name"]
 					}.select {|x|
 						JSON.parse(Labeler.get_value(x))["workplane"]==workplane
 					}.each{|x|
@@ -136,7 +115,7 @@ module IGD
 					}
 
 					group = Sketchup.active_model.entities.add_group
-					group.name=name
+					group.name="#{workplane}-#{objective["name"]}"
 
 					entities=group.entities
 
@@ -145,8 +124,9 @@ module IGD
 					min=9999999999999
 
 					#draw every line. Each pixel is a polygon.
-					pixels.each do |data|
+					pixels.each do |data|						
 						value = values.shift[0].to_f
+										
 						#check minimum and maximum
 						min=value.to_f if min>value.to_f
 						max=value.to_f if max<value.to_f
@@ -172,17 +152,19 @@ module IGD
 =end
 						pixel=entities.add_face(vertex)
 						Labeler.to_result_pixel(pixel)
-						Labeler.set_pixel_value(pixel,value)
+						Labeler.set_pixel_value(pixel,value)						
 					end
 
 					Labeler.to_solved_workplane(group)
 					Labeler.to_solved_workplane(group.definition)
-					wp_value = self.get_workplane_statistics(group)
-					wp_value["metric"] = metric
+					wp_value = self.get_workplane_statistics(group, objective)
+					wp_value["objective"] = objective["name"]
 					wp_value["workplane"] = workplane
+					ret = wp_value["approved_percentage"]
 					Labeler.set_workplane_value(group,wp_value.to_json)
 
 					group.casts_shadows=false
+					group.receives_shadows=false
 
 					#hide the edges
 					group.entities.select{|x| x.is_a? Sketchup::Edge}.each{|x| x.hidden=true}
@@ -192,12 +174,13 @@ module IGD
 					UI.messagebox ex
 					model.abort_operation
 				end
-				return metric
+				return ret
 			end
 
 
 			# Reads the results from a grid, and represent them as a heat map
-			# in a plane in the model.
+			# in a plane in the model. The color is obtained from the default Radiance
+			# color scale.
 			#
 			# @author German Molina
 			# @param value  [float] The value to be assigned a color
@@ -205,7 +188,7 @@ module IGD
 			# @param min [float] The min value, the one that saturates the color scale.
 			# @return [Array<Float>] with Red, Green and Blue components
 			# @version 0.3
-			def self.get_pixel_color(value,max,min)
+			def self.get_rad_pixel_color(value,max,min)
 
 				red=[0.18848,0.05468174,0.00103547,8.311144e-08,7.449763e-06,0.0004390987,0.001367254,0.003076,0.01376382,0.06170773,0.1739422,0.2881156,0.3299725,0.3552663,0.372552,0.3921184,0.4363976,0.6102754,0.7757267,0.9087369,1,1,0.9863]
 				green=[0.0009766,2.35501e-05,0.0008966244,0.0264977,0.1256843,0.2865799,0.4247083,0.4739468,0.4402732,0.3671876,0.2629843,0.1725325,0.1206819,0.07316644,0.03761026,0.01612362,0.004773749,6.830967e-06,0.00803605,0.1008085,0.3106831,0.6447838,0.9707]
@@ -231,27 +214,93 @@ module IGD
 				return [r,g,b]
 			end
 
+			# Reads the results from a grid, and represent them as a heat map
+			# in a plane in the model. The color is obtained from the groundhog
+			# color scale, which intends to clearly show which pixels are over-valued, 
+			# sub-valued and correctly-values
+			#
+			# @author German Molina
+			# @param value  [float] The value to be assigned a color
+			# @param max [float] The maximum value, the one that saturates the color scale.
+			# @param min [float] The min value, the one that saturates the color scale.
+			# @return [Array<Float>] with Red, Green and Blue components
+			# @version 0.3
+			def self.get_gh_pixel_color(value,min,good_min, good_max, max)
+				three_ranges = true
+				if not good_max then
+				 	good_max = max
+					three_ranges = false
+				end
+				
+				if [min, good_min, good_max, max].sort != [min, good_min, good_max, max] then
+					UI.messagebox "Trying to find a pixel color with incorrect values."
+					return false
+				end
+				
+
+				max_color = [189,6,5]
+				min_color = [70,116,196]
+				good_min_color = [255,255,255]
+				good_max_color = [249, 190, 6]				
+
+				if value <= min then
+					return min_color
+				elsif value > min and value <= good_min then
+					ret = min_color
+					frac = (value.to_f - min.to_f)/(good_min.to_f - min.to_f)	
+					sum = good_min_color				
+				elsif value > good_min and value <= good_max then
+					ret = good_min_color
+					frac = (value.to_f - good_min.to_f)/(good_max.to_f - good_min.to_f)	
+					sum = good_max_color
+				elsif value > good_max and value <= max then
+					ret = good_max_color
+					frac = (value.to_f - good_max.to_f)/(max.to_f - good_max.to_f)	
+					sum = max_color
+				elsif value > max
+					if three_ranges then
+						return max_color
+					else
+						return good_max_color
+					end
+				end 
+				ret.each_with_index{|val,i| ret[i]+= frac * (sum[i]-ret[i])}				
+				return ret.map{|x| x/255.0}
+			end
+
 			# Update the pixel colors of all the solved_workplanes in the model.
 			#
 			# @author German Molina
 			# @param max [Float] the maximum value for the scale
 			# @param min [Float] the minimum value for the scale
-			# @param metric [String] The metric to which we change the color
+			# @param objective [Hash] The objective to which we change the color
 			# @return void
 			# @version 0.2
-			def self.update_pixel_colors(min,max,metric)
+			def self.update_pixel_colors(min,max,objective)
 				model=Sketchup.active_model
 				op_name="Update pixels"
-				begin
-					model.start_operation(op_name,true)
+				#begin					
+					#model.start_operation(op_name,true)
+					#good_min and good_max are assign for static metrics, by default
+					good_min = objective["good_light"]["min"]
+					good_max = objective["good_light"]["max"]
+					good_max = false if not good_max
+
+					#if dynamic: Fix
+					if objective["dynamic"] then
+						good_min = objective["good_pixel"]
+						good_max = false				
+					end
+
 					workplanes=Utilities.get_solved_workplanes(Sketchup.active_model.entities)
-					workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value(x))["metric"]==metric}
+					workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value(x))["objective"]==objective["name"]}
 					workplanes.each do |workplane|
 						workplane.entities.each do |pixel|
 							next if not Labeler.face?(pixel) or not Labeler.result_pixel?(pixel)
 							# now we are sure ent is a pixel.
 							value=Labeler.get_value(pixel)
-							color=self.get_pixel_color(value,max,min)
+							#color=self.get_rad_pixel_color(value,max,min)
+							color=self.get_gh_pixel_color(value,min,good_min,good_max,max)
 							pixel.material=color
 							pixel.back_material=color
 						end
@@ -260,13 +309,13 @@ module IGD
 						wp_value["scale_max"]=max
 						Labeler.set_workplane_value(workplane,wp_value.to_json)
 					end
-					Utilities.remark_solved_workplanes(metric)
-					model.commit_operation
+					Utilities.remark_solved_workplanes(objective)
+					#model.commit_operation
 
-				rescue Exception => ex
-					UI.messagebox ex
-					model.abort_operation
-				end
+				#rescue Exception => ex
+				#	UI.messagebox ex
+				#	model.abort_operation
+				#end
 			end
 
 			# Checks all the solved workplanes in the model that correspond to a metric
@@ -274,14 +323,14 @@ module IGD
 			#
 			# @author German Molina
 			# @return [Array<Float>] An array with the minimum and maximum values
-			# @param metric [String] The metric that we are getting the min and max from
+			# @param objective [String] The name of the objetive that we are getting the min and max from
 			# @version 0.2
-			def self.get_min_max_from_model(metric)
+			def self.get_min_max_from_model(objective)
 				workplanes = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
 				#Get the maximum and minimum in the whole model
 				max=-1
 				min=9999999999999
-				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value x)["metric"]==metric}
+				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value x)["objective"]==objective}
 				workplanes.each do |inst|
 					value=JSON.parse(Labeler.get_value(inst))
 					min=value["min"] if min > value["min"]
@@ -295,11 +344,11 @@ module IGD
 			#
 			# @author German Molina
 			# @return [Array<Float>] An array with the minimum and maximum values
-			# @param metric [String] The metric that we are getting the min and max from
+			# @param objective [String] The objective that we are getting the min and max from
 			# @version 0.1
-			def self.get_scale_from_model(metric)
+			def self.get_scale_from_model(objective)
 				workplanes = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
-				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value x)["metric"]==metric}
+				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value x)["objective"]==objective["name"]}
 				scale_min=false
 				scale_max=false
 				workplanes.each do |workplane|
@@ -309,10 +358,10 @@ module IGD
 						scale_max = value["scale_max"]
 					else
 						if value["scale_min"] != scale_min or value["scale_max"] != scale_max then
-							UI.messagebox("Workplanes of the same metric have different scales!\nWe will fix that now")
-							min_max=Results.get_min_max_from_model(metric)
-							Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
-							self.get_scale_from_model(metric)
+							UI.messagebox("Workplanes of the same objective have different scales!\nWe will fix that now")
+							min_max=Results.get_min_max_from_model(objective["name"])
+							Results.update_pixel_colors(0,min_max[1],objective)	#minimum is 0 by default
+							self.get_scale_from_model(objective)
 						end
 					end
 				end
@@ -325,39 +374,25 @@ module IGD
 			# in a plane in the model.
 			#
 			# @author German Molina
-			# @param path [String]
-			# @param metric [String]
-			# @return void
+			# @param path [String] the path to the values to import
+			# @param pixels_file [String] the path to the pixels corresponding to the values
+			# @param workplane [String] the workplane that correspond to this solution
+			# @param objective [Hash] the objective imported
+			# @return [Float] The percentage of approved area
 			# @version 0.3
-			def self.import_results(path,metric)
-
-				model=Sketchup.active_model
-				name=path.tr("\\","/").split("/").pop.split(".")[0]
+			def self.import_results(path,pixels_file,workplane,objective)
+				
 				values = Utilities.readTextFile(path,",",0)
 				return if not values #if the format was wrong, for example
-
-				pixels_file = values[0][0]
-				if not File.exist?(pixels_file) then
-					#Assume there is no file there.
-					#Try to find the probable pixel file in the GH export.
-					pixels_file = path.tr("\\","/").split("/")
-					pixels_file.pop
-					pixels_file.pop
-					pixels_file = "#{pixels_file.join("/")}/Workplanes/#{name}.pxl"
-					if not File.exist?(pixels_file) then
-						#Now... if THIS does not exist, return.
-						UI.messagebox("Pixels file '#{pixels_file}' not found.")
-						return false
-					end
-				else
-					values.shift #remove the name of the file
+				
+				if not File.exist?(pixels_file) then					
+					UI.messagebox("Pixels file '#{pixels_file}' not found.")
+					return false				
 				end
+
 				pixels = Utilities.readTextFile(pixels_file,",",0)
-				name = name.tr("_"," ")
-				metric = self.draw_pixels(values,pixels,name,metric)
-				min_max=Results.get_min_max_from_model(metric)
-				Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
-				Utilities.remark_solved_workplanes(metric)
+				
+				return self.draw_pixels(values,pixels,workplane,objective)				
 			end
 
 
@@ -366,20 +401,33 @@ module IGD
 			# @author German Molina
 			# @return [Hash] A hash with statistics
 			# @param wp [Workplane] The workplane to analyze
+			# @param objective [Hash] The objective
 			# @version 0.1
-			def self.get_workplane_statistics(wp)
+			def self.get_workplane_statistics(wp, objective)
 				return false if not Labeler.solved_workplane? wp
 				pixels = wp.entities.select{|x| Labeler.result_pixel? x}
+
+				#good_min and good_max are assign for static metrics, by default
+				good_min = objective["good_light"]["min"]
+				good_max = objective["good_light"]["max"]
+				good_max = 9e16 if not good_max
+
+				#if dynamic: Fix
+				if objective["dynamic"] then
+					good_min = objective["good_pixel"]
+					good_max = 9e16				
+				end
 
 				count=pixels.length
 				sum=0
 				total_area = 0
 				max=Labeler.get_value(pixels[0])
 				min=max
-
+				good_area = 0;
 				pixels.each do |pixel|
-					value = Labeler.get_value(pixel)
+					value = Labeler.get_value(pixel)					
 					area = pixel.area
+					good_area += area if value >= good_min and value <= good_max
 					max = value if value > max
 					min = value if value < min
 					sum += value*area
@@ -391,9 +439,11 @@ module IGD
 				ret["min"] = min
 				ret["max"] = max
 				ret["average"]=average
+				ret["goal"]=objective["goal"]
 				ret["min_over_average"] = min==average ? 1 : min/average
 				ret["min_over_max"] = min==max ? 1 : min/max #fully shaded planes get a Max and Min of 0.
 				ret["nsensors"] = count
+				ret["approved_percentage"] = good_area / total_area
 				ret["total_area"] = total_area/1550.0 #transform into square meters from sqin
 				return ret
 			end

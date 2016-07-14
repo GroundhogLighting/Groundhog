@@ -1,10 +1,8 @@
 module IGD
 	module Groundhog
 
-		# This class has the methods that allow exporting the SketchUp model.
+		# This module has the methods that allow exporting the SketchUp model.
 		module Exporter
-
-
 
 			# Gets the path where the SketchUp model is saved. If it is not saved, it will return false.
 			# @author German Molina
@@ -93,7 +91,7 @@ module IGD
 			def self.get_rad_string(face)
 				mat = self.get_material(face)
 				positions = self.get_vertex_positions(face)
-				name = Utilities.fix_name(Labeler.get_name(face))
+				name = Labeler.get_fixed_name(face)
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
@@ -135,7 +133,7 @@ module IGD
 			def self.get_reversed_rad_string(face)
 				mat = self.get_material(face)
 				positions = self.get_vertex_positions(face).reverse
-				name = Utilities.fix_name(Labeler.get_name(face))
+				name = Labeler.get_fixed_name(face)
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
@@ -224,6 +222,7 @@ module IGD
 
 					#Export the faces and obtain the modifiers
 					mod_list=self.export_layers(path)
+					mod_list.uniq!
 					return false if not mod_list
 					return false if not self.export_modifiers(path,mod_list)
 					return false if not self.write_sky(path)
@@ -237,6 +236,7 @@ module IGD
 
 					model.commit_operation
 				rescue Exception => ex
+					model.abort_operation
 					UI.messagebox ex
 				end
 				return true
@@ -284,9 +284,9 @@ module IGD
 				#We get the layers in the model
 				layers=model.layers
 				#we open one file per each layer
-				writers=[] #this is an array of writers
-				layers.each do |lay|
-					writers=writers+[File.open("#{path}/Geometry/#{Utilities.fix_name(lay.name)}.rad",'w+')]
+				writers=Hash.new #this is an array of writers
+				layers.each do |layer|
+					writers[layer.name] = File.open("#{path}/Geometry/#{Utilities.fix_name(layer.name)}.rad",'w+')
 				end
 
 
@@ -299,33 +299,24 @@ module IGD
 						windows=windows+[fc]
 					elsif Labeler.workplane?(fc) then
 						#if it is workplane, export
-						name=Labeler.get_name(fc) #Get the name of the surface
+						name=Labeler.get_fixed_name(fc) #Get the name of the surface
 						mesh = fc.mesh
 						points = mesh.points
 						polygons = mesh.polygons
 						self.write_workplane(path, name, points, polygons)
 					elsif Labeler.illum?(fc) then
 						illums=illums+[fc]
-					else
-						i=0
-						layers.each do |ly| #we look for the correct layer
-							if fc.layer.==ly then
-								#write the information
-								writers[i].write(Utilities.fix_name(info[1].name)+info[0])
-								#store the material
-								mat_list=mat_list+[info[1]]
-								#and purge the list
-								mat_list.uniq!
-							end #end of if in find layer
-							i=i+1
-						end #end in for each layer
-
+					else						
+						#write the information
+						writers[fc.layer.name].write(Utilities.fix_name(info[1].name)+info[0])
+						#store the material
+						mat_list=mat_list+[info[1]]										
 					end #end of check the label of the face
 				end #end for each faces
 
 				#Close the rest of the files
-				writers.each do |w|
-					w.close
+				writers.each do |name,file|
+					file.close
 				end
 
 				#Write windows
@@ -410,63 +401,39 @@ module IGD
 			# @return [Boolean] Success
 			def self.write_window_groups(path,windows)
 
-				return true if windows.length < 1 #it did success... but there were not any windows
-
-				OS.mkdir("#{path}/Windows")
+				return true if windows.length <= 0 #it did success... but there were not any windows
+				path = "#{path}/Windows"
+				OS.mkdir(path)
 				groups=Utilities.get_win_groups(windows)
-				ngroups=groups.length
-				rad_strings=Array.new(ngroups,"") #store the geometry of the windows
-				materials=Array.new(ngroups,[]) #store the materials of the windows
-				nwin=1 #this will count the windows
+				
+				File.open("#{path}/windows.rad",'w'){|wins|
+					#Write the windows that have a group
+					groups.each{|group|
+						file_name = Utilities.fix_name(group)
+						group_path = "#{path}/#{file_name}.rad"						
+						wins.puts "!xform ./Windows/#{file_name}.rad"
+						group_file =  File.open(group_path,'w')
+						windows.select{|x| Labeler.get_win_group(x) == group}.each {|win|
+							info=self.get_rad_string(win)
+							group_file.puts Material.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
+							group_file.puts "#{Labeler.get_name(win)}_mat "+info[0]
+						}
+						group_file.close
+					}
 
-				windows.each do |win|
-					c=Labeler.get_win_group(win)
-					info=self.get_rad_string(win)
-					if c!=nil then # if the window has a group
-						# We write using the writer of that group
-						i=0
-						while i<ngroups
-							if c==groups[i] then #if the group of the window is the same as the one in the array
-								materials[i]+=[info[1]]
-								rad_strings[i]+='#normal (points inside): '+win.normal.x.to_s+' '+win.normal.y.to_s+' '+win.normal.z.to_s+"\n"
-								rad_strings[i]+=info[1].name.tr(" ","_")+' '+info[0]+"\n\n" #Window with its material
-								break # we leave the loop
-							end
-							i+=1
-						end
+					windows.select{|x| Labeler.get_win_group(x) == nil}.each {|win|
+						file_name = Utilities.fix_name(Labeler.get_name(win))
+						group_path = "#{path}/#{file_name}.rad"						
+						wins.puts "!xform ./Windows/#{file_name}.rad"
+						group_file =  File.open(group_path,'w')
+						info=self.get_rad_string(win)
+						group_file.puts Materials.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
+						group_file.puts "#{Labeler.get_name(win)}_mat "+info[0]
+						group_file.close
+					
+					}
+				}
 
-					else #if not
-						#we write using a new writer
-						winname=Labeler.get_name(win)
-						if winname==nil then
-							wr=File.open("#{path}/Windows/WindowSet_#{nwin}.rad",'w+')
-							nwin+=1
-						else
-							wr=File.open("#{path}/Windows/#{winname.tr(" ","_")}.rad",'w+')
-						end
-						wr.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
-						wr.close
-					end
-				end
-
-				#Close the rest of the files
-				writers=[]
-				count=0
-				groups.each do |gr|
-					materials[count].uniq!
-					mat_string=""
-					materials[count].each do |mat|
-						mat_string+=self.get_mat_string(mat,false)
-					end
-					mat_string+="\n\n"
-
-					w=File.open("#{path}/Windows/#{gr.tr(" ","_")}.rad",'w+')
-					w.write(mat_string+rad_strings[count])
-					w.close
-					count=count+1
-				end
-
-				return true
 
 			end
 
@@ -523,10 +490,10 @@ module IGD
 
 				entities.each do |ent| #for all the entities (which are faces)
 					if Labeler.illum?(ent) then #Only illums
-						name=Labeler.get_name(ent) #Get the name of the surface
+						name=Labeler.get_fixed_name(ent) #Get the name of the surface
 						info=self.get_rad_string(ent)
 
-						File.open("#{path}/#{Utilities.fix_name(name)}.rad",'w+'){ |f| #The file is opened
+						File.open("#{path}/#{name}.rad",'w+'){ |f| #The file is opened
 							f.write("void "+info[0])
 						}
 
@@ -547,11 +514,15 @@ module IGD
 
 				OS.mkdir("#{path}/Materials")
 				path="#{path}/Materials"
-				File.open("#{path}/materials.mat",'w+'){ |f| #The file is opened
-					mat_array.each do |mat|
-						f.write(self.get_mat_string(mat,false)+"\n\n")
-					end
-				}
+				FileUtils.cd(path) do
+					File.open("materials.mat",'w+'){ |f| #The file is opened
+						mat_array.each do |mat|
+							mat_string = Materials.get_mat_string(mat,false, true)
+							return false if not mat_string
+							f.puts(mat_string)
+						end
+					}
+				end
 				return true
 			end
 
@@ -593,7 +564,7 @@ module IGD
 								next if Labeler.tdd?(inst)
 								f.puts "#{self.get_component_string(inst)} #{comp_path}#{hName}.rad"
 								if Labeler.local_luminaire?(inst.definition) then
-									geom_string += "#{xform} ./Components/dat/#{Labeler.get_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, "./Components")
+									geom_string += "#{xform} ./Components/dat/#{Labeler.get_fixed_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, "./Components")
 								end
 							end
 						end
@@ -679,15 +650,7 @@ module IGD
 				return 	"skyfunc\tglow\tskyglow\n0\n0\n4\t0.99\t0.99\t1.1\t0\n\nskyglow\tsource\tskyball\n0\n0\n4\t0\t0\t1\t360\n\n"
 			end
 
-			# Get the white sky, for calculating DC matrix, for example
-			#
-			# @author German Molina
-			# @version 1.0
-			# @param bins [Integer] The number of reinhart subdivitions of the sky
-			# @return  [String] white sky definition
-			def self.white_sky(bins)
-				return 	"\#@rfluxmtx h=u u=Y\nvoid glow ground_glow\n0\n0\n4 1 1 1 0\n\nground_glow source ground\n0\n0\n4 0 0 -1 180\n\n\#@rfluxmtx h=r#{bins} u=Y\nvoid glow sky_glow\n0\n0\n4 1 1 1 0\n\nsky_glow source sky\n0\n0\n4 0 0 1 180"
-			end
+			
 
 			# Export the ComponentDefinitions into separate files into "Components" folder.
 			# Each file is autocontained, although some materials might be repeated in the "materials.mat" file.
@@ -705,6 +668,8 @@ module IGD
 					next if h.image?
 					next if Labeler.solved_workplane?(h)
 					next if Labeler.illuminance_sensor?(h)
+					next if not Utilities.has_relevant_content?(h.entities)
+
 
 					folder = "Components"
 					folder="TDDs" if Labeler.tdd?(h)
@@ -718,14 +683,7 @@ module IGD
 					instances=Utilities.get_component_instances(entities)
 
 					geom_string=""
-=begin
-					SECTION DEPRECATED BECAUSE NOW WE ASSUME EACH INSTANCE MAY HAVE DIFFERENT POWER INPUTS (A.K.A MULTIPLIER)
-					# Add the illum if it is a luminaire
-					if Labeler.local_luminaire?(h) then #add the illum
-						mult = 1.0
-						geom_string += Lamps.ies2rad(mult,h, comp_path)
-					end
-=end
+
 					# write and next if it is a TDD
 					if Labeler.tdd?(h) then
 						TDD.write_tdd("#{path}/TDDs",h)
@@ -737,19 +695,18 @@ module IGD
 						xform = self.get_component_string(inst)
 						geom_string += "#{xform} ./#{name}.rad#{$/}"
 						if Labeler.local_luminaire?(inst.definition) then
-							geom_string += "#{xform} ./dat/#{Labeler.get_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, comp_path)
+							geom_string += "#{xform} ./dat/#{Labeler.get_fixed_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, comp_path)
 						end
 					end
 					geom_string+="\n\n"
 
 					mat_array=[]
 					faces.each do |fc| #then the rest of the faces
-						if Labeler.workplane? (fc) then
-							wps = []
+						if Labeler.workplane? (fc) then							
 							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
 							tr.each_with_index{|t,index|
 								#if it is workplane, export
-								name=Labeler.get_name(fc) #Get the name of the surface
+								name=Labeler.get_fixed_name(fc) #Get the name of the surface
 								mesh = fc.mesh
 								points = mesh.points.map{|x| x.transform(t) }
 								polygons = mesh.polygons
@@ -760,19 +717,22 @@ module IGD
 							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
 							tr.each_with_index{|t,index|
 								File.open("#{path}/Illums/#{hName}_#{index}.rad",'w'){ |file|
-									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_name(fc)}_#{index}")
+									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_fixed_name(fc)}_#{index}")
 									file.write("void"+info[0])
 								}
 							}
 						elsif Labeler.window? (fc) then
 							OS.mkdir("#{path}/Windows")
+							winfile = File.open("#{path}/Windows/windows.rad",'a')
 							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
 							tr.each_with_index{|t,index|
 								File.open("#{path}/Windows/#{hName}_#{index}.rad",'w'){ |file|
-									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_name(fc)}_#{index}")
-									file.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
+									winfile.puts "!xform ./Windows/#{hName}_#{index}.rad"
+									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_fixed_name(fc)}_#{index}")
+									file.write(Materials.get_mat_string(info[1],false, false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
 								}
 							}
+							winfile.close
 						else #common surfaces
 							info=self.get_rad_string(fc)
 							matName=Utilities.fix_name(info[1].name)+"_"+hName
@@ -806,15 +766,12 @@ module IGD
 			def self.get_component_string(comp)
 
 				t=comp.transformation.to_a
-				definition = comp.definition
 
 				x=t[12].to_m
 				y=t[13].to_m
 				z=t[14].to_m
 
 				rx=Math::atan2(-t[9],t[10])
-				s1=Math::sin(rx)
-				c1=Math::cos(rx)
 				c2=Math::sqrt(t[0]*t[0]+t[4]*t[4])
 				ry=Math::atan2(t[8],c2)
 				rz=Math::atan2(-t[4],t[0])
@@ -863,7 +820,7 @@ module IGD
 					#Then the illums
 					f.write("\n\n#ILLUMS\n\n")
 					illums.each do |ill|
-						name=Labeler.get_name(ill).tr(" ","_") #Get the name of the surface
+						name=Labeler.get_fixed_name(ill)
 						f.write("illum=./Illums/"+name+".rad\n")
 					end
 
@@ -898,52 +855,10 @@ module IGD
 				return true
 			end
 
-			# Returns the Radiance primitive of a SketchUp material.
-			#  It first checks if it is available in the library, and if not, it guesses it.
-			#  If inputted a name (instead of "False"), the primitive's name will be forced to be
-			#  the inputted value. This is useful for exporting components.
-			# @author German Molina
-			# @version 0.4
-			# @param material [Sketchup::Material] SketchUp material
-			# @param name [String] The desired name for the final Radiance material
-			# @return [String] Radiance primivite definition for the material
-			def self.get_mat_string(material,name)
-				matName=material.name.tr(" ","_").tr("#","_")
-				matName=name if name #if inputted a name, overwrite.
-
-				if Labeler.local_material?(material) then
-					value= Labeler.get_value(material)
-					return value[0]+"\t"+matName+"\n"+value[1]
-				else #not local, then guess the material
-					mat_string=""
-
-					if material.texture==nil then
-						color=material.color
-					else
-						color=material.texture.average_color
-					end
-					r=color.red/255.0
-					g=color.green/255.0
-					b=color.blue/255.0
-
-					mat_string=mat_string+"## guessed Material\n\n"
-					if material.alpha < 1 then #then this is a glass
-						r=r*material.alpha #This is probably wrong... but it does the job.
-						g=g*material.alpha
-						b=b*material.alpha
-						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s
-						mat_string=mat_string+"void\tglass\t"+matName+"\n0\n0\n3\t"+rgb+"\n"
-					else #This is an opaque material
-						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s+"\t0\t0"
-						mat_string=mat_string+"void\tplastic\t"+matName+"\n0\n0\n5\t"+rgb+"\n"
-					end
-					return mat_string
-				end
-
-			end
+			
 
 
-		end #end class
+		end #end module
 
-	end #end module
+	end #end Groundhog
 end

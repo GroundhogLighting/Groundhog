@@ -1,8 +1,8 @@
 module IGD
   module Groundhog
+
+    # This module contains the methods that allow handling and exporting Tubular Daylight Devices (TDDs)
     module TDD
-
-
 
       # Returns the lens default material
       # @author German Molina
@@ -23,7 +23,7 @@ module IGD
 
 
       # Export the Tubular Daylight Devices into separate files, separating
-      #   the Pipe, the Upper Lens and the Lower Lens.
+      # the Pipe, the Upper Lens and the Lower Lens.
       # @author German Molina
       # @version 0.1
       # @param path [String] Directory where the Component Definitions are located
@@ -67,15 +67,15 @@ module IGD
         tr = Utilities.get_all_global_transformations(faces[0],Geom::Transformation.new)
         tr.each_with_index{|t,index|
             faces.each{|face|
-              info = Exporter.get_transformed_rad_string(face,t,"#{Labeler.get_name(face)}_#{index}")
+              info = Exporter.get_transformed_rad_string(face,t,"#{Labeler.get_fixed_name(face)}_#{index}")
               if Labeler.tdd_top?(face) then
-                #info = Exporter.get_reversed_transformed_rad_string(face,t,"#{Labeler.get_name(face)}_#{index}") if face.normal.z > 0
+                #info = Exporter.get_reversed_transformed_rad_string(face,t,"#{Labeler.get_fixed_name(face)}_#{index}") if face.normal.z > 0
                 File.open("#{path}/#{index}-#{top_filename}",'w'){|top|
                   mat_name = "lens_mat"
                   top.write "\#@rfluxmtx h=kf u=Y\n\n#{self.lens_material(mat_name)}\n\n #{mat_name} #{info[0]}"
                 }
               elsif Labeler.tdd_bottom?(face) then
-                #info = Exporter.get_reversed_transformed_rad_string(face,t,"#{Labeler.get_name(face)}_#{index}") if face.normal.z > 0
+                #info = Exporter.get_reversed_transformed_rad_string(face,t,"#{Labeler.get_fixed_name(face)}_#{index}") if face.normal.z > 0
                 File.open("#{path}/#{index}-#{bottom_filename}",'w'){|bottom|
                   mat_name = "#{name}_#{index}_mat"
                   bottom.write "#{self.lens_material(mat_name)}\n\n #{mat_name} #{info[0]}"

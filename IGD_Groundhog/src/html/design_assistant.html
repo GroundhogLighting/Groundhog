@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Design assistant</title>
+    <meta charset="UTF-8">
+</head>
+<link href="css/jquery-ui.css" rel="stylesheet">
+<link href="css/groundhog-ui.css" rel="stylesheet">
+<link rel='stylesheet' href='css/spectrum.css' />
+
+<body>
+
+    <div id="sidenav">
+        <p class="selected" href="#location">Location</p>
+        <p href="#model">Model</p>
+        <p href="#objectives">Objectives</p>
+        <p href="#daylight_simulation">Daylight</p>
+        <p href="#luminaires">Luminaires</p>
+        <p href="#report">Report</p>
+    </div>
+
+
+    <div class="display" id="location">
+        <h2>Location</h2>
+
+        <div class="center">
+            <button type="button" onclick='window.location.href ="skp:set_weather_path@msg"'>Change weather file</button>
+            <table id="weather_info" class="with_border bold_first_row">
+                <tr>
+                    <td>City</td>
+                    <td id="weather_city">not set</td>
+                </tr>
+                <tr>
+                    <td>State</td>
+                    <td id="weather_state">not set</td>
+                </tr>
+                <tr>
+                    <td>Country</td>
+                    <td id="weather_country">not set</td>
+                </tr>
+                <tr>
+                    <td>Latitude</td>
+                    <td id="weather_latitude">not set</td>
+                </tr>
+                <tr>
+                    <td>Longitude</td>
+                    <td id="weather_longitude">not set</td>
+                </tr>
+                <tr>
+                    <td>Time Zone</td>
+                    <td id="weather_timezone">not set</td>
+                </tr>
+            </table>
+            <a class="" href="#" onclick='window.location.href ="skp:follow_link@http://www.energyplus.net/weather"'>Find weather files here</a>
+        </div>
+
+    </div>
+
+    <div class="display" id="model">
+        <h2>Model</h2>
+        <div class="center">
+            <button id="preview_button" onclick='window.location.href = "skp:preview@msg"'>Preview</button>
+        </div>
+        <div class="accordion">
+            <h3>Label selection</h3>
+            <div class="center">
+                <button onclick='window.location.href = "skp:label_as_window@msg"'>As Window</button>
+                <button onclick='window.location.href = "skp:label_as_workplane@msg"'>As Workplane</button>
+                <button onclick='window.location.href = "skp:label_as_illum@msg"'>As Illum</button>
+            </div>
+            <h3>Materials</h3>
+            <div class="center">
+                <button id="add_material_button">Create material</button><br><br>
+                <label for="filter_materials">Filter:</label><input type="text" id="filter_materials">
+                <table id="material_list" class="selectable"> </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="display" id="objectives">
+        <h2>Objectives</h2>
+        <table id="objectives_table" class="draggable selectable"></table>
+        
+        <div class="center"><button id="add_objective_to_worplane">New objective</button></div>
+        <div class="accordion" id="workplane_objectives"></div>
+    </div>
+
+
+    <div class="display" id="daylight_simulation">
+        <h2>Daylight</h2>
+        <div class="center"><button id="simulate_button">Calculate</button></div>
+        <div id="simulation_options" class="accordion">
+            <h3>Sky subdivition</h3>
+            <div>
+                <table>
+                    <tr>
+                        <td>Sky subdivition</td>
+                        <td>
+                            <input title="option" id='sky_bins' type='number' value='1' step='1' min='1'></input>
+                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <h3>Static simulation options</h3>
+            <div >
+                <table>
+                    <tr>
+                        <td>Calculation method</td>
+                        <td>
+                            <select title="option" id='static_calculation_method'>
+							<option value="RTRACE">Ray-tracing</option>
+							<option value="DC">Simple Daylight Coefficients</option>
+						</select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Parameters</td>
+                        <td>
+                            <input title="option" type="text" id="static_parameters">
+                        </td>
+                    </tr>                    
+
+                </table>
+                <div class="center">
+                    <button id="set_low_static">Set to low</button>
+                    <button id="set_med_static">Set to medium</button>
+                    <button id="set_high_static">Set to high</button>
+                </div>
+            </div>
+
+            <h3>Dynamic simulation options</h3>
+            <div>
+                <table>
+                    <tr>
+                        <td>Calculation method</td>
+                        <td>
+                            <select title="option" id='dynamic_calculation_method'>
+							<option value="DC">Simple Daylight Coefficients</option>
+						</select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Parameters</td>
+                        <td>
+                            <input title="option" type="text" id="dynamic_parameters">
+                        </td>
+                    </tr>                   
+
+                </table>
+                <div class="center">
+                    <button id="set_low_dynamic">Set to low</button>
+                    <button id="set_med_dynamic">Set to medium</button>
+                    <button id="set_high_dynamic">Set to high</button>
+                </div>
+            </div>
+
+            <h3>Tubular Daylight Devices options</h3>
+            <div>
+                <table>
+                    <tr>
+                        <td>Daylight matrix parameters</td>
+                        <td><input title="option" type="text" id="tdd_daylight_parameters"></td>
+                    </tr>
+                    <tr>
+                        <td>Pipe interior parameters</td>
+                        <td><input title="option" type="text" id="tdd_pipe_parameters"></td>
+                    </tr>
+                    <tr>
+                        <td>View matrix parameters</td>
+                        <td><input title="option" type="text" id="tdd_view_parameters"></td>
+                    </tr>
+                    <tr>
+                        <td>Assume one Daylight Matrix</td>
+                        <td><input title="option" type="checkbox" id="tdd_singledaymtx">
+                            <p class="tooltip" title="Calculate a single daylight matrix and use it for all the TDDs. This works well if all the TDDs basically see the same sky and obstructions.">?</p>
+                        </td>
+                    </tr>
+                </table>
+                <div class="center">
+                    <button id="set_low_tdd">Set to low</button>
+                    <button id="set_med_tdd">Set to medium</button>
+                    <button id="set_high_tdd">Set to high</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="display" id="luminaires">
+        <h2>Luminaires</h2>
+    </div>
+
+    <div class="display" id="report">
+        <h2>Report</h2>
+        <div class="accordion">
+            <h3>Objective summary</h3>
+            <div id="objective_summary"></div>
+
+            <h3>Compliance summary</h3>
+            <div>
+                <table id="compliance_summary" class="selectable"></table>
+            </div>
+            
+        </div>
+        
+        
+    </div>
+
+    <!-- ADD OBJECTIVE DIALOG -->
+    <div id="add_metric_dialog" title="Add objective">       
+        <div class="center">
+            <label for="metric_name">Name: </label>
+            <input type="text" id="objective_name">   
+        </div>
+        <fieldset class="center" id="metric_field">
+            <legend>Metric</legend>
+            <select id="metric">
+                <option value="DA">Daylight Autonomy</option>
+                <option value="UDI">Useful Daylight Illminance</option>
+                <option value="DF">Daylight Factor</option>
+                <option value="LUX">Illuminance at time</option>
+            </select>
+        </fieldset>
+        <fieldset id="fulfillment_field">
+            <legend>Workplane is in compliance when:</legend>
+            <input type="number" min="0" max="100" id="objective_goal">
+            <label for="objective_goal">% of the space</label>
+            <input type="number" min="0" max="100" id="metric_threshold">
+            <label for="metric_threshold"></label>
+        </fieldset>
+
+        <fieldset id="working_hours_field">
+            <legend>Occupancy hours</legend>
+            <label for="occupied_min">From: </label>
+            <input type="number" value="8" min="0" max="24" id="occupied_min">
+            <label for="occupied_max">To:</label>
+            <input type="number" value="18" min="0" max="24" id="occupied_max">
+        </fieldset>
+
+        <fieldset id="ill_goal_field">
+            <legend>Illuminance goal (lux)</legend>
+            <label for="min_lux">From: </label>
+            <input type="number" value="300" min="0" id="min_lux">
+            <label for="max_lux">To:</label>
+            <input type="number" value="2000" min="0" id="max_lux">
+            <label for="no_maximum">Ignore maximum:</label>
+            <input type="checkbox" id="no_maximum">
+        </fieldset>
+
+        <fieldset id="sim_period_field">
+            <legend>Simulation period (months)</legend>
+            <label for="sim_min">From: </label>
+            <input type="number" value="2" min="0" step="1" id="sim_min">
+            <label for="sim_max">To:</label>
+            <input type="number" value="12" min="1" step="150" id="sim_max">
+        </fieldset>
+
+        <fieldset id="day_to_sim_field">
+            <legend>Day and time to simulate</legend>
+            <p>Date: <input type="text" id="day_to_sim"></p>
+            <p>Hour: <input type="number" value="12" min="0" max="24" step="0.5" id="time_to_sim"></p>
+        </fieldset>
+    </div>
+
+    <!-- ADD MATERIAL DIALOG -->
+    <div id="add_material_dialog" title="Create material">
+        <fieldset>
+            <legend>General information</legend>
+            <table>
+                <tr>
+                    <td><label for="material_name">Name:</label></td>
+                    <td><input type="text" id="material_name"></td>
+                </tr>
+                <tr>
+                    <td><label for="material_class">Class:</label></td>
+                    <td>
+                        <select id="material_class">
+                            <option value="plastic">Plastic</option>
+                            <option value="metal">Metal</option>
+                            <option value="glass">Glass</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+
+        </fieldset>
+        <fieldset>
+            <legend>Reflectance</legend>
+            <label for="monochromatic">Monochromatic material</label>
+            <input class="color" type="checkbox" id="monochromatic">
+            <table>
+                <tr>
+                    <td><label for="red">R: </label></td>
+                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="red"></td>
+                    <td><label for="green">G: </label></td>
+                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="green"></td>
+                    <td><label for="blue">B: </label></td>
+                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="blue"></td>
+                    <td><input type='text' id="color_pick" /> </td>
+                </tr>
+            </table>
+        </fieldset>
+
+        <fieldset>
+            <legend>Other properties</legend>
+            <table>
+                <tr>
+                    <td><label for="specularity">Specularity: </label></td>
+                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="specularity"></td>
+                    <td><label for="roughness">Roughness: </label></td>
+                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="roughness"></td>
+                </tr>
+            </table>
+        </fieldset>
+
+
+    </div>
+
+
+
+</body>
+<script>
+    
+    var workplanes = {};
+    var materials = {};
+    var objectives = {};
+    var results = {};
+
+</script>
+<script src="js/JQuery/jquery-3.0.0.js"></script>
+<script src="js/jQueryUI/jquery-ui.js"></script>
+<script src='js/Spectrum/spectrum.js'></script>
+<script src="js/groundhog-ui.js"></script>
+<script src="js/objectives.js"></script>
+<script src="js/daylight-simulation.js"></script>
+<script src="js/materials.js"></script>
+<script src="js/report.js"></script>
+<script>
+    //objectiveModule.update_workplanes();
+    window.location.href = 'skp:on_load@message';   
+</script>
+
+</html>
