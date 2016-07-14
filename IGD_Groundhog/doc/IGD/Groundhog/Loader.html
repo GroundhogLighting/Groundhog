@@ -306,11 +306,11 @@ or internal.… it is terribly under developed, though.</p>
 	<span class='id identifier rubyid_loader'>loader</span><span class='op'>=</span><span class='const'>LoadHandler</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
 	<span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span><span class='period'>.</span><span class='id identifier rubyid_load_from_url'>load_from_url</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='comma'>,</span><span class='id identifier rubyid_loader'>loader</span><span class='rparen'>)</span>
 	<span class='kw'>if</span> <span class='gvar'>$last_error</span> <span class='op'>==</span> <span class='kw'>nil</span>
-	   <span class='id identifier rubyid_last_def_id'>last_def_id</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span> <span class='op'>-</span> <span class='int'>1</span>
-	   <span class='kw'>return</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span><span class='lbracket'>[</span><span class='id identifier rubyid_last_def_id'>last_def_id</span><span class='rbracket'>]</span>
-	 <span class='kw'>else</span>
-	   <span class='kw'>return</span> <span class='kw'>false</span>
-	 <span class='kw'>end</span>
+		<span class='id identifier rubyid_last_def_id'>last_def_id</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span> <span class='op'>-</span> <span class='int'>1</span>
+		<span class='kw'>return</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span><span class='lbracket'>[</span><span class='id identifier rubyid_last_def_id'>last_def_id</span><span class='rbracket'>]</span>
+	<span class='kw'>else</span>
+		<span class='kw'>return</span> <span class='kw'>false</span>
+	<span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -552,7 +552,7 @@ or internal.… it is terribly under developed, though.</p>
 </div>
 
     <div id="footer">
-  Generated on Tue Jul 12 17:18:27 2016 by
+  Generated on Thu Jul 14 10:04:47 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

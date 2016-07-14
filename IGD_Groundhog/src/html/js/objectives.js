@@ -8,7 +8,47 @@ objectiveModule.add_objective = function(wp_name,obj_name) {
 };
 
 
+objectiveModule.get_human_description = function(objective){
+    var description = "Workplane is in compliance when ";
+    description += "more than "+objective["goal"]+"% of the space ";     
+    var good_light = objective["good_light"];
+    switch (objective["metric"]) {
+        case "DA":
+            description += "maintains an illuminance of "+good_light["min"]+"lux or more during, at least, "+objective["good_pixel"];
+            description += "% of the occupied time. Occupied time is between "+objective["occupied"]["min"]+" and ";
+            description += objective["occupied"]["max"]+" hours, from months "+objective["sim_period"]["min"]+" to "+objective["sim_period"]["max"];            
+            break;
 
+        case "UDI":
+            description += "maintains an illuminance between "+good_light["min"]+"lux and "+good_light["max"]+"lux during, at least, "+objective["good_pixel"];
+            description += "% of the occupied time. Occupied time is between "+objective["occupied"]["min"]+" and ";
+            description += objective["occupied"]["max"]+" hours, from months "+objective["sim_period"]["min"]+" to "+objective["sim_period"]["max"];            
+            break;
+        
+        case "DF":             
+            if(good_light["max"]){
+                description += "achieves a Daylight Factor between "+good_light["min"]+"% and "+good_light["max"]+"%";
+            }else{
+                description += "achieves a Daylight Factor of "+good_light["min"]+"% or more";
+            }             
+            break;
+
+        case "LUX":
+            if(good_light["max"]){
+                description += "achieves an illuminance between "+good_light["min"]+"lux and "+good_light["max"]+"lux ";
+                description += "under a clear sky at "+objective["hour"]+" hours of "+objective["date"];
+            }else{
+                description += "achieves an illuminance of "+good_light["min"]+"lux or more ";
+                description += "under a clear sky at "+objective["hour"]+" hours of "+objective["date"];
+            }
+            break;
+
+        default:
+            alert("Unkown metric to convert into human language");
+    }
+    description += ".";
+    return description;
+};
 
 objectiveModule.create_objective = function() {
     var metric = $("#metric").val();
@@ -18,6 +58,7 @@ objectiveModule.create_objective = function() {
     objectives[objective["name"]]=objective;    
     objectiveModule.update_objectives();
     objectiveModule.add_objective_dialog.dialog("close");
+    reportModule.update_objective_summary();
 };
 
 
@@ -74,7 +115,7 @@ objectiveModule.adapt_objective_dialog = function(metric) {
             $("label[for='objective_goal']").text("% of the space meets the Daylight Factor goal");
             $("label[for='metric_threshold']").hide();
             $("#metric_threshold").hide();
-            $("#min_lux").val(50);
+            $("#min_lux").val(2);
             break;
         case "LUX":
             $("#ill_goal_field legend").text("Illuminance goal (lux)");
@@ -219,7 +260,9 @@ objectiveModule.update_workplanes = function() {
                 // activeClass: "ui-state-default",
                 hoverClass: "ui-state-hover",
                 accept: ":not(.ui-sortable-helper)",
-                drop: function( event, ui ) {                                       
+                drop: function( event, ui ) {  
+                    if("TR" != ui.draggable.prop("tagName")){ return };
+                                                      
                     var wp_name = $(this).text();
                     var table_name = wp_name.replace(/\s/g, "_") + "_objectives";
                     var objective = ui.draggable.text();  
@@ -247,6 +290,7 @@ objectiveModule.update_workplanes = function() {
                 hoverClass: "ui-state-hover",
                 accept: ":not(.ui-sortable-helper)",
                 drop: function( event, ui ) {
+                    if("TR" != ui.draggable.prop("tagName")){ return };
                     var siblings = $(this).siblings("h3");
                     var table = $(this).children("table");
                     var table_id = table.attr("id");

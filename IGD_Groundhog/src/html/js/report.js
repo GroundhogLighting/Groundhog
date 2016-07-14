@@ -1,5 +1,22 @@
 var reportModule = {};
 
+reportModule.update_objective_summary = function(){    
+    var div = $("#objective_summary");
+    div.html("");
+    var objs = Object.keys(objectives);
+
+    for(var i=0; i<objs.length; i++){
+        /* FIRST, its own div */
+        var newDiv = $("<div></div>");
+        var name = $("<h4>"+objs[i]+"</h4>");
+        newDiv.append(name);
+        var text = objectiveModule.get_human_description(objectives[objs[i]]);
+        var description = $("<p>"+text+"</p>");
+        newDiv.append(description);
+        div.append(newDiv);
+    }
+}
+
 reportModule.update_compliance_summary = function(){
     var table = $("#compliance_summary");
     table.html("");

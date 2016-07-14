@@ -247,11 +247,6 @@ module IGD
 			end
 		}
 
-=begin
-		groundhog_menu.add_item("Simulation Wizard"){
-			Rad.show_sim_wizard
-		}
-=end
 
 		@design_assistant = DesignAssistant.get
 		groundhog_menu.add_item("Open Design Assistant"){
@@ -267,11 +262,7 @@ module IGD
 		### INSERT SUBMENU
 
 		gh_insert_menu=groundhog_menu.add_submenu("Insert")
-=begin
-		gh_insert_menu.add_item("Materials"){
-			Materials.show_material_wizard
-		}
-=end
+
 		gh_insert_menu.add_item("Illuminance Sensor"){
 			Loader.load_illuminance_sensor
 		}
@@ -301,23 +292,17 @@ module IGD
 				@preferences_dialog.show
 		}
 
-=begin
-		### ADD-ONS MENU
-		@gh_addons_menu=groundhog_menu.add_submenu("Add-ons")
-		@gh_addons_menu.add_item("Add-on manager") {
-			Addons.show_addons_manager
-		}
-
-		def self.addon_menu
-			return @gh_addons_menu
-		end
-=end
 		### EXAMPLES MENU
 		gh_examples_menu=groundhog_menu.add_submenu("Example files")
-		gh_examples_menu.add_item("University Hall") {
-			path = "#{OS.examples_groundhog_path}/UniversityHall.skp"
-			UI.messagebox("Unable to open Example File.") if not Sketchup.open_file path
+		examples = Dir["#{OS.examples_groundhog_path}/*.skp"]
+		examples.each{|file|
+			example = file.split("/").pop.gsub(".skp","").tr("_"," ")
+			gh_examples_menu.add_item(example) {
+				path = file
+				UI.messagebox("Unable to open '#{example}' Example File.") if not Sketchup.open_file path
+			}
 		}
+		
 
 		### HELP MENU
 

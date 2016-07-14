@@ -7,7 +7,7 @@ task :all => [:win32, :win64, :macosx] do
 end
 
 task :doc => [:clean] do
-	puts `yardoc IGD_Groundhog/src/*.rb - Readme.md`
+	puts `yardoc IGD_Groundhog/src/*.rb IGD_Groundhog/src/Scripts/*.rb - Readme.md`
 	FileUtils.rm_rf("IGD_Groundhog/doc")
 	FileUtils.cp_r("doc","IGD_Groundhog/doc")
 end

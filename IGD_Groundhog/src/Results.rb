@@ -179,7 +179,8 @@ module IGD
 
 
 			# Reads the results from a grid, and represent them as a heat map
-			# in a plane in the model.
+			# in a plane in the model. The color is obtained from the default Radiance
+			# color scale.
 			#
 			# @author German Molina
 			# @param value  [float] The value to be assigned a color
@@ -187,7 +188,7 @@ module IGD
 			# @param min [float] The min value, the one that saturates the color scale.
 			# @return [Array<Float>] with Red, Green and Blue components
 			# @version 0.3
-			def self.get_pixel_color(value,max,min)
+			def self.get_rad_pixel_color(value,max,min)
 
 				red=[0.18848,0.05468174,0.00103547,8.311144e-08,7.449763e-06,0.0004390987,0.001367254,0.003076,0.01376382,0.06170773,0.1739422,0.2881156,0.3299725,0.3552663,0.372552,0.3921184,0.4363976,0.6102754,0.7757267,0.9087369,1,1,0.9863]
 				green=[0.0009766,2.35501e-05,0.0008966244,0.0264977,0.1256843,0.2865799,0.4247083,0.4739468,0.4402732,0.3671876,0.2629843,0.1725325,0.1206819,0.07316644,0.03761026,0.01612362,0.004773749,6.830967e-06,0.00803605,0.1008085,0.3106831,0.6447838,0.9707]
@@ -213,27 +214,93 @@ module IGD
 				return [r,g,b]
 			end
 
+			# Reads the results from a grid, and represent them as a heat map
+			# in a plane in the model. The color is obtained from the groundhog
+			# color scale, which intends to clearly show which pixels are over-valued, 
+			# sub-valued and correctly-values
+			#
+			# @author German Molina
+			# @param value  [float] The value to be assigned a color
+			# @param max [float] The maximum value, the one that saturates the color scale.
+			# @param min [float] The min value, the one that saturates the color scale.
+			# @return [Array<Float>] with Red, Green and Blue components
+			# @version 0.3
+			def self.get_gh_pixel_color(value,min,good_min, good_max, max)
+				three_ranges = true
+				if not good_max then
+				 	good_max = max
+					three_ranges = false
+				end
+				
+				if [min, good_min, good_max, max].sort != [min, good_min, good_max, max] then
+					UI.messagebox "Trying to find a pixel color with incorrect values."
+					return false
+				end
+				
+
+				max_color = [189,6,5]
+				min_color = [70,116,196]
+				good_min_color = [255,255,255]
+				good_max_color = [249, 190, 6]				
+
+				if value <= min then
+					return min_color
+				elsif value > min and value <= good_min then
+					ret = min_color
+					frac = (value.to_f - min.to_f)/(good_min.to_f - min.to_f)	
+					sum = good_min_color				
+				elsif value > good_min and value <= good_max then
+					ret = good_min_color
+					frac = (value.to_f - good_min.to_f)/(good_max.to_f - good_min.to_f)	
+					sum = good_max_color
+				elsif value > good_max and value <= max then
+					ret = good_max_color
+					frac = (value.to_f - good_max.to_f)/(max.to_f - good_max.to_f)	
+					sum = max_color
+				elsif value > max
+					if three_ranges then
+						return max_color
+					else
+						return good_max_color
+					end
+				end 
+				ret.each_with_index{|val,i| ret[i]+= frac * (sum[i]-ret[i])}				
+				return ret.map{|x| x/255.0}
+			end
+
 			# Update the pixel colors of all the solved_workplanes in the model.
 			#
 			# @author German Molina
 			# @param max [Float] the maximum value for the scale
 			# @param min [Float] the minimum value for the scale
-			# @param objective [String] The metric to which we change the color
+			# @param objective [Hash] The objective to which we change the color
 			# @return void
 			# @version 0.2
 			def self.update_pixel_colors(min,max,objective)
 				model=Sketchup.active_model
 				op_name="Update pixels"
-				begin
-					model.start_operation(op_name,true)
+				#begin					
+					#model.start_operation(op_name,true)
+					#good_min and good_max are assign for static metrics, by default
+					good_min = objective["good_light"]["min"]
+					good_max = objective["good_light"]["max"]
+					good_max = false if not good_max
+
+					#if dynamic: Fix
+					if objective["dynamic"] then
+						good_min = objective["good_pixel"]
+						good_max = false				
+					end
+
 					workplanes=Utilities.get_solved_workplanes(Sketchup.active_model.entities)
-					workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value(x))["objective"]==objective}
+					workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value(x))["objective"]==objective["name"]}
 					workplanes.each do |workplane|
 						workplane.entities.each do |pixel|
 							next if not Labeler.face?(pixel) or not Labeler.result_pixel?(pixel)
 							# now we are sure ent is a pixel.
 							value=Labeler.get_value(pixel)
-							color=self.get_pixel_color(value,max,min)
+							#color=self.get_rad_pixel_color(value,max,min)
+							color=self.get_gh_pixel_color(value,min,good_min,good_max,max)
 							pixel.material=color
 							pixel.back_material=color
 						end
@@ -243,12 +310,12 @@ module IGD
 						Labeler.set_workplane_value(workplane,wp_value.to_json)
 					end
 					Utilities.remark_solved_workplanes(objective)
-					model.commit_operation
+					#model.commit_operation
 
-				rescue Exception => ex
-					UI.messagebox ex
-					model.abort_operation
-				end
+				#rescue Exception => ex
+				#	UI.messagebox ex
+				#	model.abort_operation
+				#end
 			end
 
 			# Checks all the solved workplanes in the model that correspond to a metric
@@ -256,7 +323,7 @@ module IGD
 			#
 			# @author German Molina
 			# @return [Array<Float>] An array with the minimum and maximum values
-			# @param objective [String] The metric that we are getting the min and max from
+			# @param objective [String] The name of the objetive that we are getting the min and max from
 			# @version 0.2
 			def self.get_min_max_from_model(objective)
 				workplanes = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
@@ -277,11 +344,11 @@ module IGD
 			#
 			# @author German Molina
 			# @return [Array<Float>] An array with the minimum and maximum values
-			# @param metric [String] The metric that we are getting the min and max from
+			# @param objective [String] The objective that we are getting the min and max from
 			# @version 0.1
-			def self.get_scale_from_model(metric)
+			def self.get_scale_from_model(objective)
 				workplanes = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
-				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value x)["metric"]==metric}
+				workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value x)["objective"]==objective["name"]}
 				scale_min=false
 				scale_max=false
 				workplanes.each do |workplane|
@@ -291,10 +358,10 @@ module IGD
 						scale_max = value["scale_max"]
 					else
 						if value["scale_min"] != scale_min or value["scale_max"] != scale_max then
-							UI.messagebox("Workplanes of the same metric have different scales!\nWe will fix that now")
-							min_max=Results.get_min_max_from_model(metric)
-							Results.update_pixel_colors(0,min_max[1],metric)	#minimum is 0 by default
-							self.get_scale_from_model(metric)
+							UI.messagebox("Workplanes of the same objective have different scales!\nWe will fix that now")
+							min_max=Results.get_min_max_from_model(objective["name"])
+							Results.update_pixel_colors(0,min_max[1],objective)	#minimum is 0 by default
+							self.get_scale_from_model(objective)
 						end
 					end
 				end

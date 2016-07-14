@@ -118,6 +118,17 @@ module IGD
 				return entities.select {|x| x.is_a? Sketchup::Face }
 			end
 
+			# Sets of entities to be exported contain groups or faces or component definitions.
+			# This method tells us if the entities passed as arguments have those or not.
+			# @author German Molina
+			# @param entities [Array<SketchUp::Entities>] Array with entities.
+			# @return [Boolean] The answer
+			def self.has_relevant_content?(entities)
+				groups = entities.select{|x| x.is_a? Sketchup::Group}.length
+				faces = self.get_faces(entities).length
+				comps = entities.select{|x| x.is_a? Sketchup::ComponentInstance}.length
+				(groups+faces+comps) > 0
+			end
 
 			# Returns all the Sketchup::Group within an array.
 			# @author German Molina

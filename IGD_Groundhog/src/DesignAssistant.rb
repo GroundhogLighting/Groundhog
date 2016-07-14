@@ -103,7 +103,8 @@ module IGD
                     script += "workplanes = JSON.parse('#{workplanes}');" 
                     script += "objectives = JSON.parse('#{objectives}');"                       
                     script += "objectiveModule.update_workplanes();" 
-                    script += "objectiveModule.update_objectives();"                                      
+                    script += "objectiveModule.update_objectives();"  
+                                                       
                     weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
                     if weather != nil then
                         weather = JSON.parse(weather)
@@ -117,7 +118,8 @@ module IGD
                     
                     report = self.get_actual_report
                     script += "results = JSON.parse('#{report.to_json}');"        
-                    script += "reportModule.update_compliance_summary();"                     
+                    script += "reportModule.update_compliance_summary();" 
+                    script += "reportModule.update_objective_summary();"                     
                     
                     web_dialog.execute_script(script)
                 end
@@ -346,10 +348,10 @@ module IGD
                             }
                          }
 
-                        objectives.keys.each{|obj|
-                            min_max=Results.get_min_max_from_model(obj)
-                            Results.update_pixel_colors(0,min_max[1],obj)	#minimum is 0 by default
-                            Utilities.remark_solved_workplanes(obj)
+                        objectives.each{|obj_name, value|
+                            min_max=Results.get_min_max_from_model(obj_name)
+                            Results.update_pixel_colors(0,min_max[1],value)	#minimum is 0 by default
+                            Utilities.remark_solved_workplanes(obj_name)
                         }  
                          
                          script = ""

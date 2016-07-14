@@ -222,6 +222,7 @@ module IGD
 
 					#Export the faces and obtain the modifiers
 					mod_list=self.export_layers(path)
+					mod_list.uniq!
 					return false if not mod_list
 					return false if not self.export_modifiers(path,mod_list)
 					return false if not self.write_sky(path)
@@ -235,6 +236,7 @@ module IGD
 
 					model.commit_operation
 				rescue Exception => ex
+					model.abort_operation
 					UI.messagebox ex
 				end
 				return true
@@ -282,9 +284,9 @@ module IGD
 				#We get the layers in the model
 				layers=model.layers
 				#we open one file per each layer
-				writers=[] #this is an array of writers
-				layers.each do |lay|
-					writers=writers+[File.open("#{path}/Geometry/#{Utilities.fix_name(lay.name)}.rad",'w+')]
+				writers=Hash.new #this is an array of writers
+				layers.each do |layer|
+					writers[layer.name] = File.open("#{path}/Geometry/#{Utilities.fix_name(layer.name)}.rad",'w+')
 				end
 
 
@@ -304,26 +306,17 @@ module IGD
 						self.write_workplane(path, name, points, polygons)
 					elsif Labeler.illum?(fc) then
 						illums=illums+[fc]
-					else
-						i=0
-						layers.each do |ly| #we look for the correct layer
-							if fc.layer.==ly then
-								#write the information
-								writers[i].write(Utilities.fix_name(info[1].name)+info[0])
-								#store the material
-								mat_list=mat_list+[info[1]]
-								#and purge the list
-								mat_list.uniq!
-							end #end of if in find layer
-							i=i+1
-						end #end in for each layer
-
+					else						
+						#write the information
+						writers[fc.layer.name].write(Utilities.fix_name(info[1].name)+info[0])
+						#store the material
+						mat_list=mat_list+[info[1]]										
 					end #end of check the label of the face
 				end #end for each faces
 
 				#Close the rest of the files
-				writers.each do |w|
-					w.close
+				writers.each do |name,file|
+					file.close
 				end
 
 				#Write windows
@@ -675,6 +668,8 @@ module IGD
 					next if h.image?
 					next if Labeler.solved_workplane?(h)
 					next if Labeler.illuminance_sensor?(h)
+					next if not Utilities.has_relevant_content?(h.entities)
+
 
 					folder = "Components"
 					folder="TDDs" if Labeler.tdd?(h)
