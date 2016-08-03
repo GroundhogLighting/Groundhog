@@ -90,6 +90,11 @@ module IGD
                 ret["LM-83 tree material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.2 0.2 0.2 0 0", "color" => [104, 178, 38], "alpha" => 1, "name"=> "LM-83 tree material", "class" => "plastic"}
                 ret["LM-83 ground material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.1 0.1 0.1 0 0", "color" => [25,25,25], "alpha" => 1, "name"=> "LM-83 ground material", "class" => "plastic"}
                 ret["LM-83 obstruction material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.3 0.3 0.3 0 0", "color" => [77,77,77], "alpha" => 1, "name"=> "LM-83 obstruction material", "class" => "plastic"}
+                default_glass = Materials.default_glass
+                ret[default_glass["name"]]=default_glass
+                default_material = Materials.default_material
+                ret[default_material["name"]]=default_material
+                
                 return ret
             end
 

@@ -36,16 +36,16 @@ module IGD
 				end
 				if mat==nil then # If it does not have a Back material either
 					if Labeler.window?(face) then #defaults are assigned
-						mat=Sketchup.active_model.materials["Default 3mm Clear Glass"] #If it is a glass
+						mat=Sketchup.active_model.materials[Materials.default_glass["name"]] #If it is a glass
 						if mat==nil #this means the materials has been deleted or are not there yet.
 							Materials.add_default_glass
-							mat=Sketchup.active_model.materials["Default 3mm Clear Glass"] #If it is a glass
+							mat=Sketchup.active_model.materials[Materials.default_glass["name"]] #If it is a glass
 						end
 					else
-						mat=Sketchup.active_model.materials["GH_default_material"] #if it is anything else (Illums and Workplanes will be ignored later)
+						mat=Sketchup.active_model.materials[Materials.default_material["name"]] #if it is anything else (Illums and Workplanes will be ignored later)
 						if mat==nil #material deleted
 							Materials.add_default_material
-							mat=Sketchup.active_model.materials["GH_default_material"] #if it is anything else (Illums and Workplanes will be ignored later)
+							mat=Sketchup.active_model.materials[Materials.default_material["name"]] #if it is anything else (Illums and Workplanes will be ignored later)
 						end
 					end
 				end

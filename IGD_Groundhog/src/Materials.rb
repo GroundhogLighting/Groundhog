@@ -4,28 +4,45 @@ module IGD
 		# This module handles everything related to the Materials.
 		module Materials
 
+			# Returns the hash that represents the Default Groundhog glass.
+			# @author German Molina
+			# @return [Hash] The material
+			def self.default_glass
+				return {"rad" => "void glass %MAT_NAME% 0 0 3 0.86 0.86 0.86", "color" => [0,0,255], "alpha" => 0.2, "name"=> "Default 3mm Clear Glass", "class" => "glass"}
+			end
+
+
+			# Returns the hash that represents the Default Groundhog material (opaque).
+			# @author German Molina
+			# @return [Hash] The material
+			def self.default_material
+				return {"rad" => "void plastic %MAT_NAME% 0 0 5 0.6 0.6 0.6 0 0", "color" => [153, 153, 153], "alpha" => 1, "name"=> "Default Material", "class" => "plastic"}
+			end
+
 			# Adds the default material to the model
 			# @author German Molina
 			# @return [Void]
 			def self.add_default_material
-				#Add the default materials to the model
-				Sketchup.active_model.materials.add "GH_default_material"
-				Sketchup.active_model.materials["GH_default_material"].color=[0.7,0.7,0.7]
-				Labeler.to_rad_material(Sketchup.active_model.materials["GH_default_material"])
-				val = {"rad" => "void plastic %MAT_NAME% 0 0 5 0.6 0.6 0.6 0 0"}
-				Labeler.set_rad_material_value(Sketchup.active_model.materials["GH_default_material"],val.to_json)
+				info = self.default_material
+				name = info["name"]
+				Sketchup.active_model.materials.add name
+				Sketchup.active_model.materials[name].color=info["color"]
+				Sketchup.active_model.materials[name].alpha=info["alpha"]
+				Labeler.to_rad_material(Sketchup.active_model.materials[name])
+				Labeler.set_rad_material_value(Sketchup.active_model.materials[name], info.to_json)
 			end
 
 			# Adds the glass material to the model
 			# @author German Molina
 			# @return [Void]
 			def self.add_default_glass
-				Sketchup.active_model.materials.add "Default 3mm Clear Glass"
-				Sketchup.active_model.materials["Default 3mm Clear Glass"].color=[0.0,0.0,1.0]
-				Sketchup.active_model.materials["Default 3mm Clear Glass"].alpha=0.2
-				Labeler.to_rad_material(Sketchup.active_model.materials["Default 3mm Clear Glass"])
-				val = {"rad" => "void glass %MAT_NAME% 0 0 3 0.86 0.86 0.86", "color" => [0,0,0], "alpha" => 0.3, "name"=> "Default 3mm Clear Glass", "class" => "glass"}
-				Labeler.set_rad_material_value(Sketchup.active_model.materials["Default 3mm Clear Glass"], val.to_json)
+				info = self.default_glass
+				name = info["name"]
+				Sketchup.active_model.materials.add name
+				Sketchup.active_model.materials[name].color=info["color"]
+				Sketchup.active_model.materials[name].alpha=info["alpha"]
+				Labeler.to_rad_material(Sketchup.active_model.materials[name])
+				Labeler.set_rad_material_value(Sketchup.active_model.materials[name], info.to_json)
 			end
 
 			# Returns the Radiance primitive of a SketchUp material.
