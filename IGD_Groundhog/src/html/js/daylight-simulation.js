@@ -1,11 +1,19 @@
 //Daylight simulation
-$("#set_low_static").on("click", function () { $("#static_parameters").val("-ab 4 -ad 1000 -lw 1e-3")});
-$("#set_med_static").on("click", function () { $("#static_parameters").val("-ab 7 -ad 3000 -lw 1e-4")});
-$("#set_high_static").on("click", function () { $("#static_parameters").val("-ab 9 -ad 9999 -lw 1e-5")});
+$("#set_low_parameters").on("click", function () { 
+    $("#ray_tracing_parameters").val("-ab 4 -ad 1000 -lw 1e-3")
+    $("#dc_parameters").val("-ab 4 -ad 1000 -lw 1e-3")
+});
 
-$("#set_low_dynamic").on("click", function () { $("#dynamic_parameters").val("-ab 4 -ad 1000 -lw 1e-3") });
-$("#set_med_dynamic").on("click", function () { $("#dynamic_parameters").val("-ab 7 -ad 3000 -lw 1e-4") });
-$("#set_high_dynamic").on("click", function () { $("#dynamic_parameters").val("-ab 9 -ad 9999 -lw 1e-5") });
+$("#set_med_parameters").on("click", function () { 
+    $("#ray_tracing_parameters").val("-ab 7 -ad 3000 -lw 1e-4")
+    $("#dc_parameters").val("-ab 7 -ad 3000 -lw 1e-4")
+});
+
+$("#set_high_parameters").on("click", function () { 
+    $("#ray_tracing_parameters").val("-ab 9 -ad 9999 -lw 1e-5")
+    $("#dc_parameters").val("-ab 9 -ad 9999 -lw 1e-5")
+});
+
 
 $("#set_low_tdd").on("click", function () {
     $("#tdd_daylight_parameters").val("-ab 3 -ad 512 -lw 1e-3");
@@ -37,6 +45,6 @@ $("#simulate_button").on("click", function () {
             }
             
         }
-    });    
+    });
     window.location.href = 'skp:calculate@' + JSON.stringify(options);
 });

@@ -20,12 +20,12 @@ module IGD
 			# @author German Molina
 			# @return [Void]
 			def self.add_default_glass
-				Sketchup.active_model.materials.add "GH_default_glass"
-				Sketchup.active_model.materials["GH_default_glass"].color=[0.0,0.0,1.0]
-				Sketchup.active_model.materials["GH_default_glass"].alpha=0.2
-				Labeler.to_rad_material(Sketchup.active_model.materials["GH_default_glass"])
-				val = {"rad" => "void glass %MAT_NAME% 0 0 3 0.86 0.86 0.86"}
-				Labeler.set_rad_material_value(Sketchup.active_model.materials["GH_default_glass"], val.to_json)
+				Sketchup.active_model.materials.add "Default 3mm Clear Glass"
+				Sketchup.active_model.materials["Default 3mm Clear Glass"].color=[0.0,0.0,1.0]
+				Sketchup.active_model.materials["Default 3mm Clear Glass"].alpha=0.2
+				Labeler.to_rad_material(Sketchup.active_model.materials["Default 3mm Clear Glass"])
+				val = {"rad" => "void glass %MAT_NAME% 0 0 3 0.86 0.86 0.86", "color" => [0,0,0], "alpha" => 0.3, "name"=> "Default 3mm Clear Glass", "class" => "glass"}
+				Labeler.set_rad_material_value(Sketchup.active_model.materials["Default 3mm Clear Glass"], val.to_json)
 			end
 
 			# Returns the Radiance primitive of a SketchUp material.

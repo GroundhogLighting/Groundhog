@@ -1,7 +1,7 @@
 module IGD
 	module Groundhog
 		# MAIN
-		# Groundhog.RB
+		# Groundhog_main.RB
 
 		#Check SU version.
 		version_required = 15
@@ -249,6 +249,10 @@ module IGD
 
 
 		@design_assistant = DesignAssistant.get
+		def self.design_assistant
+			@design_assistant
+		end
+
 		groundhog_menu.add_item("Open Design Assistant"){
 			@design_assistant.show
 		}

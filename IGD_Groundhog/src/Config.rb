@@ -16,9 +16,9 @@ module IGD
 				"ALBEDO" => 0.2,
 				"RVU" => "-ab 3",			
 				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7,
-				"TERRAIN_OVERSIZE" => 4,			
-				"PROJECT_NAME" => nil,
-				"TDD_PIPE_REFLECTANCE" => 0.95,			
+				"TERRAIN_OVERSIZE" => 4,							
+				"TDD_PIPE_REFLECTANCE" => 0.95,	
+				"ADD_TERRAIN" => true		
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -73,6 +73,13 @@ module IGD
 				self.get_element("ALBEDO")
 			end
 
+			# Gets the add_terrain option
+			# @author German Molina
+			# @return [Boolean] The option
+			def self.add_terrain
+				self.get_element("ADD_TERRAIN") == "true" or self.get_element("ADD_TERRAIN") == "TRUE" 
+			end
+
 			# Gets the terrain oversize parameter
 			# @author German Molina
 			# @return [String] The terrain oversize param
@@ -104,10 +111,6 @@ module IGD
 			def self.load_config
 				path=self.config_path
 				@@config=JSON.parse(File.open(path).read)
-
-				#include add-ons
-				Addons.load_addons(self.active_addons)
-
 				return true
 			end
 
@@ -134,7 +137,7 @@ module IGD
 					@@default_config.each do |field|
 						id = field[0].downcase
 						script += Utilities.set_element_value(id,@@config,field[1])
-					end					
+					end			
 					web_dialog.execute_script(script);
 				end
 

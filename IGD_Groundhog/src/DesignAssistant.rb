@@ -43,13 +43,14 @@ module IGD
 				return true
 			end
 
-            # Search for workplanes in the model and find their objectives. Returns an array
+            # Search for workplanes in the model and find their objectives. Returns a Hash
             # with the corresponding format.
 			# @author German Molina			
-			# @return [Hash] the workplanes and objectives
-            # @todo Allow it gathering workplanes inside groups and components
+			# @return [Hash] the workplanes and objectives            
             def self.get_workplanes_hash
-                workplanes = Utilities.get_workplanes(Sketchup.active_model.entities)
+                
+                workplanes = Utilities.get_workplanes(Sketchup.active_model.entities) 
+
                 wp_hash = Hash.new
                 obj_hash = Hash.new                
                 workplanes.each { |wp|
@@ -69,11 +70,33 @@ module IGD
                 return {"workplanes" => wp_hash, "objectives" => obj_hash}
             end
 
+            # Search for materials that have Radiance definition
+			# @author German Molina			
+			# @return [Hash] the materials         
+            def self.get_radiance_materials_hash
+                ret = Hash.new
+                mats = Sketchup.active_model.materials.select{|x| Labeler.rad_material? x}
+
+                mats.each{|x| 
+                    info = JSON.parse IGD::Groundhog::Labeler.get_value x
+                    ret[x.name] = info
+                }        
+
+                #insert (or replace) defaults from LM-83
+                ret["LM-83 floor material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.2 0.2 0.2 0 0", "color" => [51,51,51], "alpha" => 1, "name"=> "LM-83 floor material", "class" => "plastic"}
+                ret["LM-83 wall material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.5 0.5 0.5 0 0", "color" => [127,127,127], "alpha" => 1, "name"=> "LM-83 wall material ", "class" => "plastic"}
+                ret["LM-83 ceiling material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.7 0.7 0.7 0 0", "color" => [178,178,178], "alpha" => 1, "name"=> "LM-83 ceiling material", "class" => "plastic"}
+                ret["LM-83 furniture material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.5 0.5 0.5 0 0", "color" => [127,127,127], "alpha" => 1, "name"=> "LM-83 furniture material", "class" => "plastic"}
+                ret["LM-83 tree material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.2 0.2 0.2 0 0", "color" => [104, 178, 38], "alpha" => 1, "name"=> "LM-83 tree material", "class" => "plastic"}
+                ret["LM-83 ground material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.1 0.1 0.1 0 0", "color" => [25,25,25], "alpha" => 1, "name"=> "LM-83 ground material", "class" => "plastic"}
+                ret["LM-83 obstruction material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.3 0.3 0.3 0 0", "color" => [77,77,77], "alpha" => 1, "name"=> "LM-83 obstruction material", "class" => "plastic"}
+                return ret
+            end
+
             # Search for workplanes in the model and finds out weather they fulfil their
             # goals or not.
 			# @author German Molina			
-			# @return [Hash] the report
-            # @todo Allow it gathering workplanes inside groups and components
+			# @return [Hash] the report# @todo Allow it gathering workplanes inside groups and components
             def self.get_actual_report
                 report = Hash.new
                 wps = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
@@ -87,6 +110,64 @@ module IGD
                 return report
             end
 
+            # This is the action performed when selecting a goal to be shown.
+            # It "remkars" the workplanes corresponding to that goal, and updates
+            # the scale in the Report section of WebDialog
+			# @author German Molina			
+			# @return [String] The script that modifies the scale
+            def self.select_objective(objective)
+                return "$('#compliance_summary_scale_max').text('--');" if objective == nil
+                Utilities.remark_solved_workplanes(objective)
+                min_max = Results.get_min_max_from_model(objective)
+                max=min_max[1]
+                return "$('#compliance_summary_scale_max').text('#{max.round}');"
+            end
+
+            # Updates the Design Assistant to the actual state of the model... this is called
+            # when the dialog is opened and also, for example, when the user defines a new
+            # workplane.        
+			# @author German Molina	
+            def self.update
+                web_dialog = IGD::Groundhog.design_assistant
+                return if not web_dialog.visible?
+
+                hash = self.get_workplanes_hash                    
+                workplanes = hash["workplanes"].to_json                                         
+                objectives = hash["objectives"].to_json
+                materials = self.get_radiance_materials_hash.to_json
+                script = ""
+                script += "materials = JSON.parse('#{materials}');"  
+                script += "materialModule.update_list('');"                
+                script += "workplanes = JSON.parse('#{workplanes}');" 
+                script += "objectives = JSON.parse('#{objectives}');"                       
+                script += "objectiveModule.update_workplanes();" 
+                script += "objectiveModule.update_objectives();"  
+                
+                #remark the first objective
+                objective = hash["objectives"].keys.shift                    
+                script += self.select_objective(objective)                   
+                
+
+
+                weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
+                if weather != nil then
+                    weather = JSON.parse(weather)
+                    script += "document.getElementById('weather_city').innerHTML='#{weather["city"]}';"
+                    script += "document.getElementById('weather_state').innerHTML='#{weather["state"]}';"
+                    script += "document.getElementById('weather_country').innerHTML='#{weather["country"]}';"
+                    script += "document.getElementById('weather_latitude').innerHTML='#{weather["latitude"]}';"
+                    script += "document.getElementById('weather_longitude').innerHTML='#{weather["longitude"]}';"
+                    script += "document.getElementById('weather_timezone').innerHTML='GMT #{weather["timezone"]}';"                        
+                end
+                
+                report = self.get_actual_report
+                script += "results = JSON.parse('#{report.to_json}');"        
+                script += "reportModule.update_compliance_summary();" 
+                script += "reportModule.update_objective_summary();"                     
+                
+                web_dialog.execute_script(script)
+            end
+
             # Returns the Design Assistant.
 			#
 			# @author German Molina
@@ -96,32 +177,7 @@ module IGD
 		        wd.set_file("#{OS.main_groundhog_path}/src/html/design_assistant.html" )                
 
                 wd.add_action_callback("on_load") do |web_dialog,msg|
-                    hash = self.get_workplanes_hash                    
-                    workplanes = hash["workplanes"].to_json                                         
-                    objectives = hash["objectives"].to_json
-                    script = ""                    
-                    script += "workplanes = JSON.parse('#{workplanes}');" 
-                    script += "objectives = JSON.parse('#{objectives}');"                       
-                    script += "objectiveModule.update_workplanes();" 
-                    script += "objectiveModule.update_objectives();"  
-                                                       
-                    weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
-                    if weather != nil then
-                        weather = JSON.parse(weather)
-                        script += "document.getElementById('weather_city').innerHTML='#{weather["city"]}';"
-                        script += "document.getElementById('weather_state').innerHTML='#{weather["state"]}';"
-                        script += "document.getElementById('weather_country').innerHTML='#{weather["country"]}';"
-                        script += "document.getElementById('weather_latitude').innerHTML='#{weather["latitude"]}';"
-                        script += "document.getElementById('weather_longitude').innerHTML='#{weather["longitude"]}';"
-                        script += "document.getElementById('weather_timezone').innerHTML='GMT #{weather["timezone"]}';"                        
-                    end
-                    
-                    report = self.get_actual_report
-                    script += "results = JSON.parse('#{report.to_json}');"        
-                    script += "reportModule.update_compliance_summary();" 
-                    script += "reportModule.update_objective_summary();"                     
-                    
-                    web_dialog.execute_script(script)
+                    self.update
                 end
 
                 wd.add_action_callback("set_weather_path") do |web_dialog,msg|
@@ -150,6 +206,7 @@ module IGD
 
                     if not Exporter.export(path) then
                         UI.messagebox "Error while exporting... Sorry! Contact us to gmolina@igd.cl if the problem persists."
+                        next
                     end                                   
                                         
                     FileUtils.cd(path) do   
@@ -251,7 +308,7 @@ module IGD
                     workplane = obj["workplane"]
                     objective = obj["objective"]    
 
-                    wps = Utilities.get_workplanes(Sketchup.active_model.entities)                                                            
+                    wps = Utilities.get_workplanes(Sketchup.active_model.entities)                                                           
                     wps = wps.select{|x| Labeler.get_name(x)==workplane}
                     workplane = wps[0]   
                     #delete the objective from the workplane value                                                 
@@ -278,8 +335,8 @@ module IGD
                     web_dialog.execute_script(script)                                                   
                 end
 
-                wd.add_action_callback("remark") do |web_dialog, objective|                                     
-                    Utilities.remark_solved_workplanes(objective)
+                wd.add_action_callback("remark") do |web_dialog, objective|                                                                             
+                    web_dialog.execute_script self.select_objective(objective)
                 end
 
 
@@ -287,10 +344,9 @@ module IGD
                     path = "#{Sketchup.temp_dir}/Groundhog"
                     OS.mkdir(path)
                     next if not Exporter.export(path)
-
 					FileUtils.cd(path) do
                         options = JSON.parse(options)
-
+                        
                         #Pre-process information
                         sim = SimulationManager.new(options) 
                         next if not sim                       
@@ -350,14 +406,18 @@ module IGD
 
                         objectives.each{|obj_name, value|
                             min_max=Results.get_min_max_from_model(obj_name)
-                            Results.update_pixel_colors(0,min_max[1],value)	#minimum is 0 by default
-                            Utilities.remark_solved_workplanes(obj_name)
+                            Results.update_pixel_colors(0,min_max[1],value)	#minimum is 0 by default                            
                         }  
                          
-                         script = ""
-                         script += "results = JSON.parse('#{report.to_json}');"        
-                         script += "reportModule.update_compliance_summary();"
-                         web_dialog.execute_script(script)   
+                        script = ""
+                        script += "results = JSON.parse('#{report.to_json}');"        
+                        script += "reportModule.update_compliance_summary();"
+
+                        #remark first objective
+                        objective = objectives.keys.shift
+                        script += self.select_objective(objective)
+
+                        web_dialog.execute_script(script)   
                     end
                     
                 end

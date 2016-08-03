@@ -18,6 +18,7 @@ task :clean do
 end
 
 sketchup_plugin_dir = "#{ENV["UserProfile"].gsub("\\","/")}/AppData/Roaming/SketchUp/SketchUp 2016/SketchUp/Plugins"
+
 task :test => [:win64] do
 	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog.rb"
 	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog"

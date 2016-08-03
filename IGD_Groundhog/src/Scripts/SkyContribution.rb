@@ -17,7 +17,7 @@ module IGD
                     
                     name=Utilities.fix_name(target)
                     nsensors = File.readlines(wp_file).length
-                    script = "rfluxmtx -I+ -y #{nsensors} #{options["dynamic_parameters"]} < ./#{wp_file} - ./Skies/white_sky.rad ./Materials/materials.mat ./scene.rad #{win_string} > ./DC/#{name}-sky.dc" 
+                    script = "rfluxmtx -I+ -y #{nsensors} #{options["dc_parameters"]} < ./#{wp_file} - ./Skies/white_sky.rad ./Materials/materials.mat ./scene.rad #{win_string} > ./DC/#{name}-sky.dc" 
                     
                     next [script]
                 }

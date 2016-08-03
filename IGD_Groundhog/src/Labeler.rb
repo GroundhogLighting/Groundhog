@@ -35,12 +35,13 @@ module IGD
 			# @return [String] Name of the entity.
 			# @note: Will ask for the name of anything, even if it is not a face.
 			def self.get_name(entity)
+				#first check User-assigned name
 				name=entity.get_attribute("Groundhog","Name")
-				if name == nil then
-					return entity.entityID.to_s
-				else
-					return name
-				end
+				return name if name !=  nil
+				#Second, check if SketchUp assigns a name to this.
+				return entity.name if entity.respond_to? :name
+				#Last, return ID
+				return entity.entityID.to_s				
 			end
 
 			# Same as get_name but fixing the output (ie. replacing blanks and # by underscores)
@@ -346,12 +347,12 @@ module IGD
 				faces=Utilities.get_faces(entities)
 
 				if faces.length>=1 then
-					mat=Sketchup.active_model.materials["GH_default_glass"]
+					mat=Sketchup.active_model.materials["Default 3mm Clear Glass"]
 					Materials.add_default_glass if mat==nil
 					faces.each do |i|						
 						self.set_label(i,"window")										
-						i.material=Sketchup.active_model.materials["GH_default_glass"]
-						i.back_material=Sketchup.active_model.materials["GH_default_glass"]
+						i.material=Sketchup.active_model.materials["Default 3mm Clear Glass"]
+						i.back_material=Sketchup.active_model.materials["Default 3mm Clear Glass"]
 					end
 				else
 					UI.messagebox("No faces selected")
@@ -378,7 +379,11 @@ module IGD
 						i.back_material.alpha=0.2
 					end
 
-					self.set_name(correct,name)					
+					self.set_name(correct,name)	
+
+					#update
+					DesignAssistant.update
+
 				else
 					UI.messagebox("No faces selected")
 				end

@@ -16,6 +16,7 @@ module IGD
                 hash = DesignAssistant.get_workplanes_hash
                 workplanes = hash["workplanes"]
                 objectives=hash["objectives"]
+                UI.messagebox "There are no objectives to calculate" if objectives.length == 0
                 workplanes.each{|workplane,obj_array|
                     obj_array.each{|obj_name|
                         objective = objectives[obj_name]

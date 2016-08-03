@@ -55,7 +55,7 @@ module IGD
                     skydesc = File.read("t.tmp")
                     FileUtils.rm("t.tmp")
                     if not skydesc then
-                        warn "Error: No sky description!"
+                        UI.messagebox "Error: No sky description in genskyvec!"
                         return false
                     end
 
@@ -161,6 +161,7 @@ module IGD
                             f.puts "skyfunc glow skyglow 0 0 4 #{skycolor.join(" ")} 0\n"
                             f.puts "skyglow source sky 0 0 4 0 0 1 360\n"
                         }
+                        OS.run_command("oconv #{file} > #{octree}")                        
                         OS.run_command "#{tregcommand} > #{tmp1}"
                         tregval = File.readlines(tmp1)
                     else

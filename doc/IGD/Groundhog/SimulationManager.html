@@ -340,7 +340,8 @@ exported.</p>
 28
 29
 30
-31</pre>
+31
+32</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 13</span>
@@ -351,6 +352,7 @@ exported.</p>
     <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='const'>DesignAssistant</span><span class='period'>.</span><span class='id identifier rubyid_get_workplanes_hash'>get_workplanes_hash</span>
     <span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplanes</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
     <span class='id identifier rubyid_objectives'>objectives</span><span class='op'>=</span><span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectives</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+    <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>There are no objectives to calculate</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_objectives'>objectives</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>==</span> <span class='int'>0</span>
     <span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_obj_array'>obj_array</span><span class='op'>|</span>
         <span class='id identifier rubyid_obj_array'>obj_array</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_obj_name'>obj_name</span><span class='op'>|</span>
             <span class='id identifier rubyid_objective'>objective</span> <span class='op'>=</span> <span class='id identifier rubyid_objectives'>objectives</span><span class='lbracket'>[</span><span class='id identifier rubyid_obj_name'>obj_name</span><span class='rbracket'>]</span>
@@ -419,16 +421,16 @@ exported.</p>
       <pre class="lines">
 
 
-71
 72
 73
 74
 75
 76
-77</pre>
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 71</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 72</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_expand!'>expand!</span>
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -520,7 +522,6 @@ exported.</p>
       <pre class="lines">
 
 
-37
 38
 39
 40
@@ -549,10 +550,11 @@ exported.</p>
 63
 64
 65
-66</pre>
+66
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 37</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 38</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_get_task'>get_task</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>                                             
     <span class='id identifier rubyid_task'>task</span> <span class='op'>=</span> <span class='kw'>false</span>
@@ -651,7 +653,6 @@ calculations</p>
       <pre class="lines">
 
 
-99
 100
 101
 102
@@ -664,10 +665,11 @@ calculations</p>
 109
 110
 111
-112</pre>
+112
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 100</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_solve'>solve</span>                
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span> 
@@ -733,7 +735,6 @@ reused.</p>
       <pre class="lines">
 
 
-84
 85
 86
 87
@@ -742,10 +743,11 @@ reused.</p>
 90
 91
 92
-93</pre>
+93
+94</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 84</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 85</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_uniq!'>uniq!</span>                                               
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -767,7 +769,7 @@ reused.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Jul 14 14:01:17 2016 by
+  Generated on Wed Aug  3 15:33:52 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

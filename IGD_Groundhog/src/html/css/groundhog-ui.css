@@ -46,12 +46,16 @@ div.display{
     width:auto;
     height: 100vh;
     overflow: scroll;    
-    padding: 0 15px 15px 15px;
+    padding: 15px;
 }
 
 p.tooltip{
     display:inline;
     font-weight: bold;
+}
+
+p.link {
+    cursor:pointer;
 }
 
 legend{
@@ -159,4 +163,24 @@ td.not-success{
 
 input.color {
     width: 4em
+}
+
+div.scale {
+    height: 2.5em;
+}
+
+div.scale *{
+    display: inline-block;
+}
+div.scale img{
+    height: 100%;
+    width: 50%;
+}
+
+div.scale p{
+    height: 100%;
+    font-size: 1.1em;
+    padding: 0 3px 0 3px;
+    margin:0.4em 0 0 0;   
+    vertical-align: top;
 }

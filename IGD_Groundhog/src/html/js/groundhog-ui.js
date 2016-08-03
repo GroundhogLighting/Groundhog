@@ -38,7 +38,9 @@
     showSidenav();
     selectDisplay($("#sidenav p.selected").attr('href'));
     $("button").button();
-    $(document).tooltip();
+    $(document).tooltip({
+        track:true
+    });
     $("div.accordion").accordion({ collapsible: true, heightStyle: 'content'});
 
 

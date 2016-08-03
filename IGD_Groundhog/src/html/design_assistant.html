@@ -22,7 +22,6 @@
 
 
     <div class="display" id="location">
-        <h2>Location</h2>
 
         <div class="center">
             <button type="button" onclick='window.location.href ="skp:set_weather_path@msg"'>Change weather file</button>
@@ -52,13 +51,13 @@
                     <td id="weather_timezone">not set</td>
                 </tr>
             </table>
-            <a class="" href="#" onclick='window.location.href ="skp:follow_link@http://www.energyplus.net/weather"'>Find weather files here</a>
+            <a class="" href="#" onclick='window.location.href ="skp:follow_link@http://www.energyplus.net/weather"'>Find weather files here</a>            
         </div>
 
     </div>
 
     <div class="display" id="model">
-        <h2>Model</h2>
+       
         <div class="center">
             <button id="preview_button" onclick='window.location.href = "skp:preview@msg"'>Preview</button>
         </div>
@@ -80,7 +79,7 @@
     </div>
 
     <div class="display" id="objectives">
-        <h2>Objectives</h2>
+        
         <table id="objectives_table" class="draggable selectable"></table>
         
         <div class="center"><button id="add_objective_to_worplane">New objective</button></div>
@@ -89,10 +88,10 @@
 
 
     <div class="display" id="daylight_simulation">
-        <h2>Daylight</h2>
+        
         <div class="center"><button id="simulate_button">Calculate</button></div>
         <div id="simulation_options" class="accordion">
-            <h3>Sky subdivition</h3>
+            <h3>General options</h3>
             <div>
                 <table>
                     <tr>
@@ -102,13 +101,8 @@
                             <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
                         </td>
                     </tr>
-                </table>
-            </div>
-            <h3>Static simulation options</h3>
-            <div >
-                <table>
                     <tr>
-                        <td>Calculation method</td>
+                        <td>Static calculation method</td>
                         <td>
                             <select title="option" id='static_calculation_method'>
 							<option value="RTRACE">Ray-tracing</option>
@@ -117,45 +111,43 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Parameters</td>
-                        <td>
-                            <input title="option" type="text" id="static_parameters">
-                        </td>
-                    </tr>                    
-
-                </table>
-                <div class="center">
-                    <button id="set_low_static">Set to low</button>
-                    <button id="set_med_static">Set to medium</button>
-                    <button id="set_high_static">Set to high</button>
-                </div>
-            </div>
-
-            <h3>Dynamic simulation options</h3>
-            <div>
-                <table>
-                    <tr>
-                        <td>Calculation method</td>
+                        <td>Dynamic calculation method</td>
                         <td>
                             <select title="option" id='dynamic_calculation_method'>
 							<option value="DC">Simple Daylight Coefficients</option>
 						</select>
                         </td>
                     </tr>
+                    
+                </table>
+            </div>
+
+            <h3>Simulation parameters</h3>
+            <div >
+                <table>
+                    
                     <tr>
-                        <td>Parameters</td>
+                        <td>Ray-tracing parameters</td>
                         <td>
-                            <input title="option" type="text" id="dynamic_parameters">
+                            <input title="option" type="text" id="ray_tracing_parameters">
+                        </td>
+                    </tr>                    
+
+                    <tr>
+                        <td>Daylight coefficients parameters</td>
+                        <td>
+                            <input title="option" type="text" id="dc_parameters">
                         </td>
                     </tr>                   
 
                 </table>
                 <div class="center">
-                    <button id="set_low_dynamic">Set to low</button>
-                    <button id="set_med_dynamic">Set to medium</button>
-                    <button id="set_high_dynamic">Set to high</button>
+                    <button id="set_low_parameters">Set to low</button>
+                    <button id="set_med_parameters">Set to medium</button>
+                    <button id="set_high_parameters">Set to high</button>
                 </div>
             </div>
+
 
             <h3>Tubular Daylight Devices options</h3>
             <div>
@@ -190,20 +182,22 @@
     </div>
 
     <div class="display" id="luminaires">
-        <h2>Luminaires</h2>
+      
     </div>
 
     <div class="display" id="report">
-        <h2>Report</h2>
+        
         <div class="accordion">
+            
+            <h3>Compliance summary</h3>
+            <div>
+                <div id="compliance_summary_scale" class="scale center"><p id="compliance_summary_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale"><p id="compliance_summary_scale_max">100</p></div>
+                <table id="compliance_summary" class="selectable"></table>
+            </div>
+
             <h3>Objective summary</h3>
             <div id="objective_summary"></div>
 
-            <h3>Compliance summary</h3>
-            <div>
-                <table id="compliance_summary" class="selectable"></table>
-            </div>
-            
         </div>
         
         
@@ -289,7 +283,7 @@
 
         </fieldset>
         <fieldset>
-            <legend>Reflectance</legend>
+            <legend id="color_legend">Reflectance</legend>
             <label for="monochromatic">Monochromatic material</label>
             <input class="color" type="checkbox" id="monochromatic">
             <table>
@@ -339,9 +333,10 @@
 <script src="js/daylight-simulation.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/report.js"></script>
-<script>
-    //objectiveModule.update_workplanes();
+<script>    
     window.location.href = 'skp:on_load@message';   
+
+
 </script>
 
 </html>

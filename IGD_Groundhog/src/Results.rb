@@ -279,8 +279,8 @@ module IGD
 			def self.update_pixel_colors(min,max,objective)
 				model=Sketchup.active_model
 				op_name="Update pixels"
-				#begin					
-					#model.start_operation(op_name,true)
+				begin					
+					model.start_operation(op_name,true)
 					#good_min and good_max are assign for static metrics, by default
 					good_min = objective["good_light"]["min"]
 					good_max = objective["good_light"]["max"]
@@ -299,8 +299,8 @@ module IGD
 							next if not Labeler.face?(pixel) or not Labeler.result_pixel?(pixel)
 							# now we are sure ent is a pixel.
 							value=Labeler.get_value(pixel)
-							#color=self.get_rad_pixel_color(value,max,min)
-							color=self.get_gh_pixel_color(value,min,good_min,good_max,max)
+							color=self.get_rad_pixel_color(value,max,min)
+							#color=self.get_rad_pixel_color(value,min,good_min,good_max,max)
 							pixel.material=color
 							pixel.back_material=color
 						end
@@ -310,12 +310,12 @@ module IGD
 						Labeler.set_workplane_value(workplane,wp_value.to_json)
 					end
 					Utilities.remark_solved_workplanes(objective)
-					#model.commit_operation
+					model.commit_operation
 
-				#rescue Exception => ex
-				#	UI.messagebox ex
-				#	model.abort_operation
-				#end
+				rescue Exception => ex
+					UI.messagebox ex
+					model.abort_operation
+				end
 			end
 
 			# Checks all the solved workplanes in the model that correspond to a metric
