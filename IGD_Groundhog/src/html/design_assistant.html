@@ -13,7 +13,8 @@
 
     <div id="sidenav">
         <p class="selected" href="#location">Location</p>
-        <p href="#model">Model</p>
+        <p href="#labels">Labels</p>
+        <p href="#materials">Materials</p>
         <p href="#objectives">Objectives</p>
         <p href="#daylight_simulation">Daylight</p>
         <p href="#luminaires">Luminaires</p>
@@ -22,74 +23,79 @@
 
 
     <div class="display" id="location">
-
-        <div class="center">
-            <button type="button" onclick='window.location.href ="skp:set_weather_path@msg"'>Change weather file</button>
-            <table id="weather_info" class="with_border bold_first_row">
-                <tr>
-                    <td>City</td>
-                    <td id="weather_city">not set</td>
-                </tr>
-                <tr>
-                    <td>State</td>
-                    <td id="weather_state">not set</td>
-                </tr>
-                <tr>
-                    <td>Country</td>
-                    <td id="weather_country">not set</td>
-                </tr>
-                <tr>
-                    <td>Latitude</td>
-                    <td id="weather_latitude">not set</td>
-                </tr>
-                <tr>
-                    <td>Longitude</td>
-                    <td id="weather_longitude">not set</td>
-                </tr>
-                <tr>
-                    <td>Time Zone</td>
-                    <td id="weather_timezone">not set</td>
-                </tr>
-            </table>
-            <a class="" href="#" onclick='window.location.href ="skp:follow_link@http://www.energyplus.net/weather"'>Find weather files here</a>            
+        <div class="fixed_toolbar">
+            <button onclick='window.location.href ="skp:set_weather_path@msg"'>Change weather file</button>
+            <button onclick='window.location.href ="skp:follow_link@http://www.energyplus.net/weather"'>Find weather files here</button>
         </div>
 
+
+        <table id="weather_info" class="with_border bold_first_row">
+            <tr>
+                <td>City</td>
+                <td id="weather_city">not set</td>
+            </tr>
+            <tr>
+                <td>State</td>
+                <td id="weather_state">not set</td>
+            </tr>
+            <tr>
+                <td>Country</td>
+                <td id="weather_country">not set</td>
+            </tr>
+            <tr>
+                <td>Latitude</td>
+                <td id="weather_latitude">not set</td>
+            </tr>
+            <tr>
+                <td>Longitude</td>
+                <td id="weather_longitude">not set</td>
+            </tr>
+            <tr>
+                <td>Time Zone</td>
+                <td id="weather_timezone">not set</td>
+            </tr>
+        </table>
     </div>
 
-    <div class="display" id="model">
-       
-        <div class="center">
+    <div class="display" id="labels">
+        <div class="fixed_toolbar">
             <button id="preview_button" onclick='window.location.href = "skp:preview@msg"'>Preview</button>
         </div>
-        <div class="accordion">
-            <h3>Label selection</h3>
+
+        
             <div class="center">
                 <button onclick='window.location.href = "skp:label_as_window@msg"'>As Window</button>
                 <button onclick='window.location.href = "skp:label_as_workplane@msg"'>As Workplane</button>
                 <button onclick='window.location.href = "skp:label_as_illum@msg"'>As Illum</button>
             </div>
-            <h3>Materials</h3>
-            <div class="center">
-                <button id="add_material_button">Create material</button><br><br>
-                <label for="filter_materials">Filter:</label><input type="text" id="filter_materials">
-                <table id="material_list" class="selectable"> </table>
-            </div>
+            
 
+    </div>
+
+    <div class="display" id="materials">
+        <div class="fixed_toolbar">            
+            <button id="preview_button" onclick='window.location.href = "skp:preview@msg"'>Preview</button>
+            <button id="add_material_button">New material</button>
+            <span>Search:</span>
+            <input type="text" id="filter_materials">
         </div>
+        <table id="material_list" class="selectable row"> </table>
     </div>
 
     <div class="display" id="objectives">
-        
-        <table id="objectives_table" class="draggable selectable"></table>
-        
-        <div class="center"><button id="add_objective_to_worplane">New objective</button></div>
+        <div class="fixed_toolbar">
+            <button id="add_objective_to_worplane">New objective</button>
+        </div>
+        <table id="objectives_table" class="draggable selectable row"></table>
+
         <div class="accordion" id="workplane_objectives"></div>
     </div>
 
 
     <div class="display" id="daylight_simulation">
-        
-        <div class="center"><button id="simulate_button">Calculate</button></div>
+        <div class="fixed_toolbar">
+            <button id="simulate_button">Calculate</button>
+        </div>
         <div id="simulation_options" class="accordion">
             <h3>General options</h3>
             <div>
@@ -118,27 +124,27 @@
 						</select>
                         </td>
                     </tr>
-                    
+
                 </table>
             </div>
 
             <h3>Simulation parameters</h3>
-            <div >
+            <div>
                 <table>
-                    
+
                     <tr>
                         <td>Ray-tracing parameters</td>
                         <td>
                             <input title="option" type="text" id="ray_tracing_parameters">
                         </td>
-                    </tr>                    
+                    </tr>
 
                     <tr>
                         <td>Daylight coefficients parameters</td>
                         <td>
                             <input title="option" type="text" id="dc_parameters">
                         </td>
-                    </tr>                   
+                    </tr>
 
                 </table>
                 <div class="center">
@@ -182,32 +188,44 @@
     </div>
 
     <div class="display" id="luminaires">
-      
+        <div class="fixed_toolbar">
+            <button>New Luminaire</button>
+           	<span>Search:</span>
+            <input type="text" id="filter_luminaires">
+        </div>
+        <table id="luminaire_list" class="selectable row">
+
+        </table>
     </div>
 
     <div class="display" id="report">
-        
+        <div class="fixed_toolbar">
+
+        </div>
         <div class="accordion">
-            
+
             <h3>Compliance summary</h3>
             <div>
-                <div id="compliance_summary_scale" class="scale center"><p id="compliance_summary_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale"><p id="compliance_summary_scale_max">100</p></div>
-                <table id="compliance_summary" class="selectable"></table>
+                <div id="compliance_summary_scale" class="scale center">
+                    <p id="compliance_summary_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale">
+                    <p id="compliance_summary_scale_max">100</p>
+                </div>
+                <table id="compliance_summary" class="selectable column"></table>
             </div>
 
             <h3>Objective summary</h3>
             <div id="objective_summary"></div>
 
         </div>
-        
-        
+
+
     </div>
 
     <!-- ADD OBJECTIVE DIALOG -->
-    <div id="add_metric_dialog" title="Add objective">       
+    <div id="add_metric_dialog" title="Add objective">
         <div class="center">
             <label for="metric_name">Name: </label>
-            <input type="text" id="objective_name">   
+            <input type="text" id="objective_name">
         </div>
         <fieldset class="center" id="metric_field">
             <legend>Metric</legend>
@@ -323,6 +341,10 @@
     var materials = {};
     var objectives = {};
     var results = {};
+    var luminaires = {
+        "Example 1": {"name": "Example 1", "brand": "Brand of Ex. 1", "power": 2},
+        "Another one": {"name": "Another one", "brand": "Brand of Ex. 2", "power": 6},
+    };    
 
 </script>
 <script src="js/JQuery/jquery-3.0.0.js"></script>
@@ -333,10 +355,9 @@
 <script src="js/daylight-simulation.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/report.js"></script>
+<script src="js/luminaires.js"></script>
 <script>    
-    window.location.href = 'skp:on_load@message';   
-
-
+    window.location.href = 'skp:on_load@message';       
 </script>
 
 </html>

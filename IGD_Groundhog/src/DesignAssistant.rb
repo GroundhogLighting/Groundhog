@@ -125,7 +125,9 @@ module IGD
                 Utilities.remark_solved_workplanes(objective)
                 min_max = Results.get_min_max_from_model(objective)
                 max=min_max[1]
-                return "$('#compliance_summary_scale_max').text('#{max.round}');"
+                script = "$('#compliance_summary_scale_max').text('#{max.round}');"                
+                script += "reportModule.highlight_objective('#{objective}');"                
+                return script
             end
 
             # Updates the Design Assistant to the actual state of the model... this is called
@@ -146,13 +148,7 @@ module IGD
                 script += "workplanes = JSON.parse('#{workplanes}');" 
                 script += "objectives = JSON.parse('#{objectives}');"                       
                 script += "objectiveModule.update_workplanes();" 
-                script += "objectiveModule.update_objectives();"  
-                
-                #remark the first objective
-                objective = hash["objectives"].keys.shift                    
-                script += self.select_objective(objective)                   
-                
-
+                script += "objectiveModule.update_objectives();"                                               
 
                 weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
                 if weather != nil then
@@ -168,9 +164,17 @@ module IGD
                 report = self.get_actual_report
                 script += "results = JSON.parse('#{report.to_json}');"        
                 script += "reportModule.update_compliance_summary();" 
-                script += "reportModule.update_objective_summary();"                     
+                script += "reportModule.update_objective_summary();"                                                     
+
+                #update luminaire list
+                script += "luminaireModule.update_list('');"
+
+                #remark the first objective
+                objective = hash["objectives"].keys.shift                    
+                script += self.select_objective(objective) 
                 
-                web_dialog.execute_script(script)
+                #execute
+                web_dialog.execute_script(script)                 
             end
 
             # Returns the Design Assistant.

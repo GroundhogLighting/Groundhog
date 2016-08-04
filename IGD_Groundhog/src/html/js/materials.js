@@ -61,7 +61,8 @@ materialModule.update_list = function (filter) {
                 var g = data["color"][1];
                 var b = data["color"][2];
                 var color = "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + ")";
-                html = html + "<tr><td class='mat-name' name=\"" + material + "\">" + material + "</td><td>" + cl + "</td><td class='color' style='background: " + color + "'></td><td class='icons'><span name=\"" + material + "\" class='ui-icon ui-icon-trash del-material'></span><span class='ui-icon ui-icon-pencil'></span></td></tr>"
+                html = html + "<tr><td class='mat-name' name=\"" + material + "\">" + material + "</td><td>" + cl + "</td><td class='color' style='background: " + color + "'></td><td class='icons'><span name=\"" + material + "\" class='ui-icon ui-icon-trash del-material'></span></td></tr>" 
+                //<span class='ui-icon ui-icon-pencil'></span>
             }
         }
     }
