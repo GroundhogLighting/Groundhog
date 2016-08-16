@@ -73,6 +73,16 @@ module IGD
 				self.get_element("ALBEDO")
 			end
 
+			# Gets the luminaire shape threshold. This value is meant to control the shape of the
+			# impostor light source that actually emits light.
+			# The rationale behind this is that very long luminaires (i.e. fluorescent tube)
+			# will not be correctly modeled by the default shape (sphere); but by a rectangle instead.
+			# @author German Molina
+			# @return [Float] The threshold
+			def self.luminaire_shape_threshold
+				self.get_element("LUMINAIRE_SHAPE_THRESHOLD").to_f
+			end
+
 			# Gets the add_terrain option
 			# @author German Molina
 			# @return [Boolean] The option

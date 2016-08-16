@@ -70,6 +70,24 @@ module IGD
                 return {"workplanes" => wp_hash, "objectives" => obj_hash}
             end
 
+            # Search for the luminaire definition
+			# @author German Molina			
+			# @return [Hash] the luminaires         
+            def self.get_luminaires_hash
+                ret = Hash.new
+                
+                luminaires = Sketchup.active_model.definitions.select{|x| Labeler.luminaire? x }
+                luminaires.each{|x|
+                    # Get the data if needed.
+                    data = JSON.parse(Labeler.get_value(x))
+                    data.delete("ies")                    
+                    ret[data["luminaire"]]=data
+                }
+
+
+                return ret
+            end
+
             # Search for materials that have Radiance definition
 			# @author German Molina			
 			# @return [Hash] the materials         
@@ -140,15 +158,15 @@ module IGD
 
                 hash = self.get_workplanes_hash                    
                 workplanes = hash["workplanes"].to_json                                         
-                objectives = hash["objectives"].to_json
+                objectives = hash["objectives"].to_json                
                 materials = self.get_radiance_materials_hash.to_json
                 script = ""
                 script += "materials = JSON.parse('#{materials}');"  
                 script += "materialModule.update_list('');"                
                 script += "workplanes = JSON.parse('#{workplanes}');" 
                 script += "objectives = JSON.parse('#{objectives}');"                       
-                script += "objectiveModule.update_workplanes();" 
-                script += "objectiveModule.update_objectives();"                                               
+                script += "objectiveModule.update_workplanes('');" 
+                script += "objectiveModule.update_objectives('');"                                               
 
                 weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
                 if weather != nil then
@@ -167,6 +185,8 @@ module IGD
                 script += "reportModule.update_objective_summary();"                                                     
 
                 #update luminaire list
+                luminaires = self.get_luminaires_hash.to_json
+                script += "luminaires = JSON.parse('#{luminaires}');"  
                 script += "luminaireModule.update_list('');"
 
                 #remark the first objective
@@ -223,6 +243,26 @@ module IGD
                         win_string = ""
                         win_string = "./Windows/windows.rad" if File.directory? "Windows"      
                         script << "oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{win_string}  > octree.oct"
+                        script << "rvu #{Config.rvu_options} -vf Views/view.vf octree.oct"
+                        OS.execute_script(script)
+						OS.clear_actual_path
+                    end                                       
+                end
+
+                wd.add_action_callback("night_preview") do |web_dialog,msg| 
+                    path = "#{Sketchup.temp_dir}/Groundhog"
+                    OS.mkdir(path)
+
+                    if not Exporter.export(path) then
+                        UI.messagebox "Error while exporting... Sorry! Contact us to gmolina@igd.cl if the problem persists."
+                        next
+                    end                                   
+                                        
+                    FileUtils.cd(path) do   
+                        script=[]     
+                        win_string = ""
+                        win_string = "./Windows/windows.rad" if File.directory? "Windows"      
+                        script << "oconv ./Materials/materials.mat ./scene.rad #{win_string}  > octree.oct"
                         script << "rvu #{Config.rvu_options} -vf Views/view.vf octree.oct"
                         OS.execute_script(script)
 						OS.clear_actual_path
@@ -292,6 +332,32 @@ module IGD
                     materials.current=materials[name]
                 end
 
+
+
+                wd.add_action_callback("use_luminaire") do |web_dialog,msg|
+                    model = Sketchup.active_model
+                    entities = model.entities
+                    definitions = model.definitions
+
+                    m = JSON.parse(msg)                   
+                    name = m["name"]
+                    luminaires = definitions.select{|x| IGD::Groundhog::Labeler.luminaire? x}                    
+                    definition = luminaires.select{|x| JSON.parse(IGD::Groundhog::Labeler.get_value(x))["luminaire"] == name }
+                                      
+                    if definition.length == 0 then #it does not exist....
+                        #In the future; load it.
+                        UI.messagebox "Sorry, there was an error... there seem to be no luminare named '#{name}'"
+                        next
+                    elsif definition.length > 1 then
+                        UI.messagebox "The luminare named '#{name}' seem to be defined at least twice... we will load the first definition of it."                        
+                    end                    
+
+                    entities.add_instance(definition[0],Geom::Transformation.new) 
+                end
+
+
+
+
                 wd.add_action_callback("remove_material") do |web_dialog,name|
                     materials = Sketchup.active_model.materials                                                                             
                     materials.remove(materials[name]) if materials[name] != nil
@@ -340,7 +406,7 @@ module IGD
                     workplanes = hash["workplanes"].to_json                       
                     script = ""                    
                     script += "workplanes = JSON.parse('#{workplanes}');"                        
-                    script += "objectiveModule.update_workplanes();"  
+                    script += "objectiveModule.update_workplanes('');"  
                     web_dialog.execute_script(script)                                                   
                 end
 
@@ -361,8 +427,8 @@ module IGD
                         next if not sim                       
                         script = sim.solve
 
-                        #Process data
-                        OS.execute_script(script)
+                        #Process data                                                                      
+                        next if not OS.execute_script(script)
 
                         #post-process and load results
                         report = Hash.new

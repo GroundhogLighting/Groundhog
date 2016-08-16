@@ -214,22 +214,24 @@ module IGD
 			# @param path [String] The path where the model will be exported
 			# @return [Boolean] Success
 			def self.export(path)
+
 				OS.clear_path(path)
-		
-				#Export the faces and obtain the modifiers
-				mod_list=self.export_layers(path)
-				mod_list.uniq!
-				return false if not mod_list
-				return false if not self.export_modifiers(path,mod_list)
-				return false if not self.write_sky(path)
-				return false if not self.write_weather("#{path}/Skies")
-				return false if not self.export_views(path)
-				return false if not self.write_scene_file(path)
-				return false if not self.export_component_definitions(path)
-				return false if not self.write_illuminance_sensors(path)
 
-				Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
+				FileUtils.cd(path) do
+					#Export the faces and obtain the modifiers
+					mod_list=self.export_layers(path)
+					mod_list.uniq!
+					return false if not mod_list
+					return false if not self.export_modifiers(path,mod_list)
+					return false if not self.write_sky(path)
+					return false if not self.write_weather("#{path}/Skies")
+					return false if not self.export_views(path)
+					return false if not self.write_scene_file(path)
+					return false if not self.export_component_definitions(path)
+					return false if not self.write_illuminance_sensors(path)
 
+					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
+				end
 				return true
 			end
 
@@ -579,9 +581,10 @@ module IGD
 							instances.each do |inst|
 								next if not inst.parent.is_a? Sketchup::Model
 								next if Labeler.tdd?(inst)
-								f.puts "#{self.get_component_string(inst)} #{comp_path}#{hName}.rad"
-								if Labeler.local_luminaire?(inst.definition) then
-									geom_string += "#{xform} ./Components/dat/#{Labeler.get_fixed_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, "./Components")
+								xform = self.get_component_string(inst)
+								f.puts "#{xform} #{comp_path}#{hName}.rad"
+								if Labeler.luminaire?(inst.definition) then
+									f.puts "#{xform} ./Components/dat/#{Labeler.get_fixed_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, "./Components")
 								end
 							end
 						end
@@ -712,7 +715,7 @@ module IGD
 						name = Utilities.fix_name(inst.definition.name)
 						xform = self.get_component_string(inst)
 						geom_string += "#{xform} ./#{name}.rad#{$/}"
-						if Labeler.local_luminaire?(inst.definition) then
+						if Labeler.luminaire?(inst.definition) then
 							geom_string += "#{xform} ./dat/#{Labeler.get_fixed_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, comp_path)
 						end
 					end
@@ -752,7 +755,6 @@ module IGD
 					File.open(filename,'w+'){ |f|
 						f.write mat_string+geom_string
 					}
-
 
 				end	#end for each
 				

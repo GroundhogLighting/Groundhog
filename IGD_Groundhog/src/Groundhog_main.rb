@@ -38,10 +38,10 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Scripts/InstantIlluminance'
 		Sketchup::require 'IGD_Groundhog/src/Scripts/Sky'
 		Sketchup::require 'IGD_Groundhog/src/Scripts/SkyContribution'
-		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDContribution'
-		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDDaylight'
-		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDPipe'
-		#Sketchup::require 'IGD_Groundhog/src/Scripts/TDDView'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDContribution'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDDaylight'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDPipe'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDView'
 
 
 
@@ -94,8 +94,7 @@ module IGD
 						op_name = "Link IES file"
 						model.start_operation(op_name,true)
 						comp = components[0].definition
-
-						Labeler.to_local_luminaire(comp)
+						Labeler.to_luminaire(comp)
 						model.commit_operation
 					rescue Exception => ex
 						UI.messagebox ex

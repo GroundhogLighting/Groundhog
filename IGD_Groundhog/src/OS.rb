@@ -126,11 +126,11 @@ module IGD
 					pid = wait_thr.pid # pid of the started process.
 
 					while line = stderr.gets
-						puts line
+						warn line
 					end
 
 					while line = stdout.gets
-						puts line
+						warn line
 					end
 
 					exit_status = wait_thr.value.success?

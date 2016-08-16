@@ -39,7 +39,8 @@ module IGD
 				name=entity.get_attribute("Groundhog","Name")
 				return name if name !=  nil
 				#Second, check if SketchUp assigns a name to this.
-				return entity.name if entity.respond_to? :name
+				name = entity.name if entity.respond_to? :name 
+				return entity.name if (name != nil and name != "")
 				#Last, return ID
 				return entity.entityID.to_s				
 			end
@@ -160,8 +161,8 @@ module IGD
 			# @author German Molina
 			# @param entity [SketchUp::Entity] Entity to test.
 			# @return [Boolean]
-			def self.local_luminaire?(entity)
-				entity.get_attribute("Groundhog","Label")=="local_luminaire"
+			def self.luminaire?(entity)
+				entity.get_attribute("Groundhog","Label")=="luminaire"
 			end
 
 
@@ -319,14 +320,34 @@ module IGD
 			# @author German Molina
 			# @param comp [SkecthUp::ComponentDefinition] A SketchUp component definition
 			# @return [Void]
-			def self.to_local_luminaire(comp)
-				UI.messagebox("Only components can be labeled as Local Luminaires") if not comp.is_a? Sketchup::ComponentDefinition
+			def self.to_luminaire(comp)
+				UI.messagebox("Only components can be labeled as Luminaires") if not comp.is_a? Sketchup::ComponentDefinition
 				return if not comp.is_a? Sketchup::ComponentDefinition
-
 				
+				
+				lumfile = UI.openpanel("Choose an IES file", "c:/", "IES|*.ies||")
+				return false if not lumfile	
+				text = File.readlines(lumfile)
+
 				self.set_label(comp,"luminaire")
-				lumfile = UI.openpanel("Choose an IES file", "c:/", "IES|*.ies||")				
-				self.set_value(comp,File.readlines(lumfile))
+				data = Hash.new
+				data["ies"] = text
+								
+				
+				text.each {|line|
+						data["luminaire"] = line.gsub("[LUMINAIRE]","").strip if line.start_with? "[LUMINAIRE]"
+						data["manufacturer"] = line.gsub("[MANUFAC]","").strip if line.start_with? "[MANUFAC]"
+						data["lamp"] = line.gsub("[LAMP]","").strip if line.start_with? "[LAMP]"
+						data["lumcat"] = line.gsub("[LUMCAT]","").strip if line.start_with? "[LUMCAT]"
+						data["lampcat"] = line.gsub("[LAMPCAT]","").strip if line.start_with? "[LAMPCAT]"
+						
+						break if line.start_with? "TILT="
+				}
+								
+				self.set_value(comp,data.to_json)
+
+				#update
+				DesignAssistant.update
 			end
 
 			# Label selected material as rad_material

@@ -51,6 +51,10 @@ materialModule.update_list = function (filter) {
     filter = filter.toLowerCase();
     var list = $("#material_list");
     list.html("");
+    if(Object.keys(materials).length == 0){
+        $("<div class='center'><h4>There are no materials in your model...</h4></div>").appendTo(list);
+        return;
+    }
     var html = "<tr><td>Name</td><td>Class</td><td>Color</td><td></td></tr>"
     for (var material in materials) {
         if (materials.hasOwnProperty(material)) {

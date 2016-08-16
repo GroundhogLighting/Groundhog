@@ -13,6 +13,7 @@ task :doc => [:clean] do
 end
 
 task :clean do
+	FileUtils.rm(Dir["IGD_Groundhog/Examples/*.skb"])
 	FileUtils.rm(Dir["*.rbz"])
 	FileUtils.rm_rf("doc")
 end

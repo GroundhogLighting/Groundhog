@@ -1277,11 +1277,11 @@ if everything went well, and false if it did not.</p>
 		<span class='id identifier rubyid_pid'>pid</span> <span class='op'>=</span> <span class='id identifier rubyid_wait_thr'>wait_thr</span><span class='period'>.</span><span class='id identifier rubyid_pid'>pid</span> <span class='comment'># pid of the started process.
 </span>
 		<span class='kw'>while</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='period'>.</span><span class='id identifier rubyid_gets'>gets</span>
-			<span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_line'>line</span>
+			<span class='id identifier rubyid_warn'>warn</span> <span class='id identifier rubyid_line'>line</span>
 		<span class='kw'>end</span>
 
 		<span class='kw'>while</span> <span class='id identifier rubyid_line'>line</span> <span class='op'>=</span> <span class='id identifier rubyid_stdout'>stdout</span><span class='period'>.</span><span class='id identifier rubyid_gets'>gets</span>
-			<span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_line'>line</span>
+			<span class='id identifier rubyid_warn'>warn</span> <span class='id identifier rubyid_line'>line</span>
 		<span class='kw'>end</span>
 
 		<span class='id identifier rubyid_exit_status'>exit_status</span> <span class='op'>=</span> <span class='id identifier rubyid_wait_thr'>wait_thr</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_success?'>success?</span>
@@ -1452,7 +1452,7 @@ if everything went well, and false if it did not.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Aug  4 13:31:04 2016 by
+  Generated on Tue Aug 16 12:36:17 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

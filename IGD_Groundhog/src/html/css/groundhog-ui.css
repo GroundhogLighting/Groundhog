@@ -47,7 +47,7 @@ div.display{
     width:auto;
     height: 100vh;
     overflow: scroll;    
-    padding: 3.5em 15px 15px 15px;      
+    padding: 3.5em 2.5em 2em 2.5em;      
 }
 
 p.tooltip{
@@ -72,7 +72,7 @@ input[type="number"]{
 }
 
 table {
-    border-collapse: collapse;         
+    border-collapse: collapse;     
 }
 
 table.selectable, table.selectable tr:last-child{
@@ -223,4 +223,107 @@ div.fixed_toolbar button{
     border-radius:0px;
     border-right: 1px solid white;
     
+}
+
+input[type="text"]{
+    border: 1px solid black;
+}
+
+
+div.fixed_toolbar input[type="text"]{
+    border:none;
+}
+
+
+
+
+
+ul.droplist li{    
+    border: 1px solid gray;
+    list-style-type: none;
+    text-align: center;
+    background: white;
+    margin: 0.8em;
+   
+}
+
+ul.droplist li.hover{
+    -webkit-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    -moz-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+}
+
+
+ul.droplist li h1{
+    font-size: 1em;
+    background: #DEDBDE;
+    margin:0;        
+}
+
+ul.droplist li div{
+    padding: 0.2em;
+    margin: 0.6em;
+    border: 2px dashed gray;
+}
+
+ul.droplist li table{
+    width: 100%;     
+}
+
+
+ul.droplist li table tr td{
+    padding: 0.1em;   
+    border-bottom: 1px solid #CECECE; 
+}
+
+
+ul.droplist li table tr td span{
+    display: block;
+    float: right; 
+}
+
+
+ul.draglist li{    
+    border: 1px solid gray; 
+    border-radius: 0.4em;
+    list-style-type: none;
+    text-align: center;
+    background: white;
+    margin: 0.25em;   
+    width: 90%;
+    cursor:pointer;
+    -webkit-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    -moz-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+}
+
+ul.draglist li:hover{    
+    background:  #DEDBDE;
+}
+
+.wrap {
+    width: 100%;
+    height:90%;
+    background: white; 
+    border: 1px solid #CECECE; 
+}
+
+.resizable {
+    width: 49%;          
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;    
+}
+
+div.resizable2{
+    border-left: 3px solid #CECECE;
+}
+
+.ui-resizable-e { 
+    cursor: e-resize; 
+    width: 6px; 
+    right: -5px; 
+    top: 0; 
+    bottom: 0; 
+    background-color: gray;
 }

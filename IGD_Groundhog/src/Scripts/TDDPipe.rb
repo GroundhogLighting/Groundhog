@@ -4,7 +4,7 @@ module IGD
         class TDDPipe < Task
 
             def initialize(target)
-                @target = target
+                @target = target #the name of the TDD
 
                 @proc = Proc.new { |options|
                     tdd_name = Utilities.fix_name(target)					

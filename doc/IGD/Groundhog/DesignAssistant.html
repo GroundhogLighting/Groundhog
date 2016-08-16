@@ -187,6 +187,30 @@ components.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#get_luminaires_hash-class_method" title="get_luminaires_hash (class method)">+ (Hash) <strong>get_luminaires_hash</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The luminaires.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#get_radiance_materials_hash-class_method" title="get_radiance_materials_hash (class method)">+ (Hash) <strong>get_radiance_materials_hash</strong> </a>
     
 
@@ -464,26 +488,6 @@ components.</p>
       <pre class="lines">
 
 
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202
-203
 204
 205
 206
@@ -716,10 +720,76 @@ components.</p>
 433
 434
 435
-436</pre>
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 184</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 204</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span>
     <span class='id identifier rubyid_wd'>wd</span> <span class='op'>=</span> <span class='const'>UI</span><span class='op'>::</span><span class='const'>WebDialog</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Design Assistant</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='kw'>false</span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DAsistant</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='int'>500</span><span class='comma'>,</span><span class='int'>500</span><span class='comma'>,</span><span class='int'>130</span><span class='comma'>,</span><span class='int'>120</span><span class='comma'>,</span><span class='kw'>true</span><span class='rparen'>)</span>
@@ -763,6 +833,26 @@ components.</p>
             <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
             <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Windows/windows.rad</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_directory?'>directory?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&quot;</span></span>      
             <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_win_string'>win_string</span><span class='embexpr_end'>}</span><span class='tstring_content'>  &gt; octree.oct</span><span class='tstring_end'>&quot;</span></span>
+            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rvu </span><span class='embexpr_beg'>#{</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_rvu_options'>rvu_options</span><span class='embexpr_end'>}</span><span class='tstring_content'> -vf Views/view.vf octree.oct</span><span class='tstring_end'>&quot;</span></span>
+            <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
+						<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_clear_actual_path'>clear_actual_path</span>
+        <span class='kw'>end</span>                                       
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>night_preview</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span> 
+        <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_temp_dir'>temp_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Groundhog</span><span class='tstring_end'>&quot;</span></span>
+        <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+
+        <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span> <span class='kw'>then</span>
+            <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Error while exporting... Sorry! Contact us to gmolina@igd.cl if the problem persists.</span><span class='tstring_end'>&quot;</span></span>
+            <span class='kw'>next</span>
+        <span class='kw'>end</span>                                   
+                            
+        <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span> <span class='kw'>do</span>   
+            <span class='id identifier rubyid_script'>script</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>     
+            <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
+            <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Windows/windows.rad</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_directory?'>directory?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&quot;</span></span>      
+            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>oconv ./Materials/materials.mat ./scene.rad </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_win_string'>win_string</span><span class='embexpr_end'>}</span><span class='tstring_content'>  &gt; octree.oct</span><span class='tstring_end'>&quot;</span></span>
             <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rvu </span><span class='embexpr_beg'>#{</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_rvu_options'>rvu_options</span><span class='embexpr_end'>}</span><span class='tstring_content'> -vf Views/view.vf octree.oct</span><span class='tstring_end'>&quot;</span></span>
             <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
 						<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_clear_actual_path'>clear_actual_path</span>
@@ -832,6 +922,32 @@ components.</p>
         <span class='id identifier rubyid_materials'>materials</span><span class='period'>.</span><span class='id identifier rubyid_current'>current</span><span class='op'>=</span><span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
     <span class='kw'>end</span>
 
+
+
+    <span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>use_luminaire</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
+        <span class='id identifier rubyid_model'>model</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
+        <span class='id identifier rubyid_entities'>entities</span> <span class='op'>=</span> <span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span>
+        <span class='id identifier rubyid_definitions'>definitions</span> <span class='op'>=</span> <span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span>
+
+        <span class='id identifier rubyid_m'>m</span> <span class='op'>=</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>                   
+        <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_m'>m</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>name</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_luminaires'>luminaires</span> <span class='op'>=</span> <span class='id identifier rubyid_definitions'>definitions</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>IGD</span><span class='op'>::</span><span class='const'>Groundhog</span><span class='op'>::</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_luminaire?'>luminaire?</span> <span class='id identifier rubyid_x'>x</span><span class='rbrace'>}</span>                    
+        <span class='id identifier rubyid_definition'>definition</span> <span class='op'>=</span> <span class='id identifier rubyid_luminaires'>luminaires</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>IGD</span><span class='op'>::</span><span class='const'>Groundhog</span><span class='op'>::</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>luminaire</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_name'>name</span> <span class='rbrace'>}</span>
+                          
+        <span class='kw'>if</span> <span class='id identifier rubyid_definition'>definition</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>==</span> <span class='int'>0</span> <span class='kw'>then</span> <span class='comment'>#it does not exist....
+</span>            <span class='comment'>#In the future; load it.
+</span>            <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Sorry, there was an error... there seem to be no luminare named &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;</span><span class='tstring_end'>&quot;</span></span>
+            <span class='kw'>next</span>
+        <span class='kw'>elsif</span> <span class='id identifier rubyid_definition'>definition</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>&gt;</span> <span class='int'>1</span> <span class='kw'>then</span>
+            <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>The luminare named &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; seem to be defined at least twice... we will load the first definition of it.</span><span class='tstring_end'>&quot;</span></span>                        
+        <span class='kw'>end</span>                    
+
+        <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_add_instance'>add_instance</span><span class='lparen'>(</span><span class='id identifier rubyid_definition'>definition</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Transformation</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='rparen'>)</span> 
+    <span class='kw'>end</span>
+
+
+
+
     <span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>remove_material</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_name'>name</span><span class='op'>|</span>
         <span class='id identifier rubyid_materials'>materials</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span>                                                                             
         <span class='id identifier rubyid_materials'>materials</span><span class='period'>.</span><span class='id identifier rubyid_remove'>remove</span><span class='lparen'>(</span><span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_materials'>materials</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>!=</span> <span class='kw'>nil</span>
@@ -880,7 +996,7 @@ components.</p>
         <span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplanes</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span>                       
         <span class='id identifier rubyid_script'>script</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>                    
         <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplanes = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_workplanes'>workplanes</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>                        
-        <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectiveModule.update_workplanes();</span><span class='tstring_end'>&quot;</span></span>  
+        <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectiveModule.update_workplanes(&#39;&#39;);</span><span class='tstring_end'>&quot;</span></span>  
         <span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>                                                   
     <span class='kw'>end</span>
 
@@ -901,8 +1017,8 @@ components.</p>
             <span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_sim'>sim</span>                       
             <span class='id identifier rubyid_script'>script</span> <span class='op'>=</span> <span class='id identifier rubyid_sim'>sim</span><span class='period'>.</span><span class='id identifier rubyid_solve'>solve</span>
 
-            <span class='comment'>#Process data
-</span>            <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
+            <span class='comment'>#Process data                                                                      
+</span>            <span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
 
             <span class='comment'>#post-process and load results
 </span>            <span class='id identifier rubyid_report'>report</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1041,21 +1157,21 @@ components</p>
       <pre class="lines">
 
 
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116</pre>
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 105</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 123</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_actual_report'>get_actual_report</span>
     <span class='id identifier rubyid_report'>report</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1068,6 +1184,103 @@ components</p>
         <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_objective'>objective</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>approved_percentage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
     <span class='rbrace'>}</span>
     <span class='kw'>return</span> <span class='id identifier rubyid_report'>report</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_luminaires_hash-class_method">
+  
+    + (<tt>Hash</tt>) <strong>get_luminaires_hash</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the luminaires</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the luminaires</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 76</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_luminaires_hash'>get_luminaires_hash</span>
+    <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+    
+    <span class='id identifier rubyid_luminaires'>luminaires</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_luminaire?'>luminaire?</span> <span class='id identifier rubyid_x'>x</span> <span class='rbrace'>}</span>
+    <span class='id identifier rubyid_luminaires'>luminaires</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span>
+        <span class='comment'># Get the data if needed.
+</span>        <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ies</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>                    
+        <span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>luminaire</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='op'>=</span><span class='id identifier rubyid_data'>data</span>
+    <span class='rbrace'>}</span>
+
+
+    <span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1134,33 +1347,33 @@ components</p>
       <pre class="lines">
 
 
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
 94
 95
 96
 97
 98
-99</pre>
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 76</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 94</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_radiance_materials_hash'>get_radiance_materials_hash</span>
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1364,18 +1577,18 @@ components</p>
       <pre class="lines">
 
 
-123
-124
-125
-126
-127
-128
-129
-130
-131</pre>
+141
+142
+143
+144
+145
+146
+147
+148
+149</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 123</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 141</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_select_objective'>select_objective</span><span class='lparen'>(</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
     <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#compliance_summary_scale_max&#39;).text(&#39;--&#39;);</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span> <span class='op'>==</span> <span class='kw'>nil</span>
@@ -1554,24 +1767,6 @@ components</p>
       <pre class="lines">
 
 
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
 155
 156
 157
@@ -1595,10 +1790,30 @@ components</p>
 175
 176
 177
-178</pre>
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 137</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 155</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_update'>update</span>
     <span class='id identifier rubyid_web_dialog'>web_dialog</span> <span class='op'>=</span> <span class='const'>IGD</span><span class='op'>::</span><span class='const'>Groundhog</span><span class='period'>.</span><span class='id identifier rubyid_design_assistant'>design_assistant</span>
@@ -1606,15 +1821,15 @@ components</p>
 
     <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplanes_hash'>get_workplanes_hash</span>                    
     <span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplanes</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span>                                         
-    <span class='id identifier rubyid_objectives'>objectives</span> <span class='op'>=</span> <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectives</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span>
+    <span class='id identifier rubyid_objectives'>objectives</span> <span class='op'>=</span> <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectives</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span>                
     <span class='id identifier rubyid_materials'>materials</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_radiance_materials_hash'>get_radiance_materials_hash</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span>
     <span class='id identifier rubyid_script'>script</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
     <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>materials = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_materials'>materials</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>  
     <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>materialModule.update_list(&#39;&#39;);</span><span class='tstring_end'>&quot;</span></span>                
     <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplanes = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_workplanes'>workplanes</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span> 
     <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectives = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_objectives'>objectives</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>                       
-    <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectiveModule.update_workplanes();</span><span class='tstring_end'>&quot;</span></span> 
-    <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectiveModule.update_objectives();</span><span class='tstring_end'>&quot;</span></span>                                               
+    <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectiveModule.update_workplanes(&#39;&#39;);</span><span class='tstring_end'>&quot;</span></span> 
+    <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectiveModule.update_objectives(&#39;&#39;);</span><span class='tstring_end'>&quot;</span></span>                                               
 
     <span class='id identifier rubyid_weather'>weather</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Weather</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_weather'>weather</span> <span class='op'>!=</span> <span class='kw'>nil</span> <span class='kw'>then</span>
@@ -1633,7 +1848,9 @@ components</p>
     <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.update_objective_summary();</span><span class='tstring_end'>&quot;</span></span>                                                     
 
     <span class='comment'>#update luminaire list
-</span>    <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>luminaireModule.update_list(&#39;&#39;);</span><span class='tstring_end'>&quot;</span></span>
+</span>    <span class='id identifier rubyid_luminaires'>luminaires</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_luminaires_hash'>get_luminaires_hash</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span>
+    <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>luminaires = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_luminaires'>luminaires</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>  
+    <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>luminaireModule.update_list(&#39;&#39;);</span><span class='tstring_end'>&quot;</span></span>
 
     <span class='comment'>#remark the first objective
 </span>    <span class='id identifier rubyid_objective'>objective</span> <span class='op'>=</span> <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectives</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span>                    
@@ -1652,7 +1869,7 @@ components</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Aug  4 13:31:03 2016 by
+  Generated on Tue Aug 16 12:36:16 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

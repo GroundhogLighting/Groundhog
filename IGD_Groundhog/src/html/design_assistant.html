@@ -15,9 +15,9 @@
         <p class="selected" href="#location">Location</p>
         <p href="#labels">Labels</p>
         <p href="#materials">Materials</p>
-        <p href="#objectives">Objectives</p>
-        <p href="#daylight_simulation">Daylight</p>
         <p href="#luminaires">Luminaires</p>
+        <p href="#objectives">Objectives</p>
+        <p href="#simulation">Simulation</p>
         <p href="#report">Report</p>
     </div>
 
@@ -25,7 +25,7 @@
     <div class="display" id="location">
         <div class="fixed_toolbar">
             <button onclick='window.location.href ="skp:set_weather_path@msg"'>Change weather file</button>
-            <button onclick='window.location.href ="skp:follow_link@http://www.energyplus.net/weather"'>Find weather files here</button>
+            <button onclick='window.location.href ="skp:follow_link@http://www.energyplus.net/weather"'>Get weather files online</button>
         </div>
 
 
@@ -62,18 +62,18 @@
             <button id="preview_button" onclick='window.location.href = "skp:preview@msg"'>Preview</button>
         </div>
 
-        
-            <div class="center">
-                <button onclick='window.location.href = "skp:label_as_window@msg"'>As Window</button>
-                <button onclick='window.location.href = "skp:label_as_workplane@msg"'>As Workplane</button>
-                <button onclick='window.location.href = "skp:label_as_illum@msg"'>As Illum</button>
-            </div>
-            
+
+        <div class="center">
+            <button onclick='window.location.href = "skp:label_as_window@msg"'>As Window</button>
+            <button onclick='window.location.href = "skp:label_as_workplane@msg"'>As Workplane</button>
+            <button onclick='window.location.href = "skp:label_as_illum@msg"'>As Illum</button>
+        </div>
+
 
     </div>
 
     <div class="display" id="materials">
-        <div class="fixed_toolbar">            
+        <div class="fixed_toolbar">
             <button id="preview_button" onclick='window.location.href = "skp:preview@msg"'>Preview</button>
             <button id="add_material_button">New material</button>
             <span>Search:</span>
@@ -86,13 +86,20 @@
         <div class="fixed_toolbar">
             <button id="add_objective_to_worplane">New objective</button>
         </div>
-        <table id="objectives_table" class="draggable selectable row"></table>
-
-        <div class="accordion" id="workplane_objectives"></div>
+        <div class="wrap">                
+            <div class="resizable resizable1">
+                <div class="center"><label for="objectives_filter">Filter:</label> <input id="objectives_filter" type="text"></div>
+                <ul id="objectives_list" class="draglist"></ul>
+            </div>
+            <div class="resizable resizable2">
+                <div class="center"><label for="workplane_objectives_filter">Filter:</label><input id="workplane_objectives_filter" type="text"></div>
+                <ul id="workplane_objectives" class="droplist"></ul>
+            </div>
+        </div>
     </div>
 
 
-    <div class="display" id="daylight_simulation">
+    <div class="display" id="simulation">
         <div class="fixed_toolbar">
             <button id="simulate_button">Calculate</button>
         </div>
@@ -189,8 +196,9 @@
 
     <div class="display" id="luminaires">
         <div class="fixed_toolbar">
-            <button>New Luminaire</button>
-           	<span>Search:</span>
+            <button onclick='window.location.href = "skp:preview@msg"'>Daytime preview</button>
+            <button onclick='window.location.href = "skp:night_preview@msg"'>Nighttime preview</button>
+            <span>Search:</span>
             <input type="text" id="filter_luminaires">
         </div>
         <table id="luminaire_list" class="selectable row">
@@ -234,6 +242,7 @@
                 <option value="UDI">Useful Daylight Illminance</option>
                 <option value="DF">Daylight Factor</option>
                 <option value="LUX">Illuminance at time</option>
+                <option value="ELUX">Electric Lighting Illuminance</option>
             </select>
         </fieldset>
         <fieldset id="fulfillment_field">
@@ -341,10 +350,7 @@
     var materials = {};
     var objectives = {};
     var results = {};
-    var luminaires = {
-        "Example 1": {"name": "Example 1", "brand": "Brand of Ex. 1", "power": 2},
-        "Another one": {"name": "Another one", "brand": "Brand of Ex. 2", "power": 6},
-    };    
+    var luminaires = {};    
 
 </script>
 <script src="js/JQuery/jquery-3.0.0.js"></script>
@@ -357,7 +363,8 @@
 <script src="js/report.js"></script>
 <script src="js/luminaires.js"></script>
 <script>    
-    window.location.href = 'skp:on_load@message';       
+    window.location.href = 'skp:on_load@message';  
+
 </script>
 
 </html>

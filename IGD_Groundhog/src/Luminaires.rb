@@ -111,16 +111,16 @@ module IGD
       # @author German Molina based on Radiance's code
       # @param instance [Sketchup::ComponentInstance] The instance to which the IES will be assigned
       # @param path [String] The actual path on which we are working.
-      # @return [String] The Radiance definition of the light.
+      # @return [Boolean] Success
       # @note a .dat file is written in the process
       def self.ies2rad(instance, path)
 
         definition = instance.definition
-        multiplier = rand(10)/10.0
+        multiplier = 1 #for now... no diming
 
         verbose = true
-        ret = []
-
+      
+        OS.mkdir(path)
         OS.mkdir("#{path}/dat")
         illum_file = File.open("#{path}/dat/#{Labeler.get_fixed_name(instance)}.rad",'w')
 
@@ -133,7 +133,7 @@ module IGD
         illum_file.puts "# multiplier used is #{multiplier}" if verbose
         illum_file.puts "# Dimensions in meters" if verbose
 
-        text=Labeler.get_value(definition)
+        text=JSON.parse(Labeler.get_value(definition))["ies"]
 
         lamptype = ""
         while text.length > 0 do
@@ -155,7 +155,7 @@ module IGD
           UI.messagebox "SORRY: TILT is not yet supported... Your luminaire has TILT=#{tilt}"
           return false
 
-          ### SKIP ALL THIS... WILL INCLUDE PROCESSING SOON
+          ### SKIP ALL THIS... WILL INCLUDE PROCESSING IN THE FUTURE.... MAYBE
           text.shift #lamp to luminaire is absent if tilt=NONE
           text.shift #<# of pairs of angles and multiplying factors> is absent if tilt = NONE
           text.shift #tilt angles also absent
@@ -219,7 +219,7 @@ module IGD
           source_arg = "boxcorr"
         end
 
-        nargs += "#{$/}#{source_arg} ./Components/dat/#{datname} source.cal "
+        nargs += " #{source_arg} ./Components/dat/#{datname} source.cal "
 
         if pmtype == 2 then
           if (self.feq(bounds[1][0],0.0))
