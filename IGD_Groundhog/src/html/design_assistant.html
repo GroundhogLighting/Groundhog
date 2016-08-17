@@ -191,13 +191,14 @@
                 </div>
             </div>
         </div>
-
     </div>
+
 
     <div class="display" id="luminaires">
         <div class="fixed_toolbar">
             <button onclick='window.location.href = "skp:preview@msg"'>Daytime preview</button>
             <button onclick='window.location.href = "skp:night_preview@msg"'>Nighttime preview</button>
+            <button onclick='window.location.href = "skp:calc_elux@msg"'>Calc. Illuminance</button>
             <span>Search:</span>
             <input type="text" id="filter_luminaires">
         </div>
@@ -206,19 +207,25 @@
         </table>
     </div>
 
+
     <div class="display" id="report">
         <div class="fixed_toolbar">
 
         </div>
         <div class="accordion">
 
-            <h3>Compliance summary</h3>
+            <h3>Daylight compliance summary</h3>
             <div>
                 <div id="compliance_summary_scale" class="scale center">
                     <p id="compliance_summary_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale">
                     <p id="compliance_summary_scale_max">100</p>
                 </div>
                 <table id="compliance_summary" class="selectable column"></table>
+            </div>
+
+            <h3>Electric lighting compliance summary</h3>
+            <div>
+                <table id="electric_compliance_summary"></table>
             </div>
 
             <h3>Objective summary</h3>
@@ -241,8 +248,7 @@
                 <option value="DA">Daylight Autonomy</option>
                 <option value="UDI">Useful Daylight Illminance</option>
                 <option value="DF">Daylight Factor</option>
-                <option value="LUX">Illuminance at time</option>
-                <option value="ELUX">Electric Lighting Illuminance</option>
+                <option value="LUX">Illuminance under clear sky</option>
             </select>
         </fieldset>
         <fieldset id="fulfillment_field">

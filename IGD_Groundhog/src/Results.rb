@@ -308,8 +308,7 @@ module IGD
 						wp_value["scale_min"]=min
 						wp_value["scale_max"]=max
 						Labeler.set_workplane_value(workplane,wp_value.to_json)
-					end
-					Utilities.remark_solved_workplanes(objective)
+					end					
 					model.commit_operation
 
 				rescue Exception => ex
@@ -406,7 +405,7 @@ module IGD
 			def self.get_workplane_statistics(wp, objective)
 				return false if not Labeler.solved_workplane? wp
 				pixels = wp.entities.select{|x| Labeler.result_pixel? x}
-
+				
 				#good_min and good_max are assign for static metrics, by default
 				good_min = objective["good_light"]["min"]
 				good_max = objective["good_light"]["max"]

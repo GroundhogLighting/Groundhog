@@ -181,10 +181,13 @@ $("#green").val(red);
 $("#blue").val(red);  
 
 $("input.color").on("change", function () {
-    if(!$("#monochromatic").prop("checked")){
-        var r = $("#red").val(); var g = $("#green").val(); var b = $("#blue").val();
-        $("#color_pick").spectrum("set", "rgb(" + Math.round(r*255) + "," + Math.round(g*255) + "," + Math.round(b*255) + ")");
-    }    
+    
+    var r = $("#red").val(); var g = $("#green").val(); var b = $("#blue").val();
+    if($("#monochromatic").prop("checked")){
+        g=r; b=r;
+    }
+    $("#color_pick").spectrum("set", "rgb(" + Math.round(r*255) + "," + Math.round(g*255) + "," + Math.round(b*255) + ")");
+    
 });
 
 $("#monochromatic").on("change",function(){

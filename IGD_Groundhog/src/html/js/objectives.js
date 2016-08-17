@@ -40,17 +40,7 @@ objectiveModule.get_human_description = function (objective) {
                 description += "achieves an illuminance of " + good_light["min"] + "lux or more ";
             }
             description += "under a clear sky at " + objective["hour"] + " hours of " + objective["date"];
-            break;
-        case "ELUX":
-            if (good_light["max"]) {
-                description += "achieves an illuminance between " + good_light["min"] + "lux and " + good_light["max"] + "lux ";
-                description += "at nighttime but with all the electric lights on."
-            } else {
-                description += "achieves an illuminance of " + good_light["min"] + "lux or more ";
-            }
-            description += "at nighttime but with all the electric lights on."
-            break;
-
+            break;    
 
         default:
             alert("Unkown metric to convert into human language");
@@ -64,7 +54,7 @@ objectiveModule.create_objective = function () {
     var objective = objectiveModule.get_objective_object(metric);
     if (!objective) { return false; }
     objectives[objective["name"]] = objective;
-    objectiveModule.update_objectives();
+    objectiveModule.update_objectives("");
     objectiveModule.add_objective_dialog.dialog("close");
     reportModule.update_objective_summary();
 };
@@ -132,16 +122,7 @@ objectiveModule.adapt_objective_dialog = function (metric) {
             $("label[for='objective_goal']").text("% of the space meets the illuminance goal");
             $("label[for='metric_threshold']").hide();
             $("#metric_threshold").hide();
-            break;
-        case "ELUX":
-            $("#ill_goal_field legend").text("Illuminance goal (lux)");
-            $("#working_hours_field").hide();
-            $("#sim_period_field").hide();
-            $("label[for='objective_goal']").text("% of the space meets the illuminance goal");
-            $("label[for='metric_threshold']").hide();
-            $("#metric_threshold").hide();
-            $("#day_to_sim_field").hide();
-            break;
+            break;        
         default:
             alert("Unkown metric selected!")
     }
@@ -209,9 +190,7 @@ objectiveModule.get_objective_object = function (metric) {
         } else if (metric == "LUX") {
             ret["date"] = $("#day_to_sim").val();
             ret["hour"] = $("#time_to_sim").val();
-        } else if (metric == "ELUX") {
-            //nothing to do.
-        }
+        } 
     }
     return ret
 }

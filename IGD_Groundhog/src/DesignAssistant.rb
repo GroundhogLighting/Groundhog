@@ -252,7 +252,6 @@ module IGD
                 wd.add_action_callback("night_preview") do |web_dialog,msg| 
                     path = "#{Sketchup.temp_dir}/Groundhog"
                     OS.mkdir(path)
-
                     if not Exporter.export(path) then
                         UI.messagebox "Error while exporting... Sorry! Contact us to gmolina@igd.cl if the problem persists."
                         next
@@ -414,6 +413,60 @@ module IGD
                     web_dialog.execute_script self.select_objective(objective)
                 end
 
+
+                wd.add_action_callback("calc_elux") do |web_dialog, options|
+                    path = "#{Sketchup.temp_dir}/Groundhog"
+                    OS.mkdir(path)
+
+                    next if not Exporter.export(path)                        
+                    hash = self.get_workplanes_hash
+                    workplanes = hash["workplanes"] 
+                    if workplanes.length == 0 then
+                        UI.messagebox "there are no workplanes to calculate!"
+                        next
+                    end                 
+                    
+                    FileUtils.cd(path) do   
+                        script=[]     
+                        win_string = ""
+                        win_string = "./Windows/windows.rad" if File.directory? "Windows"      
+                        script << "oconv ./Materials/materials.mat ./scene.rad #{win_string}  > octree.oct" #no sky
+                        OS.mkdir "Results"
+                    
+                        #Then, solve each instance.
+                        workplanes.each{|workplane,obj_array|
+                            wp = Utilities.fix_name workplane                                                       
+                            wp_file="./Workplanes/#{wp}.pts"
+                            nsensors = File.readlines(wp_file).length
+                                                        
+                            script << "rtrace -I+ -h -af ambient.amb #{options["ray_tracing_parameters"]} ./octree.oct < #{wp_file} > tmp1-#{wp}.tmp"
+                            script << "rcollate -oc 1 -hi -or #{nsensors} -oc 1 ./tmp1-#{wp}.tmp > tmp2-#{wp}.tmp"                    
+                            script << "rmtxop -fa -c 47.435 119.93 11.635 ./tmp2-#{wp}.tmp > tmp3-#{wp}.tmp"
+                            script << "rcollate -oc 1 -ho  ./tmp3-#{wp}.tmp > ./Results/#{wp}-elux.txt"                          
+                        }
+
+                        #Process
+                        OS.execute_script(script)
+
+                        #Import results
+                        objective = {   "name" => "ELUX", 
+                                        "good_light" => {"min" => 0, "max" => 9e19},
+                                        "dynamic" => false                                        
+                                    }
+                        workplanes.each{|workplane,obj_array|
+                            wp = Utilities.fix_name workplane                        
+                            results = "./Results/#{wp}-elux.txt"
+                            pixel_file = "./Workplanes/#{wp}.pxl"                            
+                            Results.import_results(results,pixel_file,workplane,objective)                          
+                        }
+                        #Update colors                        
+                        min_max=Results.get_min_max_from_model("ELUX")
+                        Results.update_pixel_colors(0,min_max[1],objective)	#minimum is 0 by default  
+                        #remark
+                        Utilities.remark_solved_workplanes("ELUX")                                                  
+						
+                    end     
+                end
 
                 wd.add_action_callback("calculate") do |web_dialog, options|
                     path = "#{Sketchup.temp_dir}/Groundhog"
