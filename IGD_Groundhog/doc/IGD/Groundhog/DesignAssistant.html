@@ -177,8 +177,31 @@ Design Assistant; the main Groundhog UI.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>The report# @todo Allow it gathering workplanes inside groups and
-components.</p>
+<p>The report.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_elux_report-class_method" title="get_elux_report (class method)">+ (Hash) <strong>get_elux_report</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The report.</p>
 </div></span>
   
 </li>
@@ -488,35 +511,6 @@ components.</p>
       <pre class="lines">
 
 
-204
-205
-206
-207
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230
-231
-232
 233
 234
 235
@@ -839,10 +833,74 @@ components.</p>
 552
 553
 554
-555</pre>
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 204</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 233</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span>
     <span class='id identifier rubyid_wd'>wd</span> <span class='op'>=</span> <span class='const'>UI</span><span class='op'>::</span><span class='const'>WebDialog</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Design Assistant</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='kw'>false</span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DAsistant</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='int'>500</span><span class='comma'>,</span><span class='int'>500</span><span class='comma'>,</span><span class='int'>130</span><span class='comma'>,</span><span class='int'>120</span><span class='comma'>,</span><span class='kw'>true</span><span class='rparen'>)</span>
@@ -884,9 +942,10 @@ components.</p>
         <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span> <span class='kw'>do</span>   
             <span class='id identifier rubyid_script'>script</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>     
             <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Windows/windows.rad</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_directory?'>directory?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&quot;</span></span>      
-            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_win_string'>win_string</span><span class='embexpr_end'>}</span><span class='tstring_content'>  &gt; octree.oct</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rvu </span><span class='embexpr_beg'>#{</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_rvu_options'>rvu_options</span><span class='embexpr_end'>}</span><span class='tstring_content'> -vf Views/view.vf octree.oct</span><span class='tstring_end'>&quot;</span></span>
+            <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Windows/windows.rad</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_directory?'>directory?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&quot;</span></span>  
+            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_oconv_command'>oconv_command</span><span class='lparen'>(</span> <span class='lbrace'>{</span><span class='symbol'>:lights_on</span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='symbol'>:sky</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>sky</span><span class='tstring_end'>&quot;</span></span><span class='rbrace'>}</span> <span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'> &gt; octree.oct</span><span class='tstring_end'>&quot;</span></span>    
+            <span class='comment'>#script &lt;&lt; &quot;oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{win_string}  &gt; octree.oct&quot;
+</span>            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rvu </span><span class='embexpr_beg'>#{</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_rvu_options'>rvu_options</span><span class='embexpr_end'>}</span><span class='tstring_content'> -vf Views/view.vf octree.oct</span><span class='tstring_end'>&quot;</span></span>
             <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
 						<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_clear_actual_path'>clear_actual_path</span>
         <span class='kw'>end</span>                                       
@@ -902,10 +961,9 @@ components.</p>
                             
         <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span> <span class='kw'>do</span>   
             <span class='id identifier rubyid_script'>script</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>     
-            <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Windows/windows.rad</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_directory?'>directory?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&quot;</span></span>      
-            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>oconv ./Materials/materials.mat ./scene.rad </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_win_string'>win_string</span><span class='embexpr_end'>}</span><span class='tstring_content'>  &gt; octree.oct</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rvu </span><span class='embexpr_beg'>#{</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_rvu_options'>rvu_options</span><span class='embexpr_end'>}</span><span class='tstring_content'> -vf Views/view.vf octree.oct</span><span class='tstring_end'>&quot;</span></span>
+            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_oconv_command'>oconv_command</span><span class='lparen'>(</span> <span class='lbrace'>{</span><span class='symbol'>:lights_on</span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='symbol'>:sky</span> <span class='op'>=&gt;</span> <span class='kw'>false</span><span class='rbrace'>}</span> <span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'> &gt; no_sky.oct</span><span class='tstring_end'>&quot;</span></span>
+            <span class='comment'>#script &lt;&lt; &quot;oconv ./Materials/materials.mat ./scene.rad #{win_string}  &gt; octree.oct&quot;
+</span>            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rvu </span><span class='embexpr_beg'>#{</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_rvu_options'>rvu_options</span><span class='embexpr_end'>}</span><span class='tstring_content'> -vf Views/view.vf no_sky.oct</span><span class='tstring_end'>&quot;</span></span>
             <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
 						<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_clear_actual_path'>clear_actual_path</span>
         <span class='kw'>end</span>                                       
@@ -1056,62 +1114,73 @@ components.</p>
         <span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_select_objective'>select_objective</span><span class='lparen'>(</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
 
-
-    <span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>calc_elux</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>|</span>
-        <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_temp_dir'>temp_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Groundhog</span><span class='tstring_end'>&quot;</span></span>
-        <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
-
-        <span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>                        
-        <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplanes_hash'>get_workplanes_hash</span>
-        <span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplanes</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> 
-        <span class='kw'>if</span> <span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>==</span> <span class='int'>0</span> <span class='kw'>then</span>
-            <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>there are no workplanes to calculate!</span><span class='tstring_end'>&quot;</span></span>
-            <span class='kw'>next</span>
-        <span class='kw'>end</span>                 
-        
-        <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_cd'>cd</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span> <span class='kw'>do</span>   
-            <span class='id identifier rubyid_script'>script</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span>     
-            <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_win_string'>win_string</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Windows/windows.rad</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_directory?'>directory?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&quot;</span></span>      
-            <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>oconv ./Materials/materials.mat ./scene.rad </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_win_string'>win_string</span><span class='embexpr_end'>}</span><span class='tstring_content'>  &gt; octree.oct</span><span class='tstring_end'>&quot;</span></span> <span class='comment'>#no sky
-</span>            <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Results</span><span class='tstring_end'>&quot;</span></span>
-        
-            <span class='comment'>#Then, solve each instance.
-</span>            <span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_obj_array'>obj_array</span><span class='op'>|</span>
-                <span class='id identifier rubyid_wp'>wp</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span> <span class='id identifier rubyid_workplane'>workplane</span>                                                       
-                <span class='id identifier rubyid_wp_file'>wp_file</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Workplanes/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>.pts</span><span class='tstring_end'>&quot;</span></span>
-                <span class='id identifier rubyid_nsensors'>nsensors</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_readlines'>readlines</span><span class='lparen'>(</span><span class='id identifier rubyid_wp_file'>wp_file</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
-                                            
-                <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rtrace -I+ -h -af ambient.amb </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ray_tracing_parameters</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'> ./octree.oct &lt; </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp_file'>wp_file</span><span class='embexpr_end'>}</span><span class='tstring_content'> &gt; tmp1-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>.tmp</span><span class='tstring_end'>&quot;</span></span>
-                <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rcollate -oc 1 -hi -or </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_nsensors'>nsensors</span><span class='embexpr_end'>}</span><span class='tstring_content'> -oc 1 ./tmp1-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>.tmp &gt; tmp2-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>.tmp</span><span class='tstring_end'>&quot;</span></span>                    
-                <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rmtxop -fa -c 47.435 119.93 11.635 ./tmp2-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>.tmp &gt; tmp3-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>.tmp</span><span class='tstring_end'>&quot;</span></span>
-                <span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rcollate -oc 1 -ho  ./tmp3-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>.tmp &gt; ./Results/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>-elux.txt</span><span class='tstring_end'>&quot;</span></span>                          
-            <span class='rbrace'>}</span>
-
-            <span class='comment'>#Process
-</span>            <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
-
-            <span class='comment'>#Import results
-</span>            <span class='id identifier rubyid_objective'>objective</span> <span class='op'>=</span> <span class='lbrace'>{</span>   <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>name</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ELUX</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> 
-                            <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>good_light</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='int'>0</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='float'>9e19</span><span class='rbrace'>}</span><span class='comma'>,</span>
-                            <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>dynamic</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='kw'>false</span>                                        
-                        <span class='rbrace'>}</span>
-            <span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_obj_array'>obj_array</span><span class='op'>|</span>
-                <span class='id identifier rubyid_wp'>wp</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span> <span class='id identifier rubyid_workplane'>workplane</span>                        
-                <span class='id identifier rubyid_results'>results</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Results/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>-elux.txt</span><span class='tstring_end'>&quot;</span></span>
-                <span class='id identifier rubyid_pixel_file'>pixel_file</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Workplanes/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>.pxl</span><span class='tstring_end'>&quot;</span></span>                            
-                <span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_import_results'>import_results</span><span class='lparen'>(</span><span class='id identifier rubyid_results'>results</span><span class='comma'>,</span><span class='id identifier rubyid_pixel_file'>pixel_file</span><span class='comma'>,</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>                          
-            <span class='rbrace'>}</span>
-            <span class='comment'>#Update colors                        
-</span>            <span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ELUX</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-            <span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default  
-</span>            <span class='comment'>#remark
-</span>            <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_remark_solved_workplanes'>remark_solved_workplanes</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ELUX</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>                                                  
-						
-        <span class='kw'>end</span>     
-    <span class='kw'>end</span>
-
-    <span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>calculate</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>|</span>
+<span class='embdoc_beg'>=begin
+</span><span class='embdoc'>    wd.add_action_callback(&quot;calc_elux&quot;) do |web_dialog, options|
+</span><span class='embdoc'>        path = &quot;#{Sketchup.temp_dir}/Groundhog&quot;
+</span><span class='embdoc'>        OS.mkdir(path)
+</span><span class='embdoc'>
+</span><span class='embdoc'>        next if not Exporter.export(path)                        
+</span><span class='embdoc'>        hash = self.get_workplanes_hash
+</span><span class='embdoc'>        workplanes = hash[&quot;workplanes&quot;] 
+</span><span class='embdoc'>        if workplanes.length == 0 then
+</span><span class='embdoc'>            UI.messagebox &quot;There are no workplanes to calculate!&quot;
+</span><span class='embdoc'>            next
+</span><span class='embdoc'>        end                 
+</span><span class='embdoc'>        
+</span><span class='embdoc'>        FileUtils.cd(path) do   
+</span><span class='embdoc'>            script=[]     
+</span><span class='embdoc'>            win_string = &quot;&quot;
+</span><span class='embdoc'>            win_string = &quot;./Windows/windows.rad&quot; if File.directory? &quot;Windows&quot;      
+</span><span class='embdoc'>            script &lt;&lt; &quot;oconv ./Materials/materials.mat ./scene.rad #{win_string}  &gt; octree.oct&quot; #no sky
+</span><span class='embdoc'>            OS.mkdir &quot;Results&quot;
+</span><span class='embdoc'>        
+</span><span class='embdoc'>            #Then, solve each instance.
+</span><span class='embdoc'>            workplanes.each{|workplane,obj_array|
+</span><span class='embdoc'>                wp = Utilities.fix_name workplane                                                       
+</span><span class='embdoc'>                wp_file=&quot;./Workplanes/#{wp}.pts&quot;
+</span><span class='embdoc'>                nsensors = File.readlines(wp_file).length
+</span><span class='embdoc'>                                            
+</span><span class='embdoc'>                script &lt;&lt; &quot;rtrace -I+ -h -af ambient.amb #{options[&quot;elux_ray_tracing_parameters&quot;]} ./octree.oct &lt; #{wp_file} &gt; tmp1-#{wp}.tmp&quot;
+</span><span class='embdoc'>                script &lt;&lt; &quot;rcollate -oc 1 -hi -or #{nsensors} -oc 1 ./tmp1-#{wp}.tmp &gt; tmp2-#{wp}.tmp&quot;                    
+</span><span class='embdoc'>                script &lt;&lt; &quot;rmtxop -fa -c 47.435 119.93 11.635 ./tmp2-#{wp}.tmp &gt; tmp3-#{wp}.tmp&quot;
+</span><span class='embdoc'>                script &lt;&lt; &quot;rcollate -oc 1 -ho  ./tmp3-#{wp}.tmp &gt; ./Results/#{wp}-elux.txt&quot;                          
+</span><span class='embdoc'>            }
+</span><span class='embdoc'>
+</span><span class='embdoc'>            #Process
+</span><span class='embdoc'>            OS.execute_script(script)
+</span><span class='embdoc'>
+</span><span class='embdoc'>            #Import results
+</span><span class='embdoc'>            objective = {   &quot;name&quot; =&gt; &quot;ELUX&quot;, 
+</span><span class='embdoc'>                            &quot;good_light&quot; =&gt; {&quot;min&quot; =&gt; 0, &quot;max&quot; =&gt; 9e19},
+</span><span class='embdoc'>                            &quot;dynamic&quot; =&gt; false                                        
+</span><span class='embdoc'>                        }
+</span><span class='embdoc'>
+</span><span class='embdoc'>
+</span><span class='embdoc'>            workplanes.each{|workplane,obj_array|
+</span><span class='embdoc'>                wp = Utilities.fix_name workplane                        
+</span><span class='embdoc'>                results = &quot;./Results/#{wp}-elux.txt&quot;
+</span><span class='embdoc'>                pixel_file = &quot;./Workplanes/#{wp}.pxl&quot;                            
+</span><span class='embdoc'>                Results.import_results(results,pixel_file,workplane,objective)                          
+</span><span class='embdoc'>            }
+</span><span class='embdoc'>
+</span><span class='embdoc'>            #Update colors                        
+</span><span class='embdoc'>            min_max=Results.get_min_max_from_model(&quot;ELUX&quot;)
+</span><span class='embdoc'>            Results.update_pixel_colors(0,min_max[1],objective)	#minimum is 0 by default  
+</span><span class='embdoc'>            
+</span><span class='embdoc'>            #remark
+</span><span class='embdoc'>            script = &quot;&quot;
+</span><span class='embdoc'>            script += self.select_objective(&quot;ELUX&quot;)
+</span><span class='embdoc'>            
+</span><span class='embdoc'>            #update scale                        
+</span><span class='embdoc'>            script += &quot;elux_results = JSON.parse(&#39;#{self.get_elux_report.to_json}&#39;);&quot;        
+</span><span class='embdoc'>            #script += &quot;reportModule.update_compliance_summary();&quot;
+</span><span class='embdoc'>            
+</span><span class='embdoc'>            web_dialog.execute_script(script)                                               
+</span><span class='embdoc'>						
+</span><span class='embdoc'>        end     
+</span><span class='embdoc'>    end
+</span><span class='embdoc_end'>=end
+</span>    <span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>calculate</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>|</span>
         <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_temp_dir'>temp_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Groundhog</span><span class='tstring_end'>&quot;</span></span>
         <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
         <span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
@@ -1121,13 +1190,14 @@ components.</p>
             <span class='comment'>#Pre-process information
 </span>            <span class='id identifier rubyid_sim'>sim</span> <span class='op'>=</span> <span class='const'>SimulationManager</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span> 
             <span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_sim'>sim</span>                       
-            <span class='id identifier rubyid_script'>script</span> <span class='op'>=</span> <span class='id identifier rubyid_sim'>sim</span><span class='period'>.</span><span class='id identifier rubyid_solve'>solve</span>
-
+            <span class='id identifier rubyid_script'>script</span> <span class='op'>=</span> <span class='id identifier rubyid_sim'>sim</span><span class='period'>.</span><span class='id identifier rubyid_solve'>solve</span> <span class='comment'>#this includes Electric Lighting Calculations
+</span>
             <span class='comment'>#Process data                                                                      
 </span>            <span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>
 
-            <span class='comment'>#post-process and load results
-</span>            <span class='id identifier rubyid_report'>report</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+            <span class='comment'># post-process and load results
+</span>            <span class='comment'># Lets start by Daylighting
+</span>            <span class='id identifier rubyid_report'>report</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_actual_report'>get_actual_report</span>
             <span class='id identifier rubyid_all_objectives'>all_objectives</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
 
             <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplanes_hash'>get_workplanes_hash</span>
@@ -1179,14 +1249,37 @@ components.</p>
                 <span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_obj_name'>obj_name</span><span class='rparen'>)</span>
                 <span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default                            
 </span>            <span class='rbrace'>}</span>  
+
+            <span class='comment'># Then import electric lighting results
+</span>            <span class='comment'>#Import results
+</span>            <span class='id identifier rubyid_objective'>objective</span> <span class='op'>=</span> <span class='lbrace'>{</span>   <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>name</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ELUX</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> 
+                            <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>good_light</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='int'>0</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='float'>9e19</span><span class='rbrace'>}</span><span class='comma'>,</span>
+                            <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>dynamic</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='kw'>false</span>                                        
+                        <span class='rbrace'>}</span>
+
+
+            <span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_obj_array'>obj_array</span><span class='op'>|</span>
+                <span class='id identifier rubyid_wp'>wp</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span> <span class='id identifier rubyid_workplane'>workplane</span>                        
+                <span class='id identifier rubyid_results'>results</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Results/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>-elux.txt</span><span class='tstring_end'>&quot;</span></span>
+                <span class='id identifier rubyid_pixel_file'>pixel_file</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Workplanes/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp'>wp</span><span class='embexpr_end'>}</span><span class='tstring_content'>.pxl</span><span class='tstring_end'>&quot;</span></span>                            
+                <span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_import_results'>import_results</span><span class='lparen'>(</span><span class='id identifier rubyid_results'>results</span><span class='comma'>,</span><span class='id identifier rubyid_pixel_file'>pixel_file</span><span class='comma'>,</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>                          
+            <span class='rbrace'>}</span>
+
+            <span class='comment'>#Update colors                        
+</span>            <span class='id identifier rubyid_min_max'>min_max</span><span class='op'>=</span><span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ELUX</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+            <span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_update_pixel_colors'>update_pixel_colors</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>	<span class='comment'>#minimum is 0 by default  
+</span>
+
+
              
             <span class='id identifier rubyid_script'>script</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
             <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>results = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_report'>report</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>        
             <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.update_compliance_summary();</span><span class='tstring_end'>&quot;</span></span>
+            <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>elux_results = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_elux_report'>get_elux_report</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>
+            <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.update_elux_compliance_summary();</span><span class='tstring_end'>&quot;</span></span>
 
-            <span class='comment'>#remark first objective
-</span>            <span class='id identifier rubyid_objective'>objective</span> <span class='op'>=</span> <span class='id identifier rubyid_objectives'>objectives</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span>
-            <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_select_objective'>select_objective</span><span class='lparen'>(</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
+            <span class='comment'>#remark first objective                        
+</span>            <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_select_objective'>select_objective</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ELUX</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 
             <span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span><span class='lparen'>(</span><span class='id identifier rubyid_script'>script</span><span class='rparen'>)</span>   
         <span class='kw'>end</span>
@@ -1213,8 +1306,7 @@ components.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the report# @todo Allow it gathering workplanes inside groups and
-components</p>
+<p>Returns the report</p>
 
 
   </div>
@@ -1233,8 +1325,7 @@ components</p>
       
         &mdash;
         <div class='inline'>
-<p>the report# @todo Allow it gathering workplanes inside groups and
-components</p>
+<p>the report</p>
 </div>
       
     </li>
@@ -1288,6 +1379,107 @@ components</p>
         <span class='id identifier rubyid_objective'>objective</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objective</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
         <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='kw'>if</span> <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='kw'>nil</span> 
         <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_objective'>objective</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>approved_percentage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+    <span class='rbrace'>}</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_report'>report</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_elux_report-class_method">
+  
+    + (<tt>Hash</tt>) <strong>get_elux_report</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the report</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the report</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 139</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_elux_report'>get_elux_report</span>
+    <span class='id identifier rubyid_report'>report</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+    <span class='id identifier rubyid_wps'>wps</span> <span class='op'>=</span> <span class='const'>IGD</span><span class='op'>::</span><span class='const'>Groundhog</span><span class='op'>::</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_solved_workplanes'>get_solved_workplanes</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_wps'>wps</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_val'>val</span><span class='op'>|</span>
+        <span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
+        <span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ELUX</span><span class='tstring_end'>&quot;</span></span> <span class='op'>==</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objective</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_workplane'>workplane</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplane</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>                    
+        <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='kw'>if</span> <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='kw'>nil</span> 
+        <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_report'>report</span><span class='lbracket'>[</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>                    
     <span class='rbrace'>}</span>
     <span class='kw'>return</span> <span class='id identifier rubyid_report'>report</span>
 <span class='kw'>end</span></pre>
@@ -1683,26 +1875,44 @@ components</p>
       <pre class="lines">
 
 
-141
-142
-143
-144
-145
-146
-147
-148
-149</pre>
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 141</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 161</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_select_objective'>select_objective</span><span class='lparen'>(</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
-    <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#compliance_summary_scale_max&#39;).text(&#39;--&#39;);</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span> <span class='op'>==</span> <span class='kw'>nil</span>
+    <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#compliance_summary_scale_max&#39;).text(&#39;--&#39;);$(&#39;#elux_compliance_scale_max&#39;).text(&#39;--&#39;);$(&#39;#luminaire_scale_max&#39;).text(&#39;--&#39;);</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span> <span class='op'>==</span> <span class='kw'>nil</span>
     <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_remark_solved_workplanes'>remark_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_min_max'>min_max</span> <span class='op'>=</span> <span class='const'>Results</span><span class='period'>.</span><span class='id identifier rubyid_get_min_max_from_model'>get_min_max_from_model</span><span class='lparen'>(</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='id identifier rubyid_min_max'>min_max</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
-    <span class='id identifier rubyid_script'>script</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#compliance_summary_scale_max&#39;).text(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_max'>max</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>                
-    <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.highlight_objective(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_objective'>objective</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>                
+    <span class='id identifier rubyid_script'>script</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ELUX</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>then</span>
+        <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#elux_compliance_scale_max&#39;).text(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_max'>max</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#luminaire_scale_max&#39;).text(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_max'>max</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#compliance_summary_scale_max&#39;).text(&#39;--&#39;);</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>else</span>
+        <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#elux_compliance_scale_max&#39;).text(&#39;--&#39;);</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#luminaire_scale_max&#39;).text(&#39;--&#39;);</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#compliance_summary_scale_max&#39;).text(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_max'>max</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>                                                                  
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.highlight_objective(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_objective'>objective</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>  
     <span class='kw'>return</span> <span class='id identifier rubyid_script'>script</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1873,35 +2083,6 @@ components</p>
       <pre class="lines">
 
 
-155
-156
-157
-158
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
 184
 185
 186
@@ -1916,10 +2097,39 @@ components</p>
 195
 196
 197
-198</pre>
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 155</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 184</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_update'>update</span>
     <span class='id identifier rubyid_web_dialog'>web_dialog</span> <span class='op'>=</span> <span class='const'>IGD</span><span class='op'>::</span><span class='const'>Groundhog</span><span class='period'>.</span><span class='id identifier rubyid_design_assistant'>design_assistant</span>
@@ -1975,7 +2185,7 @@ components</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Aug 17 11:20:27 2016 by
+  Generated on Wed Aug 24 12:22:41 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

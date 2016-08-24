@@ -16,8 +16,11 @@ module IGD
                 hash = DesignAssistant.get_workplanes_hash
                 workplanes = hash["workplanes"]
                 objectives=hash["objectives"]
-                UI.messagebox "There are no objectives to calculate" if objectives.length == 0
-                workplanes.each{|workplane,obj_array|
+                UI.messagebox "There are no workplanes to calculate" if workplanes.length == 0
+                workplanes.each{|workplane,obj_array| 
+                    # Add the calculation of artificial lighting                  
+                    @tasks << ELux.new(workplane)
+                    #then the daylighting objectives
                     obj_array.each{|obj_name|
                         objective = objectives[obj_name]
                         task = self.get_task(workplane,objective)

@@ -109,24 +109,26 @@ module IGD
 
       # Transform an IES file into a Radiance understood data file
       # @author German Molina based on Radiance's code
-      # @param instance [Sketchup::ComponentInstance] The instance to which the IES will be assigned
+      # @param definition [Sketchup::ComponentDefinition] The definition to which the IES will be assigned
       # @param path [String] The actual path on which we are working.
       # @return [Boolean] Success
       # @note a .dat file is written in the process
-      def self.ies2rad(instance, path)
+      def self.ies2rad(definition, path)
 
-        definition = instance.definition
+        #definition = instance.definition
         multiplier = 1 #for now... no diming
 
         verbose = true
       
         OS.mkdir(path)
         OS.mkdir("#{path}/dat")
-        illum_file = File.open("#{path}/dat/#{Labeler.get_fixed_name(instance)}.rad",'w')
+        OS.mkdir("#{path}/Lights")
+        name = Utilities.fix_name(definition.name)
+        illum_file = File.open("#{path}/Lights/#{name}.rad",'w')
 
         illum_file.puts "### BEGINNING OF GROUNDHOG'S IES2RAD OUTPUT#{$/}#{$/}" if verbose
 
-        name = Utilities.fix_name(definition.name)
+        
 
         ### PUT HEADER
         illum_file.puts "# rad file generated within Groundhog using code based on RADIANCE's IES2RAD program" if verbose

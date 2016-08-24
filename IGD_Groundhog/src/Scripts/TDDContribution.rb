@@ -18,7 +18,8 @@ module IGD
 						while File.file? "TDDs/#{index}-#{tdd_name}.pipe" do
 							top_lens_bsdf = "./TDDs/#{tdd_name}_top.xml" #has to match the one given in TDD.write_tdd
 							bottom_lens_bsdf= "./TDDs/#{tdd_name}_bottom.xml"
-							daymtx = "DC/#{index}-#{wp_name}-sky.mtx"
+							daymtx = "DC/#{index}-#{tdd_name}-sky.mtx"
+							#"./DC/#{target}-sky.mtx"
 							#daymtx = "DC/ALL_TDDs-sky.mtx" if options["tdd_singledaymtx"]
 							script << "rmtxop DC/#{wp_name}-#{index}-#{tdd_name}.vmx #{bottom_lens_bsdf.strip} DC/#{tdd_name}-pipe.mtx #{top_lens_bsdf.strip} #{daymtx} > DC/#{wp_name}-#{index}-#{tdd_name}.dc"
 							index+=1

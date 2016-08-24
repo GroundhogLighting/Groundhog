@@ -1,16 +1,19 @@
 //Daylight simulation
 $("#set_low_parameters").on("click", function () { 
     $("#ray_tracing_parameters").val("-ab 4 -ad 1000 -lw 1e-3")
+    $("#elux_ray_tracing_parameters").val("-ab 4 -ad 1000 -lw 1e-3")
     $("#dc_parameters").val("-ab 4 -ad 1000 -lw 1e-3")
 });
 
 $("#set_med_parameters").on("click", function () { 
     $("#ray_tracing_parameters").val("-ab 7 -ad 3000 -lw 1e-4")
+    $("#elux_ray_tracing_parameters").val("-ab 7 -ad 3000 -lw 1e-4")
     $("#dc_parameters").val("-ab 7 -ad 3000 -lw 1e-4")
 });
 
 $("#set_high_parameters").on("click", function () { 
     $("#ray_tracing_parameters").val("-ab 9 -ad 9999 -lw 1e-5")
+    $("#elux_ray_tracing_parameters").val("-ab 9 -ad 9999 -lw 1e-5")
     $("#dc_parameters").val("-ab 9 -ad 9999 -lw 1e-5")
 });
 

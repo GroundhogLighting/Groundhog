@@ -31,6 +31,25 @@ reportModule.highlight_objective = function (objective) {
     });
 };
 
+reportModule.update_elux_compliance_summary = function(){
+    var table = $("#elux_compliance_summary");
+    table.html("");
+    var header = $("<tr><td></td><td>Average (lux)</td><td>Min/Average</td><td>Min/Max</td></tr>");
+    table.append(header);
+    for (var wp_name in elux_results) {
+        if (elux_results.hasOwnProperty(wp_name)) {
+            var row = $("<tr></tr>");
+            var data = elux_results[wp_name];
+            row.append($("<td>" + wp_name + "</td>"));
+            row.append($("<td>" + Math.round(data["average"]) + "</td>"));
+            row.append($("<td>" + Math.round(data["min_over_average"]*100)/100 + "</td>"));
+            row.append($("<td>" + Math.round(data["min_over_max"]*100)/100 + "</td>"));
+            table.append(row);
+        }
+    }
+
+};
+
 reportModule.update_compliance_summary = function () {
     var table = $("#compliance_summary");
     table.html("");

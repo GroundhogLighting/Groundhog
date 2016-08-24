@@ -42,6 +42,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDDaylight'
 		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDPipe'
 		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDView'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/Elux'
 
 
 
@@ -55,6 +56,11 @@ module IGD
 		
 		#Add Radiance to Path as well as RAYPATH
 		OS.setup_radiance
+		#CHMOD for avoiding permission issues
+		Dir["#{IGD::Groundhog::OS.radiance_path}/*"].each{|bin| 
+			next if bin.split("/").pop.include? "."
+			FileUtils.chmod(755,bin)
+		}
 
 		#######################
 		### CONTEXT MENUS
@@ -230,19 +236,7 @@ module IGD
 		groundhog_menu=extensions_menu.add_submenu("Groundhog")
 
 
-		### EXPORT
-		groundhog_menu.add_item("Export to Radiance") {
-
-			path=Exporter.getpath #it returns false if not successful
-			path="" if not path
-
-			path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
-
-			if path_to_save then
-				OS.mkdir(path_to_save)
-				Exporter.export(path_to_save)
-			end
-		}
+		
 
 
 		@design_assistant = DesignAssistant.get
@@ -286,7 +280,19 @@ module IGD
 		}
 
 
+		### EXPORT
+		groundhog_menu.add_item("Export to Radiance") {
 
+			path=Exporter.getpath #it returns false if not successful
+			path="" if not path
+
+			path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
+
+			if path_to_save then
+				OS.mkdir(path_to_save)
+				Exporter.export(path_to_save)
+			end
+		}
 
 
 		### PREFERENCES MENU

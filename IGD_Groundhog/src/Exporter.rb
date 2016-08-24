@@ -225,10 +225,10 @@ module IGD
 					return false if not self.export_modifiers(path,mod_list)
 					return false if not self.write_sky(path)
 					return false if not self.write_weather("#{path}/Skies")
-					return false if not self.export_views(path)
-					return false if not self.write_scene_file(path)
+					return false if not self.export_views(path)			
 					return false if not self.export_component_definitions(path)
 					return false if not self.write_illuminance_sensors(path)
+					return false if not self.write_scene_file(path)
 
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 				end
@@ -570,27 +570,30 @@ module IGD
 					
 
 					f.write("\n\n\n###### COMPONENT INSTANCES \n\n")
+					comp_path = "#{path}/Components"
 					defi=Sketchup.active_model.definitions
+					anyluminaire = defi.select{|d| Labeler.luminaire? d }.length > 0					
+					light = File.open("#{comp_path}/Lights/all.lightsources",'w') if anyluminaire
+
 					defi.each do |h|
 						next if h.instances.count==0
 						if h.is_a? Sketchup::ComponentDefinition then
 							next if Labeler.solved_workplane?(h)
 							hName=Utilities.fix_name(h.name)
-							instances=h.instances
-							comp_path = " ./Components/"
+							instances=h.instances							
+							lightfile = "./Components/Lights/#{hName}.lightsource"
 							instances.each do |inst|
 								next if not inst.parent.is_a? Sketchup::Model
 								next if Labeler.tdd?(inst)
 								xform = self.get_component_string(inst)
-								f.puts "#{xform} #{comp_path}#{hName}.rad"
-								if Labeler.luminaire?(inst.definition) then
-									f.puts "#{xform} ./Components/dat/#{Labeler.get_fixed_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, "./Components")
-								end
+								f.puts "#{xform} ./Components/#{hName}.rad"
+								
+								light.puts "#{xform} #{lightfile}" if File.file? lightfile
+								
 							end
 						end
 					end
-
-
+					light.close if anyluminaire
 				}
 				return true
 			end
@@ -711,15 +714,24 @@ module IGD
 						next
 					end
 
+					if Labeler.luminaire?(h) then
+						UI.messagebox "Error when exporting luminaire '#{h.name}'" if not Lamps.ies2rad(h, comp_path)
+					end
+
+					anyluminaire = instances.select{|inst| Labeler.luminaire? inst.definition }.length > 0
+					OS.mkdir("./Components/Lights") if anyluminaire					
+					light = File.open("./Components/Lights/#{hName}.lightsource",'w') if anyluminaire
+
 					instances.each do |inst| #include the nested components
 						name = Utilities.fix_name(inst.definition.name)
 						xform = self.get_component_string(inst)
 						geom_string += "#{xform} ./#{name}.rad#{$/}"
-						if Labeler.luminaire?(inst.definition) then
-							geom_string += "#{xform} ./dat/#{Labeler.get_fixed_name(inst)}.rad#{$/}" if Lamps.ies2rad(inst, comp_path)
+						if Labeler.luminaire?(inst.definition) then							
+							light.puts "#{xform} ./#{Labeler.get_fixed_name(inst.definition)}.rad"													
 						end
 					end
-					geom_string+="\n\n"
+					light.close if anyluminaire
+					geom_string+="#{$/}#{$/}"
 
 					mat_array=[]
 					faces.each do |fc| #then the rest of the faces
@@ -758,7 +770,7 @@ module IGD
 
 				end	#end for each
 				
-				self.write_window_groups(path,wins)
+				self.write_window_groups(path,wins)				
 
 				return true
 			end #end method

@@ -233,7 +233,8 @@
 45
 46
 47
-48</pre>
+48
+49</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Scripts/TDDContribution.rb', line 5</span>
@@ -254,8 +255,9 @@
 			<span class='kw'>while</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_file?'>file?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDDs/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.pipe</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>do</span>
 				<span class='id identifier rubyid_top_lens_bsdf'>top_lens_bsdf</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./TDDs/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_top.xml</span><span class='tstring_end'>&quot;</span></span> <span class='comment'>#has to match the one given in TDD.write_tdd
 </span>				<span class='id identifier rubyid_bottom_lens_bsdf'>bottom_lens_bsdf</span><span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./TDDs/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_bottom.xml</span><span class='tstring_end'>&quot;</span></span>
-				<span class='id identifier rubyid_daymtx'>daymtx</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp_name'>wp_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-sky.mtx</span><span class='tstring_end'>&quot;</span></span>
-				<span class='comment'>#daymtx = &quot;DC/ALL_TDDs-sky.mtx&quot; if options[&quot;tdd_singledaymtx&quot;]
+				<span class='id identifier rubyid_daymtx'>daymtx</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-sky.mtx</span><span class='tstring_end'>&quot;</span></span>
+				<span class='comment'>#&quot;./DC/#{target}-sky.mtx&quot;
+</span>				<span class='comment'>#daymtx = &quot;DC/ALL_TDDs-sky.mtx&quot; if options[&quot;tdd_singledaymtx&quot;]
 </span>				<span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rmtxop DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp_name'>wp_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.vmx </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bottom_lens_bsdf'>bottom_lens_bsdf</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='embexpr_end'>}</span><span class='tstring_content'> DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-pipe.mtx </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_top_lens_bsdf'>top_lens_bsdf</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_daymtx'>daymtx</span><span class='embexpr_end'>}</span><span class='tstring_content'> &gt; DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp_name'>wp_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.dc</span><span class='tstring_end'>&quot;</span></span>
 				<span class='id identifier rubyid_index'>index</span><span class='op'>+=</span><span class='int'>1</span>
 			<span class='kw'>end</span>
@@ -293,7 +295,7 @@
 </div>
 
     <div id="footer">
-  Generated on Wed Aug 17 11:20:30 2016 by
+  Generated on Wed Aug 24 12:22:44 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

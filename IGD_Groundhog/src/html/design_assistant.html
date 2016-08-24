@@ -15,9 +15,9 @@
         <p class="selected" href="#location">Location</p>
         <p href="#labels">Labels</p>
         <p href="#materials">Materials</p>
-        <p href="#luminaires">Luminaires</p>
+        <p href="#luminaires" onclick='window.location.href ="skp:remark@ELUX"'>Luminaires</p>
         <p href="#objectives">Objectives</p>
-        <p href="#simulation">Simulation</p>
+        <p href="#simulation">Calculate</p>
         <p href="#report">Report</p>
     </div>
 
@@ -86,7 +86,7 @@
         <div class="fixed_toolbar">
             <button id="add_objective_to_worplane">New objective</button>
         </div>
-        <div class="wrap">                
+        <div class="wrap">
             <div class="resizable resizable1">
                 <div class="center"><label for="objectives_filter">Filter:</label> <input id="objectives_filter" type="text"></div>
                 <ul id="objectives_list" class="draglist"></ul>
@@ -96,6 +96,22 @@
                 <ul id="workplane_objectives" class="droplist"></ul>
             </div>
         </div>
+    </div>
+
+
+
+    <div class="display" id="luminaires">
+        <div class="fixed_toolbar">
+            <button onclick='window.location.href = "skp:preview@msg"'>Daytime preview</button>
+            <button onclick='window.location.href = "skp:night_preview@msg"'>Nighttime preview</button>            
+            <span>Search:</span>
+            <input type="text" id="filter_luminaires">
+        </div>
+        <div id="luminaire_scale" class="scale center">
+            <p id="luminaire_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale">
+            <p id="luminaire_scale_max">--</p>
+        </div>
+        <table id="luminaire_list" class="selectable row"></table>
     </div>
 
 
@@ -140,9 +156,15 @@
                 <table>
 
                     <tr>
-                        <td>Ray-tracing parameters</td>
+                        <td>Daylighting ray-tracing parameters</td>
                         <td>
                             <input title="option" type="text" id="ray_tracing_parameters">
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>Luminaire ray-tracing parameters</td>
+                        <td>
+                            <input title="option" type="text" id="elux_ray_tracing_parameters">
                         </td>
                     </tr>
 
@@ -194,20 +216,6 @@
     </div>
 
 
-    <div class="display" id="luminaires">
-        <div class="fixed_toolbar">
-            <button onclick='window.location.href = "skp:preview@msg"'>Daytime preview</button>
-            <button onclick='window.location.href = "skp:night_preview@msg"'>Nighttime preview</button>
-            <button onclick='window.location.href = "skp:calc_elux@msg"'>Calc. Illuminance</button>
-            <span>Search:</span>
-            <input type="text" id="filter_luminaires">
-        </div>
-        <table id="luminaire_list" class="selectable row">
-
-        </table>
-    </div>
-
-
     <div class="display" id="report">
         <div class="fixed_toolbar">
 
@@ -218,17 +226,21 @@
             <div>
                 <div id="compliance_summary_scale" class="scale center">
                     <p id="compliance_summary_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale">
-                    <p id="compliance_summary_scale_max">100</p>
+                    <p id="compliance_summary_scale_max">--</p>
                 </div>
                 <table id="compliance_summary" class="selectable column"></table>
             </div>
 
-            <h3>Electric lighting compliance summary</h3>
+            <h3 onclick='window.location.href ="skp:remark@ELUX"'>Electric lighting compliance summary</h3>
             <div>
-                <table id="electric_compliance_summary"></table>
+                <div id="elux_compliance_scale" class="scale center">
+                    <p id="elux_compliance_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale">
+                    <p id="elux_compliance_scale_max">--</p>
+                </div>
+                <table id="elux_compliance_summary" class="selectable column"></table>
             </div>
 
-            <h3>Objective summary</h3>
+            <h3>Daylighting objectives summary</h3>
             <div id="objective_summary"></div>
 
         </div>
@@ -357,6 +369,7 @@
     var objectives = {};
     var results = {};
     var luminaires = {};    
+    var elux_results = {};
 
 </script>
 <script src="js/JQuery/jquery-3.0.0.js"></script>
@@ -369,8 +382,7 @@
 <script src="js/report.js"></script>
 <script src="js/luminaires.js"></script>
 <script>    
-    window.location.href = 'skp:on_load@message';  
-
+    window.location.href = 'skp:on_load@message';      
 </script>
 
 </html>
