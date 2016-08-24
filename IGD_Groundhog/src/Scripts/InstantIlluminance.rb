@@ -8,20 +8,27 @@ module IGD
                 #name of the workplane
                 @target = target
                 @dependencies = [WriteSky.new(@target["sky"])]
-                @proc = Proc.new {|options|
+                @proc = Proc.new {|options|                    
                     script = []
                     sky = Utilities.fix_name(@target["sky"])
-                    wp_file = "./Workplanes/#{Utilities.fix_name(@target["workplane"])}.pts"
-                    workplane = Utilities.fix_name(@target["workplane"])
+                    wp_file = "./Workplanes/#{Utilities.fix_name(@target["workplane"])}"
+                    
+                    next false if not File.file? "#{wp_file}.pts"
+                    
+                   
+                    wp_file="#{wp_file}.pts"
+                    
                     nsensors = File.readlines(wp_file).length
-                    win_string = ""
-                    win_string = "./Windows/windows.rad" if File.directory? "Windows" 
-                    script << "oconv ./Materials/materials.mat ./scene.rad ./Skies/#{sky}.rad #{win_string} > octree-#{sky}.oct"
-                    script << "rtrace -I+ -h -af ambient.amb #{options["static_parameters"]} ./octree-#{sky}.oct < #{wp_file} > tmp1-#{sky}.tmp"
+                    
+                    script << "#{OS.oconv_command( {:lights_on => false, :sky => sky})} > octree-#{sky}.oct"
+                    script << "rtrace -I+ -h -af #{sky}.amb #{options["ray_tracing_parameters"]} ./octree-#{sky}.oct < #{wp_file} > tmp1-#{sky}.tmp"
                     script << "rcollate -oc 1 -hi -or #{nsensors} -oc 1 ./tmp1-#{sky}.tmp > tmp2-#{sky}.tmp"                    
                     script << "rmtxop -fa -c 47.435 119.93 11.635 ./tmp2-#{sky}.tmp > tmp3-#{sky}.tmp"
-                    script << "rcollate -oc 1 -ho  ./tmp3-#{sky}.tmp > ./Results/#{workplane}-#{sky}.txt"  
+                    script << "rcollate -oc 1 -ho  ./tmp3-#{sky}.tmp > ./Results/#{Utilities.fix_name(@target["workplane"])}-#{sky}.txt"                          
+                
+                    
                     next script
+                   
                 }               
             end
         end

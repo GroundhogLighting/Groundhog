@@ -40,18 +40,23 @@ body, html {
 }
 
 div.display{
+    
     position:absolute;
     background: transparent;
     right:0;
     width:auto;
     height: 100vh;
     overflow: scroll;    
-    padding: 0 15px 15px 15px;
+    padding: 3.5em 2.5em 2em 2.5em;      
 }
 
 p.tooltip{
     display:inline;
     font-weight: bold;
+}
+
+p.link {
+    cursor:pointer;
 }
 
 legend{
@@ -67,7 +72,11 @@ input[type="number"]{
 }
 
 table {
-    border-collapse: collapse;        
+    border-collapse: collapse;     
+}
+
+table.selectable, table.selectable tr:last-child{
+    border: 1px solid #CECECE;   
 }
 
 table.selectable{
@@ -77,27 +86,37 @@ table.selectable{
 }
 
 table.selectable tr:first-child{
-    background-color: #8B8B8B;
-    color:white;
+    background-color: #E9E9E9;    
     font-weight: bold;
-    cursor: default;
+    color: #333333;
 }
-table.selectable tr:first-child:hover{
-    background-color: #8B8B8B;
-    color:white;
-    font-weight: bold;
+
+table.column tr:first-child{
+    cursor:pointer;
 }
+
+
 table.selectable td{
     padding: 3px 7px 3px 7px;
 }
 
-table.selectable tr{
-    cursor: pointer;
+table.selectable tr{    
     border-bottom: 1px solid #E4E4E4;
 }
-table.selectable tr:hover{
+
+table.row tr {
+    cursor: pointer;
+}
+
+table.row tr:hover{
     background-color: #E4E4E4
 }
+
+table td.selected{
+    background: #007FFF;
+    color: white;
+}
+
 
 table.bold_header tr:first-child{
     font-weight:bold;
@@ -159,4 +178,154 @@ td.not-success{
 
 input.color {
     width: 4em
+}
+
+div.scale {
+    height: 2.5em;
+}
+
+div.scale *{
+    display: inline-block;
+}
+div.scale img{
+    height: 100%;
+    width: 50%;
+}
+
+div.scale p{
+    height: 100%;
+    font-size: 1.1em;
+    padding: 0 3px 0 3px;
+    margin:0.4em 0 0 0;   
+    vertical-align: top;
+}
+
+div.fixed_toolbar {
+    position: fixed;
+    color: white;
+    padding: 5px 15px 5px 15px;    
+    width:100%;
+    background: #007FFF;
+    margin:0px;
+    min-height: 2em;
+    z-index: 100;
+    -webkit-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    -moz-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+}
+
+div.fixed_toolbar button{
+    padding:0; 
+    background: transparent;
+    color: white;  
+    font-weight: normal; 
+    border: 0px;
+    border-radius:0px;
+    border-right: 1px solid white;
+    
+}
+
+input[type="text"]{
+    border: 1px solid black;
+}
+
+
+div.fixed_toolbar input[type="text"]{
+    border:none;
+}
+
+
+
+
+
+ul.droplist li{    
+    border: 1px solid gray;
+    list-style-type: none;
+    text-align: center;
+    background: white;
+    margin: 0.8em;
+   
+}
+
+ul.droplist li.hover{
+    -webkit-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    -moz-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    background:  #DEDBDE;
+}
+
+
+ul.droplist li h1{
+    font-size: 1em;
+    background: #DEDBDE;
+    margin:0;        
+}
+
+ul.droplist li div{
+    padding: 0.2em;
+    margin: 0.6em;
+    border: 2px dashed gray;
+}
+
+ul.droplist li table{
+    width: 100%;     
+}
+
+
+ul.droplist li table tr td{
+    padding: 0.1em;   
+    border-bottom: 1px solid #CECECE; 
+}
+
+
+ul.droplist li table tr td span{
+    display: block;
+    float: right; 
+}
+
+
+ul.draglist li{   
+    padding: 0.5em; 
+    border: 1px solid gray; 
+    border-radius: 0.4em;
+    list-style-type: none;
+    text-align: center;
+    background: white;
+    margin: 0.25em;   
+    width: 90%;
+    cursor:pointer;
+    -webkit-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    -moz-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+}
+
+ul.draglist li:hover{    
+    background:  #DEDBDE;
+}
+
+.wrap {
+    width: 100%;
+    height:90%;
+    background: white; 
+    border: 1px solid #CECECE; 
+}
+
+.resizable {
+    width: 49%;          
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;    
+}
+
+div.resizable2{
+    border-left: 3px solid #CECECE;
+}
+
+.ui-resizable-e { 
+    cursor: e-resize; 
+    width: 6px; 
+    right: -5px; 
+    top: 0; 
+    bottom: 0; 
+    background-color: gray;
 }

@@ -37,7 +37,7 @@ materialModule.get_material_json = function(){
             var g = materialModule.transmittance2transmisivity(g);
             var b = materialModule.transmittance2transmisivity(b);
             if(!r || !g || !b || Math.max(r,g,b)>1 || Math.min(r,g,b) < 0){return false}
-            ret["alpha"]=0.265 * r + 0.67 * g + 0.065 * b;
+            ret["alpha"]= Math.sqrt(1-(0.265 * r + 0.67 * g + 0.065 * b));
             ret["rad"] = "void glass %MAT_NAME% 0 0 3 "+r+" "+g+" "+b;        
             break;
         default:
@@ -51,19 +51,24 @@ materialModule.update_list = function (filter) {
     filter = filter.toLowerCase();
     var list = $("#material_list");
     list.html("");
+    if(Object.keys(materials).length == 0){
+        $("<div class='center'><h4>There are no materials in your model...</h4></div>").appendTo(list);
+        return;
+    }
     var html = "<tr><td>Name</td><td>Class</td><td>Color</td><td></td></tr>"
     for (var material in materials) {
-        var data = materials[material];
-        var cl = data["class"];
-        if (material.toLowerCase().indexOf(filter) >= 0 || cl.toLowerCase().indexOf(filter) >= 0) {
-            var r = data["color"][0];
-            var g = data["color"][1];
-            var b = data["color"][2];
-            var color = "rgb(" + r + "," + g + "," + b + ")";
-            html = html + "<tr><td class='mat-name' name=\"" + material + "\">" + material + "</td><td>" + cl + "</td><td class='color' style='background: " + color + "'></td><td class='icons'><span name=\"" + material + "\" class='ui-icon ui-icon-trash del-material'></span><span class='ui-icon ui-icon-pencil'></span></td></tr>"
-
+        if (materials.hasOwnProperty(material)) {
+            var data = materials[material];
+            var cl = data["class"];
+            if (material.toLowerCase().indexOf(filter) >= 0 || cl.toLowerCase().indexOf(filter) >= 0) {                
+                var r = data["color"][0];
+                var g = data["color"][1];
+                var b = data["color"][2];
+                var color = "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + ")";
+                html = html + "<tr><td class='mat-name' name=\"" + material + "\">" + material + "</td><td>" + cl + "</td><td class='color' style='background: " + color + "'></td><td class='icons'><span name=\"" + material + "\" class='ui-icon ui-icon-trash del-material'></span></td></tr>" 
+                //<span class='ui-icon ui-icon-pencil'></span>
+            }
         }
-
     }
     list.html(html);
 
@@ -84,11 +89,14 @@ materialModule.adapt_dialog = function (cl) {
     $("#add_material_dialog *").show();
     $("#color_pick").hide();
     switch (cl) {
-        case "plastic":           
+        case "plastic":
+            $("#color_legend").text("Reflectance");           
             break;
-        case "metal":           
+        case "metal":  
+            $("#color_legend").text("Reflectance");           
             break;
-        case "glass":            
+        case "glass":  
+            $("#color_legend").text("Transmittance");          
             $("label[for='specularity']").hide();
             $("#specularity").hide();
             $("label[for='roughness']").hide();
@@ -158,9 +166,6 @@ $("#filter_materials").keyup(function () {
 });
 
 
-materialModule.update_list("");
-
-
 $("#material_class").on("change", function () {
     materialModule.adapt_dialog(this.value);
 });
@@ -176,10 +181,13 @@ $("#green").val(red);
 $("#blue").val(red);  
 
 $("input.color").on("change", function () {
-    if(!$("#monochromatic").prop("checked")){
-        var r = $("#red").val(); var g = $("#green").val(); var b = $("#blue").val();
-        $("#color_pick").spectrum("set", "rgb(" + Math.round(r*255) + "," + Math.round(g*255) + "," + Math.round(b*255) + ")");
-    }    
+    
+    var r = $("#red").val(); var g = $("#green").val(); var b = $("#blue").val();
+    if($("#monochromatic").prop("checked")){
+        g=r; b=r;
+    }
+    $("#color_pick").spectrum("set", "rgb(" + Math.round(r*255) + "," + Math.round(g*255) + "," + Math.round(b*255) + ")");
+    
 });
 
 $("#monochromatic").on("change",function(){

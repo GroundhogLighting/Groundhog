@@ -13,86 +13,114 @@
 
     <div id="sidenav">
         <p class="selected" href="#location">Location</p>
-        <p href="#model">Model</p>
+        <p href="#labels">Labels</p>
+        <p href="#materials">Materials</p>
+        <p href="#luminaires" onclick='window.location.href ="skp:remark@ELUX"'>Luminaires</p>
         <p href="#objectives">Objectives</p>
-        <p href="#daylight_simulation">Daylight</p>
-        <p href="#luminaires">Luminaires</p>
+        <p href="#simulation">Calculate</p>
         <p href="#report">Report</p>
     </div>
 
 
     <div class="display" id="location">
-        <h2>Location</h2>
+        <div class="fixed_toolbar">
+            <button onclick='window.location.href ="skp:set_weather_path@msg"'>Change weather file</button>
+            <button onclick='window.location.href ="skp:follow_link@http://www.energyplus.net/weather"'>Get weather files online</button>
+        </div>
+
+
+        <table id="weather_info" class="with_border bold_first_row">
+            <tr>
+                <td>City</td>
+                <td id="weather_city">not set</td>
+            </tr>
+            <tr>
+                <td>State</td>
+                <td id="weather_state">not set</td>
+            </tr>
+            <tr>
+                <td>Country</td>
+                <td id="weather_country">not set</td>
+            </tr>
+            <tr>
+                <td>Latitude</td>
+                <td id="weather_latitude">not set</td>
+            </tr>
+            <tr>
+                <td>Longitude</td>
+                <td id="weather_longitude">not set</td>
+            </tr>
+            <tr>
+                <td>Time Zone</td>
+                <td id="weather_timezone">not set</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="display" id="labels">
+        <div class="fixed_toolbar">
+            <button id="preview_button" onclick='window.location.href = "skp:preview@msg"'>Preview</button>
+        </div>
+
 
         <div class="center">
-            <button type="button" onclick='window.location.href ="skp:set_weather_path@msg"'>Change weather file</button>
-            <table id="weather_info" class="with_border bold_first_row">
-                <tr>
-                    <td>City</td>
-                    <td id="weather_city">not set</td>
-                </tr>
-                <tr>
-                    <td>State</td>
-                    <td id="weather_state">not set</td>
-                </tr>
-                <tr>
-                    <td>Country</td>
-                    <td id="weather_country">not set</td>
-                </tr>
-                <tr>
-                    <td>Latitude</td>
-                    <td id="weather_latitude">not set</td>
-                </tr>
-                <tr>
-                    <td>Longitude</td>
-                    <td id="weather_longitude">not set</td>
-                </tr>
-                <tr>
-                    <td>Time Zone</td>
-                    <td id="weather_timezone">not set</td>
-                </tr>
-            </table>
-            <a class="" href="#" onclick='window.location.href ="skp:follow_link@http://www.energyplus.net/weather"'>Find weather files here</a>
+            <button onclick='window.location.href = "skp:label_as_window@msg"'>As Window</button>
+            <button onclick='window.location.href = "skp:label_as_workplane@msg"'>As Workplane</button>
+            <button onclick='window.location.href = "skp:label_as_illum@msg"'>As Illum</button>
         </div>
+
 
     </div>
 
-    <div class="display" id="model">
-        <h2>Model</h2>
-        <div class="center">
+    <div class="display" id="materials">
+        <div class="fixed_toolbar">
             <button id="preview_button" onclick='window.location.href = "skp:preview@msg"'>Preview</button>
+            <button id="add_material_button">New material</button>
+            <span>Search:</span>
+            <input type="text" id="filter_materials">
         </div>
-        <div class="accordion">
-            <h3>Label selection</h3>
-            <div class="center">
-                <button onclick='window.location.href = "skp:label_as_window@msg"'>As Window</button>
-                <button onclick='window.location.href = "skp:label_as_workplane@msg"'>As Workplane</button>
-                <button onclick='window.location.href = "skp:label_as_illum@msg"'>As Illum</button>
-            </div>
-            <h3>Materials</h3>
-            <div class="center">
-                <button id="add_material_button">Create material</button><br><br>
-                <label for="filter_materials">Filter:</label><input type="text" id="filter_materials">
-                <table id="material_list" class="selectable"> </table>
-            </div>
-
-        </div>
+        <table id="material_list" class="selectable row"> </table>
     </div>
 
     <div class="display" id="objectives">
-        <h2>Objectives</h2>
-        <table id="objectives_table" class="draggable selectable"></table>
-        
-        <div class="center"><button id="add_objective_to_worplane">New objective</button></div>
-        <div class="accordion" id="workplane_objectives"></div>
+        <div class="fixed_toolbar">
+            <button id="add_objective_to_worplane">New objective</button>
+        </div>
+        <div class="wrap">
+            <div class="resizable resizable1">
+                <div class="center"><label for="objectives_filter">Filter:</label> <input id="objectives_filter" type="text"></div>
+                <ul id="objectives_list" class="draglist"></ul>
+            </div>
+            <div class="resizable resizable2">
+                <div class="center"><label for="workplane_objectives_filter">Filter:</label><input id="workplane_objectives_filter" type="text"></div>
+                <ul id="workplane_objectives" class="droplist"></ul>
+            </div>
+        </div>
     </div>
 
 
-    <div class="display" id="daylight_simulation">
-        <h2>Daylight</h2>
-        <div class="center"><button id="simulate_button">Calculate</button></div>
+
+    <div class="display" id="luminaires">
+        <div class="fixed_toolbar">
+            <button onclick='window.location.href = "skp:preview@msg"'>Daytime preview</button>
+            <button onclick='window.location.href = "skp:night_preview@msg"'>Nighttime preview</button>            
+            <span>Search:</span>
+            <input type="text" id="filter_luminaires">
+        </div>
+        <div id="luminaire_scale" class="scale center">
+            <p id="luminaire_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale">
+            <p id="luminaire_scale_max">--</p>
+        </div>
+        <table id="luminaire_list" class="selectable row"></table>
+    </div>
+
+
+    <div class="display" id="simulation">
+        <div class="fixed_toolbar">
+            <button id="simulate_button">Calculate</button>
+        </div>
         <div id="simulation_options" class="accordion">
-            <h3>Sky subdivition</h3>
+            <h3>General options</h3>
             <div>
                 <table>
                     <tr>
@@ -102,13 +130,8 @@
                             <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
                         </td>
                     </tr>
-                </table>
-            </div>
-            <h3>Static simulation options</h3>
-            <div >
-                <table>
                     <tr>
-                        <td>Calculation method</td>
+                        <td>Static calculation method</td>
                         <td>
                             <select title="option" id='static_calculation_method'>
 							<option value="RTRACE">Ray-tracing</option>
@@ -117,45 +140,49 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Parameters</td>
-                        <td>
-                            <input title="option" type="text" id="static_parameters">
-                        </td>
-                    </tr>                    
-
-                </table>
-                <div class="center">
-                    <button id="set_low_static">Set to low</button>
-                    <button id="set_med_static">Set to medium</button>
-                    <button id="set_high_static">Set to high</button>
-                </div>
-            </div>
-
-            <h3>Dynamic simulation options</h3>
-            <div>
-                <table>
-                    <tr>
-                        <td>Calculation method</td>
+                        <td>Dynamic calculation method</td>
                         <td>
                             <select title="option" id='dynamic_calculation_method'>
 							<option value="DC">Simple Daylight Coefficients</option>
 						</select>
                         </td>
                     </tr>
+
+                </table>
+            </div>
+
+            <h3>Simulation parameters</h3>
+            <div>
+                <table>
+
                     <tr>
-                        <td>Parameters</td>
+                        <td>Daylighting ray-tracing parameters</td>
                         <td>
-                            <input title="option" type="text" id="dynamic_parameters">
+                            <input title="option" type="text" id="ray_tracing_parameters">
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>Luminaire ray-tracing parameters</td>
+                        <td>
+                            <input title="option" type="text" id="elux_ray_tracing_parameters">
                         </td>
-                    </tr>                   
+                    </tr>
+
+                    <tr>
+                        <td>Daylight coefficients parameters</td>
+                        <td>
+                            <input title="option" type="text" id="dc_parameters">
+                        </td>
+                    </tr>
 
                 </table>
                 <div class="center">
-                    <button id="set_low_dynamic">Set to low</button>
-                    <button id="set_med_dynamic">Set to medium</button>
-                    <button id="set_high_dynamic">Set to high</button>
+                    <button id="set_low_parameters">Set to low</button>
+                    <button id="set_med_parameters">Set to medium</button>
+                    <button id="set_high_parameters">Set to high</button>
                 </div>
             </div>
+
 
             <h3>Tubular Daylight Devices options</h3>
             <div>
@@ -186,34 +213,46 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-    <div class="display" id="luminaires">
-        <h2>Luminaires</h2>
-    </div>
 
     <div class="display" id="report">
-        <h2>Report</h2>
+        <div class="fixed_toolbar">
+
+        </div>
         <div class="accordion">
-            <h3>Objective summary</h3>
+
+            <h3>Daylight compliance summary</h3>
+            <div>
+                <div id="compliance_summary_scale" class="scale center">
+                    <p id="compliance_summary_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale">
+                    <p id="compliance_summary_scale_max">--</p>
+                </div>
+                <table id="compliance_summary" class="selectable column"></table>
+            </div>
+
+            <h3 onclick='window.location.href ="skp:remark@ELUX"'>Electric lighting compliance summary</h3>
+            <div>
+                <div id="elux_compliance_scale" class="scale center">
+                    <p id="elux_compliance_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale">
+                    <p id="elux_compliance_scale_max">--</p>
+                </div>
+                <table id="elux_compliance_summary" class="selectable column"></table>
+            </div>
+
+            <h3>Daylighting objectives summary</h3>
             <div id="objective_summary"></div>
 
-            <h3>Compliance summary</h3>
-            <div>
-                <table id="compliance_summary" class="selectable"></table>
-            </div>
-            
         </div>
-        
-        
+
+
     </div>
 
     <!-- ADD OBJECTIVE DIALOG -->
-    <div id="add_metric_dialog" title="Add objective">       
+    <div id="add_metric_dialog" title="Add objective">
         <div class="center">
             <label for="metric_name">Name: </label>
-            <input type="text" id="objective_name">   
+            <input type="text" id="objective_name">
         </div>
         <fieldset class="center" id="metric_field">
             <legend>Metric</legend>
@@ -221,7 +260,7 @@
                 <option value="DA">Daylight Autonomy</option>
                 <option value="UDI">Useful Daylight Illminance</option>
                 <option value="DF">Daylight Factor</option>
-                <option value="LUX">Illuminance at time</option>
+                <option value="LUX">Illuminance under clear sky</option>
             </select>
         </fieldset>
         <fieldset id="fulfillment_field">
@@ -289,7 +328,7 @@
 
         </fieldset>
         <fieldset>
-            <legend>Reflectance</legend>
+            <legend id="color_legend">Reflectance</legend>
             <label for="monochromatic">Monochromatic material</label>
             <input class="color" type="checkbox" id="monochromatic">
             <table>
@@ -329,6 +368,8 @@
     var materials = {};
     var objectives = {};
     var results = {};
+    var luminaires = {};    
+    var elux_results = {};
 
 </script>
 <script src="js/JQuery/jquery-3.0.0.js"></script>
@@ -339,9 +380,9 @@
 <script src="js/daylight-simulation.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/report.js"></script>
-<script>
-    //objectiveModule.update_workplanes();
-    window.location.href = 'skp:on_load@message';   
+<script src="js/luminaires.js"></script>
+<script>    
+    window.location.href = 'skp:on_load@message';      
 </script>
 
 </html>

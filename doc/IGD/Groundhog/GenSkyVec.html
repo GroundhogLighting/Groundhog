@@ -364,7 +364,8 @@
 216
 217
 218
-219</pre>
+219
+220</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Scripts/Sky.rb', line 45</span>
@@ -382,7 +383,7 @@
                  <span class='id identifier rubyid_skydesc'>skydesc</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>t.tmp</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
                  <span class='const'>FileUtils</span><span class='period'>.</span><span class='id identifier rubyid_rm'>rm</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>t.tmp</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
                  <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_skydesc'>skydesc</span> <span class='kw'>then</span>
-                     <span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Error: No sky description!</span><span class='tstring_end'>&quot;</span></span>
+                     <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Error: No sky description in genskyvec!</span><span class='tstring_end'>&quot;</span></span>
                      <span class='kw'>return</span> <span class='kw'>false</span>
                  <span class='kw'>end</span>
 
@@ -488,6 +489,7 @@
                          <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>skyfunc glow skyglow 0 0 4 </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_skycolor'>skycolor</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'> 0\n</span><span class='tstring_end'>&quot;</span></span>
                          <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>skyglow source sky 0 0 4 0 0 1 360\n</span><span class='tstring_end'>&quot;</span></span>
                      <span class='rbrace'>}</span>
+                     <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_run_command'>run_command</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>oconv </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_content'> &gt; </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_octree'>octree</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>                        
                      <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_run_command'>run_command</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tregcommand'>tregcommand</span><span class='embexpr_end'>}</span><span class='tstring_content'> &gt; </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tmp1'>tmp1</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
                      <span class='id identifier rubyid_tregval'>tregval</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_readlines'>readlines</span><span class='lparen'>(</span><span class='id identifier rubyid_tmp1'>tmp1</span><span class='rparen'>)</span>
                  <span class='kw'>else</span>
@@ -555,7 +557,7 @@
 </div>
 
     <div id="footer">
-  Generated on Thu Jul 14 10:04:49 2016 by
+  Generated on Wed Aug 24 12:22:44 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

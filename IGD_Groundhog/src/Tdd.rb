@@ -72,7 +72,7 @@ module IGD
                 #info = Exporter.get_reversed_transformed_rad_string(face,t,"#{Labeler.get_fixed_name(face)}_#{index}") if face.normal.z > 0
                 File.open("#{path}/#{index}-#{top_filename}",'w'){|top|
                   mat_name = "lens_mat"
-                  top.write "\#@rfluxmtx h=kf u=Y\n\n#{self.lens_material(mat_name)}\n\n #{mat_name} #{info[0]}"
+                  top.write "\#@rfluxmtx h=kf u=Y\n#{self.lens_material(mat_name)}\n\n #{mat_name} #{info[0]}"
                 }
               elsif Labeler.tdd_bottom?(face) then
                 #info = Exporter.get_reversed_transformed_rad_string(face,t,"#{Labeler.get_fixed_name(face)}_#{index}") if face.normal.z > 0

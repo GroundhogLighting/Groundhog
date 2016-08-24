@@ -13,11 +13,13 @@ task :doc => [:clean] do
 end
 
 task :clean do
+	FileUtils.rm(Dir["IGD_Groundhog/Examples/*.skb"])
 	FileUtils.rm(Dir["*.rbz"])
 	FileUtils.rm_rf("doc")
 end
 
 sketchup_plugin_dir = "#{ENV["UserProfile"].gsub("\\","/")}/AppData/Roaming/SketchUp/SketchUp 2016/SketchUp/Plugins"
+
 task :test => [:win64] do
 	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog.rb"
 	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog"

@@ -35,12 +35,14 @@ module IGD
 			# @return [String] Name of the entity.
 			# @note: Will ask for the name of anything, even if it is not a face.
 			def self.get_name(entity)
+				#first check User-assigned name
 				name=entity.get_attribute("Groundhog","Name")
-				if name == nil then
-					return entity.entityID.to_s
-				else
-					return name
-				end
+				return name if name !=  nil
+				#Second, check if SketchUp assigns a name to this.
+				name = entity.name if entity.respond_to? :name 
+				return entity.name if (name != nil and name != "")
+				#Last, return ID
+				return entity.entityID.to_s				
 			end
 
 			# Same as get_name but fixing the output (ie. replacing blanks and # by underscores)
@@ -159,8 +161,8 @@ module IGD
 			# @author German Molina
 			# @param entity [SketchUp::Entity] Entity to test.
 			# @return [Boolean]
-			def self.local_luminaire?(entity)
-				entity.get_attribute("Groundhog","Label")=="local_luminaire"
+			def self.luminaire?(entity)
+				entity.get_attribute("Groundhog","Label")=="luminaire"
 			end
 
 
@@ -318,14 +320,34 @@ module IGD
 			# @author German Molina
 			# @param comp [SkecthUp::ComponentDefinition] A SketchUp component definition
 			# @return [Void]
-			def self.to_local_luminaire(comp)
-				UI.messagebox("Only components can be labeled as Local Luminaires") if not comp.is_a? Sketchup::ComponentDefinition
+			def self.to_luminaire(comp)
+				UI.messagebox("Only components can be labeled as Luminaires") if not comp.is_a? Sketchup::ComponentDefinition
 				return if not comp.is_a? Sketchup::ComponentDefinition
-
 				
+				
+				lumfile = UI.openpanel("Choose an IES file", "c:/", "IES|*.ies||")
+				return false if not lumfile	
+				text = File.readlines(lumfile)
+
 				self.set_label(comp,"luminaire")
-				lumfile = UI.openpanel("Choose an IES file", "c:/", "IES|*.ies||")				
-				self.set_value(comp,File.readlines(lumfile))
+				data = Hash.new
+				data["ies"] = text
+								
+				
+				text.each {|line|
+						data["luminaire"] = line.gsub("[LUMINAIRE]","").strip if line.start_with? "[LUMINAIRE]"
+						data["manufacturer"] = line.gsub("[MANUFAC]","").strip if line.start_with? "[MANUFAC]"
+						data["lamp"] = line.gsub("[LAMP]","").strip if line.start_with? "[LAMP]"
+						data["lumcat"] = line.gsub("[LUMCAT]","").strip if line.start_with? "[LUMCAT]"
+						data["lampcat"] = line.gsub("[LAMPCAT]","").strip if line.start_with? "[LAMPCAT]"
+						
+						break if line.start_with? "TILT="
+				}
+								
+				self.set_value(comp,data.to_json)
+
+				#update
+				DesignAssistant.update
 			end
 
 			# Label selected material as rad_material
@@ -346,12 +368,12 @@ module IGD
 				faces=Utilities.get_faces(entities)
 
 				if faces.length>=1 then
-					mat=Sketchup.active_model.materials["GH_default_glass"]
+					mat=Sketchup.active_model.materials["Default 3mm Clear Glass"]
 					Materials.add_default_glass if mat==nil
 					faces.each do |i|						
 						self.set_label(i,"window")										
-						i.material=Sketchup.active_model.materials["GH_default_glass"]
-						i.back_material=Sketchup.active_model.materials["GH_default_glass"]
+						i.material=Sketchup.active_model.materials["Default 3mm Clear Glass"]
+						i.back_material=Sketchup.active_model.materials["Default 3mm Clear Glass"]
 					end
 				else
 					UI.messagebox("No faces selected")
@@ -378,7 +400,11 @@ module IGD
 						i.back_material.alpha=0.2
 					end
 
-					self.set_name(correct,name)					
+					self.set_name(correct,name)	
+
+					#update
+					DesignAssistant.update
+
 				else
 					UI.messagebox("No faces selected")
 				end

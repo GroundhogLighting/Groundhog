@@ -162,7 +162,7 @@ transforms it into Radiance representation</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#ies2rad-class_method" title="ies2rad (class method)">+ (String) <strong>ies2rad</strong>(instance, path) </a>
+      <a href="#ies2rad-class_method" title="ies2rad (class method)">+ (Boolean) <strong>ies2rad</strong>(definition, path) </a>
     
 
     
@@ -505,7 +505,7 @@ replicated.</p>
       <div class="method_details ">
   <h3 class="signature " id="ies2rad-class_method">
   
-    + (<tt>String</tt>) <strong>ies2rad</strong>(instance, path) 
+    + (<tt>Boolean</tt>) <strong>ies2rad</strong>(definition, path) 
   
 
   
@@ -533,16 +533,16 @@ replicated.</p>
   
     <li>
       
-        <span class='name'>instance</span>
+        <span class='name'>definition</span>
       
       
-        <span class='type'>(<tt>Sketchup::ComponentInstance</tt>)</span>
+        <span class='type'>(<tt>Sketchup::ComponentDefinition</tt>)</span>
       
       
       
         &mdash;
         <div class='inline'>
-<p>The instance to which the IES will be assigned</p>
+<p>The definition to which the IES will be assigned</p>
 </div>
       
     </li>
@@ -571,13 +571,13 @@ replicated.</p>
     <li>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
         &mdash;
         <div class='inline'>
-<p>The Radiance definition of the light.</p>
+<p>Success</p>
 </div>
       
     </li>
@@ -778,32 +778,36 @@ replicated.</p>
 285
 286
 287
-288</pre>
+288
+289
+290</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Luminaires.rb', line 116</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ies2rad'>ies2rad</span><span class='lparen'>(</span><span class='id identifier rubyid_instance'>instance</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ies2rad'>ies2rad</span><span class='lparen'>(</span><span class='id identifier rubyid_definition'>definition</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 
-  <span class='id identifier rubyid_definition'>definition</span> <span class='op'>=</span> <span class='id identifier rubyid_instance'>instance</span><span class='period'>.</span><span class='id identifier rubyid_definition'>definition</span>
-  <span class='id identifier rubyid_multiplier'>multiplier</span> <span class='op'>=</span> <span class='id identifier rubyid_rand'>rand</span><span class='lparen'>(</span><span class='int'>10</span><span class='rparen'>)</span><span class='op'>/</span><span class='float'>10.0</span>
-
+  <span class='comment'>#definition = instance.definition
+</span>  <span class='id identifier rubyid_multiplier'>multiplier</span> <span class='op'>=</span> <span class='int'>1</span> <span class='comment'>#for now... no diming
+</span>
   <span class='id identifier rubyid_verbose'>verbose</span> <span class='op'>=</span> <span class='kw'>true</span>
-  <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
 
+  <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
   <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/dat</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_illum_file'>illum_file</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/dat/</span><span class='embexpr_beg'>#{</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_fixed_name'>get_fixed_name</span><span class='lparen'>(</span><span class='id identifier rubyid_instance'>instance</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>.rad</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Lights</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_definition'>definition</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_illum_file'>illum_file</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Lights/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.rad</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
 
   <span class='id identifier rubyid_illum_file'>illum_file</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>### BEGINNING OF GROUNDHOG&#39;S IES2RAD OUTPUT</span><span class='embexpr_beg'>#{</span><span class='gvar'>$/</span><span class='embexpr_end'>}</span><span class='embexpr_beg'>#{</span><span class='gvar'>$/</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_verbose'>verbose</span>
 
-  <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_definition'>definition</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  
 
   <span class='comment'>### PUT HEADER
 </span>  <span class='id identifier rubyid_illum_file'>illum_file</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'># rad file generated within Groundhog using code based on RADIANCE&#39;s IES2RAD program</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_verbose'>verbose</span>
   <span class='id identifier rubyid_illum_file'>illum_file</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'># multiplier used is </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_multiplier'>multiplier</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_verbose'>verbose</span>
   <span class='id identifier rubyid_illum_file'>illum_file</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'># Dimensions in meters</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_verbose'>verbose</span>
 
-  <span class='id identifier rubyid_text'>text</span><span class='op'>=</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_definition'>definition</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_text'>text</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_definition'>definition</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ies</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
 
   <span class='id identifier rubyid_lamptype'>lamptype</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>while</span> <span class='id identifier rubyid_text'>text</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>&gt;</span> <span class='int'>0</span> <span class='kw'>do</span>
@@ -825,7 +829,7 @@ replicated.</p>
     <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SORRY: TILT is not yet supported... Your luminaire has TILT=</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tilt'>tilt</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>return</span> <span class='kw'>false</span>
 
-    <span class='comment'>### SKIP ALL THIS... WILL INCLUDE PROCESSING SOON
+    <span class='comment'>### SKIP ALL THIS... WILL INCLUDE PROCESSING IN THE FUTURE.... MAYBE
 </span>    <span class='id identifier rubyid_text'>text</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span> <span class='comment'>#lamp to luminaire is absent if tilt=NONE
 </span>    <span class='id identifier rubyid_text'>text</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span> <span class='comment'>#&lt;# of pairs of angles and multiplying factors&gt; is absent if tilt = NONE
 </span>    <span class='id identifier rubyid_text'>text</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span> <span class='comment'>#tilt angles also absent
@@ -889,7 +893,7 @@ replicated.</p>
 </span>    <span class='id identifier rubyid_source_arg'>source_arg</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>boxcorr</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>end</span>
 
-  <span class='id identifier rubyid_nargs'>nargs</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='gvar'>$/</span><span class='embexpr_end'>}</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_source_arg'>source_arg</span><span class='embexpr_end'>}</span><span class='tstring_content'> ./Components/dat/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_datname'>datname</span><span class='embexpr_end'>}</span><span class='tstring_content'> source.cal </span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_nargs'>nargs</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_source_arg'>source_arg</span><span class='embexpr_end'>}</span><span class='tstring_content'> ./Components/dat/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_datname'>datname</span><span class='embexpr_end'>}</span><span class='tstring_content'> source.cal </span><span class='tstring_end'>&quot;</span></span>
 
   <span class='kw'>if</span> <span class='id identifier rubyid_pmtype'>pmtype</span> <span class='op'>==</span> <span class='int'>2</span> <span class='kw'>then</span>
     <span class='kw'>if</span> <span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_feq'>feq</span><span class='lparen'>(</span><span class='id identifier rubyid_bounds'>bounds</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='float'>0.0</span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -1185,8 +1189,6 @@ replicated.</p>
       <pre class="lines">
 
 
-298
-299
 300
 301
 302
@@ -1254,10 +1256,12 @@ replicated.</p>
 364
 365
 366
-367</pre>
+367
+368
+369</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Luminaires.rb', line 298</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Luminaires.rb', line 300</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_dat_file'>write_dat_file</span><span class='lparen'>(</span><span class='id identifier rubyid_vang'>vang</span><span class='comma'>,</span><span class='id identifier rubyid_hang'>hang</span><span class='comma'>,</span><span class='id identifier rubyid_iesname'>iesname</span><span class='comma'>,</span> <span class='id identifier rubyid_ies_content'>ies_content</span><span class='rparen'>)</span>
 
@@ -1339,7 +1343,7 @@ replicated.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Jul 14 10:04:47 2016 by
+  Generated on Wed Aug 24 12:22:42 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

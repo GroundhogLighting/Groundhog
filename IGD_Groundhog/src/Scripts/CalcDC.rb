@@ -37,7 +37,9 @@ module IGD
 					next script
                 }
 
-                @dependencies = [SkyContribution.new(workplane)]#, TDDContribution.new(workplane)]
+                @dependencies = [SkyContribution.new(workplane)]
+				@dependencies << TDDContribution.new(workplane) if File.directory? "TDDs" #add only if it exists
+
             end
         end
     end

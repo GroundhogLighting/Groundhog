@@ -124,7 +124,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (TDDContribution) <strong>initialize</strong>(target) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (TDDContribution) <strong>initialize</strong>(workplane) </a>
     
 
     
@@ -167,7 +167,7 @@
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="IGD::Groundhog::TDDContribution (class)">TDDContribution</a></span></tt>) <strong>initialize</strong>(target) 
+    - (<tt><span class='object_link'><a href="" title="IGD::Groundhog::TDDContribution (class)">TDDContribution</a></span></tt>) <strong>initialize</strong>(workplane) 
   
 
   
@@ -225,46 +225,64 @@
 37
 38
 39
-40</pre>
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Scripts/TDDContribution.rb', line 5</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_target'>target</span><span class='rparen'>)</span>
-	<span class='ivar'>@target</span> <span class='op'>=</span> <span class='id identifier rubyid_target'>target</span> <span class='comment'>#the workplane
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rparen'>)</span>
+	<span class='ivar'>@target</span> <span class='op'>=</span> <span class='id identifier rubyid_workplane'>workplane</span> <span class='comment'>#the workplane
 </span>
 	<span class='ivar'>@proc</span> <span class='op'>=</span> <span class='const'>Proc</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_options'>options</span><span class='op'>|</span>
-		<span class='kw'>next</span> <span class='lbracket'>[</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_directory?'>directory?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDDs</span><span class='tstring_end'>&quot;</span></span> <span class='comment'>#this is success... just nothing to do.
-</span>		
+		<span class='kw'>next</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_directory?'>directory?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDDs</span><span class='tstring_end'>&quot;</span></span> <span class='comment'>#this is called when TDDs does exist... if it does not exist at this point; alarm
+</span>		 	
+
 		<span class='id identifier rubyid_script'>script</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
 		<span class='id identifier rubyid_unique_tdds'>unique_tdds</span><span class='op'>=</span><span class='const'>Dir</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDDs/*.pipe</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>-</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span><span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_uniq'>uniq</span>
-		
-		<span class='id identifier rubyid_wps'>wps</span><span class='op'>=</span><span class='const'>Dir</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Workplanes/*.pts</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>										
+				
+		<span class='id identifier rubyid_wp_name'>wp_name</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='ivar'>@target</span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_unique_tdds'>unique_tdds</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='op'>|</span>
+			<span class='id identifier rubyid_index'>index</span> <span class='op'>=</span> <span class='int'>0</span>
+			<span class='kw'>while</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_file?'>file?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDDs/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.pipe</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>do</span>
+				<span class='id identifier rubyid_top_lens_bsdf'>top_lens_bsdf</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./TDDs/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_top.xml</span><span class='tstring_end'>&quot;</span></span> <span class='comment'>#has to match the one given in TDD.write_tdd
+</span>				<span class='id identifier rubyid_bottom_lens_bsdf'>bottom_lens_bsdf</span><span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./TDDs/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_bottom.xml</span><span class='tstring_end'>&quot;</span></span>
+				<span class='id identifier rubyid_daymtx'>daymtx</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-sky.mtx</span><span class='tstring_end'>&quot;</span></span>
+				<span class='comment'>#&quot;./DC/#{target}-sky.mtx&quot;
+</span>				<span class='comment'>#daymtx = &quot;DC/ALL_TDDs-sky.mtx&quot; if options[&quot;tdd_singledaymtx&quot;]
+</span>				<span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rmtxop DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp_name'>wp_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.vmx </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bottom_lens_bsdf'>bottom_lens_bsdf</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='embexpr_end'>}</span><span class='tstring_content'> DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-pipe.mtx </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_top_lens_bsdf'>top_lens_bsdf</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_daymtx'>daymtx</span><span class='embexpr_end'>}</span><span class='tstring_content'> &gt; DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp_name'>wp_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.dc</span><span class='tstring_end'>&quot;</span></span>
+				<span class='id identifier rubyid_index'>index</span><span class='op'>+=</span><span class='int'>1</span>
+			<span class='kw'>end</span>
+		<span class='rbrace'>}</span>
 
-		
-
-		<span class='comment'>### Fourth: Multiply all the parts of all TDDs
-</span>		<span class='id identifier rubyid_wps'>wps</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_workplane'>workplane</span><span class='op'>|</span>
-			<span class='id identifier rubyid_info'>info</span><span class='op'>=</span><span class='id identifier rubyid_workplane'>workplane</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-			<span class='id identifier rubyid_name'>name</span><span class='op'>=</span><span class='id identifier rubyid_info'>info</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
-			<span class='id identifier rubyid_wp_name'>wp_name</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
-			<span class='id identifier rubyid_unique_tdds'>unique_tdds</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='op'>|</span>
-				<span class='id identifier rubyid_index'>index</span> <span class='op'>=</span> <span class='int'>0</span>
-				<span class='kw'>while</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_file?'>file?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDDs/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.pipe</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>do</span>
-					<span class='id identifier rubyid_top_lens_bsdf'>top_lens_bsdf</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./TDDs/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_top.xml</span><span class='tstring_end'>&quot;</span></span> <span class='comment'>#has to match the one given in TDD.write_tdd
-</span>					<span class='id identifier rubyid_bottom_lens_bsdf'>bottom_lens_bsdf</span><span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./TDDs/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>_bottom.xml</span><span class='tstring_end'>&quot;</span></span>
-					<span class='id identifier rubyid_daymtx'>daymtx</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp_name'>wp_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-sky.mtx</span><span class='tstring_end'>&quot;</span></span>
-					<span class='id identifier rubyid_daymtx'>daymtx</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DC/ALL_TDDs-sky.mtx</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_tdd_singledaymtx'>tdd_singledaymtx</span>
-					<span class='id identifier rubyid_script'>script</span> <span class='op'>&lt;&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>rmtxop DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp_name'>wp_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.vmx </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_bottom_lens_bsdf'>bottom_lens_bsdf</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='embexpr_end'>}</span><span class='tstring_content'> DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-pipe.mtx </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_top_lens_bsdf'>top_lens_bsdf</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_daymtx'>daymtx</span><span class='embexpr_end'>}</span><span class='tstring_content'> &gt; DC/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_wp_name'>wp_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tdd_name'>tdd_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.dc</span><span class='tstring_end'>&quot;</span></span>
-					<span class='id identifier rubyid_index'>index</span><span class='op'>+=</span><span class='int'>1</span>
-				<span class='kw'>end</span>
-			<span class='rbrace'>}</span>
-
-		<span class='kw'>end</span>
 		<span class='kw'>next</span> <span class='id identifier rubyid_script'>script</span>
 	<span class='rbrace'>}</span>
 
-          <span class='ivar'>@dependencies</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>TDDDaylight</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_target'>target</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='const'>TDDPipe</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_target'>target</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='const'>TDDView</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_target'>target</span><span class='rparen'>)</span><span class='rbracket'>]</span>
+	<span class='comment'># Initiate the dependencies with the calculation of the view matrix
+</span>	<span class='ivar'>@dependencies</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>TDDView</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rparen'>)</span><span class='rbracket'>]</span>
+
+	<span class='comment'># Resolve all the TDD pipes				
+</span>	<span class='const'>Dir</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDDs/*_bottom.xml</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_tdd'>tdd</span><span class='op'>|</span>
+		<span class='id identifier rubyid_tdd'>tdd</span> <span class='op'>=</span> <span class='id identifier rubyid_tdd'>tdd</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>_bottom.xml</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDDs/</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='ivar'>@dependencies</span> <span class='op'>&lt;&lt;</span> <span class='const'>TDDPipe</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_tdd'>tdd</span><span class='rparen'>)</span>
+	<span class='rbrace'>}</span>
+
+	<span class='comment'># Resolve the Daylight matrices
+</span>	<span class='const'>Dir</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDDs/*.top</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_file'>file</span><span class='op'>|</span>
+		<span class='id identifier rubyid_tdd'>tdd</span> <span class='op'>=</span> <span class='id identifier rubyid_file'>file</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>.top</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TDDs/</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+		<span class='ivar'>@dependencies</span> <span class='op'>&lt;&lt;</span> <span class='const'>TDDDaylight</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_tdd'>tdd</span><span class='rparen'>)</span>					
+	<span class='rbrace'>}</span>
+	
+	
+          
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -277,7 +295,7 @@
 </div>
 
     <div id="footer">
-  Generated on Thu Jul 14 10:04:49 2016 by
+  Generated on Wed Aug 24 12:22:44 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

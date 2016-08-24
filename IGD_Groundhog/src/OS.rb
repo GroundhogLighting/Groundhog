@@ -126,11 +126,11 @@ module IGD
 					pid = wait_thr.pid # pid of the started process.
 
 					while line = stderr.gets
-						puts line
+						warn line
 					end
 
 					while line = stdout.gets
-						puts line
+						warn line
 					end
 
 					exit_status = wait_thr.value.success?
@@ -152,7 +152,22 @@ module IGD
 				return true
 			end
 
+			# Based on some options, the method returns the oconv command that will
+			# gather all the elements needed in the model.
+			# @author German Molina
+			# @return [String] The correspondingnoconv command
+			# @note This program is meant to be called from within the export directory
+			def self.oconv_command(options)
+				win_string = ""
+				win_string = "./Windows/windows.rad" if File.directory? "Windows" 
+				ret = "oconv ./Materials/materials.mat ./scene.rad #{win_string}"				
+				UI.messagebox("The sky '#{options[:sky]}' does not exist in OS.oconv_command") if options[:sky] and not File.file? "./Skies/#{options[:sky]}.rad"
 
+				ret +=  " ./Skies/#{options[:sky]}.rad" if options[:sky] and File.file? "./Skies/#{options[:sky]}.rad"
+				ret += " ./Components/Lights/all.lightsources" if options[:lights_on] and File.file? "./Components/Lights/all.lightsources"
+
+				return ret
+			end
 
 
 		end

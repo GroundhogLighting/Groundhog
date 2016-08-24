@@ -33,7 +33,7 @@ module IGD
 				extension=""
 				extension= "_"+name if name
 				mat_array.each do |mat|
-					ret+=Materials.get_mat_string(mat, Utilities.fix_name(mat.name)+extension, false)+"\n\n"
+					ret+=Materials.get_mat_string(mat, self.fix_name(mat.name)+extension, false)+"\n\n"
 				end
 				return ret
 			end
@@ -89,7 +89,8 @@ module IGD
 						value = default
 					end
 				end
-				return "document.getElementById('#{id}').value='#{value}';"
+				#return "document.getElementById('#{id}').value='#{value}';"
+				return "preferencesModule.set_element_value('#{id}','#{value}');"
 			end
 
 			# Fix the name, eliminating complex symbols
@@ -380,6 +381,8 @@ module IGD
 				return entities.select{|x| x.is_a? Sketchup::ComponentInstance}
 			end
 
+			
+
 			# Gets the workplanes
 			# @author German Molina
 			# @param entities [Array<SketchUp::Entities>]
@@ -418,11 +421,11 @@ module IGD
 			# @param entity [SketchUp::Face (or something)]
 			# @return [Array <SketchUp::Transformation>] An array with the transformations
 			# @note if the input entity is not within a group or component, its own transformation will be returned.
-			def self.get_all_global_transformations(entity,transform)
+			def self.get_all_global_transformations(entity,transform)			
 				ret = []
 				if entity.parent.is_a? Sketchup::Model then
 					ret << transform if not entity.respond_to? :transformation #face, edge, or other
-					ret << transform * entity.transformation #if it is a Component instance or group
+					ret << transform * entity.transformation if entity.respond_to? :transformation #if it is a Component instance or group
 				else
 					entity.parent.instances.each{|inst|
 						ret += get_all_global_transformations(inst,transform)
