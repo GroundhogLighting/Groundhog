@@ -16,34 +16,34 @@ materialModule.get_material_json = function(){
     ret = {};
     ret["color"]=[su_color.r, su_color.g, su_color.b];        
     ret["class"]=cl;    
-    if(!r || !g || !b || Math.max(r,g,b) > 1 || Math.min(r,g,b) < 0){return false;}    
+    if(!r || !g || !b || Math.max(r,g,b) > 1 || Math.min(r,g,b) < 0){return {success: false, error: "Inconsistent color values. Please use values between 0.0 and 1.0"};}    
     switch (cl) {
         case "plastic":
             ret["alpha"]=1;
             var spec = $("#specularity").val();
             var roughness = $("#roughness").val();
-            if(!spec || !roughness || Math.max(spec,roughness) > 1 || Math.min(spec,roughness) < 0){return false}
+            if(!spec || !roughness || Math.max(spec,roughness) > 1 || Math.min(spec,roughness) < 0){return {success: false, error: "Inconsistent Roughness or Specularity values. Please use values between 0.0 and 1.0"};}
             ret["rad"] = "void plastic %MAT_NAME% 0 0 5 "+r+" "+g+" "+b+" "+spec+" "+roughness; 
             break;
         case "metal":
             ret["alpha"]=1;
             var spec = $("#specularity").val();
             var roughness = $("#roughness").val();
-            if(!spec || !roughness || Math.max(spec,roughness) > 1 || Math.min(spec,roughness) < 0){return false}
+            if(!spec || !roughness || Math.max(spec,roughness) > 1 || Math.min(spec,roughness) < 0){return {success: false, error: "Inconsistent Roughness or Specularity values. Please use values between 0.0 and 1.0"};}
             ret["rad"] = "void metal %MAT_NAME% 0 0 5 "+r+" "+g+" "+b+" "+spec+" "+roughness; 
             break;
-        case "glass":             
+        case "glass":        
+            ret["alpha"]= Math.sqrt(1-(0.265 * r + 0.67 * g + 0.065 * b));
+            if(!r || !g || !b || Math.max(r,g,b)>1 || Math.min(r,g,b) < 0){return {success: false, error: "Inconsistent color values. Please use values between 0.0 and 1.0"};}     
             var r = materialModule.transmittance2transmisivity(r);
             var g = materialModule.transmittance2transmisivity(g);
-            var b = materialModule.transmittance2transmisivity(b);
-            if(!r || !g || !b || Math.max(r,g,b)>1 || Math.min(r,g,b) < 0){return false}
-            ret["alpha"]= Math.sqrt(1-(0.265 * r + 0.67 * g + 0.065 * b));
+            var b = materialModule.transmittance2transmisivity(b);                       
             ret["rad"] = "void glass %MAT_NAME% 0 0 3 "+r+" "+g+" "+b;        
             break;
         default:
-            alert("ERROR: get_material_json - unkown material class!")
+            return {success: false, error: "ERROR: get_material_json - unkown material class!"}
     }    
-    return ret
+    return {success: true, object: ret}
 }
 
 
@@ -127,9 +127,13 @@ materialModule.addMaterial = function () {
     if(materials.hasOwnProperty(name)){
         alert("Material already exists!");
         return false;
+    }else if(name == ""){
+        alert("Please insert a valid name for the material");
+        return false;
     }
     var mat = materialModule.get_material_json();
-    if(!mat){alert("Inconsistent inputs!");return false}
+    if(!mat.success){alert(mat.error);return false}
+    mat = mat.object;
     materials[name] = mat;
     materialModule.update_list("");
     materialModule.add_material_dialog.dialog("close");

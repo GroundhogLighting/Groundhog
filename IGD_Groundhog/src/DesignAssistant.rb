@@ -579,31 +579,35 @@ module IGD
                         }  
 
                         # Then import electric lighting results
-                        #Import results
-                        objective = {   "name" => "ELUX", 
-                                        "good_light" => {"min" => 0, "max" => 9e19},
-                                        "dynamic" => false                                        
-                                    }
+                        if Config.calc_elux then
+                            #Import results
+                            objective = {   "name" => "ELUX", 
+                                            "good_light" => {"min" => 0, "max" => 9e19},
+                                            "dynamic" => false                                        
+                                        }
 
 
-                        workplanes.each{|workplane,obj_array|
-                            wp = Utilities.fix_name workplane                        
-                            results = "./Results/#{wp}-elux.txt"
-                            pixel_file = "./Workplanes/#{wp}.pxl"                            
-                            Results.import_results(results,pixel_file,workplane,objective)                          
-                        }
+                            workplanes.each{|workplane,obj_array|
+                                wp = Utilities.fix_name workplane                        
+                                results = "./Results/#{wp}-elux.txt"
+                                pixel_file = "./Workplanes/#{wp}.pxl"                            
+                                Results.import_results(results,pixel_file,workplane,objective)                          
+                            }
 
-                        #Update colors                        
-                        min_max=Results.get_min_max_from_model("ELUX")
-                        Results.update_pixel_colors(0,min_max[1],objective)	#minimum is 0 by default  
+                            #Update colors                        
+                            min_max=Results.get_min_max_from_model("ELUX")
+                            Results.update_pixel_colors(0,min_max[1],objective)	#minimum is 0 by default  
+                        end
 
 
 
                          
                         script = ""
-                        script += "results = JSON.parse('#{report.to_json}');"        
+                        script += "results = JSON.parse('#{report.to_json}');"
+                        warn "results = JSON.parse('#{report.to_json}');"       
                         script += "reportModule.update_compliance_summary();"
                         script += "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"
+                        warn "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"
                         script += "reportModule.update_elux_compliance_summary();"
 
                         #remark first objective                        

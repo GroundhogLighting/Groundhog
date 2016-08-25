@@ -89,7 +89,6 @@ module IGD
 						value = default
 					end
 				end
-				#return "document.getElementById('#{id}').value='#{value}';"
 				return "preferencesModule.set_element_value('#{id}','#{value}');"
 			end
 

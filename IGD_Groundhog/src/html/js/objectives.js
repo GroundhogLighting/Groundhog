@@ -52,7 +52,8 @@ objectiveModule.get_human_description = function (objective) {
 objectiveModule.create_objective = function () {
     var metric = $("#metric").val();
     var objective = objectiveModule.get_objective_object(metric);
-    if (!objective) { return false; }
+    if (!objective.success) { alert(objective.error); return false; }
+    objective = objective.object
     objectives[objective["name"]] = objective;
     objectiveModule.update_objectives("");
     objectiveModule.add_objective_dialog.dialog("close");
@@ -155,16 +156,15 @@ objectiveModule.get_objective_object = function (metric) {
     ret["name"] = $("#objective_name").val();
 
     //validate name
-    if (ret["name"] == "") { alert("Please asign a valid name for the objective"); return false; }
-    if (objectives.hasOwnProperty(ret["name"])) { alert("An objective with such name already exists!"); return false; }
+    if (ret["name"] == "") { return {success: false, error: "Please insert a valid name"}; }
+    if (objectives.hasOwnProperty(ret["name"])) { return {success: false, error: "An objective with that name already exists"}; }
 
     //good_pixel
     var threshold = parseFloat($("#metric_threshold").val());
-    if (threshold > 100 || threshold < 0) {
-        alert("Inconsistent parameters.");
-        return false;
+    if (threshold > 100 || threshold < 0) {        
+        return {success: false, error: "The is an inconsistency in your goals. Please use percentages between 0 and 100"};
     }
-    ret["good_pixel"] = threshold;
+    ret["good_pixel"] = threshold; //
 
     //validate Good Light range
     var min_lux = parseFloat($("#min_lux").val());
@@ -172,27 +172,30 @@ objectiveModule.get_objective_object = function (metric) {
     if ($("#no_maximum").is(":checked")) {
         max_lux = false;
     }
-    if (max_lux && max_lux <= min_lux) { alert("Please assign a valid goal range. Minimum should be smaller than Maximum"); return false }
+    if (max_lux && max_lux <= min_lux) { return {success: false, error: "Please assign a valid goal range. Minimum should be smaller than Maximum"}; }
     ret["good_light"] = { "min": min_lux, "max": max_lux };
 
     ret["metric"] = metric;
-    ret["goal"] = $("#objective_goal").val();
+    ret["goal"] = $("#objective_goal").val(); if(ret["goal"] == ""){ret["goal"]=0}
     ret["dynamic"] = objectiveModule.isDynamic(metric);
 
     if (ret["dynamic"]) {
+        if($("#occupied_min").val()=="" || $("#occupied_max").val()==""){return {success: false, error: "Please fill all the fields"};}
         ret["occupied"] = { "min": parseFloat($("#occupied_min").val()), "max": parseFloat($("#occupied_max").val()) };
+        if($("#sim_min").val()=="" || $("#sim_max").val()==""){return {success: false, error: "Please fill all the fields"};}
         ret["sim_period"] = { "min": parseInt($("#sim_min").val()), "max": parseInt($("#sim_max").val()) };
 
     } else {
         if (metric == "DF") {
-            if (min_lux < 0 || min_lux > 100 || max_lux > 100) { alert("Please assign correct Daylight Factor goals (in 0-100% range)"); return false }
+            if (min_lux < 0 || min_lux > 100 || max_lux > 100) {  return {success: false, error: "Please assign correct Daylight Factor goals (in 0-100% range)"}; }
             return ret
         } else if (metric == "LUX") {
             ret["date"] = $("#day_to_sim").val();
             ret["hour"] = $("#time_to_sim").val();
+            if(ret["date"]=="" || ret["hour"]==""){return {success: false, error: "Please fill all the fields"};}
         } 
     }
-    return ret
+    return {success: true, object: ret};
 }
 
 

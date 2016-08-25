@@ -18,7 +18,8 @@ module IGD
 				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7,
 				"TERRAIN_OVERSIZE" => 4,							
 				"TDD_PIPE_REFLECTANCE" => 0.95,	
-				"ADD_TERRAIN" => true		
+				"ADD_TERRAIN" => true,
+				"CALC_ELUX" => true		
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -86,8 +87,15 @@ module IGD
 			# Gets the add_terrain option
 			# @author German Molina
 			# @return [Boolean] The option
-			def self.add_terrain
-				self.get_element("ADD_TERRAIN") == "true" or self.get_element("ADD_TERRAIN") == "TRUE" 
+			def self.add_terrain				
+				self.get_element("ADD_TERRAIN") == "true" or self.get_element("ADD_TERRAIN") == "TRUE" or self.get_element("ADD_TERRAIN") == true 
+			end
+
+			# Gets the calc_elux option
+			# @author German Molina
+			# @return [Boolean] The option
+			def self.calc_elux				
+				self.get_element("CALC_ELUX") == "true" or self.get_element("CALC_ELUX") == "TRUE" or self.get_element("CALC_ELUX") == true 
 			end
 
 			# Gets the terrain oversize parameter
