@@ -273,7 +273,7 @@ ul.droplist li table{
 
 
 ul.droplist li table tr td{
-    padding: 0.1em;   
+    padding: 0.4em 0.1em 0.4em 0.1em;   
     border-bottom: 1px solid #CECECE; 
 }
 

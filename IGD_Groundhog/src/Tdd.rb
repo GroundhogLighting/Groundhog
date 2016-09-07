@@ -72,20 +72,20 @@ module IGD
                 #info = Exporter.get_reversed_transformed_rad_string(face,t,"#{Labeler.get_fixed_name(face)}_#{index}") if face.normal.z > 0
                 File.open("#{path}/#{index}-#{top_filename}",'w'){|top|
                   mat_name = "lens_mat"
-                  top.write "\#@rfluxmtx h=kf u=Y\n#{self.lens_material(mat_name)}\n\n #{mat_name} #{info[0]}"
+                  top.puts "\#@rfluxmtx h=kf u=Y\n#{self.lens_material(mat_name)}\n\n #{mat_name} #{info[0]}"
                 }
               elsif Labeler.tdd_bottom?(face) then
                 #info = Exporter.get_reversed_transformed_rad_string(face,t,"#{Labeler.get_fixed_name(face)}_#{index}") if face.normal.z > 0
                 File.open("#{path}/#{index}-#{bottom_filename}",'w'){|bottom|
                   mat_name = "#{name}_#{index}_mat"
-                  bottom.write "#{self.lens_material(mat_name)}\n\n #{mat_name} #{info[0]}"
+                  bottom.puts "#{self.lens_material(mat_name)}\n\n #{mat_name} #{info[0]}"
                 }
               else
                 geom = geom + "default_tdd_pipe_mat" + info[0]
               end
             }
             File.open("#{path}/#{index}-#{pipe_filename}",'w'){|pipe|
-              pipe.write "#{self.pipe_material}\n\n#{geom}"
+              pipe.puts "#{self.pipe_material}\n\n#{geom}"
             }
 
         }

@@ -59,9 +59,19 @@ module IGD
 			# @param face [Sketchup::Face] SketchUp face
 			# @return [<Array>] Of SketchUp 3DPoints
 			def self.get_vertex_positions(face)
-				self.close_face([],1,4,face)
-				ret = face.vertices.map{|x| x.position}
-				Utilities.delete_label(face.edges,"added") #Maybe this could be done later... and it would be faster...?
+				radius = Utilities.get_circle_radius(face)
+				ret = []
+				if not radius then	
+					self.close_face([],1,4,face)
+					ret = face.vertices.map{|x| x.position}
+					Utilities.delete_label(face.edges,"added") #Maybe this could be done later... and it would be faster...?
+				else #it is a circle
+					normal = face.normal
+					normal.length=radius
+					center = face.bounds.center
+					ret << center
+					ret << normal #any vertex positions returned with 2 items is a circle... the items are [Center,Normal]
+				end
 				return ret
 			end
 
@@ -71,12 +81,26 @@ module IGD
 			# @param positions [Sketchup::3DPoint] An array of 3D Points
 			# @return [String] The string to be written in the .rad file
 			def self.vertex_positions_to_rad_string(positions,name)
-				string1="\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
+				string1=""
 				string2=""
-				positions.each{|pos|
-					string2=string2+"\t#{pos.x.to_m.to_f}\t#{pos.y.to_m.to_f}\t#{pos.z.to_m.to_f}\n"
-				}
-				string2+="\n\n"
+				if positions.length == 2 then #a circle
+					string1="\tring\t"+name+"\n0\n0\n8\n" #Write the standard first three lines
+					center = positions.shift
+					normal = positions.shift
+					radius = normal.length
+					normal.normalize!
+					string2="\t#{center.x.to_m} #{center.y.to_m} #{center.z.to_m}\n\t#{normal.x} #{normal.y} #{normal.z}\n\t0 #{radius.to_m}\n"
+				elsif positions.length >= 3 #a polygon
+					string1="\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
+					string2=""
+					positions.each{|pos|
+						string2=string2+"\t#{pos.x.to_m.to_f}\t#{pos.y.to_m.to_f}\t#{pos.z.to_m.to_f}\n"
+					}
+					string2+="\n\n"
+				else #something weird
+					raise "Error! trying to get the rad string of a polygon with less than 3 vertices."
+				end
+
 				return string1+string2
 			end
 
@@ -300,7 +324,7 @@ module IGD
 						illums=illums+[fc]
 					else						
 						#write the information
-						writers[fc.layer.name].write(Utilities.fix_name(info[1].name)+info[0])
+						writers[fc.layer.name].puts(Utilities.fix_name(info[1].name)+info[0])
 						#store the material
 						mat_list=mat_list+[info[1]]										
 					end #end of check the label of the face
@@ -370,14 +394,14 @@ module IGD
 				path="#{path}/Views"
 				#Export the actual view
 				File.open("#{path}/view.vf",'w+'){|f|
-					f.write(self.get_view_string(Sketchup.active_model.active_view.camera))
+					f.puts(self.get_view_string(Sketchup.active_model.active_view.camera))
 				}
 				#then the scenes
 				pages=Sketchup.active_model.pages
 				if pages.count>=1 then
 					pages.each do |page|
 						File.open("#{path}/#{Utilities.fix_name(page.name)}.vf",'w+'){|f|
-							f.write(self.get_view_string(page.camera))
+							f.puts(self.get_view_string(page.camera))
 						}
 					end
 				end
@@ -508,7 +532,7 @@ module IGD
 						info=self.get_rad_string(ent)
 
 						File.open("#{path}/#{name}.rad",'w+'){ |f| #The file is opened
-							f.write("void "+info[0])
+							f.puts("void "+info[0])
 						}
 
 					end
@@ -548,13 +572,13 @@ module IGD
 			# @return [Boolean] success
 			def self.write_scene_file(path)
 				File.open("#{path}/scene.rad",'w+'){ |f| #The file is opened
-					f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
+					f.puts("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
 
-					f.write("\n\n\n###### GEOMETRY \n\n")
+					f.puts("\n\n\n###### GEOMETRY \n\n")
 
 					Sketchup.active_model.layers.each do |layer|
 						name=layer.name.tr(" ","_")
-						f.write("!xform ./Geometry/"+name+".rad\n")
+						f.puts("!xform ./Geometry/"+name+".rad\n")
 					end
 
 					f.write("\n\n\n###### GROUND \n\n")
@@ -562,14 +586,14 @@ module IGD
 						albedo = Config.albedo
 						model_bounds=Sketchup.active_model.bounds						
 						radius = IGD::Groundhog::Config.terrain_oversize * model_bounds.diagonal
-						f.write("void plastic terrain_mat\n0\n0\n5\t#{albedo}\t#{albedo}\t#{albedo}\t0\t0")
-						f.write("\n\nterrain_mat ring ground 0 0 8 #{model_bounds.center.x.to_m} #{model_bounds.center.y.to_m} 0 0 0 1 0 #{radius.to_m}")
+						f.puts("void plastic terrain_mat\n0\n0\n5\t#{albedo}\t#{albedo}\t#{albedo}\t0\t0")
+						f.puts("\n\nterrain_mat ring ground 0 0 8 #{model_bounds.center.x.to_m} #{model_bounds.center.y.to_m} 0 0 0 1 0 #{radius.to_m}")
 					else
-						f.write("# Not terrain was desired... change this on the Preferences menu, if you want.")
+						f.puts("# Not terrain was desired... change this on the Preferences menu, if you want.")
 					end
 					
 
-					f.write("\n\n\n###### COMPONENT INSTANCES \n\n")
+					f.puts("\n\n\n###### COMPONENT INSTANCES \n\n")
 					comp_path = "#{path}/Components"
 					defi=Sketchup.active_model.definitions
 					anyluminaire = defi.select{|d| Labeler.luminaire? d }.length > 0					
@@ -618,15 +642,15 @@ module IGD
 
 				if alt >= 3.0 then
 					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
-						f.write("\n\n\n###### DEFAULT SKY \n\n")
-							f.write("!gensky -ang #{alt} #{azi} +s -g #{Config.albedo}\n\n")
-							f.write(self.sky_complement)
+						f.puts("\n\n\n###### DEFAULT SKY \n\n")
+							f.puts("!gensky -ang #{alt} #{azi} +s -g #{Config.albedo}\n\n")
+							f.puts(self.sky_complement)
 					}
 
 					return true
 				else
 					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
-						f.write "#night-time... No Sky"
+						f.puts "#night-time... No Sky"
 					}
 					return true
 				end
@@ -658,7 +682,7 @@ module IGD
 						px = pos[0].to_m
 						py = pos[1].to_m
 						pz = pos[2].to_m
-						f.write("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}\n")
+						f.puts("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}")
 					end
 				}
 				return true
@@ -743,7 +767,7 @@ module IGD
 							tr.each_with_index{|t,index|
 								File.open("#{path}/Illums/#{hName}_#{index}.rad",'w'){ |file|
 									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_fixed_name(fc)}_#{index}")
-									file.write("void"+info[0])
+									file.puts("void"+info[0])
 								}
 							}
 						elsif Labeler.window? (fc) then
@@ -765,7 +789,7 @@ module IGD
 					mat_string = Utilities.mat_array_2_mat_string(mat_array,hName)
 					OS.mkdir(comp_path)
 					File.open(filename,'w+'){ |f|
-						f.write mat_string+geom_string
+						f.puts mat_string+geom_string
 					}
 
 				end	#end for each
@@ -813,45 +837,45 @@ module IGD
 				pages=model.pages
 
 				File.open("#{path}/scene.rif",'w+'){ |f| #The file is opened
-					f.write("###############\n## RIF exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n\n\n")
+					f.puts("###############\n## RIF exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n\n\n")
 
-					f.write("ZONE= I #{min.x.to_m} #{max.x.to_m} #{min.y.to_m} #{max.y.to_m} #{min.z.to_m}  #{max.z.to_m} \n")
-					f.write("UP=Z\n")
-					f.write("scene=./Skies/sky.rad ./scene.rad\n")
-					f.write("materials=./Materials/materials.mat\n")
-					f.write("QUAL=LOW\n")
-					f.write("DETAIL=LOW\n")
-					f.write("VAR=High\n")
-					f.write("RESOLUTION=560 560\n")
-					f.write("AMBFILE=ambient.amb\n")
-					f.write("INDIRECT=3\n")
-					f.write("PENUMBRAS=True\n")
-					f.write("REPORT=2")
+					f.puts("ZONE= I #{min.x.to_m} #{max.x.to_m} #{min.y.to_m} #{max.y.to_m} #{min.z.to_m}  #{max.z.to_m} \n")
+					f.puts("UP=Z\n")
+					f.puts("scene=./Skies/sky.rad ./scene.rad\n")
+					f.puts("materials=./Materials/materials.mat\n")
+					f.puts("QUAL=LOW\n")
+					f.puts("DETAIL=LOW\n")
+					f.puts("VAR=High\n")
+					f.puts("RESOLUTION=560 560\n")
+					f.puts("AMBFILE=ambient.amb\n")
+					f.puts("INDIRECT=3\n")
+					f.puts("PENUMBRAS=True\n")
+					f.puts("REPORT=2")
 
 					#then the pages
-					f.write("\n\n#VIEWS\n\n")
+					f.puts("\n\n#VIEWS\n\n")
 					pages.each do |page|
-						f.write("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
+						f.puts("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
 					end
 
 					#Then the illums
-					f.write("\n\n#ILLUMS\n\n")
+					f.puts("\n\n#ILLUMS\n\n")
 					illums.each do |ill|
 						name=Labeler.get_fixed_name(ill)
-						f.write("illum=./Illums/"+name+".rad\n")
+						f.puts("illum=./Illums/"+name+".rad\n")
 					end
 
 
 
 					#Then the window groups
-					f.write("\n\n#WINDOW GROUPS\n\n")
+					f.puts("\n\n#WINDOW GROUPS\n\n")
 					groups=Utilities.get_win_groups(windows)
 					groups.each do |gr|
-						f.write("illum=./Windows/"+gr.tr(" ","_")+".rad\n")
+						f.puts("illum=./Windows/"+gr.tr(" ","_")+".rad\n")
 					end
 
 					#then the rest of the windows
-					f.write("\n\n#OTHER WINDOWS\n\n")
+					f.puts("\n\n#OTHER WINDOWS\n\n")
 					nwin=1 #this will count the windows
 					windows.each do |win|
 						c=Labeler.get_win_group(win)
@@ -859,10 +883,10 @@ module IGD
 
 							winname=win.get_attribute("Groundhog","Name") #get the name
 							if winname==nil then #if it does not have one
-								f.write("./Windows/WindowSet_"+nwin.to_s+".rad\n")
+								f.puts("./Windows/WindowSet_"+nwin.to_s+".rad\n")
 								nwin=nwin+1
 							else #if it has one
-								f.write("./Windows/"+winname+".rad\n")
+								f.puts("./Windows/"+winname+".rad\n")
 							end
 						end
 					end

@@ -23,23 +23,18 @@ module IGD
 				#remove header
 				7.times {annual.shift}
 				
-				#for calculating the UDI
+				#for calculating the DA
 				max_lux = 9e15 if not max_lux
 				
 				#process each sensor
 				ret = []
 				annual.each{|sensor_data|
-					data = sensor_data.split(" ").map{|x| x.to_f}        
+					data = sensor_data.split(" ").map{|x| x.to_f}  
+
 					working_hours = data.each_with_index.select{|val, index| 
 						hour = (index+0.5)%24
 						hour >= early and hour <= late
-					}.map{|value,index| value}
-					
-					working_hours = data.each_with_index.select{|val, index| 
-						hour = (index+0.5)%24
-						hour >= early and hour <= late
-					}.map{|value,index| value}
-					
+					}.map{|value,index| value}															
 					
 					good_hours = working_hours.select{|x| x >= min_lux and x<= max_lux }
 					

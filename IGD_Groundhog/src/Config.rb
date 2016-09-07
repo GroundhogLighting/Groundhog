@@ -18,8 +18,8 @@ module IGD
 				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7,
 				"TERRAIN_OVERSIZE" => 4,							
 				"TDD_PIPE_REFLECTANCE" => 0.95,	
-				"ADD_TERRAIN" => true,
-				"CALC_ELUX" => true		
+				"ADD_TERRAIN" => false,
+				"CALC_ELUX" => false		
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -38,7 +38,7 @@ module IGD
 				ret = @@config[key]
 				ret = @@default_config[key] if ret == nil
 				ret = false if ret == nil
-				UI.messagebox("Trying to get '#{key}', which is not set neither defaulted in the Configuration") if not ret
+				#UI.messagebox("Trying to get '#{key}', which is not set neither defaulted in the Configuration") if not ret
 				return ret
 			end
 

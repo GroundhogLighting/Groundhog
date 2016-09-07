@@ -13,7 +13,7 @@
 
     <div id="sidenav">
         <p class="selected" href="#location">Location</p>
-        <p href="#labels">Labels</p>
+        <!--p href="#labels">Labels</p-->
         <p href="#materials">Materials</p>
         <p href="#luminaires" onclick='window.location.href ="skp:remark@ELUX"'>Luminaires</p>
         <p href="#objectives">Objectives</p>
@@ -292,9 +292,9 @@
         <fieldset id="sim_period_field">
             <legend>Simulation period (months)</legend>
             <label for="sim_min">From: </label>
-            <input type="number" value="2" min="0" step="1" id="sim_min">
+            <input type="number" value="1" min="1" max="12" step="1" id="sim_min">
             <label for="sim_max">To:</label>
-            <input type="number" value="12" min="1" step="150" id="sim_max">
+            <input type="number" value="12" min="1" max="12" step="1" id="sim_max">
         </fieldset>
 
         <fieldset id="day_to_sim_field">

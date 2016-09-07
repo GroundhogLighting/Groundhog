@@ -238,6 +238,31 @@ of the entity.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#get_circle_radius-class_method" title="get_circle_radius (class method)">+ (Float) <strong>get_circle_radius</strong>(face) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Receives a SketchUp::Face (will be verified), checks if it is a circle and
+returns the radius of the circle.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#get_component_instances-class_method" title="get_component_instances (class method)">+ (Array &lt;SketchUp::ComponentInstances&gt;) <strong>get_component_instances</strong>(entities) </a>
     
 
@@ -1323,6 +1348,123 @@ of the entity</p>
 		<span class='rbrace'>}</span>
 	<span class='kw'>end</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_circle_radius-class_method">
+  
+    + (<tt>Float</tt>) <strong>get_circle_radius</strong>(face) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Receives a SketchUp::Face (will be verified), checks if it is a circle and
+returns the radius of the circle. A circle is defined as a polygon with
+more than N vertices (check code for that number) at the same distance to
+its center.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>face</span>
+      
+      
+        <span class='type'>(<tt>SketchUp::Face (or something)</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Float</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The Radius… false if input is not a circle.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 442</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_circle_radius'>get_circle_radius</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
+	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Face</span>
+	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_loops'>loops</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>!=</span> <span class='int'>1</span>
+	<span class='id identifier rubyid_vertices'>vertices</span> <span class='op'>=</span> <span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_vertices'>vertices</span>
+	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_vertices'>vertices</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span> <span class='op'>&lt;</span> <span class='int'>15</span> <span class='comment'>#is this enough vertices to be a circle?
+</span>					
+	<span class='id identifier rubyid_center'>center</span> <span class='op'>=</span> <span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_bounds'>bounds</span><span class='period'>.</span><span class='id identifier rubyid_center'>center</span>
+	
+	<span class='id identifier rubyid_radius'>radius</span> <span class='op'>=</span> <span class='id identifier rubyid_center'>center</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span> <span class='id identifier rubyid_vertices'>vertices</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span>
+	<span class='id identifier rubyid_vertices'>vertices</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
+		<span class='id identifier rubyid_r'>r</span> <span class='op'>=</span> <span class='id identifier rubyid_center'>center</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span>					
+		<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_r'>r</span><span class='op'>-</span><span class='id identifier rubyid_radius'>radius</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_abs'>abs</span> <span class='op'>&gt;</span> <span class='float'>1e-3</span>			
+	<span class='rbrace'>}</span>
+	<span class='kw'>return</span> <span class='id identifier rubyid_radius'>radius</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -3820,7 +3962,7 @@ If there is no hash[&#39;ID&#39;] value, or it is empty, the default value will 
 </div>
 
     <div id="footer">
-  Generated on Thu Aug 25 13:08:31 2016 by
+  Generated on Wed Sep  7 13:52:06 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

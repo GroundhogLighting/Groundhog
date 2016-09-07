@@ -31,6 +31,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Weather'
 		Sketchup::require 'IGD_Groundhog/src/DesignAssistant'
 		Sketchup::require 'IGD_Groundhog/src/SimulationManager'
+		Sketchup::require 'IGD_Groundhog/src/Report'
 
 
 		Sketchup::require 'IGD_Groundhog/src/Scripts/AnnualIlluminance'

@@ -81,6 +81,7 @@ objectiveModule.adapt_objective_dialog = function (metric) {
 
             //specific date?                
             $("#day_to_sim_field").hide();
+            $("#sim_period_field").hide();
 
             //human language explanation
             $("label[for='objective_goal']").text("% of the space meets illuminance goals for ");
@@ -92,6 +93,7 @@ objectiveModule.adapt_objective_dialog = function (metric) {
             $("label[for='no_maximum']").hide();
             $("#no_maximum").prop("checked", false);
             $("#no_maximum").hide();
+            $("#sim_period_field").hide();
 
             //units for goals
             $("#ill_goal_field legend").text("Illuminance goal (lux)");
@@ -188,7 +190,7 @@ objectiveModule.get_objective_object = function (metric) {
     } else {
         if (metric == "DF") {
             if (min_lux < 0 || min_lux > 100 || max_lux > 100) {  return {success: false, error: "Please assign correct Daylight Factor goals (in 0-100% range)"}; }
-            return ret
+            return {success: true, object: ret};
         } else if (metric == "LUX") {
             ret["date"] = $("#day_to_sim").val();
             ret["hour"] = $("#time_to_sim").val();

@@ -433,6 +433,29 @@ module IGD
 				return ret
 			end
 
-		end
+			# Receives a SketchUp::Face (will be verified), checks if it is a circle and returns the radius of the circle.
+			# A circle is defined as a polygon with more than N vertices (check code for that number) at the same distance to
+			# its center.
+			# @author German Molina
+			# @param face [SketchUp::Face (or something)]
+			# @return [Float] The Radius... false if input is not a circle.
+			def self.get_circle_radius(face)
+				return false if not face.is_a? Sketchup::Face
+				return false if face.loops.length != 1
+				vertices = face.vertices
+				return false if vertices.count < 15 #is this enough vertices to be a circle?
+								
+				center = face.bounds.center
+				
+				radius = center.distance vertices.shift
+				vertices.each{|v|
+					r = center.distance v.position					
+					return false if (r-radius).abs > 1e-3			
+				}
+				return radius
+			end
+
+
+		end # end module
 	end #end module
 end
