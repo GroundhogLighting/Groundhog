@@ -1,6 +1,7 @@
 module IGD
 	module Groundhog
-		# This file contains the system related topics related to the different Operating Systems, and system calls
+		
+		# This module contains the system related topics related to the different Operating Systems, and system calls
 		module OS
 
 			# Identifies the OS. Returns "MAC", "WIN" or "OTHER" when used.
@@ -21,6 +22,34 @@ module IGD
 					os="OTHER"
 				end
 				return os
+			end
+
+			# Gets the path where the Radiance programs are installed.
+			# @author German Molina
+			# @return [String] The radiance bin path
+			def self.radiance_path
+				"#{self.main_groundhog_path}/src/Radiance/bin"
+			end
+
+			# Gets the path where the Radiance library is installed
+			# @author German Molina
+			# @return [String] The radiance bin path
+			def self.raypath
+				"#{OS.main_groundhog_path}/src/Radiance/lib"
+			end
+
+			# Adds the Radiance Path and the Raypath to the environmental variables.
+			# @author German Molina
+			def self.setup_radiance
+				# ADD RADIANCE_PATH
+				if self.radiance_path then
+					divider = ":"
+					divider = ";" if self.getsystem == "WIN"
+					ENV["PATH"]=self.radiance_path+divider << ENV["PATH"]
+					ENV["RAYPATH"] = "#{self.raypath}"
+				else
+					UI.messagebox "There was a problem loading Radiance"
+				end
 			end
 
 
@@ -63,16 +92,6 @@ module IGD
 				return File.join(array)
 			end
 
-			# Gets the path where the Add-ons are stored
-			# @author German Molina
-			# @return [Void] The add-on groundhog path
-			def self.addons_groundhog_path
-				dir=self.main_groundhog_path
-				array=dir.split("/")
-				array.push("Addons")
-				return File.join(array)
-			end
-
 			# Removes everything from the input path
 			# The commands need to be strings.
 			# @author German Molina
@@ -107,11 +126,11 @@ module IGD
 					pid = wait_thr.pid # pid of the started process.
 
 					while line = stderr.gets
-						puts line
+						warn line
 					end
 
 					while line = stdout.gets
-						puts line
+						warn line
 					end
 
 					exit_status = wait_thr.value.success?
@@ -133,7 +152,22 @@ module IGD
 				return true
 			end
 
+			# Based on some options, the method returns the oconv command that will
+			# gather all the elements needed in the model.
+			# @author German Molina
+			# @return [String] The correspondingnoconv command
+			# @note This program is meant to be called from within the export directory
+			def self.oconv_command(options)
+				win_string = ""
+				win_string = "./Windows/windows.rad" if File.directory? "Windows" 
+				ret = "oconv ./Materials/materials.mat ./scene.rad #{win_string}"				
+				UI.messagebox("The sky '#{options[:sky]}' does not exist in OS.oconv_command") if options[:sky] and not File.file? "./Skies/#{options[:sky]}.rad"
 
+				ret +=  " ./Skies/#{options[:sky]}.rad" if options[:sky] and File.file? "./Skies/#{options[:sky]}.rad"
+				ret += " ./Components/Lights/all.lightsources" if options[:lights_on] and File.file? "./Components/Lights/all.lightsources"
+
+				return ret
+			end
 
 
 		end

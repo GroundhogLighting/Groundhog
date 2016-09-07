@@ -1,9 +1,8 @@
 module IGD
 	module Groundhog
 
-		# This class has the methods that allow exporting the SketchUp model.
+		# This module has the methods that allow exporting the SketchUp model.
 		module Exporter
-
 
 			# Gets the path where the SketchUp model is saved. If it is not saved, it will return false.
 			# @author German Molina
@@ -37,16 +36,16 @@ module IGD
 				end
 				if mat==nil then # If it does not have a Back material either
 					if Labeler.window?(face) then #defaults are assigned
-						mat=Sketchup.active_model.materials["GH_default_glass"] #If it is a glass
+						mat=Sketchup.active_model.materials[Materials.default_glass["name"]] #If it is a glass
 						if mat==nil #this means the materials has been deleted or are not there yet.
 							Materials.add_default_glass
-							mat=Sketchup.active_model.materials["GH_default_glass"] #If it is a glass
+							mat=Sketchup.active_model.materials[Materials.default_glass["name"]] #If it is a glass
 						end
 					else
-						mat=Sketchup.active_model.materials["GH_default_material"] #if it is anything else (Illums and Workplanes will be ignored later)
+						mat=Sketchup.active_model.materials[Materials.default_material["name"]] #if it is anything else (Illums and Workplanes will be ignored later)
 						if mat==nil #material deleted
 							Materials.add_default_material
-							mat=Sketchup.active_model.materials["GH_default_material"] #if it is anything else (Illums and Workplanes will be ignored later)
+							mat=Sketchup.active_model.materials[Materials.default_material["name"]] #if it is anything else (Illums and Workplanes will be ignored later)
 						end
 					end
 				end
@@ -60,9 +59,19 @@ module IGD
 			# @param face [Sketchup::Face] SketchUp face
 			# @return [<Array>] Of SketchUp 3DPoints
 			def self.get_vertex_positions(face)
-				self.close_face([],1,4,face)
-				ret = face.vertices.map{|x| x.position}
-				Utilities.delete_label(face.edges,"added") #Maybe this could be done later... and it would be faster...?
+				radius = Utilities.get_circle_radius(face)
+				ret = []
+				if not radius then	
+					self.close_face([],1,4,face)
+					ret = face.vertices.map{|x| x.position}
+					Utilities.delete_label(face.edges,"added") #Maybe this could be done later... and it would be faster...?
+				else #it is a circle
+					normal = face.normal
+					normal.length=radius
+					center = face.bounds.center
+					ret << center
+					ret << normal #any vertex positions returned with 2 items is a circle... the items are [Center,Normal]
+				end
 				return ret
 			end
 
@@ -72,12 +81,26 @@ module IGD
 			# @param positions [Sketchup::3DPoint] An array of 3D Points
 			# @return [String] The string to be written in the .rad file
 			def self.vertex_positions_to_rad_string(positions,name)
-				string1="\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
+				string1=""
 				string2=""
-				positions.each{|pos|
-					string2=string2+"\t#{pos.x.to_m.to_f}\t#{pos.y.to_m.to_f}\t#{pos.z.to_m.to_f}\n"
-				}
-				string2+="\n\n"
+				if positions.length == 2 then #a circle
+					string1="\tring\t"+name+"\n0\n0\n8\n" #Write the standard first three lines
+					center = positions.shift
+					normal = positions.shift
+					radius = normal.length
+					normal.normalize!
+					string2="\t#{center.x.to_m} #{center.y.to_m} #{center.z.to_m}\n\t#{normal.x} #{normal.y} #{normal.z}\n\t0 #{radius.to_m}\n"
+				elsif positions.length >= 3 #a polygon
+					string1="\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
+					string2=""
+					positions.each{|pos|
+						string2=string2+"\t#{pos.x.to_m.to_f}\t#{pos.y.to_m.to_f}\t#{pos.z.to_m.to_f}\n"
+					}
+					string2+="\n\n"
+				else #something weird
+					raise "Error! trying to get the rad string of a polygon with less than 3 vertices."
+				end
+
 				return string1+string2
 			end
 
@@ -92,7 +115,7 @@ module IGD
 			def self.get_rad_string(face)
 				mat = self.get_material(face)
 				positions = self.get_vertex_positions(face)
-				name = Utilities.fix_name(Labeler.get_name(face))
+				name = Labeler.get_fixed_name(face)
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
@@ -134,7 +157,7 @@ module IGD
 			def self.get_reversed_rad_string(face)
 				mat = self.get_material(face)
 				positions = self.get_vertex_positions(face).reverse
-				name = Utilities.fix_name(Labeler.get_name(face))
+				name = Labeler.get_fixed_name(face)
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
@@ -215,28 +238,23 @@ module IGD
 			# @param path [String] The path where the model will be exported
 			# @return [Boolean] Success
 			def self.export(path)
-				OS.clear_path(path)
-				begin
-					model=Sketchup.active_model
-					op_name = "Export"
-					model.start_operation( op_name,true )
 
+				OS.clear_path(path)
+
+				FileUtils.cd(path) do
 					#Export the faces and obtain the modifiers
 					mod_list=self.export_layers(path)
+					mod_list.uniq!
 					return false if not mod_list
 					return false if not self.export_modifiers(path,mod_list)
 					return false if not self.write_sky(path)
 					return false if not self.write_weather("#{path}/Skies")
-					return false if not self.export_views(path)
-					return false if not self.write_scene_file(path)
+					return false if not self.export_views(path)			
 					return false if not self.export_component_definitions(path)
 					return false if not self.write_illuminance_sensors(path)
+					return false if not self.write_scene_file(path)
 
 					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
-
-					model.commit_operation
-				rescue Exception => ex
-					UI.messagebox ex
 				end
 				return true
 			end
@@ -276,16 +294,15 @@ module IGD
 
 				faces=Utilities.get_faces(entities)
 
-				windows=[] # this array will store the windows in case their are needed
-				workplanes=[]
+				windows=[] # this array will store the windows in case their are needed				
 				illums=[]
 
 				#We get the layers in the model
 				layers=model.layers
 				#we open one file per each layer
-				writers=[] #this is an array of writers
-				layers.each do |lay|
-					writers=writers+[File.open("#{path}/Geometry/#{Utilities.fix_name(lay.name)}.rad",'w+')]
+				writers=Hash.new #this is an array of writers
+				layers.each do |layer|
+					writers[layer.name] = File.open("#{path}/Geometry/#{Utilities.fix_name(layer.name)}.rad",'w+')
 				end
 
 
@@ -298,33 +315,24 @@ module IGD
 						windows=windows+[fc]
 					elsif Labeler.workplane?(fc) then
 						#if it is workplane, export
-						name=Labeler.get_name(fc) #Get the name of the surface
+						name=Labeler.get_fixed_name(fc) #Get the name of the surface
 						mesh = fc.mesh
 						points = mesh.points
 						polygons = mesh.polygons
 						self.write_workplane(path, name, points, polygons)
 					elsif Labeler.illum?(fc) then
 						illums=illums+[fc]
-					else
-						i=0
-						layers.each do |ly| #we look for the correct layer
-							if fc.layer.==ly then
-								#write the information
-								writers[i].write(Utilities.fix_name(info[1].name)+info[0])
-								#store the material
-								mat_list=mat_list+[info[1]]
-								#and purge the list
-								mat_list.uniq!
-							end #end of if in find layer
-							i=i+1
-						end #end in for each layer
-
+					else						
+						#write the information
+						writers[fc.layer.name].puts(Utilities.fix_name(info[1].name)+info[0])
+						#store the material
+						mat_list=mat_list+[info[1]]										
 					end #end of check the label of the face
 				end #end for each faces
 
 				#Close the rest of the files
-				writers.each do |w|
-					w.close
+				writers.each do |name,file|
+					file.close
 				end
 
 				#Write windows
@@ -386,14 +394,14 @@ module IGD
 				path="#{path}/Views"
 				#Export the actual view
 				File.open("#{path}/view.vf",'w+'){|f|
-					f.write(self.get_view_string(Sketchup.active_model.active_view.camera))
+					f.puts(self.get_view_string(Sketchup.active_model.active_view.camera))
 				}
 				#then the scenes
 				pages=Sketchup.active_model.pages
 				if pages.count>=1 then
 					pages.each do |page|
 						File.open("#{path}/#{Utilities.fix_name(page.name)}.vf",'w+'){|f|
-							f.write(self.get_view_string(page.camera))
+							f.puts(self.get_view_string(page.camera))
 						}
 					end
 				end
@@ -407,64 +415,62 @@ module IGD
 			# @param path [String] Directory to export the Window Groups.
 			# @param windows [faces] An array with windows, selected during #exportFaces.
 			# @return [Boolean] Success
+			# @note This only works well when you export windows within the same group! (or wild in the model).
 			def self.write_window_groups(path,windows)
 
-				return true if windows.length < 1 #it did success... but there were not any windows
+				return true if windows.length <= 0 #it did success... but there were not any windows
+				not_in_component = windows[0].parent.is_a? Sketchup::Model
 
-				OS.mkdir("#{path}/Windows")
+				path = "#{path}/Windows"
+				OS.mkdir(path)
 				groups=Utilities.get_win_groups(windows)
-				ngroups=groups.length
-				rad_strings=Array.new(ngroups,"") #store the geometry of the windows
-				materials=Array.new(ngroups,[]) #store the materials of the windows
-				nwin=1 #this will count the windows
-
-				windows.each do |win|
-					c=Labeler.get_win_group(win)
-					info=self.get_rad_string(win)
-					if c!=nil then # if the window has a group
-						# We write using the writer of that group
-						i=0
-						while i<ngroups
-							if c==groups[i] then #if the group of the window is the same as the one in the array
-								materials[i]+=[info[1]]
-								rad_strings[i]+='#normal (points inside): '+win.normal.x.to_s+' '+win.normal.y.to_s+' '+win.normal.z.to_s+"\n"
-								rad_strings[i]+=info[1].name.tr(" ","_")+' '+info[0]+"\n\n" #Window with its material
-								break # we leave the loop
-							end
-							i+=1
-						end
-
-					else #if not
-						#we write using a new writer
-						winname=Labeler.get_name(win)
-						if winname==nil then
-							wr=File.open("#{path}/Windows/WindowSet_#{nwin}.rad",'w+')
-							nwin+=1
-						else
-							wr=File.open("#{path}/Windows/#{winname.tr(" ","_")}.rad",'w+')
-						end
-						wr.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
-						wr.close
-					end
+				
+				wins = false
+				if not_in_component then
+					wins = File.open("#{path}/windows.rad",'w')
+				else
+					wins = File.open("#{path}/windows.rad",'a')
 				end
 
-				#Close the rest of the files
-				writers=[]
-				count=0
-				groups.each do |gr|
-					materials[count].uniq!
-					mat_string=""
-					materials[count].each do |mat|
-						mat_string+=self.get_mat_string(mat,false)
-					end
-					mat_string+="\n\n"
+				tr = Utilities.get_all_global_transformations(windows[0],Geom::Transformation.new)
+				tr.each_with_index{|t,index|					
+					#Write the windows that have a group
+					groups.each{|group|					
+						file_name = "#{Labeler.get_fixed_name(windows[0].parent)}_#{Utilities.fix_name(group)}_#{index}"
+						file_name = "#{Utilities.fix_name(group)}" if not_in_component
+						group_path = "#{path}/#{file_name}.wingroup"						
+						wins.puts "!xform ./Windows/#{file_name}.wingroup"
+						group_file =  File.open(group_path,'w')
+						windows.select{|x| Labeler.get_win_group(x) == group}.each {|win|
+							#info=self.get_rad_string(win)
+							win_name = "#{Labeler.get_fixed_name(win)}_#{index}"
+							win_name = "#{Labeler.get_fixed_name(win)}" if not_in_component
+							info = Exporter.get_transformed_rad_string(win,t,win_name)
+							group_file.puts Material.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
+							group_file.puts "#{Labeler.get_name(win)}_mat "+info[0]
+						}
+						group_file.close
+					}
 
-					w=File.open("#{path}/Windows/#{gr.tr(" ","_")}.rad",'w+')
-					w.write(mat_string+rad_strings[count])
-					w.close
-					count=count+1
-				end
+					windows.select{|x| Labeler.get_win_group(x) == nil}.each {|win|
+						file_name = "#{Labeler.get_fixed_name(windows[0].parent)}_#{Labeler.get_fixed_name(win)}_#{index}"
+						file_name = "#{Labeler.get_fixed_name(win)}" if not_in_component						
+						group_path = "#{path}/#{file_name}.wingroup"						
+						wins.puts "!xform ./Windows/#{file_name}.wingroup"
+						group_file =  File.open(group_path,'w')
+						#info=self.get_rad_string(win)
+						win_name = "#{Labeler.get_fixed_name(win)}_#{index}"
+						win_name = "#{Labeler.get_fixed_name(win)}" if not_in_component
+						info = Exporter.get_transformed_rad_string(win,t,win_name)
+						group_file.puts Materials.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
+						group_file.puts "#{Labeler.get_name(win)}_mat "+info[0]
+						group_file.close
+					
+					}
+				}
+				
 
+				wins.close
 				return true
 
 			end
@@ -522,11 +528,11 @@ module IGD
 
 				entities.each do |ent| #for all the entities (which are faces)
 					if Labeler.illum?(ent) then #Only illums
-						name=Labeler.get_name(ent) #Get the name of the surface
+						name=Labeler.get_fixed_name(ent) #Get the name of the surface
 						info=self.get_rad_string(ent)
 
-						File.open("#{path}/#{Utilities.fix_name(name)}.rad",'w+'){ |f| #The file is opened
-							f.write("void "+info[0])
+						File.open("#{path}/#{name}.rad",'w+'){ |f| #The file is opened
+							f.puts("void "+info[0])
 						}
 
 					end
@@ -546,56 +552,72 @@ module IGD
 
 				OS.mkdir("#{path}/Materials")
 				path="#{path}/Materials"
-				File.open("#{path}/materials.mat",'w+'){ |f| #The file is opened
-					mat_array.each do |mat|
-						f.write(self.get_mat_string(mat,false)+"\n\n")
-					end
-				}
+				FileUtils.cd(path) do
+					File.open("materials.mat",'w+'){ |f| #The file is opened
+						mat_array.each do |mat|
+							mat_string = Materials.get_mat_string(mat,false, true)
+							return false if not mat_string
+							f.puts(mat_string)
+						end
+					}
+				end
 				return true
 			end
 
 
 			# Export the Scene file. The Scene file references the different Radiance files to create the model.
 			# @author German Molina
-			# @version 0.8
+			# @version 0.9
 			# @param path [String] Directory to export the scene file
 			# @return [Boolean] success
 			def self.write_scene_file(path)
 				File.open("#{path}/scene.rad",'w+'){ |f| #The file is opened
-					f.write("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
+					f.puts("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
 
-					f.write("\n\n\n###### GEOMETRY \n\n")
+					f.puts("\n\n\n###### GEOMETRY \n\n")
 
 					Sketchup.active_model.layers.each do |layer|
 						name=layer.name.tr(" ","_")
-						f.write("!xform ./Geometry/"+name+".rad\n")
+						f.puts("!xform ./Geometry/"+name+".rad\n")
 					end
 
 					f.write("\n\n\n###### GROUND \n\n")
-					albedo = Config.albedo
-					model_bounds=Sketchup.active_model.bounds
-					radius = IGD::Groundhog::Config.terrain_oversize * model_bounds.diagonal
-					f.write("void plastic terrain_mat\n0\n0\n5\t#{albedo}\t#{albedo}\t#{albedo}\t0\t0")
-					f.write("\n\nterrain_mat ring ground 0 0 8 #{model_bounds.center.x.to_m} #{model_bounds.center.y.to_m} 0 0 0 1 0 #{radius.to_m}")
+					if Config.add_terrain == true then
+						albedo = Config.albedo
+						model_bounds=Sketchup.active_model.bounds						
+						radius = IGD::Groundhog::Config.terrain_oversize * model_bounds.diagonal
+						f.puts("void plastic terrain_mat\n0\n0\n5\t#{albedo}\t#{albedo}\t#{albedo}\t0\t0")
+						f.puts("\n\nterrain_mat ring ground 0 0 8 #{model_bounds.center.x.to_m} #{model_bounds.center.y.to_m} 0 0 0 1 0 #{radius.to_m}")
+					else
+						f.puts("# Not terrain was desired... change this on the Preferences menu, if you want.")
+					end
+					
 
-					f.write("\n\n\n###### COMPONENT INSTANCES \n\n")
+					f.puts("\n\n\n###### COMPONENT INSTANCES \n\n")
+					comp_path = "#{path}/Components"
 					defi=Sketchup.active_model.definitions
+					anyluminaire = defi.select{|d| Labeler.luminaire? d }.length > 0					
+					light = File.open("#{comp_path}/Lights/all.lightsources",'w') if anyluminaire
+
 					defi.each do |h|
 						next if h.instances.count==0
 						if h.is_a? Sketchup::ComponentDefinition then
 							next if Labeler.solved_workplane?(h)
 							hName=Utilities.fix_name(h.name)
-							instances=h.instances
-							comp_path = " ./Components/"
+							instances=h.instances							
+							lightfile = "./Components/Lights/#{hName}.lightsource"
 							instances.each do |inst|
 								next if not inst.parent.is_a? Sketchup::Model
 								next if Labeler.tdd?(inst)
-								f.write(self.get_component_string(comp_path,inst,hName))
+								xform = self.get_component_string(inst)
+								f.puts "#{xform} ./Components/#{hName}.rad"
+								
+								light.puts "#{xform} #{lightfile}" if File.file? lightfile
+								
 							end
 						end
 					end
-
-
+					light.close if anyluminaire
 				}
 				return true
 			end
@@ -620,15 +642,15 @@ module IGD
 
 				if alt >= 3.0 then
 					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
-						f.write("\n\n\n###### DEFAULT SKY \n\n")
-							f.write("!gensky -ang #{alt} #{azi} +s -g #{Config.albedo}\n\n")
-							f.write(self.sky_complement)
+						f.puts("\n\n\n###### DEFAULT SKY \n\n")
+							f.puts("!gensky -ang #{alt} #{azi} +s -g #{Config.albedo}\n\n")
+							f.puts(self.sky_complement)
 					}
 
 					return true
 				else
 					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
-						f.write "#night-time... No Sky"
+						f.puts "#night-time... No Sky"
 					}
 					return true
 				end
@@ -660,7 +682,7 @@ module IGD
 						px = pos[0].to_m
 						py = pos[1].to_m
 						pz = pos[2].to_m
-						f.write("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}\n")
+						f.puts("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}")
 					end
 				}
 				return true
@@ -675,15 +697,7 @@ module IGD
 				return 	"skyfunc\tglow\tskyglow\n0\n0\n4\t0.99\t0.99\t1.1\t0\n\nskyglow\tsource\tskyball\n0\n0\n4\t0\t0\t1\t360\n\n"
 			end
 
-			# Get the white sky, for calculating DC matrix, for example
-			#
-			# @author German Molina
-			# @version 1.0
-			# @param bins [Integer] The number of reinhart subdivitions of the sky
-			# @return  [String] white sky definition
-			def self.white_sky(bins)
-				return 	"\#@rfluxmtx h=u u=Y\nvoid glow ground_glow\n0\n0\n4 1 1 1 0\n\nground_glow source ground\n0\n0\n4 0 0 -1 180\n\n\#@rfluxmtx h=r#{bins} u=Y\nvoid glow sky_glow\n0\n0\n4 1 1 1 0\n\nsky_glow source sky\n0\n0\n4 0 0 1 180"
-			end
+			
 
 			# Export the ComponentDefinitions into separate files into "Components" folder.
 			# Each file is autocontained, although some materials might be repeated in the "materials.mat" file.
@@ -693,17 +707,21 @@ module IGD
 			# @return [Boolean] Success
 			def self.export_component_definitions(path)
 				defi=Sketchup.active_model.definitions.select{|x| x.instances.count!=0}
-				comp_path="#{path}/Components"
 
 				return true if defi.length == 0 #dont do anything if there are no components
-
+				wins = []
+				any_workplane = false
 				defi.each do |h|
 					#skip the following
 					next if h.image?
 					next if Labeler.solved_workplane?(h)
 					next if Labeler.illuminance_sensor?(h)
+					next if not Utilities.has_relevant_content?(h.entities)
 
-					comp_path="#{path}/TDDs" if Labeler.tdd?(h)
+
+					folder = "Components"
+					folder="TDDs" if Labeler.tdd?(h)
+					comp_path="#{path}/#{folder}"
 
 					hName=Utilities.fix_name(h.name)
 					filename = "#{comp_path}/#{hName}.rad"
@@ -714,54 +732,46 @@ module IGD
 
 					geom_string=""
 
-					# Add the illum if it is a luminaire
-					if Labeler.local_luminaire?(h) then #add the illum
-						mult = 1.0
-						geom_string += Lamps.ies2rad(mult,h, comp_path)
-					end
-
 					# write and next if it is a TDD
 					if Labeler.tdd?(h) then
 						TDD.write_tdd("#{path}/TDDs",h)
 						next
 					end
 
-					instances.each do |inst| #include the nested components
-						geom_string=geom_string+self.get_component_string(" ./",inst,Utilities.fix_name(inst.definition.name))
+					if Labeler.luminaire?(h) then
+						UI.messagebox "Error when exporting luminaire '#{h.name}'" if not Lamps.ies2rad(h, comp_path)
 					end
-					geom_string+="\n\n"
+
+					anyluminaire = instances.select{|inst| Labeler.luminaire? inst.definition }.length > 0
+					OS.mkdir("./Components/Lights") if anyluminaire					
+					light = File.open("./Components/Lights/#{hName}.lightsource",'w') if anyluminaire
+
+					instances.each do |inst| #include the nested components
+						name = Utilities.fix_name(inst.definition.name)
+						xform = self.get_component_string(inst)
+						geom_string += "#{xform} ./#{name}.rad#{$/}"
+						if Labeler.luminaire?(inst.definition) then							
+							light.puts "#{xform} ./#{Labeler.get_fixed_name(inst.definition)}.rad"													
+						end
+					end
+					light.close if anyluminaire
+					geom_string+="#{$/}#{$/}"
 
 					mat_array=[]
 					faces.each do |fc| #then the rest of the faces
-						if Labeler.workplane? (fc) then
-							wps = []
-							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
-							tr.each_with_index{|t,index|
-								#if it is workplane, export
-								name=Labeler.get_name(fc) #Get the name of the surface
-								mesh = fc.mesh
-								points = mesh.points.map{|x| x.transform(t) }
-								polygons = mesh.polygons
-								self.write_workplane(path, "#{name}_#{index}", points, polygons)
-							}
+						if Labeler.workplane? (fc) then							
+							any_workplane = true
 						elsif Labeler.illum? (fc) then
 							OS.mkdir("#{path}/Illums")
 							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
 							tr.each_with_index{|t,index|
 								File.open("#{path}/Illums/#{hName}_#{index}.rad",'w'){ |file|
-									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_name(fc)}_#{index}")
-									file.write("void"+info[0])
+									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_fixed_name(fc)}_#{index}")
+									file.puts("void"+info[0])
 								}
 							}
 						elsif Labeler.window? (fc) then
-							OS.mkdir("#{path}/Windows")
-							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
-							tr.each_with_index{|t,index|
-								File.open("#{path}/Windows/#{hName}_#{index}.rad",'w'){ |file|
-									info = self.get_transformed_rad_string(fc,t,"#{Labeler.get_name(fc)}_#{index}")
-									file.write(self.get_mat_string(info[1],false)+"\n\n"+info[1].name+' '+info[0]) #Window with its material
-								}
-							}
+							wins << fc				
 						else #common surfaces
 							info=self.get_rad_string(fc)
 							matName=Utilities.fix_name(info[1].name)+"_"+hName
@@ -770,19 +780,21 @@ module IGD
 						end
 					end
 
-
-
+					if any_workplane then
+						UI.messagebox("There is at least one workplane in component '#{hName}'. Please take it outside")
+						return false
+					end
 
 					#Write materials and geometry
 					mat_string = Utilities.mat_array_2_mat_string(mat_array,hName)
 					OS.mkdir(comp_path)
 					File.open(filename,'w+'){ |f|
-						f.write mat_string+geom_string
+						f.puts mat_string+geom_string
 					}
 
-
-
 				end	#end for each
+				
+				self.write_window_groups(path,wins)				
 
 				return true
 			end #end method
@@ -792,7 +804,7 @@ module IGD
 			# @version 0.4
 			# @param comp [Sketchup::ComponentInstance]
 			# @return [string] xform comand
-			def self.get_component_string(path,comp,name)
+			def self.get_component_string(comp)
 
 				t=comp.transformation.to_a
 
@@ -801,14 +813,12 @@ module IGD
 				z=t[14].to_m
 
 				rx=Math::atan2(-t[9],t[10])
-				s1=Math::sin(rx)
-				c1=Math::cos(rx)
 				c2=Math::sqrt(t[0]*t[0]+t[4]*t[4])
 				ry=Math::atan2(t[8],c2)
 				rz=Math::atan2(-t[4],t[0])
 
 
-				ret="!xform -rz "+rz.radians.to_s+" -ry "+ry.radians.to_s+" -rx "+rx.radians.to_s+" -t "+x.to_s+" "+y.to_s+" "+z.to_s+path+name+".rad\n"
+				ret="!xform -rz #{rz.radians} -ry #{ry.radians} -rx #{rx.radians} -t #{x} #{y} #{z}"
 
 				return ret
 			end
@@ -827,45 +837,45 @@ module IGD
 				pages=model.pages
 
 				File.open("#{path}/scene.rif",'w+'){ |f| #The file is opened
-					f.write("###############\n## RIF exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n\n\n")
+					f.puts("###############\n## RIF exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n\n\n")
 
-					f.write("ZONE= I #{min.x.to_m} #{max.x.to_m} #{min.y.to_m} #{max.y.to_m} #{min.z.to_m}  #{max.z.to_m} \n")
-					f.write("UP=Z\n")
-					f.write("scene=./Skies/sky.rad ./scene.rad\n")
-					f.write("materials=./Materials/materials.mat\n")
-					f.write("QUAL=LOW\n")
-					f.write("DETAIL=LOW\n")
-					f.write("VAR=High\n")
-					f.write("RESOLUTION=560 560\n")
-					f.write("AMBFILE=ambient.amb\n")
-					f.write("INDIRECT=3\n")
-					f.write("PENUMBRAS=True\n")
-					f.write("REPORT=2")
+					f.puts("ZONE= I #{min.x.to_m} #{max.x.to_m} #{min.y.to_m} #{max.y.to_m} #{min.z.to_m}  #{max.z.to_m} \n")
+					f.puts("UP=Z\n")
+					f.puts("scene=./Skies/sky.rad ./scene.rad\n")
+					f.puts("materials=./Materials/materials.mat\n")
+					f.puts("QUAL=LOW\n")
+					f.puts("DETAIL=LOW\n")
+					f.puts("VAR=High\n")
+					f.puts("RESOLUTION=560 560\n")
+					f.puts("AMBFILE=ambient.amb\n")
+					f.puts("INDIRECT=3\n")
+					f.puts("PENUMBRAS=True\n")
+					f.puts("REPORT=2")
 
 					#then the pages
-					f.write("\n\n#VIEWS\n\n")
+					f.puts("\n\n#VIEWS\n\n")
 					pages.each do |page|
-						f.write("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
+						f.puts("view="+page.name.tr(" ","_")+" -vf Views/"+page.name.tr(" ","_")+'.vf'+"\n")
 					end
 
 					#Then the illums
-					f.write("\n\n#ILLUMS\n\n")
+					f.puts("\n\n#ILLUMS\n\n")
 					illums.each do |ill|
-						name=Labeler.get_name(ill).tr(" ","_") #Get the name of the surface
-						f.write("illum=./Illums/"+name+".rad\n")
+						name=Labeler.get_fixed_name(ill)
+						f.puts("illum=./Illums/"+name+".rad\n")
 					end
 
 
 
 					#Then the window groups
-					f.write("\n\n#WINDOW GROUPS\n\n")
+					f.puts("\n\n#WINDOW GROUPS\n\n")
 					groups=Utilities.get_win_groups(windows)
 					groups.each do |gr|
-						f.write("illum=./Windows/"+gr.tr(" ","_")+".rad\n")
+						f.puts("illum=./Windows/"+gr.tr(" ","_")+".rad\n")
 					end
 
 					#then the rest of the windows
-					f.write("\n\n#OTHER WINDOWS\n\n")
+					f.puts("\n\n#OTHER WINDOWS\n\n")
 					nwin=1 #this will count the windows
 					windows.each do |win|
 						c=Labeler.get_win_group(win)
@@ -873,10 +883,10 @@ module IGD
 
 							winname=win.get_attribute("Groundhog","Name") #get the name
 							if winname==nil then #if it does not have one
-								f.write("./Windows/WindowSet_"+nwin.to_s+".rad\n")
+								f.puts("./Windows/WindowSet_"+nwin.to_s+".rad\n")
 								nwin=nwin+1
 							else #if it has one
-								f.write("./Windows/"+winname+".rad\n")
+								f.puts("./Windows/"+winname+".rad\n")
 							end
 						end
 					end
@@ -886,52 +896,10 @@ module IGD
 				return true
 			end
 
-			# Returns the Radiance primitive of a SketchUp material.
-			#  It first checks if it is available in the library, and if not, it guesses it.
-			#  If inputted a name (instead of "False"), the primitive's name will be forced to be
-			#  the inputted value. This is useful for exporting components.
-			# @author German Molina
-			# @version 0.4
-			# @param material [Sketchup::Material] SketchUp material
-			# @param name [String] The desired name for the final Radiance material
-			# @return [String] Radiance primivite definition for the material
-			def self.get_mat_string(material,name)
-				matName=material.name.tr(" ","_").tr("#","_")
-				matName=name if name #if inputted a name, overwrite.
-
-				if Labeler.local_material?(material) then
-					value= Labeler.get_value(material)
-					return value[0]+"\t"+matName+"\n"+value[1]
-				else #not local, then guess the material
-					mat_string=""
-
-					if material.texture==nil then
-						color=material.color
-					else
-						color=material.texture.average_color
-					end
-					r=color.red/255.0
-					g=color.green/255.0
-					b=color.blue/255.0
-
-					mat_string=mat_string+"## guessed Material\n\n"
-					if material.alpha < 1 then #then this is a glass
-						r=r*material.alpha #This is probably wrong... but it does the job.
-						g=g*material.alpha
-						b=b*material.alpha
-						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s
-						mat_string=mat_string+"void\tglass\t"+matName+"\n0\n0\n3\t"+rgb+"\n"
-					else #This is an opaque material
-						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s+"\t0\t0"
-						mat_string=mat_string+"void\tplastic\t"+matName+"\n0\n0\n5\t"+rgb+"\n"
-					end
-					return mat_string
-				end
-
-			end
+			
 
 
-		end #end class
+		end #end module
 
-	end #end module
+	end #end Groundhog
 end

@@ -1,7 +1,7 @@
 module IGD
 	module Groundhog
 		# MAIN
-		# Groundhog.RB
+		# Groundhog_main.RB
 
 		#Check SU version.
 		version_required = 15
@@ -24,28 +24,44 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Exporter'
 		Sketchup::require 'IGD_Groundhog/src/Results'
 		Sketchup::require 'IGD_Groundhog/src/Materials'
-		Sketchup::require 'IGD_Groundhog/src/Rad'
 		Sketchup::require 'IGD_Groundhog/src/LoadHandler'
-		Sketchup::require 'IGD_Groundhog/src/Addons'
 		Sketchup::require 'IGD_Groundhog/src/Color'
 		Sketchup::require 'IGD_Groundhog/src/Luminaires'
-		Sketchup::require 'IGD_Groundhog/src/Report'
 		Sketchup::require 'IGD_Groundhog/src/Tdd'
 		Sketchup::require 'IGD_Groundhog/src/Weather'
+		Sketchup::require 'IGD_Groundhog/src/DesignAssistant'
+		Sketchup::require 'IGD_Groundhog/src/SimulationManager'
+		Sketchup::require 'IGD_Groundhog/src/Report'
+
+
+		Sketchup::require 'IGD_Groundhog/src/Scripts/AnnualIlluminance'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/CalcDC'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/InstantIlluminance'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/Sky'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/SkyContribution'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDContribution'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDDaylight'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDPipe'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/TDDView'
+		Sketchup::require 'IGD_Groundhog/src/Scripts/Elux'
 
 
 
 		require 'json'
 		require 'Open3'
 		require 'fileutils'
+		require 'date'
 
 		#########################################
 		model=Sketchup.active_model
-		selection=model.selection
-		entities=model.entities
-
+		
 		#Add Radiance to Path as well as RAYPATH
-		Config.setup_radiance
+		OS.setup_radiance
+		#CHMOD for avoiding permission issues
+		Dir["#{IGD::Groundhog::OS.radiance_path}/*"].each{|bin| 
+			next if bin.split("/").pop.include? "."
+			FileUtils.chmod(755,bin)
+		}
 
 		#######################
 		### CONTEXT MENUS
@@ -62,7 +78,7 @@ module IGD
 			groups = Utilities.get_groups(Sketchup.active_model.selection)
 
 			if namables.length >= 1 then
-				context_menu.add_item("Assign Name") {
+				context_menu.add_item("Assign Name (GH)") {
 					begin
 						op_name = "Assign name"
 						model.start_operation(op_name,true)
@@ -78,13 +94,12 @@ module IGD
 			end
 
 			if components.length == 1 then
-				context_menu.add_item("Label as Luminaire") {
+				context_menu.add_item("Label as Luminaire (GH)") {
 					begin
 						op_name = "Link IES file"
 						model.start_operation(op_name,true)
 						comp = components[0].definition
-
-						Labeler.to_local_luminaire(comp)
+						Labeler.to_luminaire(comp)
 						model.commit_operation
 					rescue Exception => ex
 						UI.messagebox ex
@@ -95,36 +110,36 @@ module IGD
 
 			if groups.length == 1 then
 				if Labeler.solved_workplane?(groups[0]) then
-					context_menu.add_item("Export results to CSV") {
+					context_menu.add_item("Export results to CSV (GH)") {
 						Report.report_csv(groups[0])
 					}
 				end
 			end
 
 			if groups.length >= 1 then
-				context_menu.add_item("Label as Tubular Daylight Device") {
+				context_menu.add_item("Label as Tubular Daylight Device (GH)") {
 					Labeler.to_tdd(groups)
 				}
 			end
 			if components.length >= 1 then
-				context_menu.add_item("Label as Tubular Daylight Device") {
+				context_menu.add_item("Label as Tubular Daylight Device (GH)") {
 					Labeler.to_tdd(components)
 				}
 			end
 
 			if faces.length == 1 then
 				if Labeler.tdd?(faces[0].parent) then
-					context_menu.add_item("Label as TDD's top lens"){
+					context_menu.add_item("Label as TDD's top lens (GH)"){
 						Labeler.to_tdd_top(faces[0])
 					}
-					context_menu.add_item("Label as TDD's bottom lens"){
+					context_menu.add_item("Label as TDD's bottom lens (GH)"){
 						Labeler.to_tdd_bottom(faces[0])
 					}
 				end
 			end
 
 			if faces.length>=1 then
-				context_menu.add_item("Label as Illum") {
+				context_menu.add_item("Label as Illum (GH)") {
 					begin
 						op_name = "Label as Illum"
 						model.start_operation( op_name ,true)
@@ -139,7 +154,7 @@ module IGD
 				}
 				horizontal=Utilities.get_horizontal_faces(faces)
 				if horizontal.length >=1 then
-					context_menu.add_item("Label as Workplane") {
+					context_menu.add_item("Label as Workplane (GH)") {
 						begin
 							op_name = "Label as Workplane"
 							model.start_operation( op_name,true )
@@ -153,7 +168,7 @@ module IGD
 						end
 					}
 				end
-				context_menu.add_item("Label as Window") {
+				context_menu.add_item("Label as Window (GH)") {
 					begin
 						op_name = "Label as Window"
 						model.start_operation( op_name ,true)
@@ -167,7 +182,7 @@ module IGD
 					end
 				}
 
-				context_menu.add_item("Remove Labels") {
+				context_menu.add_item("Remove Labels (GH)") {
 					begin
 						op_name = "Remove Labels"
 						model.start_operation( op_name, true)
@@ -182,7 +197,7 @@ module IGD
 				}
 				wins=Utilities.get_windows(faces)
 				if wins.length>1 then
-					context_menu.add_item("Group windows") {
+					context_menu.add_item("Group windows (GH)") {
 						begin
 							op_name = "Group windows"
 							model.start_operation(op_name,true)
@@ -222,6 +237,50 @@ module IGD
 		groundhog_menu=extensions_menu.add_submenu("Groundhog")
 
 
+		
+
+
+		@design_assistant = DesignAssistant.get
+		def self.design_assistant
+			@design_assistant
+		end
+
+		groundhog_menu.add_item("Open Design Assistant"){
+			@design_assistant.show
+		}
+
+=begin	
+		groundhog_menu.add_item("Import results"){
+			path=Exporter.getpath #it returns false if not successful
+			path="c:/" if not path
+			path=UI.openpanel("Open results file",path)
+			Results.import_results(path,false) if path
+		}
+
+	
+		### INSERT SUBMENU
+
+		gh_insert_menu=groundhog_menu.add_submenu("Insert")
+
+		gh_insert_menu.add_item("Illuminance Sensor"){
+			Loader.load_illuminance_sensor
+		}
+=end
+
+		### Show/Hide
+		gh_view_menu=groundhog_menu.add_submenu("Show / Hide")
+
+		gh_view_menu.add_item("Illums"){
+			Utilities.hide_show_specific("illum")
+		}
+		gh_view_menu.add_item("Workplanes"){
+			Utilities.hide_show_specific("workplane")
+		}
+		gh_view_menu.add_item("Solved Workplanes"){
+			Utilities.hide_show_specific("solved_workplane")
+		}
+
+
 		### EXPORT
 		groundhog_menu.add_item("Export to Radiance") {
 
@@ -237,84 +296,50 @@ module IGD
 		}
 
 
-		groundhog_menu.add_item("Simulation Wizard"){
-			Rad.show_sim_wizard
-		}
-
-		groundhog_menu.add_item("Import results"){
-			path=Exporter.getpath #it returns false if not successful
-			path="c:/" if not path
-			path=UI.openpanel("Open results file",path)
-			Results.import_results(path,false) if path
-		}
-		### INSERT SUBMENU
-
-		gh_insert_menu=groundhog_menu.add_submenu("Insert")
-
-		gh_insert_menu.add_item("Materials"){
-			Materials.show_material_wizard
-		}
-
-		gh_insert_menu.add_item("Illuminance Sensor"){
-			Loader.load_illuminance_sensor
-		}
-
-
-		### VIEW
-		gh_view_menu=groundhog_menu.add_submenu("View")
-
-		gh_view_menu.add_item("Show/Hide illums"){
-			Utilities.hide_show_specific("illum")
-		}
-		gh_view_menu.add_item("Show/Hide Workplanes"){
-			Utilities.hide_show_specific("workplane")
-		}
-		gh_view_menu.add_item("Show/Hide Solved Workplanes"){
-			Utilities.hide_show_specific("solved_workplane")
-		}
-
-
-
-
-
 		### PREFERENCES MENU
-		groundhog_menu.add_item("Preferences") {
-			Config.show_config
+		
+		@preferences_dialog = Config.get		
+		groundhog_menu.add_item("Preferences") {			
+				@preferences_dialog.show
 		}
-
-		### ADD-ONS MENU
-		@gh_addons_menu=groundhog_menu.add_submenu("Add-ons")
-		@gh_addons_menu.add_item("Add-on manager") {
-			Addons.show_addons_manager
-		}
-
-		def self.addon_menu
-			return @gh_addons_menu
-		end
 
 		### EXAMPLES MENU
 		gh_examples_menu=groundhog_menu.add_submenu("Example files")
-		gh_examples_menu.add_item("University Hall") {
-			path = "#{OS.examples_groundhog_path}/UniversityHall.skp"
-			UI.messagebox("Unable to open Example File.") if not Sketchup.open_file path
+		examples = Dir["#{OS.examples_groundhog_path}/*.skp"]
+		examples.each{|file|
+			example = file.split("/").pop.gsub(".skp","").tr("_"," ")
+			gh_examples_menu.add_item(example) {
+				path = file
+				UI.messagebox("Unable to open '#{example}' Example File.") if not Sketchup.open_file path
+			}
 		}
+		
 
 		### HELP MENU
 
 		groundhog_menu.add_item("Online documentation"){
-			status = UI.openURL("http://groundhogproject.gitbooks.io/groundhog-bible/content/")
+			UI.openURL("http://groundhogproject.gitbooks.io/groundhog-bible/content/")
 		}
 
 
 		# Add the About.
 		groundhog_menu.add_item("About Groundhog"){
 
-			str="Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+" with Radiance binaries which are a courtesy of NREL (www.nrel.gov)\n\nGroundhog was created and it is mainly developed by "+Sketchup.extensions["Groundhog"].creator+", currently working at IGD.\n\nCopyright:\n"+Sketchup.extensions["Groundhog"].copyright
-			str+="\n\nLicense:\nGroundhog is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
+			str="Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+"."
+			
+			str+="
 
-			This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+The Radiance binaries you are using are a courtesy of the U.S. National Renewable Energy Laboratory (www.nrel.gov)"
+			str+="
 
-			Go to GNU's website for more information about this license."
+Groundhog was created and it is mainly developed by "+Sketchup.extensions["Groundhog"].creator+", currently working at IGD. Copyrights are held by "+Sketchup.extensions["Groundhog"].copyright
+			str+="
+
+Groundhog is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Go to GNU's website for more information about this license."
 
 			UI.messagebox str
 		}
@@ -327,7 +352,6 @@ module IGD
 		#########################################
 		if File.exists? Config.config_path then #if a configuration file was once created
 			Config.load_config
-
 		end
 
 

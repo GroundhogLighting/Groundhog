@@ -7,17 +7,19 @@ task :all => [:win32, :win64, :macosx] do
 end
 
 task :doc => [:clean] do
-	puts `yardoc IGD_Groundhog/src/*.rb - Readme.md`
+	puts `yardoc IGD_Groundhog/src/*.rb IGD_Groundhog/src/Scripts/*.rb - Readme.md`
 	FileUtils.rm_rf("IGD_Groundhog/doc")
 	FileUtils.cp_r("doc","IGD_Groundhog/doc")
 end
 
 task :clean do
+	FileUtils.rm(Dir["IGD_Groundhog/Examples/*.skb"])
 	FileUtils.rm(Dir["*.rbz"])
 	FileUtils.rm_rf("doc")
 end
 
 sketchup_plugin_dir = "#{ENV["UserProfile"].gsub("\\","/")}/AppData/Roaming/SketchUp/SketchUp 2016/SketchUp/Plugins"
+
 task :test => [:win64] do
 	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog.rb"
 	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog"

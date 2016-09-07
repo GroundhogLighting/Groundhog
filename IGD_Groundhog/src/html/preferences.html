@@ -4,173 +4,39 @@
 	<title>Groundhog Preferences</title>
 	<meta charset="UTF-8">
 </head>
-<link rel="stylesheet" type="text/css" href="css/general.css">
-<link rel="stylesheet" type="text/css" href="css/tabs.css">
+<link href="css/jquery-ui.css" rel="stylesheet">
+<link href="css/groundhog-ui.css" rel="stylesheet">
+
 <body>
 
-	<ul id="tabs">
-		<li>
-			<a class="selected" href="#project">Project</a>
-		</li>
-		<li>
-			<a href="#radiance">Simulation</a>
-		</li>
-		<li>
-			<a href="#workplanes">Workplanes</a>
-		</li>
-		<li>
-			<a href="#luminaires">Luminaires</a>
-		</li>
-		<li>
-			<a href="#terrain">Terrain</a>
-		</li>
-		<li>
-			<a href="#tdds">TDDs</a>
-		</li>
-	</ul>
-
-
-	<div id="project" class="tabContent">
-		<h2>Project Settings</h2>
-
-		<button type="button" onclick='window.location.href = "skp:set_weather_path@msg"'>Change weather file</button>
-		<table id="weather_info" class="with_border">
-			<tr><td>City</td><td id="weather_city">not set</td></tr>
-			<tr><td>State</td><td id="weather_state">not set</td></tr>
-			<tr><td>Country</td><td id="weather_country">not set</td></tr>
-			<tr><td>Latitude</td><td id="weather_latitude">not set</td></tr>
-			<tr><td>Longitude</td><td id="weather_longitude">not set</td></tr>
-			<tr><td>Time Zone</td><td id="weather_timezone">not set</td></tr>
-		</table>
-		<br>
-
-		<fieldset>
-			<legend>Working hours</legend>
-			<label>From:</label> <input id='early' type='number' step='0.5' min='0' max='24'></input>
-			<label>To:</label><input id='late' type='number' step='0.5' min='0' max='24'></input>
-		</fieldset><br>
-
-		<fieldset>
-			<legend>Desired illuminance on workplanes (Lux)</legend>
-			<label>From:</label> <input id='min_illuminance' type='number'></input>
-			<label>To:</label><input id='max_illuminance' type='number' min='0'></input>
-			<div class='option_info'>
-				?<div class="tooltip">
-					<p>One of all of these may be ignored depending on the Daylight metric used.</p>
-				</div>
-			</div>
-		</fieldset>
-
-
+    <div id="sidenav">
+		<p class="selected" href="#preview">Preview</p>
+		<p href="#workplanes">Workplanes</p>
+		<p href="#luminaires">Luminaires</p>
+		<p href="#terrain">Terrain</p>
+		<p href="#tdds">TDDs</p>
 	</div>
 
-	<div id="radiance" class="tabContent hide">
-		<h2>Simulation Preferences</h2>
+	  
+
+	<div class="display" id="preview">
 		<fieldset>
-			<legend>Radiance options</legend>
+			<legend>Radiance parameters</legend>
 
 			<table>
 				<tr>
 					<td>Rvu options</td>
-					<td><input type="text"  class="long"  id="rvu">
-						<div class='option_info'>
-							?<div class="tooltip">
-								<p>This is the program used during previsualization</p>
-							</div>
-						</div>
+					<td><input type="text"    id="rvu">
+                    <p class="tooltip" title="This is the program used during previsualization">?</p>						
 					</td>
-				</tr>
-				<tr>
-					<td>Rfluxmtx options</td>
-					<td><input type="text"  class="long" id="rcontrib">
-						<div class='option_info'>
-							?<div class="tooltip">
-								<p>This is the program used in Daylight Coefficient simulations</p>
-							</div>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>Rtrace options</td>
-					<td><input type="text" class="long"  id="rtrace">
-						<div class='option_info'>
-							?<div class="tooltip">
-								<p>This is the program used for ray-tracing in static simulations (i.e. Daylight Factor, Actual Illuminance, etc.)</p>
-							</div>
-						</div>
-					</td>
-				</tr>
+				</tr>				
 			</table>
-		</fieldset>
-
-		<fieldset>
-			<legend>Dynamic simulation options</legend>
-
-			<table>
-				<tr>
-					<td>Calculation method</td>
-					<td>
-						<select class="long" id='dynamic_calculation_method'>
-							<option value="DC">Simple Daylight Coefficients</option>
-						</select>
-						<div class='option_info'>
-							?<div class="tooltip">
-								<p>The simple daylight coefficients is the simplest and the fastest method within Groundhog. However, it handles the direct solar component together with the sky and inter-reflected solar components, which may lead to errors. </p>
-							</div>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>Sky subdivition</td>
-					<td>
-						<input id='dynamic_sky_bins' class="long" type='number' value='1' step='1' min='1'></input>
-						<div class='option_info'>
-							?<div class="tooltip">
-								<p>The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305..</p>
-							</div>
-						</div>
-					</td>
-				</tr>
-
-			</table>
-
-		</fieldset>
-
-		<fieldset>
-			<legend>Static simulation options</legend>
-
-			<table>
-				<tr>
-					<td>Calculation method</td>
-					<td>
-						<select class="long" id='static_calculation_method'>
-							<option value="RTRACE">Ray-tracing</option>
-							<option value="DC">Simple Daylight Coefficients</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Sky subdivition</td>
-					<td>
-						<input id='static_sky_bins' class="long" type='number' value='1' step='1' min='1'></input>
-						<div class='option_info'>
-							?<div class="tooltip">
-								<p>The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305..</p>
-							</div>
-						</div>
-					</td>
-				</tr>
-
-			</table>
-
-		</fieldset>
-
+		</fieldset>	
 
 	</div>
 
 
-	<div id="workplanes" class="tabContent hide">
-		<h2>Workplane preferences</h2>
+	<div class="display" id="workplanes">
 		<fieldset>
 			<legend>Sampling</legend>
 			<table>
@@ -178,11 +44,7 @@
 					<td>Pixel size (m2):</td>
 					<td>
 						<input type="number" min="0" id="desired_pixel_area">
-						<div class='option_info'>
-							?<div class="tooltip">
-								<p>Desired pixel area in m2. It will be close (not exact) to the size of each pixel. This is caused by the refinement algorithm used.</p>
-							</div>
-						</div>
+						<p class="tooltip" title="Desired pixel area in m2. It will be close (not exact) to the size of each pixel. This is caused by the refinement algorithm used.">?</p>													
 					</td>
 				</tr>
 			</table>
@@ -190,19 +52,21 @@
 
 	</div>
 
-	<div id="luminaires" class="tabContent hide">
-		<h2>Luminaire Preferences</h2>
+    <div class="display" id="luminaires">
 		<fieldset>
 			<legend>Light source shape</legend>
 			<table>
 				<tr>
 					<td>Aspect ratio threshold</td>
-					<td><input type="number" min="1" step="0.1" size="42" id="luminaire_shape_threshold">
-						<div class='option_info'>
-							?<div class="tooltip">
-								<p>This value will decide weather the lught source surrounding a luminaire will be a box or a sphere. </p>
-							</div>
-						</div>
+					<td>
+						<input type="number" min="1" step="0.1" id="luminaire_shape_threshold">
+						<p class="tooltip" title="This value will decide weather the lught source surrounding a luminaire will be a box or a sphere.">?</p>						
+					</td>
+				</tr>
+				<tr>
+					<td>Calculate electric lighting</td>
+					<td><input title="option" type="checkbox" id="calc_elux">
+						<p class="tooltip" title="If checked, when press 'Calculate' on the Design Assistant, the illuminance caused by electric lighting will be calculated along with the Daylighting objectives.">?</p>
 					</td>
 				</tr>
 			</table>
@@ -211,26 +75,30 @@
 
 
 
-	<div id="terrain" class="tabContent">
-		<h2>Terrain preferences</h2>
+    <div class="display" id="terrain">  
 		<fieldset>
 			<legend>General terrain preferences</legend>
 			<table>
 				<tr>
-					<td>Albedo</td>
-					<td><input type="number" max="1" min="0" step="0.1" size="5" id="albedo"></td>
+					<td>Add terrain</td>
+					<td><input title="option" type="checkbox" id="add_terrain">
+						<p class="tooltip" title="Automatically add a big horizontal disc which acts as terrain. Uncheck this if you have daylit zones below ground level (i.e. skylight in basement)">?</p>
+					</td>
+				</tr>				
+				<tr>
+					<td>Oversizing</td>										
+					<td><input type="number" min="1" size="8" id="terrain_oversize"></td>
 				</tr>
 				<tr>
-					<td>Oversizing</td>
-					<td><input type="number" min="1" size="5" id="terrain_oversize"></td>
-				</tr>
+					<td>Albedo</td>
+					<td><input title="option" type="number" max="1" min="0" step="0.1" size="5" id="albedo"></td>
+				</tr>   
 			</table>
 		</fieldset>
 	</div>
 
 
-	<div id="tdds" class="tabContent hide">
-		<h2>Tubular Daylight Devices Preferences</h2>
+	<div class="display" id="tdds">
 		<fieldset>
 			<legend>Material options</legend>
 			<table>
@@ -239,60 +107,23 @@
 						Pipe reflectance
 					</td>
 					<td>
-						<input type="number" max="1" min="0" step="0.05" class="long" id="tdd_pipe_reflectance">
-						<div class='option_info'>
-							?<div class="tooltip">
-								<p>The material is assumed to be 100% specular.</p>
-							</div>
-						</div>
+						<input type="number" max="1" min="0" step="0.05"  id="tdd_pipe_reflectance">
+						<p class="tooltip" title="The material is assumed to be 100% specular.">?</p>
 					</td>
 				</tr>
 			</table>
-		</fieldset>
-		<fieldset>
-			<legend>Ray-tracing options</legend>
-			<table>
-				<tr>
-					<td>Daylight matrix</td>
-					<td><input type="text" class="long" id="tdd_daylight_rfluxmtx"></td>
-				</tr>
-				<tr>
-					<td>Within pipe</td>
-					<td><input type="text" class="long" id="tdd_pipe_rfluxmtx"></td>
-				</tr>
-				<tr>
-					<td>View matrix</td>
-					<td><input type="text" class="long" id="tdd_view_rfluxmtx"></td>
-				</tr>
-				<tr>
-					<td>Assume one Daylight Matrix</td>
-					<td><input type="checkbox" id="tdd_singledaymtx"><div class='option_info'>
-						?<div class="tooltip">
-							<p>Calculate a single daylight matrix and use it for all the TDDs.<br><br>This works well if all the TDDs basically see the same sky and obstructions.</p>
-						</div>
-					</div></td>
-				</tr>
-			</table>
-		</fieldset>
+		</fieldset>		
 	</div>
-
 
 
 </body>
 
-<script src="js/tabs.js"></script>
+<script src="js/JQuery/jquery-3.0.0.js"></script>
+<script src="js/jQueryUI/jquery-ui.js"></script>
+<script src="js/groundhog-ui.js"></script>
+<script src="js/preferences.js"></script>
 <script>
-var changeCheckBox = function(){
-	if(this.checked){
-		this.value="true";
-	}else{
-		this.value="false";
-	}
-}
-
-document.getElementById('tdd_singledaymtx').onchange = changeCheckBox;
-
-window.location.href = 'skp:onLoad@message';
-
+	window.location.href = 'skp:on_load@message';
 </script>
+	
 </html>

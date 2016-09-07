@@ -1,6 +1,8 @@
 
 module IGD
   module Groundhog
+
+    # This module is meant to read and write weather files
     module Weather
 
       # Reads an EPW file and returns a HASH containing the weather
@@ -46,7 +48,7 @@ module IGD
       # @param weather [Hash] The Hash to transform in WEA file
       # @param month_ini [Integer] The first month to write
       # @param month_end [Integer] The last month to write
-      # @param destinations [String] The directory where the file will be written
+      # @param destination [String] The directory where the file will be written
       # @return [Hash] The weather in the format that Groundhog Likes
       def self.write_wea(weather, month_ini, month_end, destination)
         File.open(destination,'w'){|file|
