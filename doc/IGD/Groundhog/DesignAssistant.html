@@ -511,11 +511,6 @@ Design Assistant; the main Groundhog UI.</p>
       <pre class="lines">
 
 
-<<<<<<< HEAD
-233
-234
-=======
->>>>>>> refs/remotes/origin/Light-Integration
 235
 236
 237
@@ -839,82 +834,10 @@ Design Assistant; the main Groundhog UI.</p>
 555
 556
 557
-<<<<<<< HEAD
-558
-559
-560
-561
-562
-563
-564
-565
-566
-567
-568
-569
-570
-571
-572
-573
-574
-575
-576
-577
-578
-579
-580
-581
-582
-583
-584
-585
-586
-587
-588
-589
-590
-591
-592
-593
-594
-595
-596
-597
-598
-599
-600
-601
-602
-603
-604
-605
-606
-607
-608
-609
-610
-611
-612
-613
-614
-615
-616
-617
-618
-619
-620
-621
-622
-623</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 233</span>
-=======
 558</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 235</span>
->>>>>>> refs/remotes/origin/Light-Integration
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span>
     <span class='id identifier rubyid_wd'>wd</span> <span class='op'>=</span> <span class='const'>UI</span><span class='op'>::</span><span class='const'>WebDialog</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Design Assistant</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='kw'>false</span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DAsistant</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='int'>500</span><span class='comma'>,</span><span class='int'>500</span><span class='comma'>,</span><span class='int'>130</span><span class='comma'>,</span><span class='int'>120</span><span class='comma'>,</span><span class='kw'>true</span><span class='rparen'>)</span>
@@ -1128,78 +1051,8 @@ Design Assistant; the main Groundhog UI.</p>
         <span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='period'>.</span><span class='id identifier rubyid_execute_script'>execute_script</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_select_objective'>select_objective</span><span class='lparen'>(</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
 
-<<<<<<< HEAD
-<span class='embdoc_beg'>=begin
-</span><span class='embdoc'>    wd.add_action_callback(&quot;calc_elux&quot;) do |web_dialog, options|
-</span><span class='embdoc'>        path = &quot;#{Sketchup.temp_dir}/Groundhog&quot;
-</span><span class='embdoc'>        OS.mkdir(path)
-</span><span class='embdoc'>
-</span><span class='embdoc'>        next if not Exporter.export(path)                        
-</span><span class='embdoc'>        hash = self.get_workplanes_hash
-</span><span class='embdoc'>        workplanes = hash[&quot;workplanes&quot;] 
-</span><span class='embdoc'>        if workplanes.length == 0 then
-</span><span class='embdoc'>            UI.messagebox &quot;There are no workplanes to calculate!&quot;
-</span><span class='embdoc'>            next
-</span><span class='embdoc'>        end                 
-</span><span class='embdoc'>        
-</span><span class='embdoc'>        FileUtils.cd(path) do   
-</span><span class='embdoc'>            script=[]     
-</span><span class='embdoc'>            win_string = &quot;&quot;
-</span><span class='embdoc'>            win_string = &quot;./Windows/windows.rad&quot; if File.directory? &quot;Windows&quot;      
-</span><span class='embdoc'>            script &lt;&lt; &quot;oconv ./Materials/materials.mat ./scene.rad #{win_string}  &gt; octree.oct&quot; #no sky
-</span><span class='embdoc'>            OS.mkdir &quot;Results&quot;
-</span><span class='embdoc'>        
-</span><span class='embdoc'>            #Then, solve each instance.
-</span><span class='embdoc'>            workplanes.each{|workplane,obj_array|
-</span><span class='embdoc'>                wp = Utilities.fix_name workplane                                                       
-</span><span class='embdoc'>                wp_file=&quot;./Workplanes/#{wp}.pts&quot;
-</span><span class='embdoc'>                nsensors = File.readlines(wp_file).length
-</span><span class='embdoc'>                                            
-</span><span class='embdoc'>                script &lt;&lt; &quot;rtrace -I+ -h -af ambient.amb #{options[&quot;elux_ray_tracing_parameters&quot;]} ./octree.oct &lt; #{wp_file} &gt; tmp1-#{wp}.tmp&quot;
-</span><span class='embdoc'>                script &lt;&lt; &quot;rcollate -oc 1 -hi -or #{nsensors} -oc 1 ./tmp1-#{wp}.tmp &gt; tmp2-#{wp}.tmp&quot;                    
-</span><span class='embdoc'>                script &lt;&lt; &quot;rmtxop -fa -c 47.435 119.93 11.635 ./tmp2-#{wp}.tmp &gt; tmp3-#{wp}.tmp&quot;
-</span><span class='embdoc'>                script &lt;&lt; &quot;rcollate -oc 1 -ho  ./tmp3-#{wp}.tmp &gt; ./Results/#{wp}-elux.txt&quot;                          
-</span><span class='embdoc'>            }
-</span><span class='embdoc'>
-</span><span class='embdoc'>            #Process
-</span><span class='embdoc'>            OS.execute_script(script)
-</span><span class='embdoc'>
-</span><span class='embdoc'>            #Import results
-</span><span class='embdoc'>            objective = {   &quot;name&quot; =&gt; &quot;ELUX&quot;, 
-</span><span class='embdoc'>                            &quot;good_light&quot; =&gt; {&quot;min&quot; =&gt; 0, &quot;max&quot; =&gt; 9e19},
-</span><span class='embdoc'>                            &quot;dynamic&quot; =&gt; false                                        
-</span><span class='embdoc'>                        }
-</span><span class='embdoc'>
-</span><span class='embdoc'>
-</span><span class='embdoc'>            workplanes.each{|workplane,obj_array|
-</span><span class='embdoc'>                wp = Utilities.fix_name workplane                        
-</span><span class='embdoc'>                results = &quot;./Results/#{wp}-elux.txt&quot;
-</span><span class='embdoc'>                pixel_file = &quot;./Workplanes/#{wp}.pxl&quot;                            
-</span><span class='embdoc'>                Results.import_results(results,pixel_file,workplane,objective)                          
-</span><span class='embdoc'>            }
-</span><span class='embdoc'>
-</span><span class='embdoc'>            #Update colors                        
-</span><span class='embdoc'>            min_max=Results.get_min_max_from_model(&quot;ELUX&quot;)
-</span><span class='embdoc'>            Results.update_pixel_colors(0,min_max[1],objective)	#minimum is 0 by default  
-</span><span class='embdoc'>            
-</span><span class='embdoc'>            #remark
-</span><span class='embdoc'>            script = &quot;&quot;
-</span><span class='embdoc'>            script += self.select_objective(&quot;ELUX&quot;)
-</span><span class='embdoc'>            
-</span><span class='embdoc'>            #update scale                        
-</span><span class='embdoc'>            script += &quot;elux_results = JSON.parse(&#39;#{self.get_elux_report.to_json}&#39;);&quot;        
-</span><span class='embdoc'>            #script += &quot;reportModule.update_compliance_summary();&quot;
-</span><span class='embdoc'>            
-</span><span class='embdoc'>            web_dialog.execute_script(script)                                               
-</span><span class='embdoc'>						
-</span><span class='embdoc'>        end     
-</span><span class='embdoc'>    end
-</span><span class='embdoc_end'>=end
-</span>    <span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>calculate</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>|</span>
-=======
 
     <span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>calculate</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>|</span>
->>>>>>> refs/remotes/origin/Light-Integration
         <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_temp_dir'>temp_dir</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Groundhog</span><span class='tstring_end'>&quot;</span></span>
         <span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
         <span class='kw'>next</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_export'>export</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
@@ -1294,17 +1147,9 @@ Design Assistant; the main Groundhog UI.</p>
 
              
             <span class='id identifier rubyid_script'>script</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
-<<<<<<< HEAD
-            <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>results = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_report'>report</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>results = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_report'>report</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>       
-            <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.update_compliance_summary();</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>elux_results = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_elux_report'>get_elux_report</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>elux_results = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_elux_report'>get_elux_report</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>
-=======
             <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>results = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_report'>report</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>                              
             <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.update_compliance_summary();</span><span class='tstring_end'>&quot;</span></span>
             <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>elux_results = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_elux_report'>get_elux_report</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>                        
->>>>>>> refs/remotes/origin/Light-Integration
             <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.update_elux_compliance_summary();</span><span class='tstring_end'>&quot;</span></span>
 
             <span class='comment'>#remark first objective                        
@@ -2155,13 +2000,9 @@ Design Assistant; the main Groundhog UI.</p>
 224
 225
 226
-<<<<<<< HEAD
-227</pre>
-=======
 227
 228
 229</pre>
->>>>>>> refs/remotes/origin/Light-Integration
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 184</span>
@@ -2196,13 +2037,9 @@ Design Assistant; the main Groundhog UI.</p>
     <span class='id identifier rubyid_report'>report</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_actual_report'>get_actual_report</span>
     <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>results = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_report'>report</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>        
     <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.update_compliance_summary();</span><span class='tstring_end'>&quot;</span></span> 
-<<<<<<< HEAD
-    <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.update_objective_summary();</span><span class='tstring_end'>&quot;</span></span>                                                     
-=======
     <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.update_objective_summary();</span><span class='tstring_end'>&quot;</span></span> 
     <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>elux_results = JSON.parse(&#39;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_elux_report'>get_elux_report</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;);</span><span class='tstring_end'>&quot;</span></span>                        
     <span class='id identifier rubyid_script'>script</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>reportModule.update_elux_compliance_summary();</span><span class='tstring_end'>&quot;</span></span>                                                    
->>>>>>> refs/remotes/origin/Light-Integration
 
     <span class='comment'>#update luminaire list
 </span>    <span class='id identifier rubyid_luminaires'>luminaires</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_luminaires_hash'>get_luminaires_hash</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span>
@@ -2226,11 +2063,7 @@ Design Assistant; the main Groundhog UI.</p>
 </div>
 
     <div id="footer">
-<<<<<<< HEAD
-  Generated on Wed Sep  7 19:02:21 2016 by
-=======
-  Generated on Thu Sep  8 13:35:39 2016 by
->>>>>>> refs/remotes/origin/Light-Integration
+  Generated on Thu Sep  8 14:05:26 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>
