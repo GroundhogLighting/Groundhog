@@ -211,7 +211,9 @@ module IGD
                 report = self.get_actual_report
                 script += "results = JSON.parse('#{report.to_json}');"        
                 script += "reportModule.update_compliance_summary();" 
-                script += "reportModule.update_objective_summary();"                                                     
+                script += "reportModule.update_objective_summary();" 
+                script += "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"                        
+                script += "reportModule.update_elux_compliance_summary();"                                                    
 
                 #update luminaire list
                 luminaires = self.get_luminaires_hash.to_json
@@ -442,72 +444,7 @@ module IGD
                     web_dialog.execute_script self.select_objective(objective)
                 end
 
-=begin
-                wd.add_action_callback("calc_elux") do |web_dialog, options|
-                    path = "#{Sketchup.temp_dir}/Groundhog"
-                    OS.mkdir(path)
 
-                    next if not Exporter.export(path)                        
-                    hash = self.get_workplanes_hash
-                    workplanes = hash["workplanes"] 
-                    if workplanes.length == 0 then
-                        UI.messagebox "There are no workplanes to calculate!"
-                        next
-                    end                 
-                    
-                    FileUtils.cd(path) do   
-                        script=[]     
-                        win_string = ""
-                        win_string = "./Windows/windows.rad" if File.directory? "Windows"      
-                        script << "oconv ./Materials/materials.mat ./scene.rad #{win_string}  > octree.oct" #no sky
-                        OS.mkdir "Results"
-                    
-                        #Then, solve each instance.
-                        workplanes.each{|workplane,obj_array|
-                            wp = Utilities.fix_name workplane                                                       
-                            wp_file="./Workplanes/#{wp}.pts"
-                            nsensors = File.readlines(wp_file).length
-                                                        
-                            script << "rtrace -I+ -h -af ambient.amb #{options["elux_ray_tracing_parameters"]} ./octree.oct < #{wp_file} > tmp1-#{wp}.tmp"
-                            script << "rcollate -oc 1 -hi -or #{nsensors} -oc 1 ./tmp1-#{wp}.tmp > tmp2-#{wp}.tmp"                    
-                            script << "rmtxop -fa -c 47.435 119.93 11.635 ./tmp2-#{wp}.tmp > tmp3-#{wp}.tmp"
-                            script << "rcollate -oc 1 -ho  ./tmp3-#{wp}.tmp > ./Results/#{wp}-elux.txt"                          
-                        }
-
-                        #Process
-                        OS.execute_script(script)
-
-                        #Import results
-                        objective = {   "name" => "ELUX", 
-                                        "good_light" => {"min" => 0, "max" => 9e19},
-                                        "dynamic" => false                                        
-                                    }
-
-
-                        workplanes.each{|workplane,obj_array|
-                            wp = Utilities.fix_name workplane                        
-                            results = "./Results/#{wp}-elux.txt"
-                            pixel_file = "./Workplanes/#{wp}.pxl"                            
-                            Results.import_results(results,pixel_file,workplane,objective)                          
-                        }
-
-                        #Update colors                        
-                        min_max=Results.get_min_max_from_model("ELUX")
-                        Results.update_pixel_colors(0,min_max[1],objective)	#minimum is 0 by default  
-                        
-                        #remark
-                        script = ""
-                        script += self.select_objective("ELUX")
-                        
-                        #update scale                        
-                        script += "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"        
-                        #script += "reportModule.update_compliance_summary();"
-                        
-                        web_dialog.execute_script(script)                                               
-						
-                    end     
-                end
-=end
                 wd.add_action_callback("calculate") do |web_dialog, options|
                     path = "#{Sketchup.temp_dir}/Groundhog"
                     OS.mkdir(path)
@@ -603,11 +540,9 @@ module IGD
 
                          
                         script = ""
-                        script += "results = JSON.parse('#{report.to_json}');"
-                        warn "results = JSON.parse('#{report.to_json}');"       
+                        script += "results = JSON.parse('#{report.to_json}');"                              
                         script += "reportModule.update_compliance_summary();"
-                        script += "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"
-                        warn "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"
+                        script += "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"                        
                         script += "reportModule.update_elux_compliance_summary();"
 
                         #remark first objective                        
