@@ -353,14 +353,14 @@ SimulationManager object that solves all tasks.</p>
       <pre class="lines">
 
 
-147
-148
-149
-150
-151</pre>
+153
+154
+155
+156
+157</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 147</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 153</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
     <span class='ivar'>@target</span> <span class='op'>=</span> <span class='kw'>false</span>
@@ -405,12 +405,12 @@ SimulationManager object that solves all tasks.</p>
       <pre class="lines">
 
 
-143
-144
-145</pre>
+149
+150
+151</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 143</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 149</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dependencies'>dependencies</span>
   <span class='ivar'>@dependencies</span>
@@ -448,12 +448,12 @@ SimulationManager object that solves all tasks.</p>
       <pre class="lines">
 
 
-143
-144
-145</pre>
+149
+150
+151</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 143</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 149</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_proc'>proc</span>
   <span class='ivar'>@proc</span>
@@ -491,12 +491,12 @@ SimulationManager object that solves all tasks.</p>
       <pre class="lines">
 
 
-143
-144
-145</pre>
+149
+150
+151</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 143</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 149</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_target'>target</span>
   <span class='ivar'>@target</span>
@@ -558,20 +558,20 @@ its dependencies and, recursively, its dependencies&#39; dependencies.</p>
       <pre class="lines">
 
 
-169
-170
-171
-172
-173
-174
 175
 176
 177
 178
-179</pre>
+179
+180
+181
+182
+183
+184
+185</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 169</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 175</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_expand'>expand</span>
     <span class='kw'>if</span> <span class='op'>!</span><span class='ivar'>@dependencies</span> <span class='kw'>or</span> <span class='ivar'>@dependencies</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>==</span> <span class='int'>0</span> <span class='kw'>then</span>                
@@ -670,15 +670,15 @@ SimulationManager object that solves all tasks.</p>
       <pre class="lines">
 
 
-158
-159
-160
-161
-162
-163</pre>
+164
+165
+166
+167
+168
+169</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 158</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 164</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_solve'>solve</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_success'>success</span> <span class='op'>=</span> <span class='ivar'>@proc</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
@@ -696,7 +696,7 @@ SimulationManager object that solves all tasks.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Sep  8 14:05:28 2016 by
+  Generated on Fri Sep  9 16:35:14 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

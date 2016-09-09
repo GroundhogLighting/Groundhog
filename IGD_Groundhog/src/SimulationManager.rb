@@ -16,17 +16,23 @@ module IGD
                 hash = DesignAssistant.get_workplanes_hash
                 workplanes = hash["workplanes"]
                 objectives=hash["objectives"]
+
+                #Check if there is any luminaire that is actually being used
+                any_luminaire = Sketchup.active_model.definitions.select{|x| Labeler.luminaire? x and x.count_instances > 0}.length > 0
+
                 if workplanes.length == 0 then
                     UI.messagebox "There are no workplanes to calculate"
                     return
                 end
-                if objectives.length == 0 and !Config.calc_elux then    
-                    UI.messagebox "There are no Objectives or Artificial Lights to calculate.\n\nYou may want to enable Lighting Calculations in the Preferences menu."
+
+                if objectives.length == 0 and (not IGD::Groundhog::Config.calc_elux or not any_luminaire) then    
+                    UI.messagebox "There are workplanes, but nothing to calculate. Set objectives and/or input luminaires and/or enable Electric Lighting calculations in the Preferences menu"
                     return
                 end
+                
                 workplanes.each{|workplane,obj_array| 
                     # Add the calculation of artificial lighting                  
-                    @tasks << ELux.new(workplane) if Config.calc_elux
+                    @tasks << ELux.new(workplane) if Config.calc_elux and any_luminaire
                     #then the daylighting objectives
                     obj_array.each{|obj_name|
                         objective = objectives[obj_name]
