@@ -150,12 +150,98 @@ module IGD
 				wd = UI::WebDialog.new("Preferences", false, "Preferences",595, 490, 100, 100, true )
 				wd.set_file("#{OS.main_groundhog_path}/src/html/preferences.html" )
 
+=begin
+				### COULD NOT GET THIS WORKING
+				wd.add_action_callback("update") do |web_dialog,msg|
+					
+					version = false
+					system = IGD::Groundhog::OS.getsystem
+					if system == "MAC" then
+						version = "macosx"
+					elsif system == "WIN" then
+						if Sketchup.is_64bit? then
+							version="win64"
+						else
+							version="win32"
+						end						
+					end
+					#if not system then
+					#	UI.messagebox "Not recognized OS!"
+					#	next
+					#end
+
+					final_file = "#{Sketchup.temp_dir}/Groundhog_#{version}.rbz"
+
+					f = open(final_file,"wb")
+					#begin
+						Net::HTTP.start("https://github.com") { |http| #https://github.com/IGD-Labs/Groundhog/blob/master/Readme.md
+							resp = http.get("/IGD-Labs/Groundhog/raw/master/Readme.md")
+							#open(final_file, "wb") { |file|
+								f.write(resp.body)
+							#}
+						}						
+					#rescue
+					#	UI.messagebox "Error while downloading the update!"
+						#next
+					#ensure
+						f.close()
+					#end
+				end
+=end
+
+				wd.add_action_callback("follow_link") do |web_dialog,msg|
+                    UI.openURL(msg)
+                end
+
+				wd.add_action_callback("check_updates") do |web_dialog,msg|
+					script = ""
+					# CHECK UPDATES
+					date = Time.parse File.readlines("#{IGD::Groundhog::OS.main_groundhog_path}/built").shift.strip							
+					
+					if Sketchup.is_online then
+						script += "$('\#no_internet_message').hide();"
+						header_url = "https://api.github.com/repos/IGD-Labs/Groundhog/git/refs/heads/master"
+						url = JSON.parse(Net::HTTP.get(URI(header_url)))["object"]["url"]
+						data = JSON.parse(Net::HTTP.get(URI(url)))
+						
+						author = data["author"]["name"];
+						email = data["author"]["email"];
+						message = data["message"];
+						update_date = Time.parse(data["author"]["date"]);
+
+						warn "DATE"
+						warn date
+
+						warn "UPDATE"
+						warn update_date
+
+						days_before = (update_date - date).to_i						
+						if days_before >= 1 then
+							script += "$('\#no_update_message').hide();$('\#update_info').show();$('\#update_date').text('#{update_date.to_s}');$('\#update_author').text('#{author}');$('\#update_comments').text('#{message}');"
+						else
+							script += "$('\#no_update_message').show();$('\#update_info').hide();"
+						end
+					else
+						script += "$('\#no_internet_message').show();$('\#no_update_message').hide();$('\#update_info').hide();"
+					end
+					warn script
+					web_dialog.execute_script(script);
+				end
+
 				wd.add_action_callback("on_load") do |web_dialog,msg|
 					script=""
 					@@default_config.each do |field|
 						id = field[0].downcase
-						script += Utilities.set_element_value(id,@@config,field[1])
-					end			
+						script += Utilities.set_element_value(id,@@config,field[1])						
+					end				
+					date = Time.parse File.readlines("#{IGD::Groundhog::OS.main_groundhog_path}/built").shift.strip		
+					script += "$('\#version').text('#{Sketchup.extensions["Groundhog"].version.to_s}');"
+					script += "$('\#date').text('#{date.to_s}');"
+					script += "$('\#no_update_message').hide();"
+					script += "$('\#update_info').hide();"
+					script += "$('\#no_internet_message').hide();"			
+					
+										
 					web_dialog.execute_script(script);
 				end
 

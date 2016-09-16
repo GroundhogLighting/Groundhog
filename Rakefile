@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'JSON'
 
 task :default => :all
 
@@ -42,12 +43,22 @@ def compress(os)
 	FileUtils.rm "listfile.txt"
 end
 
-task :win64 => [:clean, :doc] do
+task :win64 => [:clean, :doc, :add_build_date] do
 	compress("win64")
 end
-task :win32 => [:clean, :doc] do
+task :win32 => [:clean, :doc, :add_build_date] do
 	compress("win32")
 end
-task :macosx => [:clean, :doc] do
+task :macosx => [:clean, :doc, :add_build_date] do
 	compress("macosx")
+end
+
+task :add_build_date do
+	now = Time.now
+
+	date = "#{now.month} #{now.day} #{now.year} #{now.hour}:#{now.min}:#{now.sec} GMT#{now.gmt_offset/3600}"
+	File.open("IGD_Groundhog/built",'w'){|file|
+		file.puts date
+	}
+
 end

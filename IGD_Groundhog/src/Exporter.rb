@@ -112,7 +112,8 @@ module IGD
 			# @version 1.3
 			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
 			# @return [<Array>] The string to be written in the .rad file, and the material
-			def self.get_rad_string(face)
+			def self.get_rad_string(face)				
+				return false if face.deleted? #return false if the face does not exist any more.
 				mat = self.get_material(face)
 				positions = self.get_vertex_positions(face)
 				name = Labeler.get_fixed_name(face)
@@ -308,7 +309,9 @@ module IGD
 
 				#now we loop over the faces, and write them were they belong
 				faces.each do |fc| #for each face
+					next if fc.deleted?
 					info=self.get_rad_string(fc) #get the information
+					next if not info # ignore if the face was deleted
 
 					if Labeler.window?(fc)
 						#Window groups will be exported separatedly
@@ -441,8 +444,7 @@ module IGD
 						group_path = "#{path}/#{file_name}.wingroup"						
 						wins.puts "!xform ./Windows/#{file_name}.wingroup"
 						group_file =  File.open(group_path,'w')
-						windows.select{|x| Labeler.get_win_group(x) == group}.each {|win|
-							#info=self.get_rad_string(win)
+						windows.select{|x| Labeler.get_win_group(x) == group}.each {|win|							
 							win_name = "#{Labeler.get_fixed_name(win)}_#{index}"
 							win_name = "#{Labeler.get_fixed_name(win)}" if not_in_component
 							info = Exporter.get_transformed_rad_string(win,t,win_name)
@@ -458,7 +460,6 @@ module IGD
 						group_path = "#{path}/#{file_name}.wingroup"						
 						wins.puts "!xform ./Windows/#{file_name}.wingroup"
 						group_file =  File.open(group_path,'w')
-						#info=self.get_rad_string(win)
 						win_name = "#{Labeler.get_fixed_name(win)}_#{index}"
 						win_name = "#{Labeler.get_fixed_name(win)}" if not_in_component
 						info = Exporter.get_transformed_rad_string(win,t,win_name)
@@ -527,10 +528,11 @@ module IGD
 				path="#{path}/Illums"
 
 				entities.each do |ent| #for all the entities (which are faces)
+					next if ent.deleted?
 					if Labeler.illum?(ent) then #Only illums
 						name=Labeler.get_fixed_name(ent) #Get the name of the surface
 						info=self.get_rad_string(ent)
-
+						next if not info # ignore if the ent does not exist anymore
 						File.open("#{path}/#{name}.rad",'w+'){ |f| #The file is opened
 							f.puts("void "+info[0])
 						}
@@ -759,6 +761,7 @@ module IGD
 
 					mat_array=[]
 					faces.each do |fc| #then the rest of the faces
+						next if fc.deleted? #skip deleted faces
 						if Labeler.workplane? (fc) then							
 							any_workplane = true
 						elsif Labeler.illum? (fc) then
@@ -774,6 +777,7 @@ module IGD
 							wins << fc				
 						else #common surfaces
 							info=self.get_rad_string(fc)
+							next if not info # ignore if the ent does not exist anymore
 							matName=Utilities.fix_name(info[1].name)+"_"+hName
 							geom_string=geom_string+matName+info[0]
 							mat_array=mat_array+[info[1]]

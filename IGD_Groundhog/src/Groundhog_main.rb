@@ -51,6 +51,7 @@ module IGD
 		require 'Open3'
 		require 'fileutils'
 		require 'date'
+		require 'Net/Http'
 
 		#########################################
 		model=Sketchup.active_model
@@ -129,10 +130,10 @@ module IGD
 
 			if faces.length == 1 then
 				if Labeler.tdd?(faces[0].parent) then
-					context_menu.add_item("Label as TDD's top lens (GH)"){
+					context_menu.add_item("Label as TDD's Dome (GH)"){
 						Labeler.to_tdd_top(faces[0])
 					}
-					context_menu.add_item("Label as TDD's bottom lens (GH)"){
+					context_menu.add_item("Label as TDD's Diffuser (GH)"){
 						Labeler.to_tdd_bottom(faces[0])
 					}
 				end

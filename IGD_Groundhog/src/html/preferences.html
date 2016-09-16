@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Groundhog Preferences</title>
 	<meta charset="UTF-8">
@@ -9,15 +10,16 @@
 
 <body>
 
-    <div id="sidenav">
+	<div id="sidenav">
 		<p class="selected" href="#preview">Preview</p>
 		<p href="#workplanes">Workplanes</p>
 		<p href="#luminaires">Luminaires</p>
 		<p href="#terrain">Terrain</p>
 		<p href="#tdds">TDDs</p>
+		<p href="#updates">Updates</p>
 	</div>
 
-	  
+
 
 	<div class="display" id="preview">
 		<fieldset>
@@ -26,12 +28,12 @@
 			<table>
 				<tr>
 					<td>Rvu options</td>
-					<td><input type="text"    id="rvu">
-                    <p class="tooltip" title="This is the program used during previsualization">?</p>						
+					<td><input type="text" id="rvu">
+						<p class="tooltip" title="This is the program used during previsualization">?</p>
 					</td>
-				</tr>				
+				</tr>
 			</table>
-		</fieldset>	
+		</fieldset>
 
 	</div>
 
@@ -44,7 +46,7 @@
 					<td>Pixel size (m2):</td>
 					<td>
 						<input type="number" min="0" id="desired_pixel_area">
-						<p class="tooltip" title="Desired pixel area in m2. It will be close (not exact) to the size of each pixel. This is caused by the refinement algorithm used.">?</p>													
+						<p class="tooltip" title="Desired pixel area in m2. It will be close (not exact) to the size of each pixel. This is caused by the refinement algorithm used.">?</p>
 					</td>
 				</tr>
 			</table>
@@ -52,7 +54,7 @@
 
 	</div>
 
-    <div class="display" id="luminaires">
+	<div class="display" id="luminaires">
 		<fieldset>
 			<legend>Light source shape</legend>
 			<table>
@@ -60,7 +62,7 @@
 					<td>Aspect ratio threshold</td>
 					<td>
 						<input type="number" min="1" step="0.1" id="luminaire_shape_threshold">
-						<p class="tooltip" title="This value will decide weather the lught source surrounding a luminaire will be a box or a sphere.">?</p>						
+						<p class="tooltip" title="This value will decide weather the lught source surrounding a luminaire will be a box or a sphere.">?</p>
 					</td>
 				</tr>
 				<tr>
@@ -75,7 +77,7 @@
 
 
 
-    <div class="display" id="terrain">  
+	<div class="display" id="terrain">
 		<fieldset>
 			<legend>General terrain preferences</legend>
 			<table>
@@ -84,15 +86,15 @@
 					<td><input title="option" type="checkbox" id="add_terrain">
 						<p class="tooltip" title="Automatically add a big horizontal disc which acts as terrain. Uncheck this if you have daylit zones below ground level (i.e. skylight in basement)">?</p>
 					</td>
-				</tr>				
+				</tr>
 				<tr>
-					<td>Oversizing</td>										
+					<td>Oversizing</td>
 					<td><input type="number" min="1" size="8" id="terrain_oversize"></td>
 				</tr>
 				<tr>
 					<td>Albedo</td>
 					<td><input title="option" type="number" max="1" min="0" step="0.1" size="5" id="albedo"></td>
-				</tr>   
+				</tr>
 			</table>
 		</fieldset>
 	</div>
@@ -107,12 +109,89 @@
 						Pipe reflectance
 					</td>
 					<td>
-						<input type="number" max="1" min="0" step="0.05"  id="tdd_pipe_reflectance">
+						<input type="number" max="1" min="0" step="0.05" id="tdd_pipe_reflectance">
 						<p class="tooltip" title="The material is assumed to be 100% specular.">?</p>
 					</td>
 				</tr>
 			</table>
-		</fieldset>		
+		</fieldset>
+	</div>
+
+	<div class="display" id="updates">
+		<!--fieldset>
+				<legend>Auto-update options</legend>
+
+				<table>
+				<tr>
+					<td>
+						Automatically check for updates when loading Groundhog	
+					</td>
+					<td>
+						<input title="option" type="checkbox" id="auto_update">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Automatically install updates when found	
+					</td>
+					<td>
+						<input title="option" type="checkbox" id="auto_install_update">
+					</td>
+				</tr>
+			</table>
+			</fieldset-->
+		<fieldset>
+			<legend>About this version</legend>
+
+			<table>
+				<tr>
+					<td>
+						Version ID:
+					</td>
+					<td id="version"></td>
+				</tr>
+				<tr>
+					<td>
+						Built on:
+					</td>
+					<td id="date"></td>
+				</tr>
+			</table>
+		</fieldset>
+		<h4 class="center" id="no_update_message">There are no updates available</h4>
+		<h4 class="center" id="no_internet_message">You do not seem to be connected to the internet.</h4>
+		
+		<fieldset id="update_info">
+			<legend>About this update</legend>
+
+			<table>
+				<tr>
+					<td>
+						Built on:
+					</td>
+					<td id="update_date"></td>
+				</tr>
+				<tr>
+					<td>
+						Committed by:
+					</td>
+					<td id="update_author"></td>
+				</tr>
+				<tr>
+					<td>
+						Comments:
+					</td>
+					<td id="update_comments"></td>
+				</tr>
+			</table>
+			<p class="center">
+				<button onclick="window.location.href = 'skp:follow_link@http://www.groundhogproject.org'">Download now</button>
+			</p>			
+		</fieldset>
+		<p class="center">
+			<button onclick="window.location.href = 'skp:check_updates@message'">Check for updates</button>
+		</p>
+
 	</div>
 
 
@@ -122,8 +201,8 @@
 <script src="js/jQueryUI/jquery-ui.js"></script>
 <script src="js/groundhog-ui.js"></script>
 <script src="js/preferences.js"></script>
-<script>
+<script>	
 	window.location.href = 'skp:on_load@message';
 </script>
-	
+
 </html>

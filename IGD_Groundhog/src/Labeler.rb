@@ -34,9 +34,10 @@ module IGD
 			# @param entity [entity] SketchUp entity (should be face)
 			# @return [String] Name of the entity.
 			# @note: Will ask for the name of anything, even if it is not a face.
-			def self.get_name(entity)
-				#first check User-assigned name
-				name=entity.get_attribute("Groundhog","Name")
+			def self.get_name(entity)				
+				#first check User-assigned name	
+				return false if entity.deleted?			
+				name=entity.get_attribute("Groundhog","Name")				
 				return name if name !=  nil
 				#Second, check if SketchUp assigns a name to this.
 				name = entity.name if entity.respond_to? :name 
