@@ -53,12 +53,9 @@ task :macosx => [:clean, :doc, :add_build_date] do
 	compress("macosx")
 end
 
-task :add_build_date do
-	now = Time.now
-
-	date = "#{now.month} #{now.day} #{now.year} #{now.hour}:#{now.min}:#{now.sec} GMT#{now.gmt_offset/3600}"
+task :add_build_date do	
 	File.open("IGD_Groundhog/built",'w'){|file|
-		file.puts date
+		file.puts Time.now
 	}
 
 end

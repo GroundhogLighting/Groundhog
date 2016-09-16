@@ -209,11 +209,6 @@ module IGD
 						message = data["message"];
 						update_date = Time.parse(data["author"]["date"]);
 
-						warn "DATE"
-						warn date
-
-						warn "UPDATE"
-						warn update_date
 
 						days_before = (update_date - date).to_i						
 						if days_before >= 1 then
@@ -224,7 +219,7 @@ module IGD
 					else
 						script += "$('\#no_internet_message').show();$('\#no_update_message').hide();$('\#update_info').hide();"
 					end
-					warn script
+					
 					web_dialog.execute_script(script);
 				end
 
