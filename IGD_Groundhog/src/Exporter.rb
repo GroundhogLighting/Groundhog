@@ -455,8 +455,8 @@ module IGD
 					}
 
 					windows.select{|x| Labeler.get_win_group(x) == nil}.each {|win|
-						file_name = "#{Labeler.get_fixed_name(windows[0].parent)}_#{Labeler.get_fixed_name(win)}_#{index}"
-						file_name = "#{Labeler.get_fixed_name(win)}" if not_in_component						
+						file_name = "#{Labeler.get_fixed_name(win)}" 
+						file_name = "#{Labeler.get_fixed_name(windows[0].parent)}_#{Labeler.get_fixed_name(win)}_#{index}" if !not_in_component											
 						group_path = "#{path}/#{file_name}.wingroup"						
 						wins.puts "!xform ./Windows/#{file_name}.wingroup"
 						group_file =  File.open(group_path,'w')
