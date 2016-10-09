@@ -298,7 +298,7 @@ module IGD
 						OS.clear_actual_path
                     end                                       
                 end
-
+=begin
                 wd.add_action_callback("label_as_window") do |web_dialog,msg|
                     faces = Utilities.get_faces(Sketchup.active_model.selection)
                     begin
@@ -344,7 +344,7 @@ module IGD
 						Sketchup.active_model.abort_operation
 					end
                 end
-
+=end
                 wd.add_action_callback("use_material") do |web_dialog,msg|
                     materials = Sketchup.active_model.materials
                     m = JSON.parse(msg)                   

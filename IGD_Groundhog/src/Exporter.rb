@@ -114,9 +114,11 @@ module IGD
 			# @return [<Array>] The string to be written in the .rad file, and the material
 			def self.get_rad_string(face)				
 				return false if face.deleted? #return false if the face does not exist any more.
+				return false if not face
 				mat = self.get_material(face)
 				positions = self.get_vertex_positions(face)
 				name = Labeler.get_fixed_name(face)
+				return false if not name
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
