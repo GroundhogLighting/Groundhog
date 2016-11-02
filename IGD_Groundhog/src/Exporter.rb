@@ -84,14 +84,14 @@ module IGD
 				string1=""
 				string2=""
 				if positions.length == 2 then #a circle
-					string1="\tring\t"+name+"\n0\n0\n8\n" #Write the standard first three lines
+					string1="%MAT_NAME%\tring\t"+name+"\n0\n0\n8\n" #Write the standard first three lines
 					center = positions.shift
 					normal = positions.shift
 					radius = normal.length
 					normal.normalize!
 					string2="\t#{center.x.to_m} #{center.y.to_m} #{center.z.to_m}\n\t#{normal.x} #{normal.y} #{normal.z}\n\t0 #{radius.to_m}\n"
 				elsif positions.length >= 3 #a polygon
-					string1="\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
+					string1="%MAT_NAME%\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
 					string2=""
 					positions.each{|pos|
 						string2=string2+"\t#{pos.x.to_m.to_f}\t#{pos.y.to_m.to_f}\t#{pos.z.to_m.to_f}\n"
@@ -241,23 +241,30 @@ module IGD
 			# @param path [String] The path where the model will be exported
 			# @return [Boolean] Success
 			def self.export(path)
-
+				model = Sketchup.active_model
 				OS.clear_path(path)
+				op_name="Export"
+				begin
+					model.start_operation(op_name,true)
+					FileUtils.cd(path) do
+						#Export the faces and obtain the modifiers
+						mod_list=self.export_layers(path)
+						mod_list.uniq!
+						return false if not mod_list
+						return false if not self.export_modifiers(path,mod_list)
+						return false if not self.write_sky(path)
+						return false if not self.write_weather("#{path}/Skies")
+						return false if not self.export_views(path)			
+						return false if not self.export_component_definitions(path)
+						return false if not self.write_illuminance_sensors(path)
+						return false if not self.write_scene_file(path)
 
-				FileUtils.cd(path) do
-					#Export the faces and obtain the modifiers
-					mod_list=self.export_layers(path)
-					mod_list.uniq!
-					return false if not mod_list
-					return false if not self.export_modifiers(path,mod_list)
-					return false if not self.write_sky(path)
-					return false if not self.write_weather("#{path}/Skies")
-					return false if not self.export_views(path)			
-					return false if not self.export_component_definitions(path)
-					return false if not self.write_illuminance_sensors(path)
-					return false if not self.write_scene_file(path)
-
-					Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
+						Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
+					end
+					model.commit_operation
+				rescue Exception => ex
+					UI.messagebox ex
+					model.abort_operation
 				end
 				return true
 			end
@@ -329,7 +336,7 @@ module IGD
 						illums=illums+[fc]
 					else						
 						#write the information
-						writers[fc.layer.name].puts(Utilities.fix_name(info[1].name)+info[0])
+						writers[fc.layer.name].puts info[0].gsub("%MAT_NAME%",Utilities.fix_name(info[1].name))
 						#store the material
 						mat_list=mat_list+[info[1]]										
 					end #end of check the label of the face
@@ -450,8 +457,8 @@ module IGD
 							win_name = "#{Labeler.get_fixed_name(win)}_#{index}"
 							win_name = "#{Labeler.get_fixed_name(win)}" if not_in_component
 							info = Exporter.get_transformed_rad_string(win,t,win_name)
-							group_file.puts Material.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
-							group_file.puts "#{Labeler.get_name(win)}_mat "+info[0]
+							group_file.puts Material.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)							
+							group_file.puts info[0].gsub("%MAT_NAME%","#{Labeler.get_name(win)}_mat ")
 						}
 						group_file.close
 					}
@@ -466,7 +473,7 @@ module IGD
 						win_name = "#{Labeler.get_fixed_name(win)}" if not_in_component
 						info = Exporter.get_transformed_rad_string(win,t,win_name)
 						group_file.puts Materials.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
-						group_file.puts "#{Labeler.get_name(win)}_mat "+info[0]
+						group_file.puts info[0].gsub("%MAT_NAME%","#{Labeler.get_name(win)}_mat ")
 						group_file.close
 					
 					}
@@ -536,7 +543,7 @@ module IGD
 						info=self.get_rad_string(ent)
 						next if not info # ignore if the ent does not exist anymore
 						File.open("#{path}/#{name}.rad",'w+'){ |f| #The file is opened
-							f.puts("void "+info[0])
+							f.puts(info[0].gsub("%MAT_NAME%","void"))
 						}
 
 					end
@@ -781,7 +788,7 @@ module IGD
 							info=self.get_rad_string(fc)
 							next if not info # ignore if the ent does not exist anymore
 							matName=Utilities.fix_name(info[1].name)+"_"+hName
-							geom_string=geom_string+matName+info[0]
+							geom_string=geom_string+info[0].gsub("%MAT_NAME%",matName)
 							mat_array=mat_array+[info[1]]
 						end
 					end
