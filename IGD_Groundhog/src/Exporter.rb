@@ -61,16 +61,21 @@ module IGD
 			def self.get_vertex_positions(face)
 				radius = Utilities.get_circle_radius(face)
 				ret = []
-				if not radius then	
-					self.close_face([],1,4,face)
-					ret = face.vertices.map{|x| x.position}
-					Utilities.delete_label(face.edges,"added") #Maybe this could be done later... and it would be faster...?
+				if not radius then
+					if face.loops.count > 40 then #triangulate
+						mesh = face.mesh
+						points = mesh.points
+						mesh.polygons.each{|polygon|
+							ret << polygon.map{|x| points[x.abs-1]}
+						}
+					else #close it and export it
+						ret << self.close_face_2(face)
+					end
 				else #it is a circle
 					normal = face.normal
 					normal.length=radius
 					center = face.bounds.center
-					ret << center
-					ret << normal #any vertex positions returned with 2 items is a circle... the items are [Center,Normal]
+					ret << [center, normal] #any vertex positions returned with 2 items is a circle... the items are [Center,Normal]
 				end
 				return ret
 			end
@@ -78,30 +83,35 @@ module IGD
 			# Assess the String that should be written in the Radiance geometry file from an array of 3D Points
 			# @author German Molina
 			# @version 1.0
-			# @param positions [Sketchup::3DPoint] An array of 3D Points
+			# @param positions_list [Array of Sketchup::3DPoint] An array of Arrays of 3D Points
 			# @return [String] The string to be written in the .rad file
-			def self.vertex_positions_to_rad_string(positions,name)
-				string1=""
-				string2=""
-				if positions.length == 2 then #a circle
-					string1="%MAT_NAME%\tring\t"+name+"\n0\n0\n8\n" #Write the standard first three lines
-					center = positions.shift
-					normal = positions.shift
-					radius = normal.length
-					normal.normalize!
-					string2="\t#{center.x.to_m} #{center.y.to_m} #{center.z.to_m}\n\t#{normal.x} #{normal.y} #{normal.z}\n\t0 #{radius.to_m}\n"
-				elsif positions.length >= 3 #a polygon
-					string1="%MAT_NAME%\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
+			def self.vertex_positions_to_rad_string(positions_list,name)
+				ret = ""
+				positions_list.each {|positions|
+					string1=""
 					string2=""
-					positions.each{|pos|
-						string2=string2+"\t#{pos.x.to_m.to_f}\t#{pos.y.to_m.to_f}\t#{pos.z.to_m.to_f}\n"
-					}
-					string2+="\n\n"
-				else #something weird
-					raise "Error! trying to get the rad string of a polygon with less than 3 vertices."
-				end
+					if positions.length == 2 then #a circle
+						string1="%MAT_NAME%\tring\t"+name+"\n0\n0\n8\n" #Write the standard first three lines
+						center = positions.shift
+						normal = positions.shift
+						radius = normal.length
+						normal.normalize!
+						string2="\t#{center.x.to_m} #{center.y.to_m} #{center.z.to_m}\n\t#{normal.x} #{normal.y} #{normal.z}\n\t0 #{radius.to_m}\n"
+					elsif positions.length >= 3 #a polygon
+						string1="%MAT_NAME%\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
+						string2=""
+						positions.each{|pos|
+							string2=string2+"\t#{pos.x.to_m.to_f}\t#{pos.y.to_m.to_f}\t#{pos.z.to_m.to_f}\n"
+						}
+						string2+="\n\n"
+					else #something weird
+						raise "Error! trying to get the rad string of a polygon with less than 3 vertices."
+					end
+					ret += string1
+					ret += string2
+				}
 
-				return string1+string2
+				return ret
 			end
 
 			# Assess the String that should be written in the Radiance geometry file.
@@ -112,7 +122,7 @@ module IGD
 			# @version 1.3
 			# @param face [Sketchup::Face] SketchUp face to be exported (in case the group is inside a group)
 			# @return [<Array>] The string to be written in the .rad file, and the material
-			def self.get_rad_string(face)				
+			def self.get_rad_string(face)
 				return false if face.deleted? #return false if the face does not exist any more.
 				return false if not face
 				mat = self.get_material(face)
@@ -131,7 +141,7 @@ module IGD
 			# @return [<Array>] The string to be written in the .rad file, and the material
 			def self.get_transformed_rad_string(face,transformation,name)
 				mat = self.get_material(face)
-				positions = self.get_vertex_positions(face).map{|x| x.transform(transformation) }
+				positions = self.get_vertex_positions(face).map{|x| x.map{|y| y.transform(transformation)}}
 				name = Utilities.fix_name(name)
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
@@ -146,7 +156,7 @@ module IGD
 			# @return [<Array>] The string to be written in the .rad file, and the material
 			def self.get_reversed_transformed_rad_string(face,transformation,name)
 				mat = self.get_material(face)
-				positions = self.get_vertex_positions(face).reverse.map{|x| x.transform(transformation) }
+				positions = self.get_vertex_positions(face).reverse.map{|x| x.map{|y| y.transform(transformation) }}
 				name = Utilities.fix_name(name)
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
@@ -159,12 +169,12 @@ module IGD
 			# @return [<Array>] The string to be written in the .rad file, and the material
 			def self.get_reversed_rad_string(face)
 				mat = self.get_material(face)
-				positions = self.get_vertex_positions(face).reverse
+				positions = self.get_vertex_positions(face).map{|x| x.reverse}
 				name = Labeler.get_fixed_name(face)
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
-
+=begin
 			# Recursively connects the interior and the exterior loops of a face.
 			#
 			# This allow efficient exporting by exporting only One Radiance polygon for each SketchUp face.
@@ -229,6 +239,65 @@ module IGD
 					end
 				end
 			end
+=end
+			# Recursively connects the interior and the exterior loops of a face, without
+			# adding any new line or loop to the model
+			#
+			# This allow efficient exporting by exporting only One Radiance polygon for each SketchUp face.
+			#
+			# This method exists because SketchUp allows interior loops, but Radiance does not.
+			#
+			# This method is called within #get_rad_string, and returns an array with the
+			# Sketchup::Point3d representing the vertices in the correct order
+			# @author German Molina
+			# @param face [face] SketchUp face to close.
+			# @return [Array] An array with the Sketchup::Point3d representing the vertices in the correct order
+			def self.close_face_2(face)
+				outer_loop = face.outer_loop.vertices.map{|x| x.position}
+				inner_loops = face.loops.select{|x| not x.outer?}.map{|x| x.vertices.map{|y| y.position}}
+
+				until inner_loops.count == 0 do
+					#find the minimum distance from interior to exterior
+					min_distance = 1e9
+					min_inner_loop = false
+					min_ext_vertex = false
+					min_inner_vertex=false
+					outer_loop.each{|ext_vertex|
+						inner_loops.each{|inner_loop|
+							inner_loop.each{|inner_vertex|
+								distance = ext_vertex.distance(inner_vertex)
+								if distance < min_distance then
+									min_distance = distance
+									min_ext_vertex = ext_vertex
+									min_inner_vertex = inner_vertex
+									min_inner_loop=inner_loop
+								end
+							}
+						}
+					}
+					# pass the inner loop to the exterior loop
+					# (check normal --> order of the vertices)... it seems that is not required.
+					aux_ret = []
+					outer_loop.each{|ext_vertex|
+						aux_ret << ext_vertex
+						if ext_vertex == min_ext_vertex then
+							#add the loop
+							i = min_inner_loop.index(min_inner_vertex) #start from here
+							raise "min_inner_vertex not found during Close_face" if i == nil
+							min_inner_loop.length.times{
+								aux_ret << min_inner_loop[(i+=1)%min_inner_loop.length - 1]
+							}
+							aux_ret << min_inner_vertex #add the first vertex again
+							aux_ret << ext_vertex #return to the exterior loop
+						end
+					}
+					outer_loop = aux_ret
+
+					#erase the inner loop from the list
+					inner_loops.delete(min_inner_loop)
+				end
+				return outer_loop
+			end
 
 
 			# Export the entire model to the path where the model is saved.
@@ -243,9 +312,7 @@ module IGD
 			def self.export(path)
 				model = Sketchup.active_model
 				OS.clear_path(path)
-				op_name="Export"
 				begin
-					model.start_operation(op_name,true)
 					FileUtils.cd(path) do
 						#Export the faces and obtain the modifiers
 						mod_list=self.export_layers(path)
@@ -254,17 +321,16 @@ module IGD
 						return false if not self.export_modifiers(path,mod_list)
 						return false if not self.write_sky(path)
 						return false if not self.write_weather("#{path}/Skies")
-						return false if not self.export_views(path)			
+						return false if not self.export_views(path)
 						return false if not self.export_component_definitions(path)
 						return false if not self.write_illuminance_sensors(path)
 						return false if not self.write_scene_file(path)
 
 						Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 					end
-					model.commit_operation
 				rescue Exception => ex
+					FileUtils.rm_rf(path, secure: true)
 					UI.messagebox ex
-					model.abort_operation
 				end
 				return true
 			end
@@ -304,7 +370,7 @@ module IGD
 
 				faces=Utilities.get_faces(entities)
 
-				windows=[] # this array will store the windows in case their are needed				
+				windows=[] # this array will store the windows in case their are needed
 				illums=[]
 
 				#We get the layers in the model
@@ -334,11 +400,11 @@ module IGD
 						self.write_workplane(path, name, points, polygons)
 					elsif Labeler.illum?(fc) then
 						illums=illums+[fc]
-					else						
+					else
 						#write the information
 						writers[fc.layer.name].puts info[0].gsub("%MAT_NAME%",Utilities.fix_name(info[1].name))
 						#store the material
-						mat_list=mat_list+[info[1]]										
+						mat_list=mat_list+[info[1]]
 					end #end of check the label of the face
 				end #end for each faces
 
@@ -436,7 +502,7 @@ module IGD
 				path = "#{path}/Windows"
 				OS.mkdir(path)
 				groups=Utilities.get_win_groups(windows)
-				
+
 				wins = false
 				if not_in_component then
 					wins = File.open("#{path}/windows.rad",'w')
@@ -445,28 +511,28 @@ module IGD
 				end
 
 				tr = Utilities.get_all_global_transformations(windows[0],Geom::Transformation.new)
-				tr.each_with_index{|t,index|					
+				tr.each_with_index{|t,index|
 					#Write the windows that have a group
-					groups.each{|group|					
+					groups.each{|group|
 						file_name = "#{Labeler.get_fixed_name(windows[0].parent)}_#{Utilities.fix_name(group)}_#{index}"
 						file_name = "#{Utilities.fix_name(group)}" if not_in_component
-						group_path = "#{path}/#{file_name}.wingroup"						
+						group_path = "#{path}/#{file_name}.wingroup"
 						wins.puts "!xform ./Windows/#{file_name}.wingroup"
 						group_file =  File.open(group_path,'w')
-						windows.select{|x| Labeler.get_win_group(x) == group}.each {|win|							
+						windows.select{|x| Labeler.get_win_group(x) == group}.each {|win|
 							win_name = "#{Labeler.get_fixed_name(win)}_#{index}"
 							win_name = "#{Labeler.get_fixed_name(win)}" if not_in_component
 							info = Exporter.get_transformed_rad_string(win,t,win_name)
-							group_file.puts Material.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)							
+							group_file.puts Material.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
 							group_file.puts info[0].gsub("%MAT_NAME%","#{Labeler.get_name(win)}_mat ")
 						}
 						group_file.close
 					}
 
 					windows.select{|x| Labeler.get_win_group(x) == nil}.each {|win|
-						file_name = "#{Labeler.get_fixed_name(win)}" 
-						file_name = "#{Labeler.get_fixed_name(windows[0].parent)}_#{Labeler.get_fixed_name(win)}_#{index}" if !not_in_component											
-						group_path = "#{path}/#{file_name}.wingroup"						
+						file_name = "#{Labeler.get_fixed_name(win)}"
+						file_name = "#{Labeler.get_fixed_name(windows[0].parent)}_#{Labeler.get_fixed_name(win)}_#{index}" if !not_in_component
+						group_path = "#{path}/#{file_name}.wingroup"
 						wins.puts "!xform ./Windows/#{file_name}.wingroup"
 						group_file =  File.open(group_path,'w')
 						win_name = "#{Labeler.get_fixed_name(win)}_#{index}"
@@ -475,10 +541,10 @@ module IGD
 						group_file.puts Materials.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
 						group_file.puts info[0].gsub("%MAT_NAME%","#{Labeler.get_name(win)}_mat ")
 						group_file.close
-					
+
 					}
 				}
-				
+
 
 				wins.close
 				return true
@@ -595,19 +661,19 @@ module IGD
 					f.write("\n\n\n###### GROUND \n\n")
 					if Config.add_terrain == true then
 						albedo = Config.albedo
-						model_bounds=Sketchup.active_model.bounds						
+						model_bounds=Sketchup.active_model.bounds
 						radius = IGD::Groundhog::Config.terrain_oversize * model_bounds.diagonal
 						f.puts("void plastic terrain_mat\n0\n0\n5\t#{albedo}\t#{albedo}\t#{albedo}\t0\t0")
 						f.puts("\n\nterrain_mat ring ground 0 0 8 #{model_bounds.center.x.to_m} #{model_bounds.center.y.to_m} 0 0 0 1 0 #{radius.to_m}")
 					else
 						f.puts("# Not terrain was desired... change this on the Preferences menu, if you want.")
 					end
-					
+
 
 					f.puts("\n\n\n###### COMPONENT INSTANCES \n\n")
 					comp_path = "#{path}/Components"
 					defi=Sketchup.active_model.definitions
-					anyluminaire = defi.select{|d| Labeler.luminaire? d }.length > 0					
+					anyluminaire = defi.select{|d| Labeler.luminaire? d }.length > 0
 					light = File.open("#{comp_path}/Lights/all.lightsources",'w') if anyluminaire
 
 					defi.each do |h|
@@ -615,16 +681,16 @@ module IGD
 						if h.is_a? Sketchup::ComponentDefinition then
 							next if Labeler.solved_workplane?(h)
 							hName=Utilities.fix_name(h.name)
-							instances=h.instances							
+							instances=h.instances
 							lightfile = "./Components/Lights/#{hName}.lightsource"
 							instances.each do |inst|
 								next if not inst.parent.is_a? Sketchup::Model
 								next if Labeler.tdd?(inst)
 								xform = self.get_component_string(inst)
 								f.puts "#{xform} ./Components/#{hName}.rad"
-								
+
 								light.puts "#{xform} #{lightfile}" if File.file? lightfile
-								
+
 							end
 						end
 					end
@@ -708,7 +774,7 @@ module IGD
 				return 	"skyfunc\tglow\tskyglow\n0\n0\n4\t0.99\t0.99\t1.1\t0\n\nskyglow\tsource\tskyball\n0\n0\n4\t0\t0\t1\t360\n\n"
 			end
 
-			
+
 
 			# Export the ComponentDefinitions into separate files into "Components" folder.
 			# Each file is autocontained, although some materials might be repeated in the "materials.mat" file.
@@ -754,15 +820,15 @@ module IGD
 					end
 
 					anyluminaire = instances.select{|inst| Labeler.luminaire? inst.definition }.length > 0
-					OS.mkdir("./Components/Lights") if anyluminaire					
+					OS.mkdir("./Components/Lights") if anyluminaire
 					light = File.open("./Components/Lights/#{hName}.lightsource",'w') if anyluminaire
 
 					instances.each do |inst| #include the nested components
 						name = Utilities.fix_name(inst.definition.name)
 						xform = self.get_component_string(inst)
 						geom_string += "#{xform} ./#{name}.rad#{$/}"
-						if Labeler.luminaire?(inst.definition) then							
-							light.puts "#{xform} ./#{Labeler.get_fixed_name(inst.definition)}.rad"													
+						if Labeler.luminaire?(inst.definition) then
+							light.puts "#{xform} ./#{Labeler.get_fixed_name(inst.definition)}.rad"
 						end
 					end
 					light.close if anyluminaire
@@ -771,7 +837,7 @@ module IGD
 					mat_array=[]
 					faces.each do |fc| #then the rest of the faces
 						next if fc.deleted? #skip deleted faces
-						if Labeler.workplane? (fc) then							
+						if Labeler.workplane? (fc) then
 							any_workplane = true
 						elsif Labeler.illum? (fc) then
 							OS.mkdir("#{path}/Illums")
@@ -783,7 +849,7 @@ module IGD
 								}
 							}
 						elsif Labeler.window? (fc) then
-							wins << fc				
+							wins << fc
 						else #common surfaces
 							info=self.get_rad_string(fc)
 							next if not info # ignore if the ent does not exist anymore
@@ -806,8 +872,8 @@ module IGD
 					}
 
 				end	#end for each
-				
-				self.write_window_groups(path,wins)				
+
+				self.write_window_groups(path,wins)
 
 				return true
 			end #end method
@@ -909,7 +975,7 @@ module IGD
 				return true
 			end
 
-			
+
 
 
 		end #end module

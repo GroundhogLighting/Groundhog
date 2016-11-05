@@ -2,24 +2,25 @@ module IGD
 	module Groundhog
 		# This module handles (loads and provides) the options that are chosen by the user
 		# that are meant to be saved across projects.
-		# Ray tracing options are thought to be changed on every project; so they do not 
+		# Ray tracing options are thought to be changed on every project; so they do not
 		# belong here.
 		module Config
-			
+
 			# The configuration variables are taken from here.
 			@@config=Hash.new()
 
-			# These are the default values for all the options... they 
+			# These are the default values for all the options... they
 			# are automatically copied into @config when loading or modifying.
 			@@default_config = {
 				"DESIRED_PIXEL_AREA" => 0.25,
 				"ALBEDO" => 0.2,
-				"RVU" => "-ab 3",			
+				"RVU" => "-ab 3",
 				"LUMINAIRE_SHAPE_THRESHOLD" => 1.7,
-				"TERRAIN_OVERSIZE" => 4,							
-				"TDD_PIPE_REFLECTANCE" => 0.95,	
+				"TERRAIN_OVERSIZE" => 4,
+				"TDD_PIPE_REFLECTANCE" => 0.95,
 				"ADD_TERRAIN" => false,
-				"CALC_ELUX" => false		
+				"CALC_ELUX" => false,
+				"MAX_LOOPS" => 40
 			}
 
 			# Returns the HASH with the Configurations... this is meant to be accessed by other modules
@@ -59,13 +60,21 @@ module IGD
 				self.get_element("DESIRED_PIXEL_AREA").to_f
 			end
 
+			# Returns the maximum number of loops that are allowed before a face Gets
+			# triangulated
+			# @author German Molina
+			# @return [Numeric] The number of loops
+			def self.max_loops
+				self.get_element("MAX_LOOPS").to_i
+			end
+
 			# Returns the desired options for a TDD pipe reflectance
 			# @author German Molina
 			# @return [String] The selected options
 			def self.tdd_pipe_reflectance
 				self.get_element("TDD_PIPE_REFLECTANCE")
 			end
-			
+
 
 			# Gets the albedo
 			# @author German Molina
@@ -87,15 +96,15 @@ module IGD
 			# Gets the add_terrain option
 			# @author German Molina
 			# @return [Boolean] The option
-			def self.add_terrain				
-				self.get_element("ADD_TERRAIN") == "true" or self.get_element("ADD_TERRAIN") == "TRUE" or self.get_element("ADD_TERRAIN") == true 
+			def self.add_terrain
+				self.get_element("ADD_TERRAIN") == "true" or self.get_element("ADD_TERRAIN") == "TRUE" or self.get_element("ADD_TERRAIN") == true
 			end
 
 			# Gets the calc_elux option
 			# @author German Molina
 			# @return [Boolean] The option
-			def self.calc_elux				
-				self.get_element("CALC_ELUX") == "true" or self.get_element("CALC_ELUX") == "TRUE" or self.get_element("CALC_ELUX") == true 
+			def self.calc_elux
+				self.get_element("CALC_ELUX") == "true" or self.get_element("CALC_ELUX") == "TRUE" or self.get_element("CALC_ELUX") == true
 			end
 
 			# Gets the terrain oversize parameter
@@ -105,7 +114,7 @@ module IGD
 				self.get_element("TERRAIN_OVERSIZE").to_f
 			end
 
-	
+
 
 			# Gets the preconfigured RVU options for previsualization
 			# @author German Molina
@@ -145,7 +154,7 @@ module IGD
 			# Returns the web dialog that controls the options.
 			#
 			# @author German Molina
-			# @return [SketchUp::UI::WebDialog] the Configuration web dialog			
+			# @return [SketchUp::UI::WebDialog] the Configuration web dialog
 			def self.get
 				wd = UI::WebDialog.new("Preferences", false, "Preferences",595, 490, 100, 100, true )
 				wd.set_file("#{OS.main_groundhog_path}/src/html/preferences.html" )
@@ -153,7 +162,7 @@ module IGD
 =begin
 				### COULD NOT GET THIS WORKING
 				wd.add_action_callback("update") do |web_dialog,msg|
-					
+
 					version = false
 					system = IGD::Groundhog::OS.getsystem
 					if system == "MAC" then
@@ -163,7 +172,7 @@ module IGD
 							version="win64"
 						else
 							version="win32"
-						end						
+						end
 					end
 					#if not system then
 					#	UI.messagebox "Not recognized OS!"
@@ -179,7 +188,7 @@ module IGD
 							#open(final_file, "wb") { |file|
 								f.write(resp.body)
 							#}
-						}						
+						}
 					#rescue
 					#	UI.messagebox "Error while downloading the update!"
 						#next
@@ -196,21 +205,21 @@ module IGD
 				wd.add_action_callback("check_updates") do |web_dialog,msg|
 					script = ""
 					# CHECK UPDATES
-					date = Time.parse File.readlines("#{IGD::Groundhog::OS.main_groundhog_path}/built").shift.strip							
-					
+					date = Time.parse File.readlines("#{IGD::Groundhog::OS.main_groundhog_path}/built").shift.strip
+
 					if Sketchup.is_online then
 						script += "$('\#no_internet_message').hide();"
 						header_url = "https://api.github.com/repos/IGD-Labs/Groundhog/git/refs/heads/master"
 						url = JSON.parse(Net::HTTP.get(URI(header_url)))["object"]["url"]
 						data = JSON.parse(Net::HTTP.get(URI(url)))
-						
+
 						author = data["author"]["name"];
 						email = data["author"]["email"];
 						message = data["message"];
 						update_date = Time.parse(data["author"]["date"]);
 
 
-						days_before = (update_date - date).to_i						
+						days_before = (update_date - date).to_i
 						if days_before >= 1 then
 							script += "$('\#no_update_message').hide();$('\#update_info').show();$('\#update_date').text('#{update_date.to_s}');$('\#update_author').text('#{author}');$('\#update_comments').text('#{message}');"
 						else
@@ -219,7 +228,7 @@ module IGD
 					else
 						script += "$('\#no_internet_message').show();$('\#no_update_message').hide();$('\#update_info').hide();"
 					end
-					
+
 					web_dialog.execute_script(script);
 				end
 
@@ -227,16 +236,16 @@ module IGD
 					script=""
 					@@default_config.each do |field|
 						id = field[0].downcase
-						script += Utilities.set_element_value(id,@@config,field[1])						
-					end				
-					date = Time.parse File.readlines("#{IGD::Groundhog::OS.main_groundhog_path}/built").shift.strip		
+						script += Utilities.set_element_value(id,@@config,field[1])
+					end
+					date = Time.parse File.readlines("#{IGD::Groundhog::OS.main_groundhog_path}/built").shift.strip
 					script += "$('\#version').text('#{Sketchup.extensions["Groundhog"].version.to_s}');"
 					script += "$('\#date').text('#{date.to_s}');"
 					script += "$('\#no_update_message').hide();"
 					script += "$('\#update_info').hide();"
-					script += "$('\#no_internet_message').hide();"			
-					
-										
+					script += "$('\#no_internet_message').hide();"
+
+
 					web_dialog.execute_script(script);
 				end
 
