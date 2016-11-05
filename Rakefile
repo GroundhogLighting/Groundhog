@@ -3,7 +3,7 @@ require 'JSON'
 
 task :default => :all
 
-task :all => [:win32, :win64, :macosx] do
+task :all => [:doc, :win32, :win64, :macosx] do
 	FileUtils.rm_rf "./IGD_Groundhog/src/Radiance"
 end
 
@@ -25,7 +25,7 @@ task :test => [:win64] do
 	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog.rb"
 	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog"
 	FileUtils.cp_r "IGD_Groundhog.rb","#{sketchup_plugin_dir}/IGD_Groundhog.rb"
-	FileUtils.cp_r "IGD_Groundhog","#{sketchup_plugin_dir}/IGD_Groundhog"	
+	FileUtils.cp_r "IGD_Groundhog","#{sketchup_plugin_dir}/IGD_Groundhog"
 	FileUtils.rm_rf("./IGD_Groundhog/src/Radiance")
 end
 
@@ -43,17 +43,17 @@ def compress(os)
 	FileUtils.rm "listfile.txt"
 end
 
-task :win64 => [:clean, :doc, :add_build_date] do
+task :win64 => [:clean, :add_build_date] do
 	compress("win64")
 end
-task :win32 => [:clean, :doc, :add_build_date] do
+task :win32 => [:clean, :add_build_date] do
 	compress("win32")
 end
-task :macosx => [:clean, :doc, :add_build_date] do
+task :macosx => [:clean, :add_build_date] do
 	compress("macosx")
 end
 
-task :add_build_date do	
+task :add_build_date do
 	File.open("IGD_Groundhog/built",'w'){|file|
 		file.puts Time.now
 	}
