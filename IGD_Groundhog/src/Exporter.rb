@@ -62,7 +62,7 @@ module IGD
 				radius = Utilities.get_circle_radius(face)
 				ret = []
 				if not radius then
-					if face.loops.count > 40 then #triangulate
+					if face.loops.count > Config.max_loops then #triangulate
 						mesh = face.mesh
 						points = mesh.points
 						mesh.polygons.each{|polygon|
