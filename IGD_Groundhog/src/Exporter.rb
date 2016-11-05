@@ -62,7 +62,7 @@ module IGD
 				radius = Utilities.get_circle_radius(face)
 				ret = []
 				if not radius then
-					if face.loops.count > 4 then #triangulate
+					if face.loops.count > 40 then #triangulate
 						mesh = face.mesh
 						points = mesh.points
 						mesh.polygons.each{|polygon|
@@ -174,7 +174,7 @@ module IGD
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
-
+=begin
 			# Recursively connects the interior and the exterior loops of a face.
 			#
 			# This allow efficient exporting by exporting only One Radiance polygon for each SketchUp face.
@@ -239,7 +239,7 @@ module IGD
 					end
 				end
 			end
-
+=end
 			# Recursively connects the interior and the exterior loops of a face, without
 			# adding any new line or loop to the model
 			#
@@ -312,9 +312,7 @@ module IGD
 			def self.export(path)
 				model = Sketchup.active_model
 				OS.clear_path(path)
-				op_name="Export"
 				begin
-					model.start_operation(op_name,true)
 					FileUtils.cd(path) do
 						#Export the faces and obtain the modifiers
 						mod_list=self.export_layers(path)
@@ -330,10 +328,9 @@ module IGD
 
 						Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 					end
-					model.commit_operation
 				rescue Exception => ex
+					FileUtils.rm_rf(path, secure: true)
 					UI.messagebox ex
-					model.abort_operation
 				end
 				return true
 			end

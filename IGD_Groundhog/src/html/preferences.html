@@ -12,6 +12,7 @@
 
 	<div id="sidenav">
 		<p class="selected" href="#preview">Preview</p>
+			<p href="#exporting">Exporting</p>
 		<p href="#workplanes">Workplanes</p>
 		<p href="#luminaires">Luminaires</p>
 		<p href="#terrain">Terrain</p>
@@ -30,6 +31,22 @@
 					<td>Rvu options</td>
 					<td><input type="text" id="rvu">
 						<p class="tooltip" title="This is the program used during previsualization">?</p>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+
+	</div>
+
+	<div class="display" id="exporting">
+		<fieldset>
+			<legend>Polygon exporting options</legend>
+
+			<table>
+				<tr>
+					<td>Max holes before triangulating</td>
+					<td><input type="text" id="max_loops">
+						<p class="tooltip" title="Controls how a face is exported. It is recommended that faces with a great number of holes are triangulated, but the rest are exported as polygons. This value sets the threshold that decides that.">?</p>
 					</td>
 				</tr>
 			</table>
@@ -124,7 +141,7 @@
 				<table>
 				<tr>
 					<td>
-						Automatically check for updates when loading Groundhog	
+						Automatically check for updates when loading Groundhog
 					</td>
 					<td>
 						<input title="option" type="checkbox" id="auto_update">
@@ -132,7 +149,7 @@
 				</tr>
 				<tr>
 					<td>
-						Automatically install updates when found	
+						Automatically install updates when found
 					</td>
 					<td>
 						<input title="option" type="checkbox" id="auto_install_update">
@@ -160,7 +177,7 @@
 		</fieldset>
 		<h4 class="center" id="no_update_message">There are no updates available</h4>
 		<h4 class="center" id="no_internet_message">You do not seem to be connected to the internet.</h4>
-		
+
 		<fieldset id="update_info">
 			<legend>About this update</legend>
 
@@ -186,7 +203,7 @@
 			</table>
 			<p class="center">
 				<button onclick="window.location.href = 'skp:follow_link@http://www.groundhogproject.org'">Download now</button>
-			</p>			
+			</p>
 		</fieldset>
 		<p class="center">
 			<button onclick="window.location.href = 'skp:check_updates@message'">Check for updates</button>
@@ -201,7 +218,7 @@
 <script src="js/jQueryUI/jquery-ui.js"></script>
 <script src="js/groundhog-ui.js"></script>
 <script src="js/preferences.js"></script>
-<script>	
+<script>
 	window.location.href = 'skp:on_load@message';
 </script>
 
