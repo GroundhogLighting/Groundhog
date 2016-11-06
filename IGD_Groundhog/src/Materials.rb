@@ -1,6 +1,6 @@
 module IGD
 	module Groundhog
-		
+
 		# This module handles everything related to the Materials.
 		module Materials
 
@@ -65,7 +65,7 @@ module IGD
 
 				mat_string=""
 
-				if Labeler.rad_material?(material) then					
+				if Labeler.rad_material?(material) then
 					# if it is a rad_material, get the value... and verify it
 					value = Labeler.get_value(material)
 					if value == nil then
@@ -77,9 +77,9 @@ module IGD
 						UI.messagebox "rad_material with incorrect value! no 'rad' field"
 						return false
 					end
-					mat_string = value["rad"].gsub("%MAT_NAME%", mat_name)					
-				else #not rad_material, then guess the material	
-					warn "#{mat_name} guessed!"				
+					mat_string = value["rad"].gsub("%MAT_NAME%", mat_name)
+				else #not rad_material, then guess the material
+					warn "#{mat_name} guessed!"
 					if material.texture==nil then
 						color=material.color
 					else
@@ -95,15 +95,15 @@ module IGD
 						g=g*material.alpha
 						b=b*material.alpha
 						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s
-						mat_string=mat_string+"void\tglass\t"+matName+"\n0\n0\n3\t"+rgb+"\n"
+						mat_string=mat_string+"void\tglass\t"+mat_name+"\n0\n0\n3\t"+rgb+"\n"
 					else #This is an opaque material
 						rgb=r.to_s+"\t"+g.to_s+"\t"+b.to_s+"\t0\t0"
 						mat_string=mat_string+"void\tplastic\t"+mat_name+"\n0\n0\n5\t"+rgb+"\n"
-					end					
+					end
 				end
 
 				if xform then
-					File.open("#{mat_name}.mat",'w'){|f| f.puts mat_string }										
+					File.open("#{mat_name}.mat",'w'){|f| f.puts mat_string }
 					return "!xform ./Materials/#{mat_name}.mat"
 				else
 					return mat_string
