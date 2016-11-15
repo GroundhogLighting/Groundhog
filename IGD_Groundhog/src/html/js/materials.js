@@ -3,46 +3,50 @@
 var materialModule = {};
 
 
-materialModule.transmittance2transmisivity = function(tau){    
-    if(tau == 0){return 0}    
-   return (Math.sqrt(0.8402528435+0.0072522239*tau*tau)-0.9166530661)/(0.0036261119*tau);            
+materialModule.transmittance2transmisivity = function(tau){
+    if(tau == 0){return 0}
+    return tau*1.0895 //(Math.sqrt(0.8402528435+0.0072522239*tau*tau)-0.9166530661)/(0.0036261119*tau);
+};
+
+materialModule.transmisivity2transmittance = function(tau){
+    if(tau == 0){return 0}
+    return tau/1.0895
 };
 
 materialModule.get_material_json = function(){
-
     var cl = $("#material_class").val();
-    var r = $("#red").val(); var g = $("#green").val(); var b = $("#blue").val();    
+    var r = $("#red").val(); var g = $("#green").val(); var b = $("#blue").val();
     var su_color = $("#color_pick").spectrum("get").toRgb();
     ret = {};
-    ret["color"]=[su_color.r, su_color.g, su_color.b];        
-    ret["class"]=cl;    
-    if(!r || !g || !b || Math.max(r,g,b) > 1 || Math.min(r,g,b) < 0){return {success: false, error: "Inconsistent color values. Please use values between 0.0 and 1.0"};}    
+    ret["color"]=[su_color.r, su_color.g, su_color.b];
+    ret["class"]=cl;
+    if(!r || !g || !b || Math.max(r,g,b) > 1 || Math.min(r,g,b) < 0){return {success: false, error: "Inconsistent color values. Please use values between 0.0 and 1.0"};}
     switch (cl) {
         case "plastic":
             ret["alpha"]=1;
             var spec = $("#specularity").val();
             var roughness = $("#roughness").val();
             if(!spec || !roughness || Math.max(spec,roughness) > 1 || Math.min(spec,roughness) < 0){return {success: false, error: "Inconsistent Roughness or Specularity values. Please use values between 0.0 and 1.0"};}
-            ret["rad"] = "void plastic %MAT_NAME% 0 0 5 "+r+" "+g+" "+b+" "+spec+" "+roughness; 
+            ret["rad"] = "void plastic %MAT_NAME% 0 0 5 "+r+" "+g+" "+b+" "+spec+" "+roughness;
             break;
         case "metal":
             ret["alpha"]=1;
             var spec = $("#specularity").val();
             var roughness = $("#roughness").val();
             if(!spec || !roughness || Math.max(spec,roughness) > 1 || Math.min(spec,roughness) < 0){return {success: false, error: "Inconsistent Roughness or Specularity values. Please use values between 0.0 and 1.0"};}
-            ret["rad"] = "void metal %MAT_NAME% 0 0 5 "+r+" "+g+" "+b+" "+spec+" "+roughness; 
+            ret["rad"] = "void metal %MAT_NAME% 0 0 5 "+r+" "+g+" "+b+" "+spec+" "+roughness;
             break;
-        case "glass":        
+        case "glass":
             ret["alpha"]= Math.sqrt(1-(0.265 * r + 0.67 * g + 0.065 * b));
-            if(!r || !g || !b || Math.max(r,g,b)>1 || Math.min(r,g,b) < 0){return {success: false, error: "Inconsistent color values. Please use values between 0.0 and 1.0"};}     
+            if(!r || !g || !b || Math.max(r,g,b)>1 || Math.min(r,g,b) < 0){return {success: false, error: "Inconsistent color values. Please use values between 0.0 and 1.0"};}
             var r = materialModule.transmittance2transmisivity(r);
             var g = materialModule.transmittance2transmisivity(g);
-            var b = materialModule.transmittance2transmisivity(b);                       
-            ret["rad"] = "void glass %MAT_NAME% 0 0 3 "+r+" "+g+" "+b;        
+            var b = materialModule.transmittance2transmisivity(b);
+            ret["rad"] = "void glass %MAT_NAME% 0 0 3 "+r+" "+g+" "+b;
             break;
         default:
             return {success: false, error: "ERROR: get_material_json - unkown material class!"}
-    }    
+    }
     return {success: true, object: ret}
 }
 
@@ -60,13 +64,12 @@ materialModule.update_list = function (filter) {
         if (materials.hasOwnProperty(material)) {
             var data = materials[material];
             var cl = data["class"];
-            if (material.toLowerCase().indexOf(filter) >= 0 || cl.toLowerCase().indexOf(filter) >= 0) {                
+            if (material.toLowerCase().indexOf(filter) >= 0 || cl.toLowerCase().indexOf(filter) >= 0) {
                 var r = data["color"][0];
                 var g = data["color"][1];
                 var b = data["color"][2];
                 var color = "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + ")";
-                html = html + "<tr><td class='mat-name' name=\"" + material + "\">" + material + "</td><td>" + cl + "</td><td class='color' style='background: " + color + "'></td><td class='icons'><span name=\"" + material + "\" class='ui-icon ui-icon-trash del-material'></span></td></tr>" 
-                //<span class='ui-icon ui-icon-pencil'></span>
+                html = html + "<tr><td class='mat-name' name=\"" + material + "\">" + material + "</td><td>" + cl + "</td><td class='color' style='background: " + color + "'></td><td class='icons'><span name=\"" + material + "\" class='ui-icon ui-icon-trash del-material'></span><span name=\"" + material + "\" class='ui-icon ui-icon-pencil edit-material'></span></td></tr>"
             }
         }
     }
@@ -82,6 +85,11 @@ materialModule.update_list = function (filter) {
         var name = $(this).attr("name");
         materialModule.deleteMaterial(name);
     });
+
+    $("span.edit-material").on("click", function () {
+        var name = $(this).attr("name");
+        materialModule.editMaterial(name);
+    });
 }
 
 
@@ -90,13 +98,13 @@ materialModule.adapt_dialog = function (cl) {
     $("#color_pick").hide();
     switch (cl) {
         case "plastic":
-            $("#color_legend").text("Reflectance");           
+            $("#color_legend").text("Reflectance");
             break;
-        case "metal":  
-            $("#color_legend").text("Reflectance");           
+        case "metal":
+            $("#color_legend").text("Reflectance");
             break;
-        case "glass":  
-            $("#color_legend").text("Transmittance");          
+        case "glass":
+            $("#color_legend").text("Transmittance");
             $("label[for='specularity']").hide();
             $("#specularity").hide();
             $("label[for='roughness']").hide();
@@ -113,6 +121,45 @@ materialModule.deleteMaterial = function (material) {
     window.location.href = 'skp:remove_material@'+material;
 }
 
+materialModule.editMaterial = function (material) {
+  if(materials.hasOwnProperty(material)){
+      material = materials[material];
+      rad = material["rad"].split(" ");
+      cl = material["class"];
+      $("#material_name").val(material["name"]);
+      $("#material_class").val(cl);
+      $("#color_pick").spectrum("set", "rgb(" + material["color"] [0]+ "," + material["color"] [1] + "," +material["color"] [2] + ")");
+      switch (cl) {
+          case "plastic":
+              $("#red").val(rad[6]);
+              $("#green").val(rad[7]);
+              $("#blue").val(rad[8]);
+              $("#specularity").val(rad[9]);
+              $("#roughness").val(rad[10]);
+              break;
+          case "metal":
+              $("#red").val(rad[6]);
+              $("#green").val(rad[7]);
+              $("#blue").val(rad[8]);
+              $("#specularity").val(rad[9]);
+              $("#roughness").val(rad[10]);
+              break;
+          case "glass":
+              $("#red").val(materialModule.transmisivity2transmittance(rad[6]));
+              $("#green").val(materialModule.transmisivity2transmittance(rad[7]));
+              $("#blue").val(materialModule.transmisivity2transmittance(rad[8]));
+              break;
+          default:
+              return {success: false, error: "ERROR: edit material - unkown material class!"}
+      }
+      materialModule.adapt_dialog(cl);
+      materialModule.add_material_dialog.dialog("open");
+      return {success: true};
+  }else{
+      alert("There is an error with the material you are trying to edit!");
+      return false;
+  }
+}
 
 
 materialModule.useMaterial = function (material) {
@@ -122,11 +169,13 @@ materialModule.useMaterial = function (material) {
 }
 
 
-materialModule.addMaterial = function () {    
-    var name = $("#material_name").val();
+materialModule.addMaterial = function () {
+    var name = $.trim($("#material_name").val());
     if(materials.hasOwnProperty(name)){
-        alert("Material already exists!");
-        return false;
+        var r = confirm("This material already exists. Do you want to replace it?");
+        if(!r){
+          return false;
+        }
     }else if(name == ""){
         alert("Please insert a valid name for the material");
         return false;
@@ -134,6 +183,7 @@ materialModule.addMaterial = function () {
     var mat = materialModule.get_material_json();
     if(!mat.success){alert(mat.error);return false}
     mat = mat.object;
+    mat["name"]=name;
     materials[name] = mat;
     materialModule.update_list("");
     materialModule.add_material_dialog.dialog("close");
@@ -182,29 +232,29 @@ $("#green").prop("disabled",true);
 $("#blue").prop("disabled",true);
 var red = $("#red").val();
 $("#green").val(red);
-$("#blue").val(red);  
+$("#blue").val(red);
 
 $("input.color").on("change", function () {
-    
+
     var r = $("#red").val(); var g = $("#green").val(); var b = $("#blue").val();
     if($("#monochromatic").prop("checked")){
         g=r; b=r;
     }
     $("#color_pick").spectrum("set", "rgb(" + Math.round(r*255) + "," + Math.round(g*255) + "," + Math.round(b*255) + ")");
-    
+
 });
 
 $("#monochromatic").on("change",function(){
-    if($(this).prop("checked")){        
+    if($(this).prop("checked")){
         $("#green").prop("disabled",true);
-        $("#blue").prop("disabled",true);   
+        $("#blue").prop("disabled",true);
         var red = $("#red").val();
         $("#green").val(red);
-        $("#blue").val(red);     
+        $("#blue").val(red);
     }else{
         $("#green").removeAttr("disabled");
-        $("#blue").removeAttr("disabled");        
-    }   
+        $("#blue").removeAttr("disabled");
+    }
 });
 
 $("#red").on("change",function(){
