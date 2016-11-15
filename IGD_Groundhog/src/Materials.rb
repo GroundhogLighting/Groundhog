@@ -8,7 +8,7 @@ module IGD
 			# @author German Molina
 			# @return [Hash] The material
 			def self.default_glass
-				return {"rad" => "void glass %MAT_NAME% 0 0 3 0.86 0.86 0.86", "color" => [0,0,255], "alpha" => 0.2, "name"=> "Default 3mm Clear Glass", "class" => "glass"}
+				return {"rad" => "void glass %MAT_NAME% 0 0 3 0.96 0.96 0.96", "color" => [0,0,255], "alpha" => 0.2, "name"=> "Default 3mm Clear Glass", "class" => "glass"}
 			end
 
 
