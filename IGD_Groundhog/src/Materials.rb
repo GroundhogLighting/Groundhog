@@ -4,6 +4,22 @@ module IGD
 		# This module handles everything related to the Materials.
 		module Materials
 
+			# Creates a SketchUp material from the Groundhog definition.
+			# If the material already exist, it will update it.
+			# @author German Molina
+			# @param m [Hash] The material hash
+			def self.add_material(m)
+				materials = Sketchup.active_model.materials
+				m["color"] = m["color"].map{|x| x.to_i}
+				m["alpha"] = m["alpha"].to_f
+				materials.add m["name"] if materials[m["name"]] == nil #add it if it does not exist
+				mat = materials[m["name"]]
+				mat.color=m["color"]
+				mat.alpha=m["alpha"]
+				Labeler.to_rad_material(mat)
+				Labeler.set_rad_material_value(mat,m.to_json)
+			end
+
 			# Returns the hash that represents the Default Groundhog glass.
 			# @author German Molina
 			# @return [Hash] The material
@@ -23,26 +39,14 @@ module IGD
 			# @author German Molina
 			# @return [Void]
 			def self.add_default_material
-				info = self.default_material
-				name = info["name"]
-				Sketchup.active_model.materials.add name
-				Sketchup.active_model.materials[name].color=info["color"]
-				Sketchup.active_model.materials[name].alpha=info["alpha"]
-				Labeler.to_rad_material(Sketchup.active_model.materials[name])
-				Labeler.set_rad_material_value(Sketchup.active_model.materials[name], info.to_json)
+				self.add_material self.default_material
 			end
 
 			# Adds the glass material to the model
 			# @author German Molina
 			# @return [Void]
 			def self.add_default_glass
-				info = self.default_glass
-				name = info["name"]
-				Sketchup.active_model.materials.add name
-				Sketchup.active_model.materials[name].color=info["color"]
-				Sketchup.active_model.materials[name].alpha=info["alpha"]
-				Labeler.to_rad_material(Sketchup.active_model.materials[name])
-				Labeler.set_rad_material_value(Sketchup.active_model.materials[name], info.to_json)
+				self.add_material self.default_glass
 			end
 
 			# Returns the Radiance primitive of a SketchUp material.

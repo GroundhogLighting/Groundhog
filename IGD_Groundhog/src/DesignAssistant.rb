@@ -349,17 +349,16 @@ module IGD
                     materials = Sketchup.active_model.materials
                     m = JSON.parse(msg)
                     name = m["name"]
-                    m["color"] = m["color"].map{|x| x.to_i}
-                    m["alpha"] = m["alpha"].to_f
-                    if materials[name] == nil then
-                        mat = Sketchup.active_model.materials.add name
-                        mat.color=m["color"]
-                        mat.alpha=m["alpha"]
-                        Labeler.to_rad_material(mat)
-                        Labeler.set_rad_material_value(mat,m.to_json)
+                    if materials[name] == nil then #add it if it does not exist
+                        Materials.add_material(m)
                     end
                     Sketchup.send_action("selectPaintTool:")
                     materials.current=materials[name]
+                end
+
+                wd.add_action_callback("add_material") do |web_dialog,msg|
+                    m = JSON.parse(msg)
+                    Materials.add_material(m)
                 end
 
 

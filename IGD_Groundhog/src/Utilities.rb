@@ -1,11 +1,20 @@
 module IGD
 	module Groundhog
-		
+
 		# This modiule contains the methods that are useful other methods.
 		#
 		# For example, obtain all the faces within an array, or all the windows, or delete all the
 		# entities with a certain label.
 		module Utilities
+
+			def self.compare_versions(older,newer)
+				return 0 if older == newer
+
+				older = older.split(".").map{|x| x.to_i}
+				newer = newer.split(".").map{|x| x.to_i}
+				3.times { return -1 if newer.shift < older.shift}
+				return 1
+			end
 
 			#  Assess the current CIE sky, using model's sun position and
 			#  a type of sky
@@ -250,7 +259,7 @@ module IGD
 			# @author German Molina
 			# @param entities [Array<entities>] Array of entities
 			# @return [Array <Int>] Array with the unique window groups
-			def self.get_win_groups(entities)				
+			def self.get_win_groups(entities)
 				windows=self.get_windows(entities).select{|x| Labeler.get_win_group(x) != nil}
 				windows.map{|x| Labeler.get_win_group(x)}.uniq
 			end
@@ -380,7 +389,7 @@ module IGD
 				return entities.select{|x| x.is_a? Sketchup::ComponentInstance}
 			end
 
-			
+
 
 			# Gets the workplanes
 			# @author German Molina
@@ -404,7 +413,7 @@ module IGD
 			# @param objective [String] The name of the objective to remark
 			# @version 0.1
 			def self.remark_solved_workplanes(objective)
-				#hide them all, except those with the metric we are interested in				
+				#hide them all, except those with the metric we are interested in
 				self.get_solved_workplanes(Sketchup.active_model.entities).each{|x|
 					value=JSON.parse(Labeler.get_value(x))
 					if value["objective"]==objective
@@ -420,7 +429,7 @@ module IGD
 			# @param entity [SketchUp::Face (or something)]
 			# @return [Array <SketchUp::Transformation>] An array with the transformations
 			# @note if the input entity is not within a group or component, its own transformation will be returned.
-			def self.get_all_global_transformations(entity,transform)			
+			def self.get_all_global_transformations(entity,transform)
 				ret = []
 				if entity.parent.is_a? Sketchup::Model then
 					ret << transform if not entity.respond_to? :transformation #face, edge, or other
@@ -444,13 +453,13 @@ module IGD
 				return false if face.loops.length != 1
 				vertices = face.vertices
 				return false if vertices.count < 15 #is this enough vertices to be a circle?
-								
+
 				center = face.bounds.center
-				
+
 				radius = center.distance vertices.shift
 				vertices.each{|v|
-					r = center.distance v.position					
-					return false if (r-radius).abs > 1e-3			
+					r = center.distance v.position
+					return false if (r-radius).abs > 1e-3
 				}
 				return radius
 			end
