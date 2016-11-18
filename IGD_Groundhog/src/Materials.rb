@@ -5,7 +5,8 @@ module IGD
 		module Materials
 
 			# Creates a SketchUp material from the Groundhog definition.
-			# If the material already exist, it will update it.
+			# If the material already exist, it will update it (by default, SketchUp
+			# adds a second material with the same name followed by a number)
 			# @author German Molina
 			# @param m [Hash] The material hash
 			def self.add_material(m)

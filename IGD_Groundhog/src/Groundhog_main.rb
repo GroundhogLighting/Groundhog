@@ -32,6 +32,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/DesignAssistant'
 		Sketchup::require 'IGD_Groundhog/src/SimulationManager'
 		Sketchup::require 'IGD_Groundhog/src/Report'
+		Sketchup::require 'IGD_Groundhog/src/Objectives'
 
 
 		Sketchup::require 'IGD_Groundhog/src/Scripts/AnnualIlluminance'
@@ -74,7 +75,7 @@ module IGD
 
 			end
 		end
-		model.set_attribute("Groundhog","objectives",Hash.new) if model.get_attribute("Groundhog","objectives") == nil #Objectives will be stored here.
+		model.set_attribute("Groundhog","objectives",Hash.new.to_json) if model.get_attribute("Groundhog","objectives") == nil #Objectives will be stored here.
 
 		#Add Radiance to Path as well as RAYPATH
 		OS.setup_radiance

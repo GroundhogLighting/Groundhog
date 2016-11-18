@@ -7,6 +7,25 @@ module IGD
 		# entities with a certain label.
 		module Utilities
 
+			# Returns the workplane that has a certain name
+			#
+			# @author German Molina
+			# @return [SketchUp::Face] The workplane
+			# @param wp_name [String] The name of the workplane
+			def self.get_workplane_by_name(wp_name)
+				wp = Utilities.get_workplanes(Sketchup.active_model.entities).select{|x| Labeler.get_name(x)==wp_name}
+				UI.messagebox "Two or more objectives have the same name... Only one of them will be processed.\nThis is something you should fix." if wp.length > 1
+        return wp.shift
+			end
+
+			# Compares a two version strings in format "A.B.C"
+			#
+			# If they are the same, it returns 0... if the first one is older,
+			# returns 1; if the first one is newer, returns -1.
+			# @author German Molina
+			# @return [Integer] The number.
+			# @param older [String] A version number in string format (A.B.C)
+			# @param newer [String] A version number in string format (A.B.C)
 			def self.compare_versions(older,newer)
 				return 0 if older == newer
 
@@ -21,7 +40,7 @@ module IGD
 			#
 			# @author German Molina
 			# @return [String] The sky description
-			# @param sky_type [String] The file to read
+			# @param sky_type [String] The sky type
 			def self.get_current_sky(sky_type)
 				sky = false
 				info=Sketchup.active_model.shadow_info
