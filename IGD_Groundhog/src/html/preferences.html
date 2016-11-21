@@ -4,9 +4,12 @@
 <head>
 	<title>Groundhog Preferences</title>
 	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+	<link href="css/jquery-ui.css" rel="stylesheet">
+	<link href="css/groundhog-ui.css" rel="stylesheet">
+
 </head>
-<link href="css/jquery-ui.css" rel="stylesheet">
-<link href="css/groundhog-ui.css" rel="stylesheet">
 
 <body>
 
@@ -212,14 +215,14 @@
 	</div>
 
 
-</body>
+	<script src="js/JQuery/jquery-3.0.0.js"></script>
+	<script src="js/jQueryUI/jquery-ui.js"></script>
+	<script src="js/groundhog-ui.js"></script>
+	<script src="js/preferences.js"></script>
+	<script>
+		window.location.href = 'skp:on_load@message';
+	</script>
 
-<script src="js/JQuery/jquery-3.0.0.js"></script>
-<script src="js/jQueryUI/jquery-ui.js"></script>
-<script src="js/groundhog-ui.js"></script>
-<script src="js/preferences.js"></script>
-<script>
-	window.location.href = 'skp:on_load@message';
-</script>
+</body>
 
 </html>

@@ -62,13 +62,40 @@ module IGD
 		current_groundhog_version = Sketchup.extensions["Groundhog"].version.to_s
 		if current_model_version == nil then
 			model.set_attribute("Groundhog","version",current_groundhog_version)
+			any_objective = false
+			wps =Utilities.get_workplanes(Sketchup.active_model.entities)
+			wps.each {|wp|
+				if Labeler.get_value(wp) != nil then
+					any_objective = true
+					break
+				end
+			}
+			if any_objective then
+				result = UI.messagebox('It seems that you worked on this project using an earlier version of Groundhog... would you like to try to update it?', MB_YESNO)
+				if result == IDYES
+					begin
+						objs = Hash.new
+						wps.each{|wp|
+							val = JSON.parse(Labeler.get_value(wp))
+							wp_value = []
+							val.each{|ob|
+								objs[ob["name"]]=ob
+								wp_value << ob["name"]
+							}
+							Labeler.set_value(wp,wp_value.to_json)
+						}
+						Sketchup.active_model.set_attribute("Groundhog","objectives",objs.to_json)
+					rescue
+						UI.messagebox("There was an error in this transformation... sorry. Please re-edit all objectives in your model.")
+					end
+				end
+			end
 		else
 			# Do something about compatibility!
 			compare = Utilities.compare_versions(current_model_version,current_groundhog_version)
 			if compare == 0 then #same version... all OK
 
 			elsif compare < 0 then #model version is newer than GH version
-				# Warn?
 
 			else #model version is older than GH version.
 				#update model to make them compatible?
