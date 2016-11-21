@@ -32,6 +32,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/DesignAssistant'
 		Sketchup::require 'IGD_Groundhog/src/SimulationManager'
 		Sketchup::require 'IGD_Groundhog/src/Report'
+		Sketchup::require 'IGD_Groundhog/src/Objectives'
 
 
 		Sketchup::require 'IGD_Groundhog/src/Scripts/AnnualIlluminance'
@@ -51,15 +52,62 @@ module IGD
 		require 'Open3'
 		require 'fileutils'
 		require 'date'
-		require 'Net/Http'
+		require 'Net/Http' #used only for checking updates
 
 		#########################################
 		model=Sketchup.active_model
-		
+
+
+		current_model_version = model.get_attribute("Groundhog","version")
+		current_groundhog_version = Sketchup.extensions["Groundhog"].version.to_s
+		if current_model_version == nil then
+			model.set_attribute("Groundhog","version",current_groundhog_version)
+			any_objective = false
+			wps =Utilities.get_workplanes(Sketchup.active_model.entities)
+			wps.each {|wp|
+				if Labeler.get_value(wp) != nil then
+					any_objective = true
+					break
+				end
+			}
+			if any_objective then
+				result = UI.messagebox('It seems that you worked on this project using an earlier version of Groundhog... would you like to try to update it?', MB_YESNO)
+				if result == IDYES
+					begin
+						objs = Hash.new
+						wps.each{|wp|
+							val = JSON.parse(Labeler.get_value(wp))
+							wp_value = []
+							val.each{|ob|
+								objs[ob["name"]]=ob
+								wp_value << ob["name"]
+							}
+							Labeler.set_value(wp,wp_value.to_json)
+						}
+						Sketchup.active_model.set_attribute("Groundhog","objectives",objs.to_json)
+					rescue
+						UI.messagebox("There was an error in this transformation... sorry. Please re-edit all objectives in your model.")
+					end
+				end
+			end
+		else
+			# Do something about compatibility!
+			compare = Utilities.compare_versions(current_model_version,current_groundhog_version)
+			if compare == 0 then #same version... all OK
+
+			elsif compare < 0 then #model version is newer than GH version
+
+			else #model version is older than GH version.
+				#update model to make them compatible?
+
+			end
+		end
+		model.set_attribute("Groundhog","objectives",Hash.new.to_json) if model.get_attribute("Groundhog","objectives") == nil #Objectives will be stored here.
+
 		#Add Radiance to Path as well as RAYPATH
 		OS.setup_radiance
 		#CHMOD for avoiding permission issues
-		Dir["#{IGD::Groundhog::OS.radiance_path}/*"].each{|bin| 
+		Dir["#{IGD::Groundhog::OS.radiance_path}/*"].each{|bin|
 			next if bin.split("/").pop.include? "."
 			FileUtils.chmod(755,bin)
 		}
@@ -238,7 +286,7 @@ module IGD
 		groundhog_menu=extensions_menu.add_submenu("Groundhog")
 
 
-		
+
 
 
 		@design_assistant = DesignAssistant.get
@@ -250,7 +298,7 @@ module IGD
 			@design_assistant.show
 		}
 
-=begin	
+=begin
 		groundhog_menu.add_item("Import results"){
 			path=Exporter.getpath #it returns false if not successful
 			path="c:/" if not path
@@ -258,7 +306,7 @@ module IGD
 			Results.import_results(path,false) if path
 		}
 
-	
+
 		### INSERT SUBMENU
 
 		gh_insert_menu=groundhog_menu.add_submenu("Insert")
@@ -298,9 +346,9 @@ module IGD
 
 
 		### PREFERENCES MENU
-		
-		@preferences_dialog = Config.get		
-		groundhog_menu.add_item("Preferences") {			
+
+		@preferences_dialog = Config.get
+		groundhog_menu.add_item("Preferences") {
 				@preferences_dialog.show
 		}
 
@@ -314,7 +362,7 @@ module IGD
 				UI.messagebox("Unable to open '#{example}' Example File.") if not Sketchup.open_file path
 			}
 		}
-		
+
 
 		### HELP MENU
 
@@ -327,7 +375,7 @@ module IGD
 		groundhog_menu.add_item("About Groundhog"){
 
 			str="Groundhog version "+Sketchup.extensions["Groundhog"].version.to_s+"."
-			
+
 			str+="
 
 The Radiance binaries you are using are a courtesy of the U.S. National Renewable Energy Laboratory (www.nrel.gov)"

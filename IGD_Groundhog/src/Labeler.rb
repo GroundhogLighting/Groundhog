@@ -34,18 +34,18 @@ module IGD
 			# @param entity [entity] SketchUp entity (should be face)
 			# @return [String] Name of the entity.
 			# @note: Will ask for the name of anything, even if it is not a face.
-			def self.get_name(entity)								
-				return false if entity.deleted?	
-				return false if not entity		
+			def self.get_name(entity)
+				return false if entity.deleted?
+				return false if not entity
 
-				#first check User-assigned name	
-				name=entity.get_attribute("Groundhog","Name")				
+				#first check User-assigned name
+				name=entity.get_attribute("Groundhog","Name")
 				return name if name !=  nil
 				#Second, check if SketchUp assigns a name to this.
-				name = entity.name if entity.respond_to? :name 
+				name = entity.name if entity.respond_to? :name
 				return entity.name if (name != nil and name != "")
 				#Last, return ID
-				return entity.entityID.to_s				
+				return entity.entityID.to_s
 			end
 
 			# Same as get_name but fixing the output (ie. replacing blanks and # by underscores)
@@ -58,7 +58,7 @@ module IGD
 				return false if not name
 				return Utilities.fix_name(name)
 			end
-			
+
 
 			# Assigns the value to a solved workplane
 			#
@@ -71,7 +71,7 @@ module IGD
 			def self.set_workplane_value(workplane,value)
 				if not self.solved_workplane?(workplane) then
 					warn "Trying to assign a solved_workplane value to a non-solved_workplane entity!"
-					return false 
+					return false
 				end
 				self.set_value(workplane,value)
 			end
@@ -85,9 +85,9 @@ module IGD
 			# @param value [Array<String>] an array of 2 strings, with what goes before the name, and what goes after the name.
 			# @return [Boolean] Success
 			def self.set_rad_material_value(material,value)
-				if not self.rad_material?(material) then				
+				if not self.rad_material?(material) then
 					UI.messagebox "Trying to assign a rad_material value to a non-rad_material entity!"
-					return false 
+					return false
 				end
 				self.set_value(material,value)
 				return true
@@ -118,7 +118,7 @@ module IGD
 			# @param material [entity] Material to test.
 			# @return [Boolean]
 			def self.rad_material?(material)
-				self.is?(material, "rad_material")				
+				self.is?(material, "rad_material")
 			end
 
 			# Checks if a component is a solved_workplane
@@ -256,7 +256,7 @@ module IGD
 				if entities.length==1 then
 					entities[0].set_attribute("Groundhog","Name",name)
 				else
-					entities.each_with_index do |ent,i|							
+					entities.each_with_index do |ent,i|
 						ent.set_attribute("Groundhog","Name",name+"_#{i}")
 					end
 				end
@@ -269,13 +269,13 @@ module IGD
 			# @param value [Float] The value to be assigned
 			# @return [Void]
 			# @version 0.1
-			def self.set_pixel_value(pixel,value)				
-				warn "Trying to assign a pixel value to a non-result_pixel" if not self.result_pixel?(pixel) 
-				return false if not self.result_pixel?(pixel) 
-				self.set_value(pixel,value)														
+			def self.set_pixel_value(pixel,value)
+				warn "Trying to assign a pixel value to a non-result_pixel" if not self.result_pixel?(pixel)
+				return false if not self.result_pixel?(pixel)
+				self.set_value(pixel,value)
 			end
 
-			
+
 			# Label selected faces as illums
 			# @author German Molina
 			# @param entities [Array<entities>] An array with the entities to be transformed into illums.
@@ -285,7 +285,7 @@ module IGD
 				faces=Utilities.get_faces(entities)
 
 				if faces.length>=1 then
-					faces.each do |i|						
+					faces.each do |i|
 						self.set_label(i,"illum")
 						i.material=[0.0,1.0,0.0]
 						i.material.alpha=0.2
@@ -309,7 +309,7 @@ module IGD
 			# @author German Molina
 			# @param obj [Sketchup::ComponentDefinition] The object to be labeled as illuminance_sensor
 			# @return [Void]
-			def self.to_illuminance_sensor(obj)				
+			def self.to_illuminance_sensor(obj)
 				obj.set_label(face,"illuminance_sensor")
 			end
 
@@ -328,27 +328,27 @@ module IGD
 			def self.to_luminaire(comp)
 				UI.messagebox("Only components can be labeled as Luminaires") if not comp.is_a? Sketchup::ComponentDefinition
 				return if not comp.is_a? Sketchup::ComponentDefinition
-				
-				
+
+
 				lumfile = UI.openpanel("Choose an IES file", "c:/", "IES|*.ies||")
-				return false if not lumfile	
+				return false if not lumfile
 				text = File.readlines(lumfile)
 
 				self.set_label(comp,"luminaire")
 				data = Hash.new
 				data["ies"] = text
-								
-				
+
+
 				text.each {|line|
 						data["luminaire"] = line.gsub("[LUMINAIRE]","").strip if line.start_with? "[LUMINAIRE]"
 						data["manufacturer"] = line.gsub("[MANUFAC]","").strip if line.start_with? "[MANUFAC]"
 						data["lamp"] = line.gsub("[LAMP]","").strip if line.start_with? "[LAMP]"
 						data["lumcat"] = line.gsub("[LUMCAT]","").strip if line.start_with? "[LUMCAT]"
 						data["lampcat"] = line.gsub("[LAMPCAT]","").strip if line.start_with? "[LAMPCAT]"
-						
+
 						break if line.start_with? "TILT="
 				}
-								
+
 				self.set_value(comp,data.to_json)
 
 				#update
@@ -375,8 +375,8 @@ module IGD
 				if faces.length>=1 then
 					mat=Sketchup.active_model.materials["Default 3mm Clear Glass"]
 					Materials.add_default_glass if mat==nil
-					faces.each do |i|						
-						self.set_label(i,"window")										
+					faces.each do |i|
+						self.set_label(i,"window")
 						i.material=Sketchup.active_model.materials["Default 3mm Clear Glass"]
 						i.back_material=Sketchup.active_model.materials["Default 3mm Clear Glass"]
 					end
@@ -391,21 +391,21 @@ module IGD
 			# @version 0.2
 			# @return [Void]
 			def self.to_workplane(entities)
-				faces=Utilities.get_horizontal_faces(entities)				
+				faces=Utilities.get_horizontal_faces(entities)
 				correct=[]
 				name = Utilities.get_name
 				return if not name
 				if faces.length>=1 then
 					faces.each do |i|
-						correct=correct+[i]
-						self.set_label(i,"workplane")
-						i.material=[1.0,0.0,0.0]
-						i.material.alpha=0.2
-						i.back_material=[1.0,0.0,0.0]
-						i.back_material.alpha=0.2
-					end
+					correct=correct+[i]
+					self.set_label(i,"workplane")
+					i.material=[1.0,0.0,0.0]
+					i.material.alpha=0.2
+					i.back_material=[1.0,0.0,0.0]
+					i.back_material.alpha=0.2
+				end
 
-					self.set_name(correct,name)	
+					self.set_name(correct,name)
 
 					#update
 					DesignAssistant.update
@@ -423,7 +423,7 @@ module IGD
 			def self.to_tdd(groups)
 				groups.each{|x|
 					self.set_label(x, "TDD")
-					self.set_label(x.definition, "TDD")					
+					self.set_label(x.definition, "TDD")
 				}
 			end
 
@@ -444,9 +444,9 @@ module IGD
 			# @version 0.1
 			# @return [Void]
 			def self.to_tdd_bottom(face)
-				self.set_label(face,"TDD_bottom")				
+				self.set_label(face,"TDD_bottom")
 				file = UI.openpanel("Choose an BSDF.xml file", "c:/", "XML|*.xml||")
-				self.set_value(face,File.readlines(file))				
+				self.set_value(face,File.readlines(file))
 			end
 
 			# Delete label from entities
@@ -488,7 +488,7 @@ module IGD
 				entity.get_attribute("Groundhog","Label")
 			end
 
-			# Sets the Groundhog-assigned value to an entity						
+			# Sets the Groundhog-assigned value to an entity
 			#
 			# @author German Molina
 			# @param entity [SketchUp::Entity] The entity to set the value to
@@ -498,7 +498,7 @@ module IGD
 				return true
 			end
 
-			# Sets the Groundhog-assigned label an entity						
+			# Sets the Groundhog-assigned label an entity
 			#
 			# @author German Molina
 			# @param entity [SketchUp::Entity] The entity to get the value from

@@ -187,6 +187,7 @@ materialModule.addMaterial = function () {
     materials[name] = mat;
     materialModule.update_list("");
     materialModule.add_material_dialog.dialog("close");
+    window.location.href = 'skp:add_material@'+JSON.stringify(mat);
 }
 
 

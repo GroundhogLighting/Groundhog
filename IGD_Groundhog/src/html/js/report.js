@@ -18,8 +18,8 @@ reportModule.update_objective_summary = function () {
 }
 
 reportModule.highlight_objective = function (objective) {
-    
-    $('#compliance_summary tr:first-child').each(function () {        
+
+    $('#compliance_summary tr:first-child').each(function () {
         $(this).children().each(function () {
             var o = $(this).text();
             if (o == objective) {
@@ -80,7 +80,7 @@ reportModule.update_compliance_summary = function () {
                 if (results[wp_name].hasOwnProperty(obj_name)) {
                     var s = results[wp_name][obj_name] * 100;
                     col.text(Math.round(s) + "%");
-                    if (objectives[obj_name]["goal"] < s) {
+                    if (objectives[obj_name]["goal"] <= s) {
                         col.addClass("success");
                     } else {
                         col.addClass("not-success");

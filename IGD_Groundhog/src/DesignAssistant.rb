@@ -43,52 +43,45 @@ module IGD
 				return true
 			end
 
-            # Search for workplanes in the model and find their objectives. Returns a Hash
-            # with the corresponding format.
+      # Search for workplanes in the model and find their objectives. Returns a Hash
+      # with the corresponding format.
 			# @author German Molina
 			# @return [Hash] the workplanes and objectives
-            def self.get_workplanes_hash
+      def self.get_workplanes_hash
+        obj_hash = Objectives.get_objectives_hash
 
-                workplanes = Utilities.get_workplanes(Sketchup.active_model.entities)
-
-                wp_hash = Hash.new
-                obj_hash = Hash.new
-                workplanes.each { |wp|
-                    value = Labeler.get_value(wp)
-                    if value == nil or not value then
-                        wp_hash[Labeler.get_name(wp)] = []
-                    else
-                        value = JSON.parse(value)  #this should  be an array of Hash
-                        value.each {|objective|
-                            obj_hash[objective["name"]] = objective #does not requie "uniq"
-                        }
-                        aux = []
-                        value.each{|x| aux << x["name"]}
-                        wp_hash[Labeler.get_name(wp)] = aux.uniq
-                    end
-                }
-                return {"workplanes" => wp_hash, "objectives" => obj_hash}
+        wp_hash = Hash.new
+        workplanes = Utilities.get_workplanes(Sketchup.active_model.entities)
+        workplanes.each { |wp|
+            value = Labeler.get_value(wp)
+            if value == nil or not value then
+                wp_hash[Labeler.get_name(wp)] = []
+            else
+                wp_hash[Labeler.get_name(wp)] = JSON.parse(value)
             end
+        }
+          return {"workplanes" => wp_hash, "objectives" => obj_hash}
+      end
 
-            # Search for the luminaire definition
+      # Search for the luminaire definition
 			# @author German Molina
 			# @return [Hash] the luminaires
-            def self.get_luminaires_hash
-                ret = Hash.new
+      def self.get_luminaires_hash
+          ret = Hash.new
 
-                luminaires = Sketchup.active_model.definitions.select{|x| Labeler.luminaire? x }
-                luminaires.each{|x|
-                    # Get the data if needed.
-                    data = JSON.parse(Labeler.get_value(x))
-                    data.delete("ies")
-                    ret[data["luminaire"]]=data
-                }
+          luminaires = Sketchup.active_model.definitions.select{|x| Labeler.luminaire? x }
+          luminaires.each{|x|
+              # Get the data if needed.
+              data = JSON.parse(Labeler.get_value(x))
+              data.delete("ies")
+              ret[data["luminaire"]]=data
+          }
 
 
-                return ret
-            end
+          return ret
+      end
 
-            # Search for materials that have Radiance definition
+      # Search for materials that have Radiance definition
 			# @author German Molina
 			# @return [Hash] the materials
             def self.get_radiance_materials_hash
@@ -277,7 +270,7 @@ module IGD
                         #script << "oconv ./Materials/materials.mat ./scene.rad  ./Skies/sky.rad  #{win_string}  > octree.oct"
                         script << "rvu #{Config.rvu_options} -vf Views/view.vf octree.oct"
                         OS.execute_script(script)
-						OS.clear_actual_path
+						            OS.clear_actual_path
                     end
                 end
 
@@ -349,17 +342,16 @@ module IGD
                     materials = Sketchup.active_model.materials
                     m = JSON.parse(msg)
                     name = m["name"]
-                    m["color"] = m["color"].map{|x| x.to_i}
-                    m["alpha"] = m["alpha"].to_f
-                    if materials[name] == nil then
-                        mat = Sketchup.active_model.materials.add name
-                        mat.color=m["color"]
-                        mat.alpha=m["alpha"]
-                        Labeler.to_rad_material(mat)
-                        Labeler.set_rad_material_value(mat,m.to_json)
+                    if materials[name] == nil then #add it if it does not exist
+                        Materials.add_material(m)
                     end
                     Sketchup.send_action("selectPaintTool:")
                     materials.current=materials[name]
+                end
+
+                wd.add_action_callback("add_material") do |web_dialog,msg|
+                    m = JSON.parse(msg)
+                    Materials.add_material(m)
                 end
 
 
@@ -397,39 +389,36 @@ module IGD
                     obj = JSON.parse(msg)
                     wp_name = obj["workplane"]
                     objective = obj["objective"]
-
-                    wp = Utilities.get_workplanes(Sketchup.active_model.entities).select{|x| Labeler.get_name(x)==wp_name}
-                    wp=wp[0]
-                    value = Labeler.get_value(wp)
-                    value = "[]" if value == nil or not value
-                    value = JSON.parse(value)
-                    value << objective
-                    Labeler.set_value(wp,value.to_json)
-
+                    Objectives.add_objective_to_worplane(wp_name,objective)
                 end
+
+                wd.add_action_callback("create_objective") do |web_dialog,msg|
+                    objective = JSON.parse(msg)
+                    Objectives.create_objective(objective)
+                end
+
+                wd.add_action_callback("delete_objective") do |web_dialog,msg|
+                    name = msg
+                    Objectives.delete_objective(name)
+
+                    #update design assistant.
+                    hash = self.get_workplanes_hash
+                    workplanes = hash["workplanes"].to_json
+                    objectives = hash["objectives"].to_json
+                    script = ""
+                    script += "workplanes = JSON.parse('#{workplanes}');"
+                    script += "objectives = JSON.parse('#{objectives}');"
+                    script += "objectiveModule.update_workplanes('');"
+                    script += "objectiveModule.update_objectives('');"
+                    web_dialog.execute_script(script)
+                end
+
 
                 wd.add_action_callback("remove_objective") do |web_dialog,msg|
                     obj = JSON.parse(msg)
                     workplane = obj["workplane"]
-                    objective = obj["objective"]
-
-                    wps = Utilities.get_workplanes(Sketchup.active_model.entities)
-                    wps = wps.select{|x| Labeler.get_name(x)==workplane}
-                    workplane = wps[0]
-                    #delete the objective from the workplane value
-                    value = JSON.parse Labeler.get_value(workplane)   #this is an array of hash
-                    del = value.select{|x| x["name"]==objective}
-                    value.delete(del.shift) #delete the first one.
-                    Labeler.set_value(workplane, value.to_json)
-
-                    #delete the solved workplane if it exist.
-					IGD::Groundhog::Utilities.get_solved_workplanes(Sketchup.active_model.entities).select{|x|
-						JSON.parse(IGD::Groundhog::Labeler.get_value(x))["objective"]==obj["objective"]
-					}.select {|x|
-						JSON.parse(IGD::Groundhog::Labeler.get_value(x))["workplane"]==obj["workplane"]
-					}.each{|x|
-						x.erase!
-					}
+                    objective_name = obj["objective"]
+                    Objectives.remove_objective_from_workplane(workplane,objective_name)
 
                     #update design assistant.
                     hash = self.get_workplanes_hash
@@ -449,7 +438,7 @@ module IGD
                     path = "#{Sketchup.temp_dir}/Groundhog"
                     OS.mkdir(path)
                     next if not Exporter.export(path)
-					FileUtils.cd(path) do
+					          FileUtils.cd(path) do
                         options = JSON.parse(options)
 
                         #Pre-process information

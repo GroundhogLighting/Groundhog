@@ -1,18 +1,46 @@
 module IGD
 	module Groundhog
-		
+
 		# This modiule contains the methods that are useful other methods.
 		#
 		# For example, obtain all the faces within an array, or all the windows, or delete all the
 		# entities with a certain label.
 		module Utilities
 
+			# Returns the workplane that has a certain name
+			#
+			# @author German Molina
+			# @return [SketchUp::Face] The workplane
+			# @param wp_name [String] The name of the workplane
+			def self.get_workplane_by_name(wp_name)
+				wp = Utilities.get_workplanes(Sketchup.active_model.entities).select{|x| Labeler.get_name(x)==wp_name}
+				UI.messagebox "Two or more objectives have the same name... Only one of them will be processed.\nThis is something you should fix." if wp.length > 1
+        return wp.shift
+			end
+
+			# Compares a two version strings in format "A.B.C"
+			#
+			# If they are the same, it returns 0... if the first one is older,
+			# returns 1; if the first one is newer, returns -1.
+			# @author German Molina
+			# @return [Integer] The number.
+			# @param older [String] A version number in string format (A.B.C)
+			# @param newer [String] A version number in string format (A.B.C)
+			def self.compare_versions(older,newer)
+				return 0 if older == newer
+
+				older = older.split(".").map{|x| x.to_i}
+				newer = newer.split(".").map{|x| x.to_i}
+				3.times { return -1 if newer.shift < older.shift}
+				return 1
+			end
+
 			#  Assess the current CIE sky, using model's sun position and
 			#  a type of sky
 			#
 			# @author German Molina
 			# @return [String] The sky description
-			# @param sky_type [String] The file to read
+			# @param sky_type [String] The sky type
 			def self.get_current_sky(sky_type)
 				sky = false
 				info=Sketchup.active_model.shadow_info
@@ -250,7 +278,7 @@ module IGD
 			# @author German Molina
 			# @param entities [Array<entities>] Array of entities
 			# @return [Array <Int>] Array with the unique window groups
-			def self.get_win_groups(entities)				
+			def self.get_win_groups(entities)
 				windows=self.get_windows(entities).select{|x| Labeler.get_win_group(x) != nil}
 				windows.map{|x| Labeler.get_win_group(x)}.uniq
 			end
@@ -380,7 +408,7 @@ module IGD
 				return entities.select{|x| x.is_a? Sketchup::ComponentInstance}
 			end
 
-			
+
 
 			# Gets the workplanes
 			# @author German Molina
@@ -404,7 +432,7 @@ module IGD
 			# @param objective [String] The name of the objective to remark
 			# @version 0.1
 			def self.remark_solved_workplanes(objective)
-				#hide them all, except those with the metric we are interested in				
+				#hide them all, except those with the metric we are interested in
 				self.get_solved_workplanes(Sketchup.active_model.entities).each{|x|
 					value=JSON.parse(Labeler.get_value(x))
 					if value["objective"]==objective
@@ -420,7 +448,7 @@ module IGD
 			# @param entity [SketchUp::Face (or something)]
 			# @return [Array <SketchUp::Transformation>] An array with the transformations
 			# @note if the input entity is not within a group or component, its own transformation will be returned.
-			def self.get_all_global_transformations(entity,transform)			
+			def self.get_all_global_transformations(entity,transform)
 				ret = []
 				if entity.parent.is_a? Sketchup::Model then
 					ret << transform if not entity.respond_to? :transformation #face, edge, or other
@@ -444,13 +472,13 @@ module IGD
 				return false if face.loops.length != 1
 				vertices = face.vertices
 				return false if vertices.count < 15 #is this enough vertices to be a circle?
-								
+
 				center = face.bounds.center
-				
+
 				radius = center.distance vertices.shift
 				vertices.each{|v|
-					r = center.distance v.position					
-					return false if (r-radius).abs > 1e-3			
+					r = center.distance v.position
+					return false if (r-radius).abs > 1e-3
 				}
 				return radius
 			end

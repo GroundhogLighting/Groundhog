@@ -4,10 +4,12 @@
 <head>
     <title>Design assistant</title>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <link href="css/jquery-ui.css" rel="stylesheet">
+    <link href="css/groundhog-ui.css" rel="stylesheet">
+    <link rel='stylesheet' href='css/spectrum.css' />
 </head>
-<link href="css/jquery-ui.css" rel="stylesheet">
-<link href="css/groundhog-ui.css" rel="stylesheet">
-<link rel='stylesheet' href='css/spectrum.css' />
 
 <body>
 
@@ -84,12 +86,12 @@
 
     <div class="display" id="objectives">
         <div class="fixed_toolbar">
-            <button id="add_objective_to_worplane">New objective</button>
+            <button id="create_objective_button">New objective</button>
         </div>
         <div class="wrap">
             <div class="resizable resizable1">
                 <div class="center"><label for="objectives_filter">Filter:</label> <input id="objectives_filter" type="text"></div>
-                <ul id="objectives_list" class="draglist"></ul>
+                <table id='objectives_list'  class='draglist'></table>
             </div>
             <div class="resizable resizable2">
                 <div class="center"><label for="workplane_objectives_filter">Filter:</label><input id="workplane_objectives_filter" type="text"></div>
@@ -126,7 +128,7 @@
                     <tr>
                         <td>Sky subdivition</td>
                         <td>
-                            <input title="option" id='sky_bins' type='number' value='1' step='1' min='1'></input>
+                            <input title="option" id='sky_bins' type='number' value='1' step='1' min='1'>
                             <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
                         </td>
                     </tr>
@@ -249,58 +251,74 @@
     </div>
 
     <!-- ADD OBJECTIVE DIALOG -->
-    <div id="add_metric_dialog" title="Add objective">
-        <div class="center">
-            <label for="metric_name">Name: </label>
+    <div id="create_objective_dialog" title="Add objective">
+        <div id="objective_name_field" class="center">
+            <label for="objective_name">Name: </label>
             <input type="text" id="objective_name">
         </div>
         <fieldset class="center" id="metric_field">
             <legend>Metric</legend>
-            <select id="metric">
-                <option value="DA">Daylight Autonomy</option>
-                <option value="UDI">Useful Daylight Illminance</option>
-                <option value="DF">Daylight Factor</option>
-                <option value="LUX">Illuminance under clear sky</option>
-            </select>
-        </fieldset>
-        <fieldset id="fulfillment_field">
-            <legend>Workplane is in compliance when:</legend>
-            <input type="number" min="0" max="100" id="objective_goal">
-            <label for="objective_goal">% of the space</label>
-            <input type="number" min="0" max="100" id="metric_threshold">
-            <label for="metric_threshold"></label>
+            <select id="metric"></select>
         </fieldset>
 
-        <fieldset id="working_hours_field">
+        <fieldset id="compliance_field">
+            <legend>Compliance</legend>
+            <table>
+              <tr>
+                <td>
+                  <input type="number" min="0" max="100" id="objective_goal">
+                </td>
+                <td>
+                  <label for="objective_goal">% of the space</label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    <input type="number" min="0" max="100" id="objective_good_pixel">
+                </td>
+                <td>
+                  <label for="objective_good_pixel">% of occupied time</label>
+                </td>
+              </tr>
+            </table>
+
+        </fieldset>
+
+        <fieldset id="objective_occupied">
             <legend>Occupancy hours</legend>
-            <label for="occupied_min">From: </label>
-            <input type="number" value="8" min="0" max="24" id="occupied_min">
-            <label for="occupied_max">To:</label>
-            <input type="number" value="18" min="0" max="24" id="occupied_max">
+            <label for="objective_occupied_min">From: </label>
+            <input type="number" value="8" min="0" max="24" id="objective_occupied_min">
+            <label for="objective_occupied_max">To:</label>
+            <input type="number" value="18" min="0" max="24" id="objective_occupied_max">
         </fieldset>
 
-        <fieldset id="ill_goal_field">
-            <legend>Illuminance goal (lux)</legend>
-            <label for="min_lux">From: </label>
-            <input type="number" value="300" min="0" id="min_lux">
-            <label for="max_lux">To:</label>
-            <input type="number" value="2000" min="0" id="max_lux">
+        <fieldset id="objective_good_light">
+            <legend id='objective_good_light_legend'>Illuminance goal (lux)</legend>
+            <label for="objective_good_light_min">From: </label>
+            <input type="number" value="300" min="0" id="objective_good_light_min">
+            <label for="objective_good_light_max">To:</label>
+            <input type="number" value="2000" min="0" id="objective_good_light_max">
             <label for="no_maximum">Ignore maximum:</label>
             <input type="checkbox" id="no_maximum">
         </fieldset>
 
-        <fieldset id="sim_period_field">
+        <fieldset id="objective_sim_period">
             <legend>Simulation period (months)</legend>
-            <label for="sim_min">From: </label>
-            <input type="number" value="1" min="1" max="12" step="1" id="sim_min">
-            <label for="sim_max">To:</label>
-            <input type="number" value="12" min="1" max="12" step="1" id="sim_max">
+            <label for="objective_sim_period_min">From: </label>
+            <input type="number" value="1" min="1" max="12" step="1" id="objective_sim_period_min">
+            <label for="objective_sim_period_max">To:</label>
+            <input type="number" value="12" min="1" max="12" step="1" id="objective_sim_period_max">
         </fieldset>
 
-        <fieldset id="day_to_sim_field">
+        <fieldset id="objective_date">
             <legend>Day and time to simulate</legend>
-            <p>Date: <input type="text" id="day_to_sim"></p>
-            <p>Hour: <input type="number" value="12" min="0" max="24" step="0.5" id="time_to_sim"></p>
+            <p>Date: <input type="text" id="objective_date_date"></p>
+            <p>Hour: <input type="number" value="12" min="0" max="24" step="0.5" id="objective_date_hour"></p>
+        </fieldset>
+
+        <fieldset id="human_description">
+            <legend>Objective summary</legend>
+            <p id="objective_human_description"></p>
         </fieldset>
     </div>
 
@@ -360,29 +378,34 @@
     </div>
 
 
+    <script>
+
+        var workplanes = {};
+        var materials = {};
+        var objectives = {};
+        var results = {};
+        var luminaires = {};
+        var elux_results = {};
+
+    </script>
+
+    <script src="js/JQuery/jquery-3.0.0.js"></script>
+    <script src="js/jQueryUI/jquery-ui.js"></script>
+    <script src='js/Spectrum/spectrum.js'></script>
+    <script src="js/groundhog-ui.js"></script>
+    <script src="js/objectives.js"></script>
+    <script src="js/daylight-simulation.js"></script>
+    <script src="js/materials.js"></script>
+    <script src="js/report.js"></script>
+    <script src="js/luminaires.js"></script>
+    <script>
+        window.location.href = 'skp:on_load@message';
+
+        //workplanes = {"Plano":[]}
+        //objectives = {"DF":{"name":"DF","metric":"DF","dynamic":false,"good_light":{"min":"2","max":"10"},"goal":"50"}}
+        //objectiveModule.update_workplanes(""); objectiveModule.update_objectives("");
+    </script>
 
 </body>
-<script>
-
-    var workplanes = {};
-    var materials = {};
-    var objectives = {};
-    var results = {};
-    var luminaires = {};
-    var elux_results = {};
-
-</script>
-<script src="js/JQuery/jquery-3.0.0.js"></script>
-<script src="js/jQueryUI/jquery-ui.js"></script>
-<script src='js/Spectrum/spectrum.js'></script>
-<script src="js/groundhog-ui.js"></script>
-<script src="js/objectives.js"></script>
-<script src="js/daylight-simulation.js"></script>
-<script src="js/materials.js"></script>
-<script src="js/report.js"></script>
-<script src="js/luminaires.js"></script>
-<script>
-    window.location.href = 'skp:on_load@message';
-</script>
 
 </html>
