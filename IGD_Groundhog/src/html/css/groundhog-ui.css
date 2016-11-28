@@ -301,13 +301,13 @@ table.draglist tr{
 }
 
 table.draglist tr td{
-    padding: 0.8em 0 0.8em 0;
+    padding: 0.8em 0 0.8em 0.8em;
     color: #444444;
     font-weight: bold;
 }
 
 table.draglist tr td:last-child span{
-    float:right;     
+    float:right;
 }
 
 table.draglist tr:hover{
@@ -319,7 +319,7 @@ table.draglist tr:hover{
     height:90%;
     background: white;
     border: 1px solid #CECECE;
-    overflow-y: scroll;    
+    overflow-y: scroll;
 }
 
 .resizable {

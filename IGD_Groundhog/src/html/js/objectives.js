@@ -2,6 +2,42 @@
 var objectiveModule = {};
 
 
+
+objectiveModule.metrics = {
+  "DA" :  {
+    "name": "Daylight Autonomy",
+    "requirements" : {"good_pixel": 50, "good_light": {"min": 300, "max":false}, "goal": 50, "occupied" : {"min": 8, "max" : 18}, "sim_period":{"min":1, "max": 12 } }, //"date"
+    "dynamic" : true,
+    "good_light_legend" : "Illuminance goal (lux)",
+    "human_language" : "Workplane is in compliance when at least %goal%% of the space achieves an illuminance of %good_light_min%lux or more for a minimum of %good_pixel%% of the occupied time by daylight only. Occupied time is between %occupied_min% and %occupied_max% hours, from months %sim_period_min% to %sim_period_max%.",
+  },
+  "UDI" :  {
+    "name": "Useful Daylight Illuminance",
+    "requirements" : {"good_pixel": 50, "good_light": {"min": 300, "max":3000}, "goal": 50, "occupied" : {"min": 8, "max" : 18}, "sim_period":{"min":1, "max": 12 } }, //"date"
+    "dynamic" : true,
+    "human_language" : "Workplane is in compliance when at least %goal%% of the space achieves an illuminance between %good_light_min%lux and %good_light_max%lux during for a minimum of %good_pixel%% of the occupied time by daylight only. Occupied time is between %occupied_min% and %occupied_max% hours, from months %sim_period_min% to %sim_period_max%.",
+    "good_light_legend" : "Illuminance goal (lux)"
+  },
+  "DF" :  {
+    "name": "Daylight Factor",
+    "requirements" : {"good_light": {"min": 2, "max": 10}, "goal": 50 }, //"date"
+    "dynamic" : false,
+    "human_language" : "Workplane is in compliance when at least %goal%% of the space presents a Daylight Factor between %good_light_min%% and %good_light_max%%.",
+    "good_light_legend" : "Daylight Factor goal (%)"
+  },
+  "LUX" :  {
+    "name": "Illuminance under clear sky",
+    "requirements" : {"good_light": {"min": 300, "max":2000}, "goal": 50, "date" : {"date": "", "hour": 12}},
+    "dynamic" : false,
+    "human_language" : "Workplane is in compliance when at least %goal%% of the space presents an illuminance between %good_light_min%lux and %good_light_max%lux under a clear sky at %date_hour% hours on %date_date%.",
+    "good_light_legend" : "Illuminance goal (lux)"
+  }
+
+};
+
+
+
+
 objectiveModule.add_objective = function (wp_name, obj_name) {
   var message = { "workplane": wp_name, "objective": objectives[obj_name] };
   window.location.href = 'skp:add_objective@' + JSON.stringify(message);
@@ -22,11 +58,11 @@ objectiveModule.get_human_description = function (objective) {
       if (item !== null && typeof item === 'object'){
         for (var sub_item_name in item) {
           if (item.hasOwnProperty(sub_item_name)) {
-            description = description.replace("%%"+item_name+"_"+sub_item_name+"%%",$("#objective_"+item_name+"_"+sub_item_name).val());
+            description = description.replaceAll("%"+item_name+"_"+sub_item_name+"%",$("#objective_"+item_name+"_"+sub_item_name).val());
           }
         }
       }else{
-        description = description.replace("%%"+item_name+"%%", $("#objective_"+item_name).val());
+        description = description.replaceAll("%"+item_name+"%", $("#objective_"+item_name).val());
       }
     }
   }
@@ -67,38 +103,6 @@ objectiveModule.remove_objective = function (workplane, objective) {
   window.location.href = 'skp:remove_objective@' + JSON.stringify({ "workplane": workplane, "objective": objective });
 };
 
-
-objectiveModule.metrics = {
-  "DA" :  {
-    "name": "Daylight Autonomy",
-    "requirements" : {"good_pixel": 50, "good_light": {"min": 300, "max":false}, "goal": 50, "occupied" : {"min": 8, "max" : 18}, "sim_period":{"min":1, "max": 12 } }, //"date"
-    "dynamic" : true,
-    "good_light_legend" : "Illuminance goal (lux)",
-    "human_language" : "Workplane is in compliance when at least %%goal%%% of the space achieves an illuminance of %%good_light_min%%lux or more for a minimum of %%good_pixel%%% of the occupied time by daylight only. Occupied time is between %%occupied_min%% and %%occupied_max%% hours, from months %%sim_period_min%% to %%sim_period_max%%.",
-  },
-  "UDI" :  {
-    "name": "Useful Daylight Illuminance",
-    "requirements" : {"good_pixel": 50, "good_light": {"min": 300, "max":3000}, "goal": 50, "occupied" : {"min": 8, "max" : 18}, "sim_period":{"min":1, "max": 12 } }, //"date"
-    "dynamic" : true,
-    "human_language" : "Workplane is in compliance when at least %%goal%%% of the space achieves an illuminance between %%good_light_min%%lux and %%good_light_max%%lux during for a minimum of %%good_pixel%%% of the occupied time by daylight only. Occupied time is between %%occupied_min%% and %%occupied_max%% hours, from months %%sim_period_min%% to %%sim_period_max%%.",
-    "good_light_legend" : "Illuminance goal (lux)"
-  },
-  "DF" :  {
-    "name": "Daylight Factor",
-    "requirements" : {"good_light": {"min": 2, "max": 10}, "goal": 50 }, //"date"
-    "dynamic" : false,
-    "human_language" : "Workplane is in compliance when at least %%goal%%% of the space presents a Daylight Factor between %%good_light_min%%% and %%good_light_max%%%.",
-    "good_light_legend" : "Daylight Factor goal (%)"
-  },
-  "LUX" :  {
-    "name": "Illuminance under clear sky",
-    "requirements" : {"good_light": {"min": 300, "max":2000}, "goal": 50, "date" : {"date": "", "hour": 12}},
-    "dynamic" : false,
-    "human_language" : "Workplane is in compliance when at least %%goal%%% of the space presents an illuminance between %%good_light_min%%lux and %%good_light_max%%lux under a clear sky at %%date_hour%% hours on %%date_date%%.",
-    "good_light_legend" : "Illuminance goal (lux)"
-  }
-
-};
 
 
 
@@ -201,7 +205,7 @@ objectiveModule.update_objectives = function (filter) {
     if (objectives.hasOwnProperty(objective)) {
       if (objective.toLowerCase().indexOf(filter) >= 0) {//filter by objective name
         var new_row = $("<tr></tr>");
-        var drag = $(("<td name='"+objective+"'> <span class='ui-icon ui-icon-arrow-4-diag'></span>" + objective +"</td>"));
+        var drag = $(("<td name='"+objective+"'>" + objective +"</td>"));
         new_row.append(drag); //
         var action_column = $("<td></td>");
         var delete_button = $("<span name=\"" + objective + "\" class='ui-icon ui-icon-trash del-material'></span>")
@@ -299,11 +303,11 @@ objectiveModule.update_workplanes = function (filter) {
           hoverClass: "hover",
           accept: ":not(.ui-sortable-helper)",
           drop: function (event, ui) {
-            if ("TD" != ui.draggable.prop("tagName")) { return };
+            if ("TD" != ui.draggable.prop("tagName")) { alert(ui.draggable.prop("tagName"));return };
 
             var wp_name = $(this).find("h1").text();
 
-            var table_name = wp_name.replace(/\s/g, "_") + "_objectives";
+            var table_name = utilities.fixName(wp_name) + "_objectives";
             var objective = ui.draggable.attr("name");
             //check if workplane already has the objective
             if (workplanes[wp_name].indexOf(objective) >= 0) {
@@ -336,7 +340,7 @@ objectiveModule.update_workplanes = function (filter) {
           li.append($("<div>Drop objectives here</div>"))
           li.addClass("empty");
         } else {
-          var table = $("<table id='" + wp_name.replace(/\s/g, "_") + "_objectives'>");
+          var table = $("<table id='" + utilities.fixName(wp_name) + "_objectives'>");
           for (var i = 0; i < objectives.length; i++) {
             var row = objectiveModule.get_new_row_for_workplane(wp_name, objectives[i]);
             table.append(row);
@@ -366,15 +370,6 @@ $("#create_objective_button").button().on("click", function () {
 
 $("#objective_date_date").datepicker();
 
-$('#no_maximum').on("change", function () {
-  if (this.checked) {
-    this.value = "true";
-    $("#objective_good_light_max").attr('disabled', 'disabled');
-  } else {
-    this.value = "false";
-    $("#objective_good_light_max").removeAttr('disabled');
-  }
-});
 
 $(".resizable1").resizable(
   {

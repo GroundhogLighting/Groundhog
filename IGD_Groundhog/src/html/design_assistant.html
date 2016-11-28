@@ -59,20 +59,6 @@
         </table>
     </div>
 
-    <div class="display" id="labels">
-        <div class="fixed_toolbar">
-            <button id="preview_button" onclick='window.location.href = "skp:preview@msg"'>Preview</button>
-        </div>
-
-
-        <div class="center">
-            <button onclick='window.location.href = "skp:label_as_window@msg"'>As Window</button>
-            <button onclick='window.location.href = "skp:label_as_workplane@msg"'>As Workplane</button>
-            <button onclick='window.location.href = "skp:label_as_illum@msg"'>As Illum</button>
-        </div>
-
-
-    </div>
 
     <div class="display" id="materials">
         <div class="fixed_toolbar">
@@ -298,8 +284,6 @@
             <input type="number" value="300" min="0" id="objective_good_light_min">
             <label for="objective_good_light_max">To:</label>
             <input type="number" value="2000" min="0" id="objective_good_light_max">
-            <label for="no_maximum">Ignore maximum:</label>
-            <input type="checkbox" id="no_maximum">
         </fieldset>
 
         <fieldset id="objective_sim_period">
@@ -334,11 +318,7 @@
                 <tr>
                     <td><label for="material_class">Class:</label></td>
                     <td>
-                        <select id="material_class">
-                            <option value="plastic">Plastic</option>
-                            <option value="metal">Metal</option>
-                            <option value="glass">Glass</option>
-                        </select>
+                        <select id="material_class"></select>
                     </td>
                 </tr>
             </table>
@@ -362,16 +342,9 @@
             </table>
         </fieldset>
 
-        <fieldset>
+        <fieldset id="other_material_properties">
             <legend>Other properties</legend>
-            <table>
-                <tr>
-                    <td><label for="specularity">Specularity: </label></td>
-                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="specularity"></td>
-                    <td><label for="roughness">Roughness: </label></td>
-                    <td><input class="color" type="number" min="0" max="1" step="0.01" id="roughness"></td>
-                </tr>
-            </table>
+            <table id="other_material_properties_table"></table>
         </fieldset>
 
 
@@ -392,6 +365,7 @@
     <script src="js/JQuery/jquery-3.0.0.js"></script>
     <script src="js/jQueryUI/jquery-ui.js"></script>
     <script src='js/Spectrum/spectrum.js'></script>
+    <script src="js/utilities.js"></script>
     <script src="js/groundhog-ui.js"></script>
     <script src="js/objectives.js"></script>
     <script src="js/daylight-simulation.js"></script>
@@ -401,9 +375,9 @@
     <script>
         window.location.href = 'skp:on_load@message';
 
-        //workplanes = {"Plano":[]}
-        //objectives = {"DF":{"name":"DF","metric":"DF","dynamic":false,"good_light":{"min":"2","max":"10"},"goal":"50"}}
-        //objectiveModule.update_workplanes(""); objectiveModule.update_objectives("");
+      //   workplanes = {"Plano":[]}
+      //  objectives = {"DF":{"name":"DF","metric":"DF","dynamic":false,"good_light":{"min":"2","max":"10"},"goal":"50"}}
+    //    objectiveModule.update_workplanes(""); objectiveModule.update_objectives("");
     </script>
 
 </body>

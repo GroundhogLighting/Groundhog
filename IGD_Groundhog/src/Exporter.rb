@@ -627,17 +627,14 @@ module IGD
 			# @return [Boolean] Success
 			def self.export_modifiers(path,mat_array)
 
-				OS.mkdir("#{path}/Materials")
-				path="#{path}/Materials"
-				FileUtils.cd(path) do
-					File.open("materials.mat",'w+'){ |f| #The file is opened
+				OS.mkdir("Materials")
+					File.open("Materials/materials.mat",'w+'){ |f| #The file is opened
 						mat_array.each do |mat|
 							mat_string = Materials.get_mat_string(mat,false, true)
 							return false if not mat_string
 							f.puts(mat_string)
 						end
 					}
-				end
 				return true
 			end
 

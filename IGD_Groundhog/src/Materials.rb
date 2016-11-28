@@ -64,7 +64,7 @@ module IGD
 			# @param name [String] The desired name for the final Radiance material
 			# @param xform [Boolean] reference the material by Xform
 			# @return [String] Radiance primivite definition for the material
-			def self.get_mat_string(material,name, xform)
+			def self.get_mat_string(material, name, xform)
 				mat_name=Utilities.fix_name(material.name)
 				mat_name=Utilities.fix_name(name) if name #if inputted a name, overwrite.
 
@@ -82,7 +82,18 @@ module IGD
 						UI.messagebox "rad_material with incorrect value! no 'rad' field"
 						return false
 					end
-					mat_string = value["rad"].gsub("%MAT_NAME%", mat_name)
+					rad = value["rad"]
+					if value["support_files"] then
+						OS.mkdir("Materials/Cal")
+						value["support_files"].each {|s|
+							filename = s["name"]
+							content = s["content"]
+							given_name = mat_name+".cal"
+							File.open("./Materials/Cal/"+given_name,'w+'){|f| f.puts content }
+							rad = rad.gsub("%"+filename+"%", "./Materials/Cal/"+given_name)
+						}
+					end
+					mat_string = rad.gsub("%MAT_NAME%", mat_name)
 				else #not rad_material, then guess the material
 					warn "#{mat_name} guessed!"
 					if material.texture==nil then
