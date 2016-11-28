@@ -119,7 +119,7 @@ module IGD
 				end
 
 				if xform then
-					File.open("#{mat_name}.mat",'w'){|f| f.puts mat_string }
+					File.open("Materials/#{mat_name}.mat",'w'){|f| f.puts mat_string }
 					return "!xform ./Materials/#{mat_name}.mat"
 				else
 					return mat_string

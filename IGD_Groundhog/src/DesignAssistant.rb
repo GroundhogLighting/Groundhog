@@ -452,7 +452,7 @@ module IGD
                         # post-process and load results
                         # Lets start by Daylighting
                         report = self.get_actual_report
-                        all_objectives = []
+                        #all_objectives = []
 
                         hash = self.get_workplanes_hash
                         workplanes = hash["workplanes"]
@@ -461,12 +461,12 @@ module IGD
                         workplanes.each{|workplane,obj_array|
                             #initialize the object where the information to report will be stored
                             report[workplane]=Hash.new
+                            pixel_file = "./Workplanes/#{Utilities.fix_name(workplane)}.pxl"
 
                             #then go through the objectives
                             obj_array.each{|obj_name|
-                                all_objectives << obj_name
+                                #all_objectives << obj_name
                                 objective = objectives[obj_name]
-                                pixel_file = "./Workplanes/#{Utilities.fix_name(workplane)}.pxl"
                                 min_lux = objective["good_light"]["min"]
                                 max_lux = objective["good_light"]["max"]
 
@@ -535,7 +535,7 @@ module IGD
                         script += "reportModule.update_elux_compliance_summary();"
 
                         #remark first objective
-                        script += self.select_objective("ELUX")
+                        script += self.select_objective("ELUX") if Config.calc_elux
 
                         web_dialog.execute_script(script)
                     end

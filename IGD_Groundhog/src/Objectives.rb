@@ -1,7 +1,7 @@
 module IGD
   module Groundhog
     module Objectives
-
+      
 
       def self.get_objectives_hash
         JSON.parse Sketchup.active_model.get_attribute("Groundhog","objectives")

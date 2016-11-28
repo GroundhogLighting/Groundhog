@@ -1,11 +1,11 @@
 module IGD
     module Groundhog
-        
+
         # This class is the core of Groundhog simulation management. A SimulationManager
         # object will handle different Tasks, intending to reuse calculations as much as possible.
-        # 
+        #
         # The idea was to create a sort of Make or Rake; defining requirements for each task
-        class SimulationManager     
+        class SimulationManager
 
             # This method initializes the Simulation Manager
             # @author Germán Molina
@@ -21,17 +21,17 @@ module IGD
                 any_luminaire = Sketchup.active_model.definitions.select{|x| Labeler.luminaire? x and x.count_instances > 0}.length > 0
 
                 if workplanes.length == 0 then
-                    UI.messagebox "There are no workplanes to calculate"
+                    UI.messagebox "There are no workplanes to calculate."
                     return
                 end
 
-                if objectives.length == 0 and (not IGD::Groundhog::Config.calc_elux or not any_luminaire) then    
+                if objectives.length == 0 and (not IGD::Groundhog::Config.calc_elux or not any_luminaire) then
                     UI.messagebox "There are workplanes, but nothing to calculate. Set objectives and/or input luminaires and/or enable Electric Lighting calculations in the Preferences menu"
                     return
                 end
-                
-                workplanes.each{|workplane,obj_array| 
-                    # Add the calculation of artificial lighting                  
+
+                workplanes.each{|workplane,obj_array|
+                    # Add the calculation of artificial lighting
                     @tasks << ELux.new(workplane) if Config.calc_elux and any_luminaire
                     #then the daylighting objectives
                     obj_array.each{|obj_name|
@@ -42,16 +42,16 @@ module IGD
                             return false
                         end
                         @tasks << task
-                    }                    
+                    }
                 }
 
             end
-           
+
             # Receives an objective and creates a task to be performed from it.
             # @param workplane [String] The name of the workplane to which the task is being created
             # @param objective [Hash] The objective from which the task will be assembled.
             # @author Germán Molina
-            def get_task(workplane,objective)                                             
+            def get_task(workplane,objective)
                 task = false
                 albedo = Config.albedo
                 if objective["dynamic"] then
@@ -66,17 +66,17 @@ module IGD
                         lat = Sketchup.active_model.shadow_info["Latitude"]
                         lon = -Sketchup.active_model.shadow_info["Longitude"]
                         mer = -Sketchup.active_model.shadow_info["TZOffset"]
-                        sky = "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo} +s"                        
+                        sky = "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo} +s"
                     end
                     target = {"workplane" =>workplane, "sky" => sky}
-                    case @options["static_calculation_method"] 
-                    when "RTRACE"                        
+                    case @options["static_calculation_method"]
+                    when "RTRACE"
                         task = RtraceInstantIlluminance.new(target)
                     when "DC"
                         task = DCInstantIlluminance.new(target)
                     else
                         return false
-                    end 
+                    end
                 end
 
                 return task
@@ -90,7 +90,7 @@ module IGD
                 @tasks.each {|task|
                     ret = ret + task.expand
                 }
-                @tasks = ret                
+                @tasks = ret
             end
 
             # Removes the repeated tasks; keeping just the first one required.
@@ -98,35 +98,35 @@ module IGD
             # is required twice, it will be done just once and the information generated
             # will be reused.
             # @author Germán Molina
-            def uniq!                                               
+            def uniq!
                 ret = []
-                @tasks.reverse_each {|task|                                   
-                    cl = task.class         
-                    sel = ret.select{|x| x.class == cl and x.target == task.target}    
+                @tasks.reverse_each {|task|
+                    cl = task.class
+                    sel = ret.select{|x| x.class == cl and x.target == task.target}
                     next if sel.length > 0 #already there
-                    ret << task            
+                    ret << task
                 }
                 @tasks =  ret
             end
-              
+
             # This is meant to be called from the directory where the Radiance
             # model was exported
             # @author Germán Molina
             # @return [Array] An array of commands that, when run, will perform all the needed calculations
-            def solve                
-                ret = [] 
+            def solve
+                ret = []
                 OS.mkdir("DC")
-                OS.mkdir("Results")               
+                OS.mkdir("Results")
                 self.expand!
-                self.uniq!                    
+                self.uniq!
                 @tasks.each{|task|
                     new_tasks = task.solve(@options)
                     ret = ret + new_tasks if new_tasks
                     return false if not new_tasks
                 }
-            
+
                 return ret
-            end     
+            end
         end
 
 
@@ -144,8 +144,8 @@ module IGD
         # commands that, when run, will accomplish such task (i.e. rfluxmtx -ab ...)
         #
         # The dependencies is an array with other Tasks that must be run before this task
-        class Task            
-           	
+        class Task
+
             attr_accessor :proc, :target, :dependencies
 
             # initialize.
@@ -153,8 +153,8 @@ module IGD
             def initialize
                 @target = false
                 @proc = false
-                @dependencies = false                                     
-            end                        
+                @dependencies = false
+            end
 
             # Solve a task is running its proc by using the options given to the
             # SimulationManager object that solves all tasks.
@@ -164,7 +164,7 @@ module IGD
             def solve(options)
                 success = @proc.call(options)
                 warn "Fatal: Impossible to solve #{self}" if not success
-                return false if not success                
+                return false if not success
                 return success
             end
 
@@ -173,20 +173,20 @@ module IGD
             # dependencies.
             # @return [Array] all the tasks
             def expand
-                if !@dependencies or @dependencies.length == 0 then                
+                if !@dependencies or @dependencies.length == 0 then
                     return [self]
                 else
                     ret = [self]
                     @dependencies.each {|dep|
                         ret = ret + dep.expand
-                    }                   
+                    }
                     return ret
                 end
             end
 
         end
 
-   
+
 
 
     end

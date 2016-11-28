@@ -174,72 +174,6 @@ module IGD
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
-=begin
-			# Recursively connects the interior and the exterior loops of a face.
-			#
-			# This allow efficient exporting by exporting only One Radiance polygon for each SketchUp face.
-			#
-			# This method exists because SketchUp allows interior loops, but Radiance does not.
-			#
-			# This method is called within #get_rad_string
-			# @author German Molina
-			# @version 1.0.5
-			# @param lines [Array] Should be empty
-			# @param p [Int] Should be different from w. It really does not matter what the input is (see source code)
-			# @param w [Int] Should be different from p. It really does not matter what the input is (see source code)
-			# @param face [face] SketchUp face to close.
-			# @return [Void]
-			# @example Close a selected face
-			#   close_face([],1,4,Sketchup.active_model.selection[0])
-			def self.close_face(lines, p, w, face)
-
-				entities = face.parent.entities
-
-				if p!=0 and p!=w then
-				#p, here, was added because this function sometimes entered to an infinite loop... so when
-				#nothing changes between one close_face implementation and the next one, we stop it.
-					w=0 #this will count the number of interior loops
-
-						loops=face.loops #get the loops
-						if loops.length > 1 then #it means it has interior loops
-							#we add this loop to the new selection, so it will be checked on the next iteration.
-
-							out_vert=face.outer_loop.vertices #and identify the outer loop
-							min_dist=1000000 #just to declare the variable with a big number
-							pt_o=Geom::Point3d.new(0,0,0) #Declare the outer and inner points.
-							pt_e=Geom::Point3d.new(0,0,0)
-							loops.each do |j| #Then, for all the loops
-								if ! j.outer? #that are inner loops
-									w=w+1 #we take note of it
-									in_vert=j.vertices #We extract the vertices of the interior loop
-									in_vert.each do |k| #and for each of them
-										out_vert.each do |l| #We check the distance to the vertices of the exterior loop
-											dist=l.position.distance(k.position)
-											if dist<min_dist #if the distance is smaller than the smallest until now
-												min_dist=dist #we change it
-												pt_o=k.position #and store the points
-												pt_e=l.position
-											end
-										end
-									end
-								end
-							end
-							ln=entities.add_line(pt_o,pt_e) #And connect it to the outer loop
-							lines=lines+[ln] #store the lines, since they will be deleted after the export.
-						end
-
-					self.close_face(lines,w,p,face)
-				end
-
-				lines.each do |i|
-					if i==nil then
-
-					else
-						i.set_attribute("Groundhog","Label","added")
-					end
-				end
-			end
-=end
 			# Recursively connects the interior and the exterior loops of a face, without
 			# adding any new line or loop to the model
 			#
@@ -331,6 +265,7 @@ module IGD
 				rescue Exception => ex
 					FileUtils.rm_rf(path, secure: true)
 					UI.messagebox ex
+					return false
 				end
 				return true
 			end
@@ -626,15 +561,14 @@ module IGD
 			# @param mat_array [faces] An array with the materials to export
 			# @return [Boolean] Success
 			def self.export_modifiers(path,mat_array)
-
 				OS.mkdir("Materials")
-					File.open("Materials/materials.mat",'w+'){ |f| #The file is opened
-						mat_array.each do |mat|
-							mat_string = Materials.get_mat_string(mat,false, true)
-							return false if not mat_string
-							f.puts(mat_string)
-						end
-					}
+				File.open("Materials/materials.mat",'w+'){ |f| #The file is opened
+					mat_array.each do |mat|
+						mat_string = Materials.get_mat_string(mat,false, true)
+						return false if not mat_string
+						f.puts(mat_string)
+					end
+				}
 				return true
 			end
 
@@ -717,8 +651,8 @@ module IGD
 				if alt >= 3.0 then
 					File.open("#{path}/sky.rad",'w+'){ |f| #The file is opened
 						f.puts("\n\n\n###### DEFAULT SKY \n\n")
-							f.puts("!gensky -ang #{alt} #{azi} +s -g #{Config.albedo}\n\n")
-							f.puts(self.sky_complement)
+						f.puts("!gensky -ang #{alt} #{azi} +s -g #{Config.albedo}\n\n")
+						f.puts(self.sky_complement)
 					}
 
 					return true
