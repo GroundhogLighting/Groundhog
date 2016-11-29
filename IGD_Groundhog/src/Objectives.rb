@@ -2,11 +2,17 @@ module IGD
   module Groundhog
     module Objectives
 
-
+      # Returns the objectives avaiable in the model, which are stored in
+      # a models dictionary
+      # @author Germán Molina
+      # @return [Hash] the objectives
       def self.get_objectives_hash
         JSON.parse Sketchup.active_model.get_attribute("Groundhog","objectives")
       end
 
+      # Receives and objective and stores it in the model's dictionary
+      # @author Germán Molina
+      # @param objective [Hash] an objective
       def self.create_objective(objective)
         name = objective["name"]
         objs = JSON.parse Sketchup.active_model.get_attribute("Groundhog","objectives")
@@ -14,7 +20,11 @@ module IGD
         Sketchup.active_model.set_attribute("Groundhog","objectives",objs.to_json)
       end
 
-
+      # Receives a workplane name and an objective, and adds such objective to
+      # the workplane for posterior calculations.
+      # @author Germán Molina
+      # @param wp_name [String] The name of the workplane
+      # @param objective [Hash] The objective
       def self.add_objective_to_worplane(wp_name,objective)
         wp = Utilities.get_workplane_by_name(wp_name)
 
@@ -25,7 +35,10 @@ module IGD
         Labeler.set_value(wp,value.to_json)
       end
 
-
+      # Deletes an objective from the model... that is, from its dictionary and
+      # from all the workplanes out there.
+      # @param objective_name [String] The name of the objective
+      # @author Germán Molina
       def self.delete_objective(objective_name)
         #delete it from the main list
         objs = JSON.parse Sketchup.active_model.get_attribute("Groundhog","objectives")
@@ -39,7 +52,10 @@ module IGD
         }
       end
 
-
+      # Removes an objective from a certain workplane, avoiding future calculations
+      # @param wp_name [String] The name of the workplane
+      # @param objective_name [String] The name of the objective
+      # @author Germán Molina
       def self.remove_objective_from_workplane(wp_name,objective_name)
         #find the workplane
         workplane = Utilities.get_workplane_by_name(wp_name)

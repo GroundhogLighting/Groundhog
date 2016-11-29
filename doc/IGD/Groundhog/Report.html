@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: IGD::Groundhog::Report
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../';
+  framesUrl = "../../frames.html#!IGD/Groundhog/Report.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (R)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../IGD.html" title="IGD (module)">IGD</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Groundhog.html" title="IGD::Groundhog (module)">Groundhog</a></span></span>
+     &raquo; 
+    <span class="title">Report</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: IGD::Groundhog::Report
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">IGD_Groundhog/src/Report.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#report_csv-class_method" title="report_csv (class method)">+ (Object) <strong>report_csv</strong>(group) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Exports a CSV with the values and statistics of a solved workplane.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="report_csv-class_method">
+  
+    + (<tt>Object</tt>) <strong>report_csv</strong>(group) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Exports a CSV with the values and statistics of a solved workplane</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>group</span>
+      
+      
+        <span class='type'>(<tt>Solved Workplane</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A Solved Workplane that will be exported</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Report.rb', line 8</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_report_csv'>report_csv</span><span class='lparen'>(</span><span class='id identifier rubyid_group'>group</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_solved_workplane?'>solved_workplane?</span> <span class='id identifier rubyid_group'>group</span> <span class='kw'>then</span>
+        <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ERROR: Attempted to report a CSV file from a group that is not a Solved Workplane</span><span class='tstring_end'>&quot;</span></span>
+        <span class='kw'>return</span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='const'>Exporter</span><span class='period'>.</span><span class='id identifier rubyid_getpath'>getpath</span> <span class='comment'>#it returns false if not successful
+</span>    <span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_path'>path</span>
+
+    <span class='id identifier rubyid_value'>value</span><span class='op'>=</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_group'>group</span><span class='rparen'>)</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_filename'>filename</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplane</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>_</span><span class='embexpr_beg'>#{</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objective</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>.csv</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid_filename'>filename</span><span class='op'>=</span><span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_savepanel'>savepanel</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Export CSV file of results</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_path'>path</span><span class='comma'>,</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
+
+    <span class='kw'>if</span> <span class='id identifier rubyid_filename'>filename</span> <span class='kw'>then</span>
+        <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_csv'>csv</span><span class='op'>|</span>
+            <span class='comment'>#write statistics
+</span>            <span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span><span class='id identifier rubyid_val'>val</span><span class='op'>|</span>
+                <span class='id identifier rubyid_csv'>csv</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_key'>key</span><span class='embexpr_end'>}</span><span class='tstring_content'>,</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_val'>val</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+            <span class='rbrace'>}</span>
+            <span class='comment'>#Write header
+</span>            <span class='id identifier rubyid_csv'>csv</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Pixel area (m2),Position X,Position Y,Position Z,Value (Lux or %... depends on the metric)</span><span class='tstring_end'>&quot;</span></span>
+            <span class='comment'>#Write pixels
+</span>            <span class='id identifier rubyid_pixels'>pixels</span> <span class='op'>=</span> <span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_result_pixel?'>result_pixel?</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rbrace'>}</span>
+            <span class='id identifier rubyid_pixels'>pixels</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pixel'>pixel</span><span class='op'>|</span>
+                <span class='id identifier rubyid_vertices'>vertices</span><span class='op'>=</span><span class='id identifier rubyid_pixel'>pixel</span><span class='period'>.</span><span class='id identifier rubyid_vertices'>vertices</span>
+                <span class='id identifier rubyid_nvertices'>nvertices</span><span class='op'>=</span><span class='id identifier rubyid_vertices'>vertices</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
+                <span class='id identifier rubyid_center'>center</span><span class='op'>=</span><span class='id identifier rubyid_vertices'>vertices</span><span class='period'>.</span><span class='id identifier rubyid_shift'>shift</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span>
+                <span class='id identifier rubyid_vertices'>vertices</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_vert'>vert</span><span class='op'>|</span>
+                    <span class='id identifier rubyid_pos'>pos</span><span class='op'>=</span><span class='id identifier rubyid_vert'>vert</span><span class='period'>.</span><span class='id identifier rubyid_position'>position</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span>
+                    <span class='id identifier rubyid_center'>center</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='op'>+=</span><span class='id identifier rubyid_pos'>pos</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+                    <span class='id identifier rubyid_center'>center</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='op'>+=</span><span class='id identifier rubyid_pos'>pos</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+                    <span class='id identifier rubyid_center'>center</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='op'>+=</span><span class='id identifier rubyid_pos'>pos</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span>
+                <span class='rbrace'>}</span>
+                <span class='id identifier rubyid_csv'>csv</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pixel'>pixel</span><span class='period'>.</span><span class='id identifier rubyid_area'>area</span><span class='op'>/</span><span class='float'>1550.0</span><span class='embexpr_end'>}</span><span class='tstring_content'>,</span><span class='embexpr_beg'>#{</span><span class='lparen'>(</span><span class='id identifier rubyid_center'>center</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='op'>/</span><span class='id identifier rubyid_nvertices'>nvertices</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_m'>to_m</span><span class='embexpr_end'>}</span><span class='tstring_content'>,</span><span class='embexpr_beg'>#{</span><span class='lparen'>(</span><span class='id identifier rubyid_center'>center</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='op'>/</span><span class='id identifier rubyid_nvertices'>nvertices</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_m'>to_m</span><span class='embexpr_end'>}</span><span class='tstring_content'>,</span><span class='embexpr_beg'>#{</span><span class='lparen'>(</span><span class='id identifier rubyid_center'>center</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='op'>/</span><span class='id identifier rubyid_nvertices'>nvertices</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_m'>to_m</span><span class='embexpr_end'>}</span><span class='tstring_content'>,</span><span class='embexpr_beg'>#{</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_pixel'>pixel</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+            <span class='kw'>end</span>
+        <span class='rbrace'>}</span>
+    <span class='kw'>end</span>            
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Tue Nov 29 17:48:04 2016 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.3.0).
+</div>
+
+  </body>
+</html>

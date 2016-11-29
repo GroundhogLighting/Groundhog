@@ -1493,8 +1493,6 @@ of the entity</p>
       <pre class="lines">
 
 
-451
-452
 453
 454
 455
@@ -1504,10 +1502,12 @@ of the entity</p>
 459
 460
 461
-462</pre>
+462
+463
+464</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 451</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 453</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_all_global_transformations'>get_all_global_transformations</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='comma'>,</span><span class='id identifier rubyid_transform'>transform</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -1604,8 +1604,6 @@ its center.</p>
       <pre class="lines">
 
 
-470
-471
 472
 473
 474
@@ -1618,10 +1616,12 @@ its center.</p>
 481
 482
 483
-484</pre>
+484
+485
+486</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 470</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 472</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_circle_radius'>get_circle_radius</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Face</span>
@@ -1718,12 +1718,12 @@ its center.</p>
       <pre class="lines">
 
 
-383
-384
-385</pre>
+385
+386
+387</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 383</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 385</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_component_instances'>get_component_instances</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>ComponentInstance</span> <span class='kw'>or</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Group</span><span class='rbrace'>}</span>
@@ -1808,12 +1808,12 @@ its center.</p>
       <pre class="lines">
 
 
-407
-408
-409</pre>
+409
+410
+411</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 407</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 409</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_components'>get_components</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>ComponentInstance</span><span class='rbrace'>}</span>
@@ -2223,12 +2223,12 @@ its center.</p>
       <pre class="lines">
 
 
-367
-368
-369</pre>
+369
+370
+371</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 367</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 369</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_horizontal_faces'>get_horizontal_faces</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_face?'>face?</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_is_horizontal?'>is_horizontal?</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rbrace'>}</span>
@@ -2420,12 +2420,12 @@ its center.</p>
       <pre class="lines">
 
 
-399
-400
-401</pre>
+401
+402
+403</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 399</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 401</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_namables'>get_namables</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_namable?'>namable?</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rbrace'>}</span>
@@ -2589,12 +2589,12 @@ its center.</p>
       <pre class="lines">
 
 
-425
-426
-427</pre>
+427
+428
+429</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 425</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 427</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_solved_workplanes'>get_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_solved_workplane?'>solved_workplane?</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='rbrace'>}</span>
@@ -2684,13 +2684,13 @@ its center.</p>
       <pre class="lines">
 
 
-281
 282
 283
-284</pre>
+284
+285</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 281</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 282</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_win_groups'>get_win_groups</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_windows'>windows</span><span class='op'>=</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_windows'>get_windows</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_win_group'>get_win_group</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span> <span class='op'>!=</span> <span class='kw'>nil</span><span class='rbrace'>}</span>
@@ -2970,12 +2970,12 @@ its center.</p>
       <pre class="lines">
 
 
-417
-418
-419</pre>
+419
+420
+421</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 417</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 419</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplanes'>get_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_label'>get_label</span><span class='lparen'>(</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='op'>==</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplane</span><span class='tstring_end'>&quot;</span></span><span class='rbrace'>}</span>
@@ -3116,7 +3116,8 @@ file.</p>
 272
 273
 274
-275</pre>
+275
+276</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 252</span>
@@ -3142,6 +3143,7 @@ file.</p>
 	<span class='kw'>rescue</span> <span class='const'>Exception</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_ex'>ex</span>
 		<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='id identifier rubyid_ex'>ex</span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
+		<span class='id identifier rubyid_raise'>raise</span> <span class='id identifier rubyid_ex'>ex</span>
 	<span class='kw'>end</span>
 
 <span class='kw'>end</span></pre>
@@ -3329,7 +3331,6 @@ shown. All according to the first face that is part of the class</p>
       <pre class="lines">
 
 
-333
 334
 335
 336
@@ -3356,10 +3357,12 @@ shown. All according to the first face that is part of the class</p>
 357
 358
 359
-360</pre>
+360
+361
+362</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 333</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 334</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_hide_show_specific'>hide_show_specific</span><span class='lparen'>(</span><span class='id identifier rubyid_label'>label</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entities'>entities</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span>
@@ -3387,6 +3390,7 @@ shown. All according to the first face that is part of the class</p>
 	<span class='kw'>rescue</span> <span class='const'>Exception</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_ex'>ex</span>
 		<span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span> <span class='id identifier rubyid_ex'>ex</span>
 		<span class='id identifier rubyid_model'>model</span><span class='period'>.</span><span class='id identifier rubyid_abort_operation'>abort_operation</span>
+		<span class='id identifier rubyid_raise'>raise</span> <span class='id identifier rubyid_ex'>ex</span>
 	<span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -3469,12 +3473,12 @@ shown. All according to the first face that is part of the class</p>
       <pre class="lines">
 
 
-375
-376
-377</pre>
+377
+378
+379</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 375</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 377</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_is_horizontal?'>is_horizontal?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Face</span> <span class='kw'>and</span> <span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_normal'>normal</span><span class='period'>.</span><span class='id identifier rubyid_parallel?'>parallel?</span><span class='lparen'>(</span><span class='const'>Geom</span><span class='op'>::</span><span class='const'>Vector3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='int'>0</span><span class='comma'>,</span><span class='int'>1</span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -3598,12 +3602,12 @@ shown. All according to the first face that is part of the class</p>
       <pre class="lines">
 
 
-391
-392
-393</pre>
+393
+394
+395</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 391</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 393</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_namable?'>namable?</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>ComponentInstance</span> <span class='kw'>or</span> <span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Group</span> <span class='kw'>or</span> <span class='id identifier rubyid_entity'>entity</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>Face</span>
@@ -3703,7 +3707,6 @@ Radiance as non-planars when building the octree.</p>
       <pre class="lines">
 
 
-294
 295
 296
 297
@@ -3734,10 +3737,11 @@ Radiance as non-planars when building the octree.</p>
 322
 323
 324
-325</pre>
+325
+326</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 294</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 295</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_planar?'>planar?</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_vertices'>vertices</span><span class='op'>=</span><span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_vertices'>vertices</span>
@@ -4030,8 +4034,6 @@ metric</p>
       <pre class="lines">
 
 
-434
-435
 436
 437
 438
@@ -4040,10 +4042,12 @@ metric</p>
 441
 442
 443
-444</pre>
+444
+445
+446</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 434</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Utilities.rb', line 436</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_remark_solved_workplanes'>remark_solved_workplanes</span><span class='lparen'>(</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
 	<span class='comment'>#hide them all, except those with the metric we are interested in
@@ -4233,7 +4237,7 @@ If there is no hash[&#39;ID&#39;] value, or it is empty, the default value will 
 </div>
 
     <div id="footer">
-  Generated on Mon Nov 28 13:00:48 2016 by
+  Generated on Tue Nov 29 17:48:04 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

@@ -122,15 +122,29 @@ module IGD
       ################ END OF LIBARY #################
       ################################################
 
+
+      # Returns the Proc that returns the tasks corresponding to a certain metric
+      # @param metric [String] The metric whose task is needed
+      # @author Germán Molina
+      # @return [Proc] The required Proc
       def self.get_task(metric)
         return @@library[metric][:get_tasks] unless not @@library.key? metric
-        UI.messagebox "Metric '#{metric}' is not available in the library of metrics"
+        err = "Metric '#{metric}' is not available in the library of metrics"
+        UI.messagebox err
+        raise err
       end
 
+      # Returns the Proc that returns the read_file corresponding to a certain metric.
+      # If the metric does not exist, it raises an error... but if the read_file does
+      # does not exist, it returns False, a value understood by other methods.
+      # @param metric [String] The metric whose task is needed
+      # @author Germán Molina
+      # @return [Proc] The required Proc
       def self.get_read_file(metric)
         if not @@library.key? metric then
-          UI.messagebox "Metric '#{metric}' is not available in the library of metrics"
-          return false
+          err = "Metric '#{metric}' is not available in the library of metrics"
+          UI.messagebox err
+          raise err
         end
         if not @@library[metric].key? :read_file then
           return false
@@ -138,15 +152,28 @@ module IGD
         return @@library[metric][:read_file]
       end
 
+      # Returns the Proc that returns the write_file corresponding to a certain metric
+      # @param metric [String] The metric whose task is needed
+      # @author Germán Molina
+      # @return [Proc] The required Proc
       def self.get_write_file(metric)
         return @@library[metric][:write_file] unless not @@library.key? metric
-        UI.messagebox "Metric '#{metric}' is not available in the library of metrics"
+        err = "Metric '#{metric}' is not available in the library of metrics"
+        UI.messagebox err
+        raise err
       end
 
+      # Returns the Proc that returns the calc_score corresponding to a certain metric.
+      # If the metric does not exist, it raises an error... but if the calc_score does
+      # does not exist, it returns False, a value understood by other methods.
+      # @param metric [String] The metric whose task is needed
+      # @author Germán Molina
+      # @return [Proc] The required Proc
       def self.get_score_calculator(metric)
         if not @@library.key? metric then
-          UI.messagebox "Metric '#{metric}' is not available in the library of metrics"
-          return false
+          err = "Metric '#{metric}' is not available in the library of metrics"
+          UI.messagebox err
+          raise err
         end
         if not @@library[metric].key? :calc_score then
           return false
@@ -154,10 +181,17 @@ module IGD
         return @@library[metric][:calc_score]
       end
 
+      # Returns the daylight factor sky String, which is a CIE overcast sky, scaled
+      # @author Germán Molina
+      # @return [String] The sky definition as a gensky command.
       def self.get_daylight_factor_sky
         return "gensky -ang 45 40 -c -B 0.5586592 -g #{Config.albedo}"
       end
 
+      # Returns the CIE clear sky String
+      # @author Germán Molina
+      # @param objective [Hash] The objective that contains the date and time for calculating
+      # @return [String] The sky definition as a gensky command.
       def self.get_clear_sky(objective)
         albedo = Config.albedo
         date = Date.strptime(objective["date"]["date"], '%m/%d/%Y')
@@ -170,10 +204,19 @@ module IGD
         sky = "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo} +s"
       end
 
+      # Return the task corresponding to a full annual climate-based simulation
+      # @author Germán Molina
+      # @param workplane [String] The name of the workplane whose illuminance we are calculating
+      # @return [Task] The task that calculates what we want.
       def self.calc_annual_illuminance_tasks(workplane)
         return DCAnnualIlluminance.new(workplane)
       end
 
+      # Return the task corresponding to a static simulation
+      # @author Germán Molina
+      # @param target [Hash] A Hash containing the sky and the workplane.
+      # @param options [Hash] A Hash containing the simulation options
+      # @return [Task] The task that calculates what we want.
       def self.calc_static_illuminance_tasks(target,options)
         case options["static_calculation_method"]
         when "RTRACE"
