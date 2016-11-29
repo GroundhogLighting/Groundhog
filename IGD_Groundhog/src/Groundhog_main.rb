@@ -33,6 +33,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/SimulationManager'
 		Sketchup::require 'IGD_Groundhog/src/Report'
 		Sketchup::require 'IGD_Groundhog/src/Objectives'
+		Sketchup::require 'IGD_Groundhog/src/Metrics'
 
 
 		Sketchup::require 'IGD_Groundhog/src/Scripts/AnnualIlluminance'
@@ -138,6 +139,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						model.abort_operation
+						raise ex
 					end
 				}
 			end
@@ -153,6 +155,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						model.abort_operation
+						raise ex
 					end
 				}
 			end
@@ -199,6 +202,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						model.abort_operation
+						raise ex
 					end
 				}
 				horizontal=Utilities.get_horizontal_faces(faces)
@@ -214,6 +218,7 @@ module IGD
 						rescue Exception => ex
 							UI.messagebox ex
 							model.abort_operation
+							raise ex
 						end
 					}
 				end
@@ -228,6 +233,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						model.abort_operation
+						raise ex
 					end
 				}
 
@@ -242,6 +248,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						model.abort_operation
+						raise ex
 					end
 				}
 				wins=Utilities.get_windows(faces)
@@ -261,6 +268,7 @@ module IGD
 						rescue Exception => ex
 							UI.messagebox ex
 							model.abort_operation
+							raise ex
 						end
 					}
 				end
