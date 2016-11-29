@@ -4,49 +4,6 @@ module IGD
 		# This module intends to handle results; that is, drawing them, coloring them, etc.
 		module Results
 
-=begin
-			# Reads the file with annual illuminance results (in "path") and
-			# calculates the UDI of them, according to the rest of the parameters.
-			# @author German Molina
-			# @param path [String] The path to the file with the annual results
-			# @param min_lux [Float] The minimum required illuminance
-			# @param max_lux [Float] The maximum required illuminance
-			# @param early [Float] The time of the beggining of the occupied time
-			# @param late [Float] The time of the end of the occupied time
-			# @param month_ini [Integer] The first month to consider in the simulation
-			# @param month_end [Integer] The final month to consider in the simulation
-			# @return [Array <String>] An array with the names of the metrics
-			# @todo Allow calculating UDI for parts of the year.
-			def self.annual_to_udi(path,min_lux, max_lux, early,late,month_ini, month_end)
-
-
-				annual = File.readlines(path)
-				#remove header
-				7.times {annual.shift}
-
-				#for calculating the DA
-				max_lux = 9e15 if not max_lux
-
-				#process each sensor
-				ret = []
-				annual.each{|sensor_data|
-					data = sensor_data.split(" ").map{|x| x.to_f}
-
-					working_hours = data.each_with_index.select{|val, index|
-						hour = (index+0.5)%24
-						hour >= early and hour <= late
-					}.map{|value,index| value}
-
-					good_hours = working_hours.select{|x| x >= min_lux and x<= max_lux }
-
-					ret << (100.0 * good_hours.length.to_f / working_hours.length.to_f)
-
-				}
-				return ret
-
-			end
-=end
-
 			# Returns an array with the names of the metrics within the solved-workplanes, obtained from the Solved Workplanes
 			# @author German Molina
 			# @return [Array <String>] An array with the names of the metrics
@@ -170,6 +127,7 @@ module IGD
 				rescue Exception => ex
 					UI.messagebox ex
 					model.abort_operation
+					raise ex
 				end
 				return ret
 			end
@@ -278,17 +236,22 @@ module IGD
 				op_name="Update pixels"
 				begin
 					model.start_operation(op_name,true)
+					
 					#good_min and good_max are assign for static metrics, by default
-					good_min = objective["good_light"]["min"]
-					good_max = objective["good_light"]["max"]
-					good_max = false if not good_max
-
-					#if dynamic: Fix
+					# If the static metric does not have "good_light" field, it is
+					# assumed to be binary... that is, 0 is bad, > 0 is good.
+					good_min = 1e-9
+					good_max = 9e16
+					if objective.key? "good_light" then
+						good_min = objective["good_light"]["min"]
+						good_max = objective["good_light"]["max"]
+						good_max = 9e16 if not good_max
+					end
+					#if dynamic, we actually just want to get the good pixels
 					if objective["dynamic"] then
 						good_min = objective["good_pixel"]
-						good_max = false
+						good_max = 9e16
 					end
-
 					workplanes=Utilities.get_solved_workplanes(Sketchup.active_model.entities)
 					workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value(x))["objective"]==objective["name"]}
 					workplanes.each do |workplane|
@@ -311,6 +274,7 @@ module IGD
 				rescue Exception => ex
 					UI.messagebox ex
 					model.abort_operation
+					raise ex
 				end
 			end
 
@@ -403,12 +367,18 @@ module IGD
 				return false if not Labeler.solved_workplane? wp
 				pixels = wp.entities.select{|x| Labeler.result_pixel? x}
 
-				#good_min and good_max are assign for static metrics, by default
-				good_min = objective["good_light"]["min"]
-				good_max = objective["good_light"]["max"]
-				good_max = 9e16 if not good_max
 
-				#if dynamic: Fix
+				#good_min and good_max are assign for static metrics, by default
+				# If the static metric does not have "good_light" field, it is
+				# assumed to be binary... that is, 0 is bad, > 0 is good.
+				good_min = 1e-9
+				good_max = 9e16
+				if objective.key? "good_light" then
+					good_min = objective["good_light"]["min"]
+					good_max = objective["good_light"]["max"]
+					good_max = 9e16 if not good_max
+				end
+				#if dynamic, we actually just want to get the good pixels
 				if objective["dynamic"] then
 					good_min = objective["good_pixel"]
 					good_max = 9e16

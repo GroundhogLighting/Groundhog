@@ -270,6 +270,7 @@ module IGD
 				rescue Exception => ex
 					UI.messagebox ex
 					model.abort_operation
+					raise ex
 				end
 
 			end
@@ -356,6 +357,7 @@ module IGD
 				rescue Exception => ex
 					UI.messagebox ex
 					model.abort_operation
+					raise ex
 				end
 			end
 

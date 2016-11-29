@@ -6,21 +6,21 @@ var objectiveModule = {};
 objectiveModule.metrics = {
   "DA" :  {
     "name": "Daylight Autonomy",
-    "requirements" : {"good_pixel": 50, "good_light": {"min": 300, "max":false}, "goal": 50, "occupied" : {"min": 8, "max" : 18}, "sim_period":{"min":1, "max": 12 } }, //"date"
+    "requirements" : {"good_pixel": 50, "good_light": {"min": 300, "max":false}, "goal": 50, "occupied" : {"min": 8, "max" : 18}, "sim_period":{"min":1, "max": 12 } },
     "dynamic" : true,
     "good_light_legend" : "Illuminance goal (lux)",
     "human_language" : "Workplane is in compliance when at least %goal%% of the space achieves an illuminance of %good_light_min%lux or more for a minimum of %good_pixel%% of the occupied time by daylight only. Occupied time is between %occupied_min% and %occupied_max% hours, from months %sim_period_min% to %sim_period_max%.",
   },
   "UDI" :  {
     "name": "Useful Daylight Illuminance",
-    "requirements" : {"good_pixel": 50, "good_light": {"min": 300, "max":3000}, "goal": 50, "occupied" : {"min": 8, "max" : 18}, "sim_period":{"min":1, "max": 12 } }, //"date"
+    "requirements" : {"good_pixel": 50, "good_light": {"min": 300, "max":3000}, "goal": 50, "occupied" : {"min": 8, "max" : 18}, "sim_period":{"min":1, "max": 12 } },
     "dynamic" : true,
     "human_language" : "Workplane is in compliance when at least %goal%% of the space achieves an illuminance between %good_light_min%lux and %good_light_max%lux during for a minimum of %good_pixel%% of the occupied time by daylight only. Occupied time is between %occupied_min% and %occupied_max% hours, from months %sim_period_min% to %sim_period_max%.",
     "good_light_legend" : "Illuminance goal (lux)"
   },
   "DF" :  {
     "name": "Daylight Factor",
-    "requirements" : {"good_light": {"min": 2, "max": 10}, "goal": 50 }, //"date"
+    "requirements" : {"good_light": {"min": 2, "max": 10}, "goal": 50 },
     "dynamic" : false,
     "human_language" : "Workplane is in compliance when at least %goal%% of the space presents a Daylight Factor between %good_light_min%% and %good_light_max%%.",
     "good_light_legend" : "Daylight Factor goal (%)"
@@ -31,8 +31,14 @@ objectiveModule.metrics = {
     "dynamic" : false,
     "human_language" : "Workplane is in compliance when at least %goal%% of the space presents an illuminance between %good_light_min%lux and %good_light_max%lux under a clear sky at %date_hour% hours on %date_date%.",
     "good_light_legend" : "Illuminance goal (lux)"
-  }
-
+  },
+  "SKY_VISIBILITY" :  {
+    "name": "Sky visibility",
+    "requirements" : {"goal": 80 },
+    "dynamic" : false,
+    "human_language" : "Workplane is in compliance when at least %goal%% of the space receives direct light from the sky.",
+    "good_light_legend" : "Sky visibility"
+  },
 };
 
 
@@ -397,6 +403,9 @@ $(".resizable1").resizable(
       }
     });
 
+    $("#create_objective_dialog input").change(function(){
+      objectiveModule.update_human_description();
+    });
 
     for (var metric in objectiveModule.metrics) {
       if (objectiveModule.metrics.hasOwnProperty(metric)) {
@@ -414,7 +423,3 @@ $(".resizable1").resizable(
       break;
     }
     objectiveModule.adapt_objective_dialog(first);
-
-    $("#create_objective_dialog input").change(function(){
-      objectiveModule.update_human_description();
-    });

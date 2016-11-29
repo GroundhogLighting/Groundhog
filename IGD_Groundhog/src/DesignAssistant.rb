@@ -302,6 +302,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						Sketchup.active_model.abort_operation
+            raise ex
 					end
                 end
 
@@ -335,6 +336,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						Sketchup.active_model.abort_operation
+            raise ex
 					end
                 end
 =end
@@ -492,10 +494,11 @@ module IGD
                                 else
                                     if score_calculator != false then
                                       results = File.readlines(file_to_read).map{|x| x.to_f}
-                                      File.open(file_to_write,'w'){ |f| f.puts results.map{|x| score_calculator.call(x)} }                                    
+                                      File.open(file_to_write,'w'){ |f| f.puts results.map{|x| score_calculator.call(x)} }
                                     end
                                 end
                                 report[workplane][obj_name]=Results.import_results(file_to_write,pixel_file,workplane,objective)
+
                             }
                          }
 
@@ -503,7 +506,6 @@ module IGD
                             min_max=Results.get_min_max_from_model(obj_name)
                             Results.update_pixel_colors(0,min_max[1],value)	#minimum is 0 by default
                         }
-
                         # Then import electric lighting results
                         if Config.calc_elux then
                             #Import results
@@ -527,7 +529,6 @@ module IGD
 
 
 
-
                         script = ""
                         script += "results = JSON.parse('#{report.to_json}');"
                         script += "reportModule.update_compliance_summary();"
@@ -536,6 +537,7 @@ module IGD
 
                         #remark first objective
                         script += self.select_objective("ELUX") if Config.calc_elux
+                        script += self.select_objective(objectives.keys.shift) if not Config.calc_elux
 
                         web_dialog.execute_script(script)
                     end

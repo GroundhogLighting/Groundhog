@@ -64,19 +64,10 @@ module IGD
         next "./Results/#{Utilities.fix_name(workplane)}-#{Utilities.fix_name(sky)}.txt"
       }
 
-      df[:read_file] = Proc.new{ |workplane,objective|
-        sky = self.get_daylight_factor_sky
-        next "./Results/#{Utilities.fix_name(workplane)}-#{Utilities.fix_name(sky)}.txt"
-      }
-
       df[:get_tasks] = Proc.new { |workplane,objective,options|
         sky = self.get_daylight_factor_sky
         target = {"workplane" =>workplane, "sky" => sky}
         next self.calc_static_illuminance_tasks(target,options)
-      }
-
-      df[:calc_score] = Proc.new{|sensor_value|
-        next sensor_value
       }
 
       @@library["DF"] = df
@@ -97,6 +88,33 @@ module IGD
 
       @@library["LUX"] = lux
 
+
+      ###### SKY VISIBILITY (SKY_VISIBILITY) ######
+      sky_visibility = Hash.new
+
+      sky_visibility[:write_file] = Proc.new{ |workplane,objective|
+        sky = self.get_daylight_factor_sky
+        next "./Results/#{Utilities.fix_name(workplane)}-sky_visibility.txt"
+      }
+
+      sky_visibility[:read_file] = Proc.new{ |workplane,objective|
+        sky = self.get_daylight_factor_sky
+        next "./Results/#{Utilities.fix_name(workplane)}-sky_visibility.txt"
+      }
+
+      sky_visibility[:get_tasks] = Proc.new { |workplane,objective,options|
+        next SkyVisibility.new(workplane)
+      }
+
+      sky_visibility[:calc_score] = Proc.new{|sensor_value|
+        if sensor_value > 0 then
+          next 1
+        else
+          next 0
+        end
+      }
+
+      @@library["SKY_VISIBILITY"] = sky_visibility
 
 
 

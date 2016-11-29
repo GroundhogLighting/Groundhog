@@ -139,6 +139,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						model.abort_operation
+						raise ex
 					end
 				}
 			end
@@ -154,6 +155,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						model.abort_operation
+						raise ex
 					end
 				}
 			end
@@ -200,6 +202,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						model.abort_operation
+						raise ex
 					end
 				}
 				horizontal=Utilities.get_horizontal_faces(faces)
@@ -215,6 +218,7 @@ module IGD
 						rescue Exception => ex
 							UI.messagebox ex
 							model.abort_operation
+							raise ex
 						end
 					}
 				end
@@ -229,6 +233,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						model.abort_operation
+						raise ex
 					end
 				}
 
@@ -243,6 +248,7 @@ module IGD
 					rescue Exception => ex
 						UI.messagebox ex
 						model.abort_operation
+						raise ex
 					end
 				}
 				wins=Utilities.get_windows(faces)
@@ -262,6 +268,7 @@ module IGD
 						rescue Exception => ex
 							UI.messagebox ex
 							model.abort_operation
+							raise ex
 						end
 					}
 				end

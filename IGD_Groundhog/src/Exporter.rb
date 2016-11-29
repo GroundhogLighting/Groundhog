@@ -265,7 +265,7 @@ module IGD
 				rescue Exception => ex
 					FileUtils.rm_rf(path, secure: true)
 					UI.messagebox ex
-					return false
+					raise ex
 				end
 				return true
 			end
