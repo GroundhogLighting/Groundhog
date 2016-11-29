@@ -165,7 +165,11 @@ objectiveModule.get_objective_object = function (metric) {
         ret[item_name]={};
         for (var sub_item_name in item) {
           if (item.hasOwnProperty(sub_item_name)) {
-            ret[item_name][sub_item_name] = parseFloat($("#objective_"+item_name+"_"+sub_item_name).val());
+            var input = $("#objective_"+item_name+"_"+sub_item_name);
+            ret[item_name][sub_item_name] = input.val();
+            if(input.attr("type")==="number"){
+              ret[item_name][sub_item_name] = parseFloat(ret[item_name][sub_item_name]);
+            }
           }
         }
       }else{
@@ -216,7 +220,7 @@ objectiveModule.update_objectives = function (filter) {
         });
         edit_button.on("click", function () {
           var objective_name = $(this).attr("name");
-          objectiveModule.edit_objective(objective_name);
+          objectiveModule.editObjective(objective_name);
         });
         new_row.append(action_column);
         action_column.append(edit_button);
@@ -232,7 +236,8 @@ objectiveModule.update_objectives = function (filter) {
   }
 }
 
-objectiveModule.edit_objective = function(objective_name){
+objectiveModule.editObjective = function(objective_name){
+  $("#objective_name").prop("disabled",true);
   var obj = objectives[objective_name];
   var object = objectiveModule.metrics[obj["metric"]];
   objectiveModule.adapt_objective_dialog(obj["metric"]);
@@ -365,6 +370,7 @@ $("#metric").on("change", function () {
 });
 
 $("#create_objective_button").button().on("click", function () {
+  $("#objective_name").removeAttr("disabled");
   objectiveModule.add_objective_dialog.dialog("open");
 });
 

@@ -452,7 +452,6 @@ module IGD
                         # post-process and load results
                         # Lets start by Daylighting
                         report = self.get_actual_report
-                        #all_objectives = []
 
                         hash = self.get_workplanes_hash
                         workplanes = hash["workplanes"]
@@ -462,40 +461,41 @@ module IGD
                             #initialize the object where the information to report will be stored
                             report[workplane]=Hash.new
                             pixel_file = "./Workplanes/#{Utilities.fix_name(workplane)}.pxl"
-
                             #then go through the objectives
                             obj_array.each{|obj_name|
-                                #all_objectives << obj_name
                                 objective = objectives[obj_name]
-                                min_lux = objective["good_light"]["min"]
-                                max_lux = objective["good_light"]["max"]
-
+                                metric = objective["metric"]
+                                file_to_read = Metrics.get_read_file(metric)
+                                file_to_read = file_to_read.call(workplane,objective) if file_to_read != false
+                                file_to_write = Metrics.get_write_file(metric).call(workplane,objective)
+                                score_calculator = Metrics.get_score_calculator(metric)
                                 if objective["dynamic"] then
-                                    path = "./Results/#{Utilities.fix_name(workplane)}-daylight.annual"
+                                    annual = File.readlines(file_to_read)
+                                    #remove header
+                            				7.times {annual.shift}
+
                                     early = objective["occupied"]["min"]
                                     late = objective["occupied"]["max"]
                                     month_ini = 1
                                     month_end = 12
 
-                                    results = "./Results/#{Utilities.fix_name(workplane)}-#{objective["name"]}.txt"
-                                    File.open(results,'w'){ |f|
-                                        f.puts Results.annual_to_udi(path,min_lux, max_lux, early,late,month_ini, month_end)
-                                    }
+                                    results = []
+                                    annual.each{|sensor_data|
+                            					data = sensor_data.split(" ").map{|x| x.to_f}
+                            					sensor_working_hours = data.each_with_index.select{|val, index|
+                            						hour = (index+0.5)%24
+                            						hour >= early and hour <= late
+                            					}.map{|value,index| value}
+                                      results << score_calculator.call(workplane,objective,sensor_working_hours)
+                            				}
+                                    File.open(file_to_write,'w'){ |f| f.puts results }
                                 else
-                                    sky = "gensky -ang 45 40 -c -B 0.5586592 -g #{Config.albedo}"
-                                    if objective["metric"] == "LUX" then
-                                        date = Date.strptime(objective["date"], '%m/%d/%Y')
-                                        month = date.month
-                                        day = date.day
-                                        hour = objective["hour"]
-                                        lat = Sketchup.active_model.shadow_info["Latitude"]
-                                        lon = -Sketchup.active_model.shadow_info["Longitude"]
-                                        mer = -Sketchup.active_model.shadow_info["TZOffset"]
-                                        sky = "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{Config.albedo} +s"
+                                    if score_calculator != false then
+                                      results = File.readlines(file_to_read).map{|x| x.to_f}
+                                      File.open(file_to_write,'w'){ |f| f.puts results.map{|x| score_calculator.call(x)} }                                    
                                     end
-                                    results = "./Results/#{Utilities.fix_name(workplane)}-#{Utilities.fix_name(sky)}.txt"
                                 end
-                                report[workplane][obj_name]=Results.import_results(results,pixel_file,workplane,objective)
+                                report[workplane][obj_name]=Results.import_results(file_to_write,pixel_file,workplane,objective)
                             }
                          }
 

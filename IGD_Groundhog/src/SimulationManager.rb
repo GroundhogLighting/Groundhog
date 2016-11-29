@@ -36,7 +36,8 @@ module IGD
                     #then the daylighting objectives
                     obj_array.each{|obj_name|
                         objective = objectives[obj_name]
-                        task = self.get_task(workplane,objective)
+                        metric = objective["metric"]
+                        task = Metrics.get_task(metric).call(workplane,objective,@options)
                         if not task then
                             UI.messagebox("Error at workplane '#{workplane}' - objective '#{obj_name}' while building the Simulation Manager.")
                             return false
@@ -46,7 +47,7 @@ module IGD
                 }
 
             end
-
+=begin
             # Receives an objective and creates a task to be performed from it.
             # @param workplane [String] The name of the workplane to which the task is being created
             # @param objective [Hash] The objective from which the task will be assembled.
@@ -81,7 +82,7 @@ module IGD
 
                 return task
             end
-
+=end
 
             # Expands all the simulation manager tasks, obtaining their subtasks (requirements).
             # @author Germán Molina
