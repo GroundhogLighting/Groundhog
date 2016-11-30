@@ -148,11 +148,11 @@ module IGD
       # @author German Molina
       # @param triangle [Array] an array of 3 SketchUp::3DPoint
       # @return [SketchUp::Vector3d] The normal of the triangle
-      def self.get_normal(triangle)
-        ed1 = triangle[0].vector_to(triangle[1])
-        ed2 = triangle[1].vector_to(triangle[2])
-        return ed1.cross(ed2).normalize
-      end
+      #def self.get_normal(triangle)
+      #  ed1 = triangle[0].vector_to(triangle[1])
+      #  ed2 = triangle[1].vector_to(triangle[2])
+      #  return ed1.cross(ed2).normalize
+      #end
 
       # Triangulates and refines a workplane
       # @author German Molina

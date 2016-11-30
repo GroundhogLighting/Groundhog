@@ -24,7 +24,7 @@ module IGD
 				if back_material == nil then #create it
 					back_material = Sketchup.active_model.materials.add("back_#{label}_material")
 					back_material.texture = "#{OS.main_groundhog_path}/Assets/Images/back_material_texture.jpg"
-					back_material.texture.size = 3
+					back_material.texture.size = 5
 					back_material.color = color
 					back_material.alpha=alpha
 				end
