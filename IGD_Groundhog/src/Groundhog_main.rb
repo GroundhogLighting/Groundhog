@@ -205,23 +205,23 @@ module IGD
 						raise ex
 					end
 				}
-				horizontal=Utilities.get_horizontal_faces(faces)
-				if horizontal.length >=1 then
-					context_menu.add_item("Label as Workplane (GH)") {
-						begin
-							op_name = "Label as Workplane"
-							model.start_operation( op_name,true )
 
-							Labeler.to_workplane(faces)
 
-							model.commit_operation
-						rescue Exception => ex
-							UI.messagebox ex
-							model.abort_operation
-							raise ex
-						end
-					}
-				end
+				context_menu.add_item("Label as Workplane (GH)") {
+					begin
+						op_name = "Label as Workplane"
+						model.start_operation( op_name,true )
+
+						Labeler.to_workplane(faces)
+
+						model.commit_operation
+					rescue Exception => ex
+						UI.messagebox ex
+						model.abort_operation
+						raise ex
+					end
+				}
+
 				context_menu.add_item("Label as Window (GH)") {
 					begin
 						op_name = "Label as Window"

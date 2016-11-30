@@ -388,18 +388,16 @@ module IGD
 			# @version 0.2
 			# @return [Void]
 			def self.to_workplane(entities)
-				faces=Utilities.get_horizontal_faces(entities)
-				correct=[]
+				faces=Utilities.get_faces(entities)
 				name = Utilities.get_name
 				return if not name
 				if faces.length>=1 then
 					faces.each do |face|
-						correct << face
 						self.set_label(face,"workplane")
 						Utilities.set_oriented_surface_materials(face,"workplane","red",0.2)
 					end
 
-					self.set_name(correct,name)
+					self.set_name(faces,name)
 
 					#update
 					DesignAssistant.update
