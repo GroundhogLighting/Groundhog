@@ -36,7 +36,7 @@ module IGD
 				materials.add m["name"] if materials[m["name"]] == nil #add it if it does not exist
 				mat = materials[m["name"]]
 				mat.texture = "#{OS.main_groundhog_path}/Assets/Images/back_material_texture.jpg"
-				mat.texture.size = 5
+				mat.texture.size = 3
 				mat.color=m["color"]
 				mat.alpha=m["alpha"]
 				Labeler.to_rad_material(mat)
