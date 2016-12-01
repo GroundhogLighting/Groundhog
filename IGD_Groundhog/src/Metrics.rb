@@ -210,7 +210,7 @@ module IGD
       def self.calc_annual_illuminance_tasks(workplane, options)
         return DCAnnualIlluminance.new(workplane)
       end
-
+      
       # Returns the Task that calculates illuminance in a static moment of the year
       #
       # @param target [Hash] A hash containing the sky at the moment and the workplane

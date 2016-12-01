@@ -49,18 +49,8 @@ module IGD
 			# @return [Hash] the workplanes and objectives
       def self.get_workplanes_hash
         obj_hash = Objectives.get_objectives_hash
-
-        wp_hash = Hash.new
-        workplanes = Utilities.get_workplanes(Sketchup.active_model.entities)
-        workplanes.each { |wp|
-            value = Labeler.get_value(wp)
-            if value == nil or not value then
-                wp_hash[Labeler.get_name(wp)] = []
-            else
-                wp_hash[Labeler.get_name(wp)] = JSON.parse(value)
-            end
-        }
-          return {"workplanes" => wp_hash, "objectives" => obj_hash}
+        wp_hash = JSON.parse Sketchup.active_model.get_attribute("Groundhog","workplanes")
+        return {"workplanes" => wp_hash, "objectives" => obj_hash}
       end
 
       # Search for the luminaire definition
@@ -342,8 +332,8 @@ module IGD
                 wd.add_action_callback("add_objective") do |web_dialog,msg|
                     obj = JSON.parse(msg)
                     wp_name = obj["workplane"]
-                    objective = obj["objective"]
-                    Objectives.add_objective_to_worplane(wp_name,objective)
+                    objective_name = obj["objective"]
+                    Objectives.add_objective_to_workplane(wp_name,objective_name)
                 end
 
                 wd.add_action_callback("create_objective") do |web_dialog,msg|

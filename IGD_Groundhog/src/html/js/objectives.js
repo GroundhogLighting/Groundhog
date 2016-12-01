@@ -45,7 +45,7 @@ objectiveModule.metrics = {
 
 
 objectiveModule.add_objective = function (wp_name, obj_name) {
-  var message = { "workplane": wp_name, "objective": objectives[obj_name] };
+  var message = { "workplane": wp_name, "objective": obj_name}//objectives[obj_name] };
   window.location.href = 'skp:add_objective@' + JSON.stringify(message);
 };
 

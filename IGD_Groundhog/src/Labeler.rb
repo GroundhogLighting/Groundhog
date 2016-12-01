@@ -251,7 +251,6 @@ module IGD
 					UI.messagebox("No selected entities can be named")
 					return
 				end
-				#return false if not name
 
 				if entities.length==1 then
 					entities[0].set_attribute("Groundhog","Name",name)
@@ -391,13 +390,21 @@ module IGD
 				faces=Utilities.get_faces(entities)
 				name = Utilities.get_name
 				return if not name
-				if faces.length>=1 then
+				if faces.length > 0 then
 					faces.each do |face|
 						self.set_label(face,"workplane")
 						Utilities.set_oriented_surface_materials(face,"workplane","red",0.2)
+						self.set_name([face],name)
+						face.add_observer(WorkplaneObserver.new)
 					end
 
-					self.set_name(faces,name)
+					# Register the workplane... will replace the old one, if it exists.
+					model = Sketchup.active_model
+					value = model.get_attribute("Groundhog","workplanes")
+					value = Hash.new.to_json if value == nil or not value
+					value = JSON.parse value
+					value[name] = []
+					model.set_attribute("Groundhog","workplanes",value.to_json)
 
 					#update
 					DesignAssistant.update

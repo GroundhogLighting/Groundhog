@@ -26,16 +26,28 @@ module IGD
       # array containing objectives names in the workplane's value.
       #
       # @param wp_name [String] The workplane name
-      # @param objective [Hash] The objective in Hash format
+      # @param objective_name [Hash] The objective in Hash format
       # @author Germán Molina
-      def self.add_objective_to_worplane(wp_name,objective)
-        wp = Utilities.get_workplane_by_name(wp_name)
+      def self.add_objective_to_workplane(wp_name,objective_name)
+        # Register the workplane... will replace the old one, if it exists.
+        model = Sketchup.active_model
+        value = model.get_attribute("Groundhog","workplanes")
+        Error.inform_exception("Model has no registered workplanes!") if value == nil or not value
+        value = JSON.parse value
 
-        value = Labeler.get_value(wp)
-        value = "[]" if value == nil or not value
-        value = JSON.parse(value)
-        value << objective["name"] #only the name is stored
-        Labeler.set_value(wp,value.to_json)
+        Error.inform_exception("Model has not registered workplane '#{wp_name}'!") if not value.key? wp_name
+        value[wp_name] << objective_name
+        model.set_attribute("Groundhog","workplanes",value.to_json)
+=begin
+        wps = Utilities.get_workplane_by_name(wp_name)
+        wps.each{|wp|
+          value = Labeler.get_value(wp)
+          value = "[]" if value == nil or not value
+          value = JSON.parse(value)
+          value << objective["name"] #only the name is stored
+          Labeler.set_value(wp,value.to_json)
+        }
+=end
       end
 
       # Removes an objective completely from the model.
@@ -49,8 +61,8 @@ module IGD
         Sketchup.active_model.set_attribute("Groundhog","objectives",objs.to_json)
 
         #deletete it from the workplanes... and remove the solved workplane, if it exist
-        Utilities.get_workplanes(Sketchup.active_model.entities).select{|x|
-          wp_name = Labeler.get_name(x)
+        wp_names = Utilities.get_workplanes(Sketchup.active_model.entities).map{|x| Labeler.get_name(x)}.uniq
+        wp_names.each{|wp_name|
           Objectives.remove_objective_from_workplane(wp_name,objective_name)
         }
       end
@@ -61,13 +73,18 @@ module IGD
       # @param obejctive_name [String] The name of the objective
       # @author Germán Molina
       def self.remove_objective_from_workplane(wp_name,objective_name)
-        #find the workplane
-        workplane = Utilities.get_workplane_by_name(wp_name)
 
-        #delete the objective from the workplane value
-        value = JSON.parse Labeler.get_value(workplane)   #this is an array of hash
-        value.delete(objective_name) #delete the first one.
-        Labeler.set_value(workplane, value.to_json)
+
+        # Register the workplane... will replace the old one, if it exists.
+        model = Sketchup.active_model
+        value = model.get_attribute("Groundhog","workplanes")
+        Error.inform_exception("Model has not registered any workplanes!") if value == nil or not value
+        value = JSON.parse value
+
+        Error.inform_exception("Model has not registered workplane '#{wp_name}'!") if not value.key? wp_name
+        value[wp_name].delete(objective_name)
+        model.set_attribute("Groundhog","workplanes",value.to_json)
+
 
         #delete the solved workplane if it exist.
         IGD::Groundhog::Utilities.get_solved_workplanes(Sketchup.active_model.entities).select{|x|
