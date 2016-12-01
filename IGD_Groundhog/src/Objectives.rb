@@ -2,11 +2,19 @@ module IGD
   module Groundhog
     module Objectives
 
-
+      # Gets the hash of objectives stored in the Model dictionary.
+      # This hash is used for performing calculations and updating the Design Assistant.
+      #
+      # @author Germán Molina
+      # @return [Hash] The objectives hash
       def self.get_objectives_hash
         JSON.parse Sketchup.active_model.get_attribute("Groundhog","objectives")
       end
 
+      # Receives an objective (in Hash format), and stores it in the model dictionary.
+      #
+      # @param objective [Hash] The objective in Hash format.
+      # @author Germán Molina
       def self.create_objective(objective)
         name = objective["name"]
         objs = JSON.parse Sketchup.active_model.get_attribute("Groundhog","objectives")
@@ -14,7 +22,12 @@ module IGD
         Sketchup.active_model.set_attribute("Groundhog","objectives",objs.to_json)
       end
 
-
+      # Adds a certain objective to a certain workplane. That is, adds it to the
+      # array containing objectives names in the workplane's value.
+      #
+      # @param wp_name [String] The workplane name
+      # @param objective [Hash] The objective in Hash format
+      # @author Germán Molina
       def self.add_objective_to_worplane(wp_name,objective)
         wp = Utilities.get_workplane_by_name(wp_name)
 
@@ -25,7 +38,10 @@ module IGD
         Labeler.set_value(wp,value.to_json)
       end
 
-
+      # Removes an objective completely from the model.
+      #
+      # @author Germán Molina
+      # @param objective_name [String] The name of the objective to remove
       def self.delete_objective(objective_name)
         #delete it from the main list
         objs = JSON.parse Sketchup.active_model.get_attribute("Groundhog","objectives")
@@ -39,7 +55,11 @@ module IGD
         }
       end
 
-
+      # Removes an objective from a certain workplane, avoiding future calculations.
+      #
+      # @param wp_name [String] The name of the workplane
+      # @param obejctive_name [String] The name of the objective
+      # @author Germán Molina
       def self.remove_objective_from_workplane(wp_name,objective_name)
         #find the workplane
         workplane = Utilities.get_workplane_by_name(wp_name)
