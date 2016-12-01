@@ -61,8 +61,8 @@ module IGD
         Sketchup.active_model.set_attribute("Groundhog","objectives",objs.to_json)
 
         #deletete it from the workplanes... and remove the solved workplane, if it exist
-        Utilities.get_workplanes(Sketchup.active_model.entities).select{|x|
-          wp_name = Labeler.get_name(x)
+        wp_names = Utilities.get_workplanes(Sketchup.active_model.entities).map{|x| Labeler.get_name(x)}.uniq
+        wp_names.each{|wp_name|
           Objectives.remove_objective_from_workplane(wp_name,objective_name)
         }
       end
