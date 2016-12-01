@@ -86,19 +86,6 @@ module IGD
         model.set_attribute("Groundhog","workplanes",value.to_json)
 
 
-=begin
-        #find the workplane
-        workplanes = Utilities.get_workplane_by_name(wp_name)
-
-        workplanes.each{|workplane|
-          #delete the objective from the workplane value
-          value = Labeler.get_value(workplane)
-          value = "[]" if value == nil or not value
-          value = JSON.parse(value)
-          value.delete(objective_name) #delete the first one.
-          Labeler.set_value(workplane, value.to_json)
-        }
-=end
         #delete the solved workplane if it exist.
         IGD::Groundhog::Utilities.get_solved_workplanes(Sketchup.active_model.entities).select{|x|
           JSON.parse(IGD::Groundhog::Labeler.get_value(x))["objective"]==objective_name

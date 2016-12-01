@@ -9,8 +9,6 @@ module IGD
           #get the names of all the workplanes in the model
           workplanes = Utilities.get_workplanes(Sketchup.active_model.entities).map{|x| Labeler.get_name(x)}.uniq
 
-          warn workplanes.inspect
-
           # Un-register the workplane.
           model = Sketchup.active_model
           value = model.get_attribute("Groundhog","workplanes")
@@ -18,8 +16,6 @@ module IGD
           value = JSON.parse value
           value.keys.each{|wp_name|
             value.delete(wp_name) if not workplanes.include? wp_name
-            warn "deleting #{wp_name}" if not workplanes.include? wp_name
-            warn "saving #{wp_name}" if workplanes.include? wp_name
           }
           model.set_attribute("Groundhog","workplanes",value.to_json)
           DesignAssistant.update
