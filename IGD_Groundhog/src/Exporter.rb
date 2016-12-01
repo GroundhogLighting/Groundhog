@@ -327,11 +327,6 @@ module IGD
 						windows=windows+[fc]
 					elsif Labeler.workplane?(fc) then
 						#if it is workplane, export
-						#name=Labeler.get_fixed_name(fc) #Get the name of the surface
-						#mesh = fc.mesh
-						#points = mesh.points
-						#polygons = mesh.polygons
-						#self.write_workplane(name, points, polygons)
 						self.write_workplane(fc)
 					elsif Labeler.illum?(fc) then
 						illums=illums+[fc]
@@ -488,12 +483,9 @@ module IGD
 			# The name of the file will be the name of the entity.
 			# @author German Molina
 			# @version 1.2
-			# @param name [String] the name of the workplane file (without extension)
-			# @param points [entities] The points of the mesh
-			# @param polygons [entities] The polygons of the mesh
-			# @return [Boolean] Success
+			# @param face [Sketchup::Face] The face to be exported as workplane
+9			# @return [Boolean] Success
 			def self.write_workplane(face)
-			#def self.write_workplane( name, points, polygons)
 				name=Labeler.get_fixed_name(face) #Get the name of the surface
 				mesh = face.mesh 4
 				points = mesh.points
