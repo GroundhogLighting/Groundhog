@@ -43,12 +43,11 @@ module IGD
 			# Returns the workplane that has a certain name
 			#
 			# @author German Molina
-			# @return [SketchUp::Face] The workplane
+			# @return [Array<SketchUp::Face>] The workplanes in an array
 			# @param wp_name [String] The name of the workplane
 			def self.get_workplane_by_name(wp_name)
 				wp = Utilities.get_workplanes(Sketchup.active_model.entities).select{|x| Labeler.get_name(x)==wp_name}
-				UI.messagebox "Two or more objectives have the same name... Only one of them will be processed.\nThis is something you should fix." if wp.length > 1
-        return wp.shift
+        return wp
 			end
 
 			# Compares a two version strings in format "A.B.C"

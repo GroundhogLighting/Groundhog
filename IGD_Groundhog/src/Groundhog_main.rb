@@ -16,6 +16,8 @@ module IGD
 
 		#################################
 
+		Sketchup::require 'IGD_Groundhog/src/Error'
+		Sketchup::require 'IGD_Groundhog/src/Observers'
 		Sketchup::require 'IGD_Groundhog/src/Triangle'
 		Sketchup::require 'IGD_Groundhog/src/Utilities'
 		Sketchup::require 'IGD_Groundhog/src/Config'
@@ -103,7 +105,10 @@ module IGD
 
 			end
 		end
+
 		model.set_attribute("Groundhog","objectives",Hash.new.to_json) if model.get_attribute("Groundhog","objectives") == nil #Objectives will be stored here.
+		model.set_attribute("Groundhog","workplanes",Hash.new.to_json) if model.get_attribute("Groundhog","workplanes") == nil #Workplane's objectives will be stored here.
+
 
 		#Add Radiance to Path as well as RAYPATH
 		OS.setup_radiance
@@ -137,9 +142,8 @@ module IGD
 						Labeler.set_name(Sketchup.active_model.selection,name)
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
-						raise ex
+						Error.inform_exception(ex)
 					end
 				}
 			end
@@ -153,9 +157,8 @@ module IGD
 						Labeler.to_luminaire(comp)
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
-						raise ex
+						Error.inform_exception(ex)
 					end
 				}
 			end
@@ -200,9 +203,8 @@ module IGD
 
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
-						raise ex
+						Error.inform_exception(ex)
 					end
 				}
 
@@ -216,9 +218,8 @@ module IGD
 
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
-						raise ex
+						Error.inform_exception(ex)
 					end
 				}
 
@@ -231,9 +232,8 @@ module IGD
 
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
-						raise ex
+						Error.inform_exception(ex)
 					end
 				}
 
@@ -246,9 +246,8 @@ module IGD
 
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
-						raise ex
+						Error.inform_exception(ex)
 					end
 				}
 				wins=Utilities.get_windows(faces)
@@ -266,9 +265,8 @@ module IGD
 
 							model.commit_operation
 						rescue Exception => ex
-							UI.messagebox ex
 							model.abort_operation
-							raise ex
+							Error.inform_exception(ex)
 						end
 					}
 				end

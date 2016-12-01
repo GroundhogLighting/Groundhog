@@ -259,6 +259,7 @@ module IGD
 						return false if not self.export_component_definitions
 						return false if not self.write_illuminance_sensors
 						return false if not self.write_scene_file
+						return false if not self.write_workplanes
 
 						Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 					end
@@ -326,8 +327,7 @@ module IGD
 						#Window groups will be exported separatedly
 						windows=windows+[fc]
 					elsif Labeler.workplane?(fc) then
-						#if it is workplane, export
-						self.write_workplane(fc)
+						next # These will be exported later
 					elsif Labeler.illum?(fc) then
 						illums=illums+[fc]
 					else
@@ -478,24 +478,27 @@ module IGD
 
 			end
 
-			# Writes the sensors that are over a certain workplane. Creates a Workplanes folder on the directory.
+			# Writes the workplanes in the model (need to be in the model, not in components)
 			#
-			# The name of the file will be the name of the entity.
 			# @author German Molina
-			# @version 1.2
-			# @param face [Sketchup::Face] The face to be exported as workplane
-9			# @return [Boolean] Success
-			def self.write_workplane(face)
-				name=Labeler.get_fixed_name(face) #Get the name of the surface
-				mesh = face.mesh 4
-				points = mesh.points
-				polygons = mesh.polygons
-
+			# @return [Boolean] Success
+			def self.write_workplanes
+				workplanes = Utilities.get_workplanes(Sketchup.active_model.entities)
+				return true if workplanes.length == 0 #success... just, no workplanes.
+				wp_names = wp_names = workplanes.map{|x| Labeler.get_name(x) }.uniq
 				path = "./Workplanes"
 				OS.mkdir(path)
 
-				File.open("#{path}/#{name}.pxl",'w+'){ |pixels_file|
-					File.open("#{path}/#{name}.pts",'w+'){ |points_file|
+				wp_names.each{|workplane|
+					name=Utilities.fix_name(workplane)
+
+					pixels_file = File.open("#{path}/#{name}.pxl",'w+')
+					points_file = File.open("#{path}/#{name}.pts",'w+')
+					wp_group = workplanes.select{|x| IGD::Groundhog::Labeler.get_name(x) == workplane}
+					wp_group.each{|face|
+						mesh = face.mesh 4
+						points = mesh.points
+						polygons = mesh.polygons
 						# Work one of the received polygons at a time
 						polygons.each_with_index{|polygon, index|
 							triangles = Triangle.triangulate(points,[polygon])
@@ -507,7 +510,10 @@ module IGD
 							}
 						}
 					}
-				}
+
+					pixels_file.close
+					points_file.close
+				} # end wp_names.each
 
 				return true
 			end
