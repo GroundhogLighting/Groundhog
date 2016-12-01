@@ -187,30 +187,6 @@ points.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_normal-class_method" title="get_normal (class method)">+ (SketchUp::Vector3d) <strong>get_normal</strong>(triangle) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Calculates the normal of a triangle.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#refine_triangles-class_method" title="refine_triangles (class method)">+ (Array) <strong>refine_triangles</strong>(triangles) </a>
     
 
@@ -740,105 +716,6 @@ points.</p>
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="get_normal-class_method">
-  
-    + (<tt>SketchUp::Vector3d</tt>) <strong>get_normal</strong>(triangle) 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Calculates the normal of a triangle</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
-  
-    <li>
-      
-        <span class='name'>triangle</span>
-      
-      
-        <span class='type'>(<tt>Array</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>an array of 3 SketchUp::3DPoint</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>SketchUp::Vector3d</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The normal of the triangle</p>
-</div>
-      
-    </li>
-  
-</ul>
-<p class="tag_title">Author:</p>
-<ul class="author">
-  
-    <li>
-      
-      
-      
-      
-        
-        <div class='inline'>
-<p>German Molina</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-151
-152
-153
-154
-155</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Triangle.rb', line 151</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_normal'>get_normal</span><span class='lparen'>(</span><span class='id identifier rubyid_triangle'>triangle</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_ed1'>ed1</span> <span class='op'>=</span> <span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_vector_to'>vector_to</span><span class='lparen'>(</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_ed2'>ed2</span> <span class='op'>=</span> <span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_vector_to'>vector_to</span><span class='lparen'>(</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-  <span class='kw'>return</span> <span class='id identifier rubyid_ed1'>ed1</span><span class='period'>.</span><span class='id identifier rubyid_cross'>cross</span><span class='lparen'>(</span><span class='id identifier rubyid_ed2'>ed2</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_normalize'>normalize</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
   <h3 class="signature " id="refine_triangles-class_method">
   
     + (<tt>Array</tt>) <strong>refine_triangles</strong>(triangles) 
@@ -1209,6 +1086,16 @@ which triangle in &#39;points&#39; form the triangle</p>
       <pre class="lines">
 
 
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
 162
 163
 164
@@ -1222,20 +1109,10 @@ which triangle in &#39;points&#39; form the triangle</p>
 172
 173
 174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185</pre>
+175</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Triangle.rb', line 162</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Triangle.rb', line 152</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_triangulate'>triangulate</span><span class='lparen'>(</span><span class='id identifier rubyid_points'>points</span><span class='comma'>,</span><span class='id identifier rubyid_polygons'>polygons</span><span class='rparen'>)</span>
 
@@ -1271,7 +1148,7 @@ which triangle in &#39;points&#39; form the triangle</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Nov 30 12:31:03 2016 by
+  Generated on Thu Dec  1 09:34:44 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

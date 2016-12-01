@@ -4409,7 +4409,7 @@ texture on their back in order to allow easy identification of each side.</p>
 	<span class='kw'>if</span> <span class='id identifier rubyid_back_material'>back_material</span> <span class='op'>==</span> <span class='kw'>nil</span> <span class='kw'>then</span> <span class='comment'>#create it
 </span>		<span class='id identifier rubyid_back_material'>back_material</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_materials'>materials</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>back_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_label'>label</span><span class='embexpr_end'>}</span><span class='tstring_content'>_material</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 		<span class='id identifier rubyid_back_material'>back_material</span><span class='period'>.</span><span class='id identifier rubyid_texture'>texture</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_main_groundhog_path'>main_groundhog_path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/Assets/Images/back_material_texture.jpg</span><span class='tstring_end'>&quot;</span></span>
-		<span class='id identifier rubyid_back_material'>back_material</span><span class='period'>.</span><span class='id identifier rubyid_texture'>texture</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>=</span> <span class='int'>3</span>
+		<span class='id identifier rubyid_back_material'>back_material</span><span class='period'>.</span><span class='id identifier rubyid_texture'>texture</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>=</span> <span class='int'>5</span>
 		<span class='id identifier rubyid_back_material'>back_material</span><span class='period'>.</span><span class='id identifier rubyid_color'>color</span> <span class='op'>=</span> <span class='id identifier rubyid_color'>color</span>
 		<span class='id identifier rubyid_back_material'>back_material</span><span class='period'>.</span><span class='id identifier rubyid_alpha'>alpha</span><span class='op'>=</span><span class='id identifier rubyid_alpha'>alpha</span>
 	<span class='kw'>end</span>
@@ -4434,7 +4434,7 @@ texture on their back in order to allow easy identification of each side.</p>
 </div>
 
     <div id="footer">
-  Generated on Wed Nov 30 12:31:04 2016 by
+  Generated on Thu Dec  1 09:34:44 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

@@ -84,144 +84,144 @@ module IGD
       # Search for materials that have Radiance definition
 			# @author German Molina
 			# @return [Hash] the materials
-            def self.get_radiance_materials_hash
-                ret = Hash.new
-                mats = Sketchup.active_model.materials.select{|x| Labeler.rad_material? x}
+      def self.get_radiance_materials_hash
+          ret = Hash.new
+          mats = Sketchup.active_model.materials.select{|x| Labeler.rad_material? x}
 
-                mats.each{|x|
-                    info = JSON.parse IGD::Groundhog::Labeler.get_value x
-                    ret[x.name] = info
-                }
+          mats.each{|x|
+              info = JSON.parse IGD::Groundhog::Labeler.get_value x
+              ret[x.name] = info
+          }
 
-                #insert (or replace) defaults from LM-83
-                ret["LM-83 floor material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.2 0.2 0.2 0 0", "color" => [51,51,51], "alpha" => 1, "name"=> "LM-83 floor material", "class" => "plastic"}
-                ret["LM-83 wall material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.5 0.5 0.5 0 0", "color" => [127,127,127], "alpha" => 1, "name"=> "LM-83 wall material", "class" => "plastic"}
-                ret["LM-83 ceiling material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.7 0.7 0.7 0 0", "color" => [178,178,178], "alpha" => 1, "name"=> "LM-83 ceiling material", "class" => "plastic"}
-                ret["LM-83 furniture material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.5 0.5 0.5 0 0", "color" => [127,127,127], "alpha" => 1, "name"=> "LM-83 furniture material", "class" => "plastic"}
-                ret["LM-83 tree material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.2 0.2 0.2 0 0", "color" => [104, 178, 38], "alpha" => 1, "name"=> "LM-83 tree material", "class" => "plastic"}
-                ret["LM-83 ground material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.1 0.1 0.1 0 0", "color" => [25,25,25], "alpha" => 1, "name"=> "LM-83 ground material", "class" => "plastic"}
-                ret["LM-83 obstruction material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.3 0.3 0.3 0 0", "color" => [77,77,77], "alpha" => 1, "name"=> "LM-83 obstruction material", "class" => "plastic"}
-                default_glass = Materials.default_glass
-                ret[default_glass["name"]]=default_glass
-                default_material = Materials.default_material
-                ret[default_material["name"]]=default_material
+          #insert (or replace) defaults from LM-83
+          ret["LM-83 floor material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.2 0.2 0.2 0 0", "color" => [51,51,51], "alpha" => 1, "name"=> "LM-83 floor material", "class" => "plastic"}
+          ret["LM-83 wall material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.5 0.5 0.5 0 0", "color" => [127,127,127], "alpha" => 1, "name"=> "LM-83 wall material", "class" => "plastic"}
+          ret["LM-83 ceiling material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.7 0.7 0.7 0 0", "color" => [178,178,178], "alpha" => 1, "name"=> "LM-83 ceiling material", "class" => "plastic"}
+          ret["LM-83 furniture material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.5 0.5 0.5 0 0", "color" => [127,127,127], "alpha" => 1, "name"=> "LM-83 furniture material", "class" => "plastic"}
+          ret["LM-83 tree material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.2 0.2 0.2 0 0", "color" => [104, 178, 38], "alpha" => 1, "name"=> "LM-83 tree material", "class" => "plastic"}
+          ret["LM-83 ground material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.1 0.1 0.1 0 0", "color" => [25,25,25], "alpha" => 1, "name"=> "LM-83 ground material", "class" => "plastic"}
+          ret["LM-83 obstruction material"]={"rad" => "void plastic %MAT_NAME% 0 0 5 0.3 0.3 0.3 0 0", "color" => [77,77,77], "alpha" => 1, "name"=> "LM-83 obstruction material", "class" => "plastic"}
+          default_glass = Materials.default_glass
+          ret[default_glass["name"]]=default_glass
+          default_material = Materials.default_material
+          ret[default_material["name"]]=default_material
 
-                return ret
-            end
+          return ret
+      end
 
-            # Search for workplanes in the model and finds out weather they fulfil their
-            # goals or not.
+      # Search for workplanes in the model and finds out weather they fulfil their
+      # goals or not.
 			# @author German Molina
 			# @return [Hash] the report
-            def self.get_actual_report
-                report = Hash.new
-                wps = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
-                wps.map{|x| Labeler.get_value(x)}.each{|val|
-                    value = JSON.parse(val)
-                    workplane = value["workplane"]
-                    objective = value["objective"]
-                    report[workplane] = Hash.new if report[workplane] == nil
-                    report[workplane][objective] = value["approved_percentage"]
-                }
-                return report
-            end
+      def self.get_actual_report
+          report = Hash.new
+          wps = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+          wps.map{|x| Labeler.get_value(x)}.each{|val|
+              value = JSON.parse(val)
+              workplane = value["workplane"]
+              objective = value["objective"]
+              report[workplane] = Hash.new if report[workplane] == nil
+              report[workplane][objective] = value["approved_percentage"]
+          }
+          return report
+      end
 
-            # Search for workplanes in the model and assembles an object with the statistics of their electric lighting calculations
+      # Search for workplanes in the model and assembles an object with the statistics of their electric lighting calculations
 			# @author German Molina
 			# @return [Hash] the report
-            def self.get_elux_report
-                report = Hash.new
-                wps = IGD::Groundhog::Utilities.get_solved_workplanes(Sketchup.active_model.entities)
-                wps.map{|x| Labeler.get_value(x)}.each{|val|
-                    value = JSON.parse(val)
-                    next if not "ELUX" == value["objective"]
-                    workplane = value["workplane"]
-                    report[workplane] = Hash.new if report[workplane] == nil
-                    report[workplane]["average"] = value["average"]
-                    report[workplane]["min_over_average"] = value["min_over_average"]
-                    report[workplane]["min_over_max"] = value["min_over_max"]
-                    report[workplane]["min"] = value["min"]
-                    report[workplane]["max"] = value["max"]
-                }
-                return report
-            end
+      def self.get_elux_report
+          report = Hash.new
+          wps = IGD::Groundhog::Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+          wps.map{|x| Labeler.get_value(x)}.each{|val|
+              value = JSON.parse(val)
+              next if not "ELUX" == value["objective"]
+              workplane = value["workplane"]
+              report[workplane] = Hash.new if report[workplane] == nil
+              report[workplane]["average"] = value["average"]
+              report[workplane]["min_over_average"] = value["min_over_average"]
+              report[workplane]["min_over_max"] = value["min_over_max"]
+              report[workplane]["min"] = value["min"]
+              report[workplane]["max"] = value["max"]
+          }
+          return report
+      end
 
-            # This is the action performed when selecting a goal to be shown.
-            # It "remkars" the workplanes corresponding to that goal, and updates
-            # the scale in the Report section of WebDialog
+      # This is the action performed when selecting a goal to be shown.
+      # It "remkars" the workplanes corresponding to that goal, and updates
+      # the scale in the Report section of WebDialog
 			# @author German Molina
 			# @return [String] The script that modifies the scale
-            def self.select_objective(objective)
-                return "$('#compliance_summary_scale_max').text('--');$('#elux_compliance_scale_max').text('--');$('#luminaire_scale_max').text('--');" if objective == nil
-                Utilities.remark_solved_workplanes(objective)
-                min_max = Results.get_min_max_from_model(objective)
-                max=min_max[1]
-                script = ""
-                if objective=="ELUX" then
-                    script += "$('#elux_compliance_scale_max').text('#{max.round}');"
-                    script += "$('#luminaire_scale_max').text('#{max.round}');"
-                    script += "$('#compliance_summary_scale_max').text('--');"
-                else
-                    script += "$('#elux_compliance_scale_max').text('--');"
-                    script += "$('#luminaire_scale_max').text('--');"
-                    script += "$('#compliance_summary_scale_max').text('#{max.round}');"
-                end
-                script += "reportModule.highlight_objective('#{objective}');"
-                return script
-            end
+      def self.select_objective(objective)
+          return "$('#compliance_summary_scale_max').text('--');$('#elux_compliance_scale_max').text('--');$('#luminaire_scale_max').text('--');" if objective == nil
+          Utilities.remark_solved_workplanes(objective)
+          min_max = Results.get_min_max_from_model(objective)
+          max=min_max[1]
+          script = ""
+          if objective=="ELUX" then
+              script += "$('#elux_compliance_scale_max').text('#{max.round}');"
+              script += "$('#luminaire_scale_max').text('#{max.round}');"
+              script += "$('#compliance_summary_scale_max').text('--');"
+          else
+              script += "$('#elux_compliance_scale_max').text('--');"
+              script += "$('#luminaire_scale_max').text('--');"
+              script += "$('#compliance_summary_scale_max').text('#{max.round}');"
+          end
+          script += "reportModule.highlight_objective('#{objective}');"
+          return script
+      end
 
-            # Updates the Design Assistant to the actual state of the model... this is called
-            # when the dialog is opened and also, for example, when the user defines a new
-            # workplane.
+      # Updates the Design Assistant to the actual state of the model... this is called
+      # when the dialog is opened and also, for example, when the user defines a new
+      # workplane.
 			# @author German Molina
-            def self.update
-                web_dialog = IGD::Groundhog.design_assistant
-                return if not web_dialog.visible?
+      def self.update
+          web_dialog = IGD::Groundhog.design_assistant
+          return if not web_dialog.visible?
 
-                hash = self.get_workplanes_hash
-                workplanes = hash["workplanes"].to_json
-                objectives = hash["objectives"].to_json
-                materials = self.get_radiance_materials_hash.to_json
-                script = ""
-                script += "materials = JSON.parse('#{materials}');"
-                script += "materialModule.update_list('');"
-                script += "workplanes = JSON.parse('#{workplanes}');"
-                script += "objectives = JSON.parse('#{objectives}');"
-                script += "objectiveModule.update_workplanes('');"
-                script += "objectiveModule.update_objectives('');"
+          hash = self.get_workplanes_hash
+          workplanes = hash["workplanes"].to_json
+          objectives = hash["objectives"].to_json
+          materials = self.get_radiance_materials_hash.to_json
+          script = ""
+          script += "materials = JSON.parse('#{materials}');"
+          script += "materialModule.update_list('');"
+          script += "workplanes = JSON.parse('#{workplanes}');"
+          script += "objectives = JSON.parse('#{objectives}');"
+          script += "objectiveModule.update_workplanes('');"
+          script += "objectiveModule.update_objectives('');"
 
-                weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
-                if weather != nil then
-                    weather = JSON.parse(weather)
-                    script += "document.getElementById('weather_city').innerHTML='#{weather["city"]}';"
-                    script += "document.getElementById('weather_state').innerHTML='#{weather["state"]}';"
-                    script += "document.getElementById('weather_country').innerHTML='#{weather["country"]}';"
-                    script += "document.getElementById('weather_latitude').innerHTML='#{weather["latitude"]}';"
-                    script += "document.getElementById('weather_longitude').innerHTML='#{weather["longitude"]}';"
-                    script += "document.getElementById('weather_timezone').innerHTML='GMT #{weather["timezone"]}';"
-                end
+          weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
+          if weather != nil then
+              weather = JSON.parse(weather)
+              script += "document.getElementById('weather_city').innerHTML='#{weather["city"]}';"
+              script += "document.getElementById('weather_state').innerHTML='#{weather["state"]}';"
+              script += "document.getElementById('weather_country').innerHTML='#{weather["country"]}';"
+              script += "document.getElementById('weather_latitude').innerHTML='#{weather["latitude"]}';"
+              script += "document.getElementById('weather_longitude').innerHTML='#{weather["longitude"]}';"
+              script += "document.getElementById('weather_timezone').innerHTML='GMT #{weather["timezone"]}';"
+          end
 
-                report = self.get_actual_report
-                script += "results = JSON.parse('#{report.to_json}');"
-                script += "reportModule.update_compliance_summary();"
-                script += "reportModule.update_objective_summary();"
-                script += "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"
-                script += "reportModule.update_elux_compliance_summary();"
+          report = self.get_actual_report
+          script += "results = JSON.parse('#{report.to_json}');"
+          script += "reportModule.update_compliance_summary();"
+          script += "reportModule.update_objective_summary();"
+          script += "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"
+          script += "reportModule.update_elux_compliance_summary();"
 
-                #update luminaire list
-                luminaires = self.get_luminaires_hash.to_json
-                script += "luminaires = JSON.parse('#{luminaires}');"
-                script += "luminaireModule.update_list('');"
+          #update luminaire list
+          luminaires = self.get_luminaires_hash.to_json
+          script += "luminaires = JSON.parse('#{luminaires}');"
+          script += "luminaireModule.update_list('');"
 
-                #remark the first objective
-                objective = hash["objectives"].keys.shift
-                script += self.select_objective(objective)
+          #remark the first objective
+          objective = hash["objectives"].keys.shift
+          script += self.select_objective(objective)
 
-                #execute
-                web_dialog.execute_script(script)
-            end
+          #execute
+          web_dialog.execute_script(script)
+      end
 
-            # Returns the Design Assistant.
+      # Returns the Design Assistant.
 			#
 			# @author German Molina
 			# @return [SketchUp::UI::WebDialog] the Design Assistant web dialog
@@ -288,58 +288,10 @@ module IGD
                         #script << "oconv ./Materials/materials.mat ./scene.rad #{win_string}  > octree.oct"
                         script << "rvu #{Config.rvu_options} -vf Views/view.vf no_sky.oct"
                         OS.execute_script(script)
-						OS.clear_actual_path
+						            OS.clear_actual_path
                     end
                 end
-=begin
-                wd.add_action_callback("label_as_window") do |web_dialog,msg|
-                    faces = Utilities.get_faces(Sketchup.active_model.selection)
-                    begin
-						op_name = "Label as Window"
-						Sketchup.active_model.start_operation( op_name ,true)
-						Labeler.to_window(faces)
-						Sketchup.active_model.commit_operation
-					rescue Exception => ex
-						UI.messagebox ex
-						Sketchup.active_model.abort_operation
-            raise ex
-					end
-                end
 
-                wd.add_action_callback("label_as_workplane") do |web_dialog,msg|
-                    faces = Utilities.get_faces(Sketchup.active_model.selection)
-                    begin
-						op_name = "Label as Workplane"
-
-						Sketchup.active_model.start_operation( op_name ,true)
-						Labeler.to_workplane(faces)
-                        hash = self.get_workplanes_hash
-                        workplanes = hash["workplanes"].to_json
-                        script = ""
-                        script += "workplanes = JSON.parse('#{workplanes}');"
-                        script += "objectiveModule.update_workplanes();"
-                        web_dialog.execute_script(script)
-						Sketchup.active_model.commit_operation
-					rescue Exception => ex
-						UI.messagebox ex
-						Sketchup.active_model.abort_operation
-					end
-                end
-
-                wd.add_action_callback("label_as_illum") do |web_dialog,msg|
-                    faces = Utilities.get_faces(Sketchup.active_model.selection)
-                    begin
-						op_name = "Label as illum"
-						Sketchup.active_model.start_operation( op_name ,true)
-						Labeler.to_illum(faces)
-						Sketchup.active_model.commit_operation
-					rescue Exception => ex
-						UI.messagebox ex
-						Sketchup.active_model.abort_operation
-            raise ex
-					end
-                end
-=end
                 wd.add_action_callback("use_material") do |web_dialog,msg|
                     materials = Sketchup.active_model.materials
                     m = JSON.parse(msg)

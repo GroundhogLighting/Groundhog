@@ -20,7 +20,7 @@ module IGD
       }
 
       da[:get_tasks] = Proc.new { |workplane,objective,options|
-        next self.calc_annual_illuminance_tasks(workplane)
+        next self.calc_annual_illuminance_tasks(workplane, options)
       }
 
       da[:calc_score] = Proc.new { |workplane,objective,sensor_working_hours|
@@ -44,7 +44,7 @@ module IGD
       }
 
       udi[:get_tasks] = Proc.new { |workplane,objective,options|
-        next self.calc_annual_illuminance_tasks(workplane)
+        next self.calc_annual_illuminance_tasks(workplane, options)
       }
 
       udi[:calc_score] = Proc.new { |workplane,objective,sensor_working_hours|
@@ -122,11 +122,22 @@ module IGD
       ################ END OF LIBARY #################
       ################################################
 
+      # Gets the Proc that returns the tasks necessary to calculate a certain metric.
+      #
+      # @param metric [String] The name of the metric
+      # @return [Proc] The proc
       def self.get_task(metric)
         return @@library[metric][:get_tasks] unless not @@library.key? metric
         UI.messagebox "Metric '#{metric}' is not available in the library of metrics"
       end
 
+      # Gets the Proc that returns the read_file of a certain metric.
+      # That is, the Proc that returns the name of the  file that needs to be
+      # read, processed (using the :calc_score Proc), for lately write the write_file.
+      #
+      # @param metric [String] The name of the metric
+      # @return [Proc] The proc
+      # @note If the :read_file key is not available, it will return False, which is not an error and will be understood by other methods.
       def self.get_read_file(metric)
         if not @@library.key? metric then
           UI.messagebox "Metric '#{metric}' is not available in the library of metrics"
@@ -138,11 +149,22 @@ module IGD
         return @@library[metric][:read_file]
       end
 
+      # Gets the Proc that returns the write_file of a certain metric.
+      # That is, the final file whose results will be imported as pixels.
+      #
+      # @param metric [String] The name of the metric
+      # @return [Proc] The proc
       def self.get_write_file(metric)
         return @@library[metric][:write_file] unless not @@library.key? metric
         UI.messagebox "Metric '#{metric}' is not available in the library of metrics"
       end
 
+      # Gets the Proc that returns the calc_score of a certain metric.
+      # That is, the Proc that will trasform the read_file into the write_file.
+      #
+      # @param metric [String] The name of the metric
+      # @return [Proc] The proc
+      # @note If the :calc_score key is not available, it will return False, which is not an error and will be understood by other methods.
       def self.get_score_calculator(metric)
         if not @@library.key? metric then
           UI.messagebox "Metric '#{metric}' is not available in the library of metrics"
@@ -154,10 +176,18 @@ module IGD
         return @@library[metric][:calc_score]
       end
 
+      # Returns the sky used for calculating the daylight factor.
+      # @author Germán Molina
+      # @return [String] The sky definition as a gensky command
       def self.get_daylight_factor_sky
         return "gensky -ang 45 40 -c -B 0.5586592 -g #{Config.albedo}"
       end
 
+      # Returns the CIE clear sky corresponding to a certain objective.
+      #
+      # @param objective [Hash] The objective in Hash format
+      # @author Germán Molina
+      # @return [String] The sky definition as a gensky command
       def self.get_clear_sky(objective)
         albedo = Config.albedo
         date = Date.strptime(objective["date"]["date"], '%m/%d/%Y')
@@ -170,10 +200,23 @@ module IGD
         sky = "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo} +s"
       end
 
-      def self.calc_annual_illuminance_tasks(workplane)
+      # Returns the Task that calculates annual illuminance values according to the
+      # input weather file.
+      #
+      # @param workplane [String] The name of the workplane
+      # @param options [Hash] The options of the Simulation manager (for choosing methods)
+      # @author Germán Molina
+      # @return [Task] The task
+      def self.calc_annual_illuminance_tasks(workplane, options)
         return DCAnnualIlluminance.new(workplane)
       end
 
+      # Returns the Task that calculates illuminance in a static moment of the year
+      #
+      # @param target [Hash] A hash containing the sky at the moment and the workplane
+      # @param options [Hash] The options of the Simulation manager (for choosing methods)
+      # @author Germán Molina
+      # @return [Task] The task
       def self.calc_static_illuminance_tasks(target,options)
         case options["static_calculation_method"]
         when "RTRACE"
