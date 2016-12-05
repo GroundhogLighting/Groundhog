@@ -365,7 +365,7 @@ SimulationManager object that solves all tasks.</p>
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
     <span class='ivar'>@target</span> <span class='op'>=</span> <span class='kw'>false</span>
     <span class='ivar'>@proc</span> <span class='op'>=</span> <span class='kw'>false</span>
-    <span class='ivar'>@dependencies</span> <span class='op'>=</span> <span class='kw'>false</span>                                     
+    <span class='ivar'>@dependencies</span> <span class='op'>=</span> <span class='kw'>false</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -574,13 +574,13 @@ its dependencies and, recursively, its dependencies&#39; dependencies.</p>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 175</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_expand'>expand</span>
-    <span class='kw'>if</span> <span class='op'>!</span><span class='ivar'>@dependencies</span> <span class='kw'>or</span> <span class='ivar'>@dependencies</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>==</span> <span class='int'>0</span> <span class='kw'>then</span>                
+    <span class='kw'>if</span> <span class='op'>!</span><span class='ivar'>@dependencies</span> <span class='kw'>or</span> <span class='ivar'>@dependencies</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>==</span> <span class='int'>0</span> <span class='kw'>then</span>
         <span class='kw'>return</span> <span class='lbracket'>[</span><span class='kw'>self</span><span class='rbracket'>]</span>
     <span class='kw'>else</span>
         <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='kw'>self</span><span class='rbracket'>]</span>
         <span class='ivar'>@dependencies</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_dep'>dep</span><span class='op'>|</span>
             <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='id identifier rubyid_ret'>ret</span> <span class='op'>+</span> <span class='id identifier rubyid_dep'>dep</span><span class='period'>.</span><span class='id identifier rubyid_expand'>expand</span>
-        <span class='rbrace'>}</span>                   
+        <span class='rbrace'>}</span>
         <span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
     <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -683,7 +683,7 @@ SimulationManager object that solves all tasks.</p>
 <span class='kw'>def</span> <span class='id identifier rubyid_solve'>solve</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_success'>success</span> <span class='op'>=</span> <span class='ivar'>@proc</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Fatal: Impossible to solve </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_success'>success</span>
-    <span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_success'>success</span>                
+    <span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_success'>success</span>
     <span class='kw'>return</span> <span class='id identifier rubyid_success'>success</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -696,7 +696,7 @@ SimulationManager object that solves all tasks.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon Nov 28 13:00:49 2016 by
+  Generated on Mon Dec  5 10:10:42 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>
