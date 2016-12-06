@@ -158,30 +158,6 @@ each task</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get_task-instance_method" title="#get_task (instance method)">- (Object) <strong>get_task</strong>(workplane, objective) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Receives an objective and creates a task to be performed from it.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#initialize-instance_method" title="#initialize (instance method)">- (SimulationManager) <strong>initialize</strong>(options) </a>
     
 
@@ -357,7 +333,8 @@ exported.</p>
 45
 46
 47
-48</pre>
+48
+49</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 13</span>
@@ -388,7 +365,8 @@ exported.</p>
         <span class='comment'>#then the daylighting objectives
 </span>        <span class='id identifier rubyid_obj_array'>obj_array</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_obj_name'>obj_name</span><span class='op'>|</span>
             <span class='id identifier rubyid_objective'>objective</span> <span class='op'>=</span> <span class='id identifier rubyid_objectives'>objectives</span><span class='lbracket'>[</span><span class='id identifier rubyid_obj_name'>obj_name</span><span class='rbracket'>]</span>
-            <span class='id identifier rubyid_task'>task</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_task'>get_task</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
+            <span class='id identifier rubyid_metric'>metric</span> <span class='op'>=</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+            <span class='id identifier rubyid_task'>task</span> <span class='op'>=</span> <span class='const'>Metrics</span><span class='period'>.</span><span class='id identifier rubyid_get_task'>get_task</span><span class='lparen'>(</span><span class='id identifier rubyid_metric'>metric</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='comma'>,</span><span class='ivar'>@options</span><span class='rparen'>)</span>
             <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_task'>task</span> <span class='kw'>then</span>
                 <span class='const'>UI</span><span class='period'>.</span><span class='id identifier rubyid_messagebox'>messagebox</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Error at workplane &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_workplane'>workplane</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; - objective &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_obj_name'>obj_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39; while building the Simulation Manager.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
                 <span class='kw'>return</span> <span class='kw'>false</span>
@@ -453,16 +431,16 @@ exported.</p>
       <pre class="lines">
 
 
-88
-89
-90
-91
-92
-93
-94</pre>
+53
+54
+55
+56
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 88</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 53</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_expand!'>expand!</span>
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -470,153 +448,6 @@ exported.</p>
         <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='id identifier rubyid_ret'>ret</span> <span class='op'>+</span> <span class='id identifier rubyid_task'>task</span><span class='period'>.</span><span class='id identifier rubyid_expand'>expand</span>
     <span class='rbrace'>}</span>
     <span class='ivar'>@tasks</span> <span class='op'>=</span> <span class='id identifier rubyid_ret'>ret</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="get_task-instance_method">
-  
-    - (<tt>Object</tt>) <strong>get_task</strong>(workplane, objective) 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Receives an objective and creates a task to be performed from it.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  <p class="tag_title">Parameters:</p>
-<ul class="param">
-  
-    <li>
-      
-        <span class='name'>workplane</span>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The name of the workplane to which the task is being created</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>objective</span>
-      
-      
-        <span class='type'>(<tt>Hash</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The objective from which the task will be assembled.</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-<p class="tag_title">Author:</p>
-<ul class="author">
-  
-    <li>
-      
-      
-      
-      
-        
-        <div class='inline'>
-<p>Germán Molina</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 54</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_get_task'>get_task</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_task'>task</span> <span class='op'>=</span> <span class='kw'>false</span>
-    <span class='id identifier rubyid_albedo'>albedo</span> <span class='op'>=</span> <span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_albedo'>albedo</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>dynamic</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='kw'>then</span>
-        <span class='id identifier rubyid_task'>task</span> <span class='op'>=</span> <span class='const'>DCAnnualIlluminance</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_workplane'>workplane</span><span class='rparen'>)</span>
-    <span class='kw'>else</span>
-        <span class='id identifier rubyid_sky'>sky</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>gensky -ang 45 40 -c -B 0.5586592 -g </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_albedo'>albedo</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-        <span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>metric</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>LUX</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>then</span>
-            <span class='id identifier rubyid_date'>date</span> <span class='op'>=</span> <span class='const'>Date</span><span class='period'>.</span><span class='id identifier rubyid_strptime'>strptime</span><span class='lparen'>(</span><span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>date</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>%m/%d/%Y</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-            <span class='id identifier rubyid_month'>month</span> <span class='op'>=</span> <span class='id identifier rubyid_date'>date</span><span class='period'>.</span><span class='id identifier rubyid_month'>month</span>
-            <span class='id identifier rubyid_day'>day</span> <span class='op'>=</span> <span class='id identifier rubyid_date'>date</span><span class='period'>.</span><span class='id identifier rubyid_day'>day</span>
-            <span class='id identifier rubyid_hour'>hour</span> <span class='op'>=</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>hour</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-            <span class='id identifier rubyid_lat'>lat</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_shadow_info'>shadow_info</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Latitude</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-            <span class='id identifier rubyid_lon'>lon</span> <span class='op'>=</span> <span class='op'>-</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_shadow_info'>shadow_info</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Longitude</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-            <span class='id identifier rubyid_mer'>mer</span> <span class='op'>=</span> <span class='op'>-</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_shadow_info'>shadow_info</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TZOffset</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-            <span class='id identifier rubyid_sky'>sky</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>gensky </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_month'>month</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_day'>day</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_hour'>hour</span><span class='embexpr_end'>}</span><span class='tstring_content'> -a </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_lat'>lat</span><span class='embexpr_end'>}</span><span class='tstring_content'> -o </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_lon'>lon</span><span class='embexpr_end'>}</span><span class='tstring_content'> -m </span><span class='embexpr_beg'>#{</span><span class='int'>15</span><span class='op'>*</span><span class='id identifier rubyid_mer'>mer</span><span class='embexpr_end'>}</span><span class='tstring_content'> -g </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_albedo'>albedo</span><span class='embexpr_end'>}</span><span class='tstring_content'> +s</span><span class='tstring_end'>&quot;</span></span>
-        <span class='kw'>end</span>
-        <span class='id identifier rubyid_target'>target</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplane</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span><span class='id identifier rubyid_workplane'>workplane</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>sky</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_sky'>sky</span><span class='rbrace'>}</span>
-        <span class='kw'>case</span> <span class='ivar'>@options</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>static_calculation_method</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-        <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>RTRACE</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_task'>task</span> <span class='op'>=</span> <span class='const'>RtraceInstantIlluminance</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_target'>target</span><span class='rparen'>)</span>
-        <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DC</span><span class='tstring_end'>&quot;</span></span>
-            <span class='id identifier rubyid_task'>task</span> <span class='op'>=</span> <span class='const'>DCInstantIlluminance</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_target'>target</span><span class='rparen'>)</span>
-        <span class='kw'>else</span>
-            <span class='kw'>return</span> <span class='kw'>false</span>
-        <span class='kw'>end</span>
-    <span class='kw'>end</span>
-
-    <span class='kw'>return</span> <span class='id identifier rubyid_task'>task</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -685,23 +516,23 @@ calculations</p>
       <pre class="lines">
 
 
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129</pre>
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 116</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 81</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_solve'>solve</span>
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -767,19 +598,19 @@ reused.</p>
       <pre class="lines">
 
 
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110</pre>
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/SimulationManager.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_uniq!'>uniq!</span>
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -801,7 +632,7 @@ reused.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon Dec  5 10:10:41 2016 by
+  Generated on Tue Dec  6 17:27:13 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

@@ -475,12 +475,12 @@ points.</p>
       <pre class="lines">
 
 
-143
-144
-145</pre>
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Triangle.rb', line 143</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Triangle.rb', line 146</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_center'>get_center</span><span class='lparen'>(</span><span class='id identifier rubyid_triangle'>triangle</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='const'>Geom</span><span class='op'>::</span><span class='const'>Point3d</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='lparen'>(</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_x'>x</span><span class='op'>+</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_x'>x</span><span class='op'>+</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_x'>x</span><span class='rparen'>)</span><span class='op'>/</span><span class='int'>3</span><span class='comma'>,</span> <span class='lparen'>(</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_y'>y</span><span class='op'>+</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_y'>y</span><span class='op'>+</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_y'>y</span><span class='rparen'>)</span><span class='op'>/</span><span class='int'>3</span><span class='comma'>,</span><span class='lparen'>(</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_z'>z</span><span class='op'>+</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_z'>z</span><span class='op'>+</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_z'>z</span><span class='rparen'>)</span><span class='op'>/</span><span class='int'>3</span><span class='rbracket'>]</span><span class='rparen'>)</span>
@@ -641,7 +641,10 @@ points.</p>
 133
 134
 135
-136</pre>
+136
+137
+138
+139</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Triangle.rb', line 73</span>
@@ -656,7 +659,10 @@ points.</p>
     <span class='id identifier rubyid_b'>b</span> <span class='op'>=</span> <span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span><span class='lparen'>(</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_c'>c</span> <span class='op'>=</span> <span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_distance'>distance</span><span class='lparen'>(</span><span class='id identifier rubyid_triangle'>triangle</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
 
-    <span class='id identifier rubyid_circumradius'>circumradius</span> <span class='op'>=</span> <span class='id identifier rubyid_a'>a</span><span class='op'>*</span><span class='id identifier rubyid_b'>b</span><span class='op'>*</span><span class='id identifier rubyid_c'>c</span><span class='op'>/</span><span class='const'>Math</span><span class='period'>.</span><span class='id identifier rubyid_sqrt'>sqrt</span><span class='lparen'>(</span><span class='lparen'>(</span><span class='id identifier rubyid_a'>a</span><span class='op'>+</span><span class='id identifier rubyid_b'>b</span><span class='op'>+</span><span class='id identifier rubyid_c'>c</span><span class='rparen'>)</span><span class='op'>*</span><span class='lparen'>(</span><span class='id identifier rubyid_b'>b</span><span class='op'>+</span><span class='id identifier rubyid_c'>c</span><span class='op'>-</span><span class='id identifier rubyid_a'>a</span><span class='rparen'>)</span><span class='op'>*</span><span class='lparen'>(</span><span class='id identifier rubyid_c'>c</span><span class='op'>+</span><span class='id identifier rubyid_a'>a</span><span class='op'>-</span><span class='id identifier rubyid_b'>b</span><span class='rparen'>)</span><span class='op'>*</span><span class='lparen'>(</span><span class='id identifier rubyid_a'>a</span><span class='op'>+</span><span class='id identifier rubyid_b'>b</span><span class='op'>-</span><span class='id identifier rubyid_c'>c</span><span class='rparen'>)</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_sqrt'>sqrt</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_a'>a</span><span class='op'>+</span><span class='id identifier rubyid_b'>b</span><span class='op'>+</span><span class='id identifier rubyid_c'>c</span><span class='rparen'>)</span><span class='op'>*</span><span class='lparen'>(</span><span class='id identifier rubyid_b'>b</span><span class='op'>+</span><span class='id identifier rubyid_c'>c</span><span class='op'>-</span><span class='id identifier rubyid_a'>a</span><span class='rparen'>)</span><span class='op'>*</span><span class='lparen'>(</span><span class='id identifier rubyid_c'>c</span><span class='op'>+</span><span class='id identifier rubyid_a'>a</span><span class='op'>-</span><span class='id identifier rubyid_b'>b</span><span class='rparen'>)</span><span class='op'>*</span><span class='lparen'>(</span><span class='id identifier rubyid_a'>a</span><span class='op'>+</span><span class='id identifier rubyid_b'>b</span><span class='op'>-</span><span class='id identifier rubyid_c'>c</span><span class='rparen'>)</span>
+    <span class='kw'>next</span> <span class='kw'>if</span> <span class='id identifier rubyid_sqrt'>sqrt</span> <span class='op'>&lt;</span> <span class='float'>1e-4</span> <span class='comment'>#ignore triangles that are too long
+</span>
+    <span class='id identifier rubyid_circumradius'>circumradius</span> <span class='op'>=</span> <span class='id identifier rubyid_a'>a</span><span class='op'>*</span><span class='id identifier rubyid_b'>b</span><span class='op'>*</span><span class='id identifier rubyid_c'>c</span><span class='op'>/</span><span class='const'>Math</span><span class='period'>.</span><span class='id identifier rubyid_sqrt'>sqrt</span><span class='lparen'>(</span><span class='id identifier rubyid_sqrt'>sqrt</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_shortest_edge'>shortest_edge</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_a'>a</span><span class='comma'>,</span><span class='id identifier rubyid_b'>b</span><span class='comma'>,</span><span class='id identifier rubyid_c'>c</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_min'>min</span>
     <span class='id identifier rubyid_ratio'>ratio</span> <span class='op'>=</span> <span class='id identifier rubyid_circumradius'>circumradius</span><span class='op'>/</span><span class='id identifier rubyid_shortest_edge'>shortest_edge</span>
 
@@ -1086,9 +1092,6 @@ which triangle in &#39;points&#39; form the triangle</p>
       <pre class="lines">
 
 
-152
-153
-154
 155
 156
 157
@@ -1109,10 +1112,13 @@ which triangle in &#39;points&#39; form the triangle</p>
 172
 173
 174
-175</pre>
+175
+176
+177
+178</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Triangle.rb', line 152</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Triangle.rb', line 155</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_triangulate'>triangulate</span><span class='lparen'>(</span><span class='id identifier rubyid_points'>points</span><span class='comma'>,</span><span class='id identifier rubyid_polygons'>polygons</span><span class='rparen'>)</span>
 
@@ -1148,11 +1154,7 @@ which triangle in &#39;points&#39; form the triangle</p>
 </div>
 
     <div id="footer">
-<<<<<<< HEAD
-  Generated on Mon Dec  5 10:10:41 2016 by
-=======
-  Generated on Thu Dec  1 09:34:44 2016 by
->>>>>>> refs/remotes/origin/Groundhog1.0b
+  Generated on Tue Dec  6 17:27:13 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>
