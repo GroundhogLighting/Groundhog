@@ -249,23 +249,24 @@ module IGD
 				begin
 					FileUtils.cd(path) do
 						#Export the faces and obtain the modifiers
-						mod_list=self.export_layers(path)
+						mod_list=self.export_layers
 						mod_list.uniq!
 						return false if not mod_list
-						return false if not self.export_modifiers(path,mod_list)
-						return false if not self.write_sky(path)
-						return false if not self.write_weather("#{path}/Skies")
-						return false if not self.export_views(path)
-						return false if not self.export_component_definitions(path)
-						return false if not self.write_illuminance_sensors(path)
-						return false if not self.write_scene_file(path)
+						return false if not self.export_modifiers(mod_list)
+						return false if not self.write_sky
+						return false if not self.write_weather
+						return false if not self.export_views
+						return false if not self.export_component_definitions
+						return false if not self.write_illuminance_sensors
+						return false if not self.write_scene_file
+						return false if not self.write_workplanes
 
 						Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 					end
 				rescue Exception => ex
 					FileUtils.rm_rf(path, secure: true)
 					UI.messagebox ex
-					return false
+					raise ex
 				end
 				return true
 			end
@@ -273,9 +274,9 @@ module IGD
 			# Writes the weather file in WEA format
 			# @author German Molina
 			# @version 2.0
-			# @param path [String] Directory to export the weather file
 			# @return [Boolean] Success
-			def self.write_weather(path)
+			def self.write_weather
+				path = "./Skies"
 				weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
 				return true if weather == nil
 				OS.mkdir(path)
@@ -290,14 +291,13 @@ module IGD
 			#
 			# @author German Molina
 			# @version 1.0.5
-			# @param path [String] Directory where the Geometry folder is.
 			# @return [Array<Material>] Array of all the unique materials assigned to the exported faces.
 			# @return false if not succss or cancelled
 			# @example Export the whole model.
-			#   mat_list=Exporter.exportFaces(path, SketchUp.active_model.entities)
-			def self.export_layers(path)
+			def self.export_layers
 
-				OS.mkdir("#{path}/Geometry")
+				path = "./Geometry"
+				OS.mkdir(path)
 
 				mat_list=[] #This will store the modifiers (materials) of each face.
 				model=Sketchup.active_model
@@ -313,7 +313,7 @@ module IGD
 				#we open one file per each layer
 				writers=Hash.new #this is an array of writers
 				layers.each do |layer|
-					writers[layer.name] = File.open("#{path}/Geometry/#{Utilities.fix_name(layer.name)}.rad",'w+')
+					writers[layer.name] = File.open("#{path}/#{Utilities.fix_name(layer.name)}.rad",'w+')
 				end
 
 
@@ -327,12 +327,7 @@ module IGD
 						#Window groups will be exported separatedly
 						windows=windows+[fc]
 					elsif Labeler.workplane?(fc) then
-						#if it is workplane, export
-						name=Labeler.get_fixed_name(fc) #Get the name of the surface
-						mesh = fc.mesh
-						points = mesh.points
-						polygons = mesh.polygons
-						self.write_workplane(path, name, points, polygons)
+						next # These will be exported later
 					elsif Labeler.illum?(fc) then
 						illums=illums+[fc]
 					else
@@ -349,13 +344,13 @@ module IGD
 				end
 
 				#Write windows
-				return false if not self.write_window_groups(path,windows)
+				return false if not self.write_window_groups(windows)
 
 				#Write illums
-				return false if not self.write_illums(path,illums)
+				return false if not self.write_illums(illums)
 
 				#write rif
-				return false if not self.write_rif_file(path, illums, windows)
+				return false if not self.write_rif_file(illums, windows)
 
 				return mat_list
 			end
@@ -397,14 +392,12 @@ module IGD
 			# with the scene (page)name.
 			# @author German Molina
 			# @version 0.3
-			# @param path [String] Directory to export the View.
 			# @return [Boolean] Success
-			# @example Export the actual view
-			#   Exporter.exportView(path)
-			def self.export_views(path)
+			def self.export_views
 
-				OS.mkdir("#{path}/Views")
-				path="#{path}/Views"
+				path="./Views"
+				OS.mkdir(path)
+
 				#Export the actual view
 				File.open("#{path}/view.vf",'w+'){|f|
 					f.puts(self.get_view_string(Sketchup.active_model.active_view.camera))
@@ -425,16 +418,15 @@ module IGD
 			# Export the window groups. This method is called from #exportFaces. Creates a Window folder within the directory.
 			# @author German Molina
 			# @version 1.1
-			# @param path [String] Directory to export the Window Groups.
 			# @param windows [faces] An array with windows, selected during #exportFaces.
 			# @return [Boolean] Success
 			# @note This only works well when you export windows within the same group! (or wild in the model).
-			def self.write_window_groups(path,windows)
+			def self.write_window_groups(windows)
 
 				return true if windows.length <= 0 #it did success... but there were not any windows
 				not_in_component = windows[0].parent.is_a? Sketchup::Model
 
-				path = "#{path}/Windows"
+				path = "./Windows"
 				OS.mkdir(path)
 				groups=Utilities.get_win_groups(windows)
 
@@ -486,39 +478,42 @@ module IGD
 
 			end
 
-			# Writes the sensors that are over a certain workplane. Creates a Workplanes folder on the directory.
+			# Writes the workplanes in the model (need to be in the model, not in components)
 			#
-			# The name of the file will be the name of the entity.
 			# @author German Molina
-			# @version 1.2
-			# @param path [String] Directory to export the Workplanes
-			# @param name [entities] the name of the workplane file (without extension)
-			# @param points [entities] The points of the mesh
-			# @param polygons [entities] The polygons of the mesh
 			# @return [Boolean] Success
-			def self.write_workplane(path, name, points, polygons)
+			def self.write_workplanes
+				workplanes = Utilities.get_workplanes(Sketchup.active_model.entities)
+				return true if workplanes.length == 0 #success... just, no workplanes.
+				wp_names = wp_names = workplanes.map{|x| Labeler.get_name(x) }.uniq
+				path = "./Workplanes"
+				OS.mkdir(path)
 
-				d=Config.desired_pixel_area
-				return false if not d
-				d=d.m
+				wp_names.each{|workplane|
+					name=Utilities.fix_name(workplane)
 
-				OS.mkdir("#{path}/Workplanes")
-				path="#{path}/Workplanes"
-
-				triangles = Triangle.triangulate(points,polygons)
-
-				File.open("#{path}/#{name}.pxl",'w+'){ |pixels|
-					File.open("#{path}/#{name}.pts",'w+'){ |points|
-						#now the triangles
-						triangles.each do |triangle|
-							pos = Triangle.get_center(triangle)
-							n = Triangle.get_normal(triangle)
-							pixels.puts "#{triangle[0].x.to_m},#{triangle[0].y.to_m},#{triangle[0].z.to_m},#{triangle[1].x.to_m},#{triangle[1].y.to_m},#{triangle[1].z.to_m},#{triangle[2].x.to_m},#{triangle[2].y.to_m},#{triangle[2].z.to_m}"
-							#points.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t#{n.x}\t#{n.y}\t#{n.z}"
-							points.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t0\t0\t1"
-						end
+					pixels_file = File.open("#{path}/#{name}.pxl",'w+')
+					points_file = File.open("#{path}/#{name}.pts",'w+')
+					wp_group = workplanes.select{|x| IGD::Groundhog::Labeler.get_name(x) == workplane}
+					wp_group.each{|face|
+						mesh = face.mesh 4
+						points = mesh.points
+						polygons = mesh.polygons
+						# Work one of the received polygons at a time
+						polygons.each_with_index{|polygon, index|
+							triangles = Triangle.triangulate(points,[polygon])
+							normal = mesh.normal_at(index+1)
+							triangles.each { |triangle|
+								pos = Triangle.get_center(triangle)
+								pixels_file.puts "#{triangle[0].x.to_m},#{triangle[0].y.to_m},#{triangle[0].z.to_m},#{triangle[1].x.to_m},#{triangle[1].y.to_m},#{triangle[1].z.to_m},#{triangle[2].x.to_m},#{triangle[2].y.to_m},#{triangle[2].z.to_m}"
+								points_file.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t#{normal.x}\t#{normal.y}\t#{normal.z}"
+							}
+						}
 					}
-				}
+
+					pixels_file.close
+					points_file.close
+				} # end wp_names.each
 
 				return true
 			end
@@ -527,15 +522,14 @@ module IGD
 			# Exports illum surfaces
 			# @author German Molina
 			# @version 1.0
-			# @param path [String] Directory to export the Window Groups.
 			# @param entities [Array <Sketchup::Face>] An array with illums, selected during exportFaces.
 			# @return [Boolean] Success
-			def self.write_illums(path,entities)
+			def self.write_illums(entities)
 
 				return true if entities.length<1  #success... did not export, though.
 
-				OS.mkdir("#{path}/Illums")
-				path="#{path}/Illums"
+				path="./Illums"
+				OS.mkdir(path)
 
 				entities.each do |ent| #for all the entities (which are faces)
 					next if ent.deleted?
@@ -557,12 +551,12 @@ module IGD
 			# Export the Radiance Modifiers
 			# @author German Molina
 			# @version 1.0
-			# @param path [String] Directory to export the Window Groups.
 			# @param mat_array [faces] An array with the materials to export
 			# @return [Boolean] Success
-			def self.export_modifiers(path,mat_array)
-				OS.mkdir("Materials")
-				File.open("Materials/materials.mat",'w+'){ |f| #The file is opened
+			def self.export_modifiers(mat_array)
+				path = "./Materials"
+				OS.mkdir(path)
+				File.open("#{path}/materials.mat",'w+'){ |f| #The file is opened
 					mat_array.each do |mat|
 						mat_string = Materials.get_mat_string(mat,false, true)
 						return false if not mat_string
@@ -576,10 +570,9 @@ module IGD
 			# Export the Scene file. The Scene file references the different Radiance files to create the model.
 			# @author German Molina
 			# @version 0.9
-			# @param path [String] Directory to export the scene file
 			# @return [Boolean] success
-			def self.write_scene_file(path)
-				File.open("#{path}/scene.rad",'w+'){ |f| #The file is opened
+			def self.write_scene_file
+				File.open("./scene.rad",'w+'){ |f| #The file is opened
 					f.puts("###############\n## Scene exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" from SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n")
 
 					f.puts("\n\n\n###### GEOMETRY \n\n")
@@ -602,7 +595,7 @@ module IGD
 
 
 					f.puts("\n\n\n###### COMPONENT INSTANCES \n\n")
-					comp_path = "#{path}/Components"
+					comp_path = "./Components"
 					defi=Sketchup.active_model.definitions
 					anyluminaire = defi.select{|d| Labeler.luminaire? d }.length > 0
 					light = File.open("#{comp_path}/Lights/all.lightsources",'w') if anyluminaire
@@ -634,12 +627,11 @@ module IGD
 			# Writes the standard Clear Sky
 			# @author German Molina
 			# @version 1.0
-			# @param path [String] Directory to export the sky file
 			# @return [Boolean] Success
-			def self.write_sky(path)
+			def self.write_sky
 
-				OS.mkdir("#{path}/Skies")
-				path="#{path}/Skies"
+				OS.mkdir("./Skies")
+				path="./Skies"
 
 				info=Sketchup.active_model.shadow_info
 				sun=info["SunDirection"]
@@ -668,16 +660,15 @@ module IGD
 			# Writes the illuminance sensors
 			# @author German Molina
 			# @version 0.1
-			# @param path [String] Directory to export the sky file
 			# @return [Boolean] Success
-			def self.write_illuminance_sensors(path)
+			def self.write_illuminance_sensors
 
 				sensors = Sketchup.active_model.definitions.select {|x| Labeler.illuminance_sensor?(x) }
 				return true if sensors.length < 1 #do not do anything, but success
 				sensors = sensors[0].instances
 				return true if sensors.length < 1 #do not do anything, but success
 
-				path="#{path}/Illuminance_Sensors"
+				path="./Illuminance_Sensors"
 				OS.mkdir(path)
 
 				File.open("#{path}/sensors.pts",'w+'){ |f| #The file is opened
@@ -711,9 +702,8 @@ module IGD
 			# Each file is autocontained, although some materials might be repeated in the "materials.mat" file.
 			# @author German Molina
 			# @version 0.6
-			# @param path [String] Directory to export the model (scene file)
 			# @return [Boolean] Success
-			def self.export_component_definitions(path)
+			def self.export_component_definitions
 				defi=Sketchup.active_model.definitions.select{|x| x.instances.count!=0}
 
 				return true if defi.length == 0 #dont do anything if there are no components
@@ -729,7 +719,7 @@ module IGD
 
 					folder = "Components"
 					folder="TDDs" if Labeler.tdd?(h)
-					comp_path="#{path}/#{folder}"
+					comp_path="./#{folder}"
 
 					hName=Utilities.fix_name(h.name)
 					filename = "#{comp_path}/#{hName}.rad"
@@ -742,7 +732,7 @@ module IGD
 
 					# write and next if it is a TDD
 					if Labeler.tdd?(h) then
-						TDD.write_tdd("#{path}/TDDs",h)
+						TDD.write_tdd("./TDDs",h)
 						next
 					end
 
@@ -771,7 +761,7 @@ module IGD
 						if Labeler.workplane? (fc) then
 							any_workplane = true
 						elsif Labeler.illum? (fc) then
-							OS.mkdir("#{path}/Illums")
+							OS.mkdir("./Illums")
 							tr = Utilities.get_all_global_transformations(fc,Geom::Transformation.new)
 							tr.each_with_index{|t,index|
 								File.open("#{path}/Illums/#{hName}_#{index}.rad",'w'){ |file|
@@ -804,7 +794,7 @@ module IGD
 
 				end	#end for each
 
-				self.write_window_groups(path,wins)
+				self.write_window_groups(wins)
 
 				return true
 			end #end method
@@ -836,17 +826,16 @@ module IGD
 			# Export the RIF file, for creating renders
 			# @author German Molina
 			# @version 0.4
-			# @param path [String] Directory to export the RIF file
 			# @return [Boolean] Success
 			# @note It assumes that the relevant zone is interior.
-			def self.write_rif_file(path, illums, windows)
+			def self.write_rif_file(illums, windows)
 				model=Sketchup.active_model
 				box=model.bounds
 				max=box.max
 				min=box.min
 				pages=model.pages
 
-				File.open("#{path}/scene.rif",'w+'){ |f| #The file is opened
+				File.open("./scene.rif",'w+'){ |f| #The file is opened
 					f.puts("###############\n## RIF exported using Groundhog v"+Sketchup.extensions["Groundhog"].version.to_s+" in SketchUp "+Sketchup.version+"\n## Date of export: "+Time.now.to_s+"\n###############\n\n\n")
 
 					f.puts("ZONE= I #{min.x.to_m} #{max.x.to_m} #{min.y.to_m} #{max.y.to_m} #{min.z.to_m}  #{max.z.to_m} \n")

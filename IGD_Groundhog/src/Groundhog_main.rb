@@ -16,6 +16,8 @@ module IGD
 
 		#################################
 
+		Sketchup::require 'IGD_Groundhog/src/Error'
+		Sketchup::require 'IGD_Groundhog/src/Observers'
 		Sketchup::require 'IGD_Groundhog/src/Triangle'
 		Sketchup::require 'IGD_Groundhog/src/Utilities'
 		Sketchup::require 'IGD_Groundhog/src/Config'
@@ -33,6 +35,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/SimulationManager'
 		Sketchup::require 'IGD_Groundhog/src/Report'
 		Sketchup::require 'IGD_Groundhog/src/Objectives'
+		Sketchup::require 'IGD_Groundhog/src/Metrics'
 
 
 		Sketchup::require 'IGD_Groundhog/src/Scripts/AnnualIlluminance'
@@ -96,13 +99,26 @@ module IGD
 			if compare == 0 then #same version... all OK
 
 			elsif compare < 0 then #model version is newer than GH version
-
+				UI.messagebox("We are sorry. This model was edited using a newer version (#{current_model_version}) than the one you have installed (#{current_groundhog_version}). Please redefine all Workplanes and Objectives.")
 			else #model version is older than GH version.
 				#update model to make them compatible?
-
+				did_something = false
+				workplanes = Hash.new
+				Utilities.get_workplanes(Sketchup.active_model.entities).map{|wp|
+					value = Labeler.get_value(wp)
+					next if value == nil or not value
+					did_something = true
+					name = Labeler.get_fixed_name(wp)
+					workplanes[name]=JSON.parse(value)
+					Labeler.set_value(wp,nil);
+				}
+				Sketchup.active_model.set_attribute("Groundhog","workplanes",workplanes.to_json) if did_something
 			end
 		end
+
 		model.set_attribute("Groundhog","objectives",Hash.new.to_json) if model.get_attribute("Groundhog","objectives") == nil #Objectives will be stored here.
+		model.set_attribute("Groundhog","workplanes",Hash.new.to_json) if model.get_attribute("Groundhog","workplanes") == nil #Workplane's objectives will be stored here.
+
 
 		#Add Radiance to Path as well as RAYPATH
 		OS.setup_radiance
@@ -136,8 +152,8 @@ module IGD
 						Labeler.set_name(Sketchup.active_model.selection,name)
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
+						Error.inform_exception(ex)
 					end
 				}
 			end
@@ -151,8 +167,8 @@ module IGD
 						Labeler.to_luminaire(comp)
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
+						Error.inform_exception(ex)
 					end
 				}
 			end
@@ -197,26 +213,26 @@ module IGD
 
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
+						Error.inform_exception(ex)
 					end
 				}
-				horizontal=Utilities.get_horizontal_faces(faces)
-				if horizontal.length >=1 then
-					context_menu.add_item("Label as Workplane (GH)") {
-						begin
-							op_name = "Label as Workplane"
-							model.start_operation( op_name,true )
 
-							Labeler.to_workplane(faces)
 
-							model.commit_operation
-						rescue Exception => ex
-							UI.messagebox ex
-							model.abort_operation
-						end
-					}
-				end
+				context_menu.add_item("Label as Workplane (GH)") {
+					begin
+						op_name = "Label as Workplane"
+						model.start_operation( op_name,true )
+
+						Labeler.to_workplane(faces)
+
+						model.commit_operation
+					rescue Exception => ex
+						model.abort_operation
+						Error.inform_exception(ex)
+					end
+				}
+
 				context_menu.add_item("Label as Window (GH)") {
 					begin
 						op_name = "Label as Window"
@@ -226,8 +242,8 @@ module IGD
 
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
+						Error.inform_exception(ex)
 					end
 				}
 
@@ -240,8 +256,8 @@ module IGD
 
 						model.commit_operation
 					rescue Exception => ex
-						UI.messagebox ex
 						model.abort_operation
+						Error.inform_exception(ex)
 					end
 				}
 				wins=Utilities.get_windows(faces)
@@ -259,8 +275,8 @@ module IGD
 
 							model.commit_operation
 						rescue Exception => ex
-							UI.messagebox ex
 							model.abort_operation
+							Error.inform_exception(ex)
 						end
 					}
 				end

@@ -80,7 +80,10 @@ module IGD
           b = triangle[1].distance(triangle[2])
           c = triangle[2].distance(triangle[0])
 
-          circumradius = a*b*c/Math.sqrt((a+b+c)*(b+c-a)*(c+a-b)*(a+b-c))
+          sqrt = (a+b+c)*(b+c-a)*(c+a-b)*(a+b-c)
+          next if sqrt < 1e-4 #ignore triangles that are too long
+
+          circumradius = a*b*c/Math.sqrt(sqrt)
           shortest_edge = [a,b,c].min
           ratio = circumradius/shortest_edge
 
@@ -142,16 +145,6 @@ module IGD
       # @return [SketchUp::Point3d] The normal of the triangle
       def self.get_center(triangle)
         return Geom::Point3d.new([(triangle[0].x+triangle[1].x+triangle[2].x)/3, (triangle[0].y+triangle[1].y+triangle[2].y)/3,(triangle[0].z+triangle[1].z+triangle[2].z)/3])
-      end
-
-      # Calculates the normal of a triangle
-      # @author German Molina
-      # @param triangle [Array] an array of 3 SketchUp::3DPoint
-      # @return [SketchUp::Vector3d] The normal of the triangle
-      def self.get_normal(triangle)
-        ed1 = triangle[0].vector_to(triangle[1])
-        ed2 = triangle[1].vector_to(triangle[2])
-        return ed1.cross(ed2).normalize
       end
 
       # Triangulates and refines a workplane

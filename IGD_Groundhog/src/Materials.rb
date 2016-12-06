@@ -21,6 +21,28 @@ module IGD
 				Labeler.set_rad_material_value(mat,m.to_json)
 			end
 
+			# Creates a SketchUp material from the Groundhog definition, but it is texture
+			# to recognize it as the back side of the surface.
+			# If the material already exist, it will update it (by default, SketchUp
+			# adds a second material with the same name followed by a number)
+			# @author German Molina
+			# @param m [Hash] The material hash
+			# @note Not all materials need a back version.
+			def self.add_back_material(m)
+				materials = Sketchup.active_model.materials
+				m["color"] = m["color"].map{|x| x.to_i}
+				m["alpha"] = m["alpha"].to_f
+				m["name"] = m["name"]+" (back)"
+				materials.add m["name"] if materials[m["name"]] == nil #add it if it does not exist
+				mat = materials[m["name"]]
+				mat.texture = "#{OS.main_groundhog_path}/Assets/Images/back_material_texture.jpg"
+				mat.texture.size = 5
+				mat.color=m["color"]
+				mat.alpha=m["alpha"]
+				Labeler.to_rad_material(mat)
+				Labeler.set_rad_material_value(mat,m.to_json)
+			end
+
 			# Returns the hash that represents the Default Groundhog glass.
 			# @author German Molina
 			# @return [Hash] The material
@@ -48,6 +70,7 @@ module IGD
 			# @return [Void]
 			def self.add_default_glass
 				self.add_material self.default_glass
+				self.add_back_material self.default_glass
 			end
 
 			# Returns the Radiance primitive of a SketchUp material.

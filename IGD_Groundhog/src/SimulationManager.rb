@@ -36,7 +36,8 @@ module IGD
                     #then the daylighting objectives
                     obj_array.each{|obj_name|
                         objective = objectives[obj_name]
-                        task = self.get_task(workplane,objective)
+                        metric = objective["metric"]
+                        task = Metrics.get_task(metric).call(workplane,objective,@options)
                         if not task then
                             UI.messagebox("Error at workplane '#{workplane}' - objective '#{obj_name}' while building the Simulation Manager.")
                             return false
@@ -46,42 +47,6 @@ module IGD
                 }
 
             end
-
-            # Receives an objective and creates a task to be performed from it.
-            # @param workplane [String] The name of the workplane to which the task is being created
-            # @param objective [Hash] The objective from which the task will be assembled.
-            # @author Germán Molina
-            def get_task(workplane,objective)
-                task = false
-                albedo = Config.albedo
-                if objective["dynamic"] then
-                    task = DCAnnualIlluminance.new(workplane)
-                else
-                    sky = "gensky -ang 45 40 -c -B 0.5586592 -g #{albedo}"
-                    if objective["metric"] == "LUX" then
-                        date = Date.strptime(objective["date"], '%m/%d/%Y')
-                        month = date.month
-                        day = date.day
-                        hour = objective["hour"]
-                        lat = Sketchup.active_model.shadow_info["Latitude"]
-                        lon = -Sketchup.active_model.shadow_info["Longitude"]
-                        mer = -Sketchup.active_model.shadow_info["TZOffset"]
-                        sky = "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo} +s"
-                    end
-                    target = {"workplane" =>workplane, "sky" => sky}
-                    case @options["static_calculation_method"]
-                    when "RTRACE"
-                        task = RtraceInstantIlluminance.new(target)
-                    when "DC"
-                        task = DCInstantIlluminance.new(target)
-                    else
-                        return false
-                    end
-                end
-
-                return task
-            end
-
 
             # Expands all the simulation manager tasks, obtaining their subtasks (requirements).
             # @author Germán Molina

@@ -251,7 +251,6 @@ module IGD
 					UI.messagebox("No selected entities can be named")
 					return
 				end
-				#return false if not name
 
 				if entities.length==1 then
 					entities[0].set_attribute("Groundhog","Name",name)
@@ -285,12 +284,9 @@ module IGD
 				faces=Utilities.get_faces(entities)
 
 				if faces.length>=1 then
-					faces.each do |i|
-						self.set_label(i,"illum")
-						i.material=[0.0,1.0,0.0]
-						i.material.alpha=0.2
-						i.back_material=[0.0,1.0,0.0]
-						i.back_material.alpha=0.2
+					faces.each do |face|
+						self.set_label(face,"illum")
+						Utilities.set_oriented_surface_materials(face,"illum","green",0.2)
 					end
 				else
 					UI.messagebox("No faces selected")
@@ -340,13 +336,13 @@ module IGD
 
 
 				text.each {|line|
-						data["luminaire"] = line.gsub("[LUMINAIRE]","").strip if line.start_with? "[LUMINAIRE]"
-						data["manufacturer"] = line.gsub("[MANUFAC]","").strip if line.start_with? "[MANUFAC]"
-						data["lamp"] = line.gsub("[LAMP]","").strip if line.start_with? "[LAMP]"
-						data["lumcat"] = line.gsub("[LUMCAT]","").strip if line.start_with? "[LUMCAT]"
-						data["lampcat"] = line.gsub("[LAMPCAT]","").strip if line.start_with? "[LAMPCAT]"
+					data["luminaire"] = line.gsub("[LUMINAIRE]","").strip if line.start_with? "[LUMINAIRE]"
+					data["manufacturer"] = line.gsub("[MANUFAC]","").strip if line.start_with? "[MANUFAC]"
+					data["lamp"] = line.gsub("[LAMP]","").strip if line.start_with? "[LAMP]"
+					data["lumcat"] = line.gsub("[LUMCAT]","").strip if line.start_with? "[LUMCAT]"
+					data["lampcat"] = line.gsub("[LAMPCAT]","").strip if line.start_with? "[LAMPCAT]"
 
-						break if line.start_with? "TILT="
+					break if line.start_with? "TILT="
 				}
 
 				self.set_value(comp,data.to_json)
@@ -375,10 +371,10 @@ module IGD
 				if faces.length>=1 then
 					mat=Sketchup.active_model.materials["Default 3mm Clear Glass"]
 					Materials.add_default_glass if mat==nil
-					faces.each do |i|
-						self.set_label(i,"window")
-						i.material=Sketchup.active_model.materials["Default 3mm Clear Glass"]
-						i.back_material=Sketchup.active_model.materials["Default 3mm Clear Glass"]
+					faces.each do |face|
+						self.set_label(face,"window")
+						face.material=Sketchup.active_model.materials["Default 3mm Clear Glass"]
+						face.back_material=Sketchup.active_model.materials["Default 3mm Clear Glass (back)"]
 					end
 				else
 					UI.messagebox("No faces selected")
@@ -391,21 +387,24 @@ module IGD
 			# @version 0.2
 			# @return [Void]
 			def self.to_workplane(entities)
-				faces=Utilities.get_horizontal_faces(entities)
-				correct=[]
+				faces=Utilities.get_faces(entities)
 				name = Utilities.get_name
 				return if not name
-				if faces.length>=1 then
-					faces.each do |i|
-					correct=correct+[i]
-					self.set_label(i,"workplane")
-					i.material=[1.0,0.0,0.0]
-					i.material.alpha=0.2
-					i.back_material=[1.0,0.0,0.0]
-					i.back_material.alpha=0.2
-				end
+				if faces.length > 0 then
+					faces.each do |face|
+						self.set_label(face,"workplane")
+						Utilities.set_oriented_surface_materials(face,"workplane","red",0.2)
+						self.set_name([face],name)
+						face.add_observer(WorkplaneObserver.new)
+					end
 
-					self.set_name(correct,name)
+					# Register the workplane... will replace the old one, if it exists.
+					model = Sketchup.active_model
+					value = model.get_attribute("Groundhog","workplanes")
+					value = Hash.new.to_json if value == nil or not value
+					value = JSON.parse value
+					value[name] = []
+					model.set_attribute("Groundhog","workplanes",value.to_json)
 
 					#update
 					DesignAssistant.update

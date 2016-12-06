@@ -3,47 +3,6 @@ module IGD
 
 		# This module intends to handle results; that is, drawing them, coloring them, etc.
 		module Results
-						
-			# Reads the file with annual illuminance results (in "path") and
-			# calculates the UDI of them, according to the rest of the parameters. 
-			# @author German Molina
-			# @param path [String] The path to the file with the annual results
-			# @param min_lux [Float] The minimum required illuminance
-			# @param max_lux [Float] The maximum required illuminance
-			# @param early [Float] The time of the beggining of the occupied time
-			# @param late [Float] The time of the end of the occupied time
-			# @param month_ini [Integer] The first month to consider in the simulation
-			# @param month_end [Integer] The final month to consider in the simulation
-			# @return [Array <String>] An array with the names of the metrics
-			# @todo Allow calculating UDI for parts of the year.
-			def self.annual_to_udi(path,min_lux, max_lux, early,late,month_ini, month_end)
-
-				
-				annual = File.readlines(path)
-				#remove header
-				7.times {annual.shift}
-				
-				#for calculating the DA
-				max_lux = 9e15 if not max_lux
-				
-				#process each sensor
-				ret = []
-				annual.each{|sensor_data|
-					data = sensor_data.split(" ").map{|x| x.to_f}  
-
-					working_hours = data.each_with_index.select{|val, index| 
-						hour = (index+0.5)%24
-						hour >= early and hour <= late
-					}.map{|value,index| value}															
-					
-					good_hours = working_hours.select{|x| x >= min_lux and x<= max_lux }
-					
-					ret << (100.0 * good_hours.length.to_f / working_hours.length.to_f)
-
-				}
-				return ret
-				
-			end
 
 			# Returns an array with the names of the metrics within the solved-workplanes, obtained from the Solved Workplanes
 			# @author German Molina
@@ -119,9 +78,9 @@ module IGD
 					min=9999999999999
 
 					#draw every line. Each pixel is a polygon.
-					pixels.each do |data|						
+					pixels.each do |data|
 						value = values.shift[0].to_f
-										
+
 						#check minimum and maximum
 						min=value.to_f if min>value.to_f
 						max=value.to_f if max<value.to_f
@@ -147,7 +106,7 @@ module IGD
 =end
 						pixel=entities.add_face(vertex)
 						Labeler.to_result_pixel(pixel)
-						Labeler.set_pixel_value(pixel,value)						
+						Labeler.set_pixel_value(pixel,value)
 					end
 
 					Labeler.to_solved_workplane(group)
@@ -168,6 +127,7 @@ module IGD
 				rescue Exception => ex
 					UI.messagebox ex
 					model.abort_operation
+					raise ex
 				end
 				return ret
 			end
@@ -211,7 +171,7 @@ module IGD
 
 			# Reads the results from a grid, and represent them as a heat map
 			# in a plane in the model. The color is obtained from the groundhog
-			# color scale, which intends to clearly show which pixels are over-valued, 
+			# color scale, which intends to clearly show which pixels are over-valued,
 			# sub-valued and correctly-values
 			#
 			# @author German Molina
@@ -226,31 +186,31 @@ module IGD
 				 	good_max = max
 					three_ranges = false
 				end
-				
+
 				if [min, good_min, good_max, max].sort != [min, good_min, good_max, max] then
 					UI.messagebox "Trying to find a pixel color with incorrect values."
 					return false
 				end
-				
+
 
 				max_color = [189,6,5]
 				min_color = [70,116,196]
 				good_min_color = [255,255,255]
-				good_max_color = [249, 190, 6]				
+				good_max_color = [249, 190, 6]
 
 				if value <= min then
 					return min_color
 				elsif value > min and value <= good_min then
 					ret = min_color
-					frac = (value.to_f - min.to_f)/(good_min.to_f - min.to_f)	
-					sum = good_min_color				
+					frac = (value.to_f - min.to_f)/(good_min.to_f - min.to_f)
+					sum = good_min_color
 				elsif value > good_min and value <= good_max then
 					ret = good_min_color
-					frac = (value.to_f - good_min.to_f)/(good_max.to_f - good_min.to_f)	
+					frac = (value.to_f - good_min.to_f)/(good_max.to_f - good_min.to_f)
 					sum = good_max_color
 				elsif value > good_max and value <= max then
 					ret = good_max_color
-					frac = (value.to_f - good_max.to_f)/(max.to_f - good_max.to_f)	
+					frac = (value.to_f - good_max.to_f)/(max.to_f - good_max.to_f)
 					sum = max_color
 				elsif value > max
 					if three_ranges then
@@ -258,8 +218,8 @@ module IGD
 					else
 						return good_max_color
 					end
-				end 
-				ret.each_with_index{|val,i| ret[i]+= frac * (sum[i]-ret[i])}				
+				end
+				ret.each_with_index{|val,i| ret[i]+= frac * (sum[i]-ret[i])}
 				return ret.map{|x| x/255.0}
 			end
 
@@ -274,19 +234,24 @@ module IGD
 			def self.update_pixel_colors(min,max,objective)
 				model=Sketchup.active_model
 				op_name="Update pixels"
-				begin					
+				begin
 					model.start_operation(op_name,true)
+					
 					#good_min and good_max are assign for static metrics, by default
-					good_min = objective["good_light"]["min"]
-					good_max = objective["good_light"]["max"]
-					good_max = false if not good_max
-
-					#if dynamic: Fix
+					# If the static metric does not have "good_light" field, it is
+					# assumed to be binary... that is, 0 is bad, > 0 is good.
+					good_min = 1e-9
+					good_max = 9e16
+					if objective.key? "good_light" then
+						good_min = objective["good_light"]["min"]
+						good_max = objective["good_light"]["max"]
+						good_max = 9e16 if not good_max
+					end
+					#if dynamic, we actually just want to get the good pixels
 					if objective["dynamic"] then
 						good_min = objective["good_pixel"]
-						good_max = false				
+						good_max = 9e16
 					end
-
 					workplanes=Utilities.get_solved_workplanes(Sketchup.active_model.entities)
 					workplanes = workplanes.select{|x| JSON.parse(Labeler.get_value(x))["objective"]==objective["name"]}
 					workplanes.each do |workplane|
@@ -303,12 +268,13 @@ module IGD
 						wp_value["scale_min"]=min
 						wp_value["scale_max"]=max
 						Labeler.set_workplane_value(workplane,wp_value.to_json)
-					end					
+					end
 					model.commit_operation
 
 				rescue Exception => ex
 					UI.messagebox ex
 					model.abort_operation
+					raise ex
 				end
 			end
 
@@ -375,18 +341,18 @@ module IGD
 			# @return [Float] The percentage of approved area
 			# @version 0.3
 			def self.import_results(path,pixels_file,workplane,objective)
-				
+
 				values = Utilities.readTextFile(path,",",0)
 				return if not values #if the format was wrong, for example
-				
-				if not File.exist?(pixels_file) then					
+
+				if not File.exist?(pixels_file) then
 					UI.messagebox("Pixels file '#{pixels_file}' not found.")
-					return false				
+					return false
 				end
 
 				pixels = Utilities.readTextFile(pixels_file,",",0)
-				
-				return self.draw_pixels(values,pixels,workplane,objective)				
+
+				return self.draw_pixels(values,pixels,workplane,objective)
 			end
 
 
@@ -400,16 +366,22 @@ module IGD
 			def self.get_workplane_statistics(wp, objective)
 				return false if not Labeler.solved_workplane? wp
 				pixels = wp.entities.select{|x| Labeler.result_pixel? x}
-				
-				#good_min and good_max are assign for static metrics, by default
-				good_min = objective["good_light"]["min"]
-				good_max = objective["good_light"]["max"]
-				good_max = 9e16 if not good_max
 
-				#if dynamic: Fix
+
+				#good_min and good_max are assign for static metrics, by default
+				# If the static metric does not have "good_light" field, it is
+				# assumed to be binary... that is, 0 is bad, > 0 is good.
+				good_min = 1e-9
+				good_max = 9e16
+				if objective.key? "good_light" then
+					good_min = objective["good_light"]["min"]
+					good_max = objective["good_light"]["max"]
+					good_max = 9e16 if not good_max
+				end
+				#if dynamic, we actually just want to get the good pixels
 				if objective["dynamic"] then
 					good_min = objective["good_pixel"]
-					good_max = 9e16				
+					good_max = 9e16
 				end
 
 				count=pixels.length
@@ -419,7 +391,7 @@ module IGD
 				min=max
 				good_area = 0;
 				pixels.each do |pixel|
-					value = Labeler.get_value(pixel)					
+					value = Labeler.get_value(pixel)
 					area = pixel.area
 					good_area += area if value >= good_min and value <= good_max
 					max = value if value > max
