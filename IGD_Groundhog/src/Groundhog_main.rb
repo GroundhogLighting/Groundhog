@@ -99,10 +99,20 @@ module IGD
 			if compare == 0 then #same version... all OK
 
 			elsif compare < 0 then #model version is newer than GH version
-
+				UI.messagebox("We are sorry. This model was edited using a newer version (#{current_model_version}) than the one you have installed (#{current_groundhog_version}). Please redefine all Workplanes and Objectives.")
 			else #model version is older than GH version.
 				#update model to make them compatible?
-
+				did_something = false
+				workplanes = Hash.new
+				Utilities.get_workplanes(Sketchup.active_model.entities).map{|wp|
+					value = Labeler.get_value(wp)
+					next if value == nil or not value
+					did_something = true
+					name = Labeler.get_fixed_name(wp)
+					workplanes[name]=JSON.parse(value)
+					Labeler.set_value(wp,nil);
+				}
+				Sketchup.active_model.set_attribute("Groundhog","workplanes",workplanes.to_json) if did_something
 			end
 		end
 
