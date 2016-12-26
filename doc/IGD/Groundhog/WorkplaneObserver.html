@@ -119,6 +119,28 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#onChangeEntity-instance_method" title="#onChangeEntity (instance method)">- (Object) <strong>onChangeEntity</strong>(entity) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#onEraseEntity-instance_method" title="#onEraseEntity (instance method)">- (Object) <strong>onEraseEntity</strong>(entity) </a>
     
 
@@ -149,7 +171,37 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="onEraseEntity-instance_method">
+  <h3 class="signature first" id="onChangeEntity-instance_method">
+  
+    - (<tt>Object</tt>) <strong>onChangeEntity</strong>(entity) 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+25
+26
+27</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Observers.rb', line 25</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_onChangeEntity'>onChangeEntity</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_warn'>warn</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_name'>get_name</span><span class='lparen'>(</span><span class='id identifier rubyid_entity'>entity</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="onEraseEntity-instance_method">
   
     - (<tt>Object</tt>) <strong>onEraseEntity</strong>(entity) 
   
@@ -211,7 +263,7 @@
 </div>
 
     <div id="footer">
-  Generated on Tue Dec  6 17:27:13 2016 by
+  Generated on Mon Dec 26 17:04:48 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>
