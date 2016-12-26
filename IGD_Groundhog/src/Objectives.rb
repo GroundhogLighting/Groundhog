@@ -70,7 +70,7 @@ module IGD
       # Removes an objective from a certain workplane, avoiding future calculations.
       #
       # @param wp_name [String] The name of the workplane
-      # @param obejctive_name [String] The name of the objective
+      # @param objective_name [String] The name of the objective
       # @author Germán Molina
       def self.remove_objective_from_workplane(wp_name,objective_name)
 

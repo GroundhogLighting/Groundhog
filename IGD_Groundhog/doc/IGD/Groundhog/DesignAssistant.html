@@ -511,6 +511,16 @@ Design Assistant; the main Groundhog UI.</p>
       <pre class="lines">
 
 
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
 228
 229
 230
@@ -774,20 +784,10 @@ Design Assistant; the main Groundhog UI.</p>
 488
 489
 490
-491
-492
-493
-494
-495
-496
-497
-498
-499
-500
-501</pre>
+491</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 228</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 218</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span>
     <span class='id identifier rubyid_wd'>wd</span> <span class='op'>=</span> <span class='const'>UI</span><span class='op'>::</span><span class='const'>WebDialog</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Design Assistant</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='kw'>false</span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DAsistant</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='int'>500</span><span class='comma'>,</span><span class='int'>500</span><span class='comma'>,</span><span class='int'>130</span><span class='comma'>,</span><span class='int'>120</span><span class='comma'>,</span><span class='kw'>true</span><span class='rparen'>)</span>
@@ -906,8 +906,8 @@ Design Assistant; the main Groundhog UI.</p>
     <span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>add_objective</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
         <span class='id identifier rubyid_obj'>obj</span> <span class='op'>=</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
         <span class='id identifier rubyid_wp_name'>wp_name</span> <span class='op'>=</span> <span class='id identifier rubyid_obj'>obj</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplane</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-        <span class='id identifier rubyid_objective'>objective</span> <span class='op'>=</span> <span class='id identifier rubyid_obj'>obj</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objective</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-        <span class='const'>Objectives</span><span class='period'>.</span><span class='id identifier rubyid_add_objective_to_worplane'>add_objective_to_worplane</span><span class='lparen'>(</span><span class='id identifier rubyid_wp_name'>wp_name</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_objective_name'>objective_name</span> <span class='op'>=</span> <span class='id identifier rubyid_obj'>obj</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objective</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+        <span class='const'>Objectives</span><span class='period'>.</span><span class='id identifier rubyid_add_objective_to_workplane'>add_objective_to_workplane</span><span class='lparen'>(</span><span class='id identifier rubyid_wp_name'>wp_name</span><span class='comma'>,</span><span class='id identifier rubyid_objective_name'>objective_name</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
 
     <span class='id identifier rubyid_wd'>wd</span><span class='period'>.</span><span class='id identifier rubyid_add_action_callback'>add_action_callback</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>create_objective</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_web_dialog'>web_dialog</span><span class='comma'>,</span><span class='id identifier rubyid_msg'>msg</span><span class='op'>|</span>
@@ -1128,21 +1128,21 @@ Design Assistant; the main Groundhog UI.</p>
       <pre class="lines">
 
 
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
 116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127</pre>
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 116</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 106</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_actual_report'>get_actual_report</span>
     <span class='id identifier rubyid_report'>report</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1221,25 +1221,25 @@ Design Assistant; the main Groundhog UI.</p>
       <pre class="lines">
 
 
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
 132
 133
 134
 135
 136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147</pre>
+137</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 132</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 122</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_elux_report'>get_elux_report</span>
     <span class='id identifier rubyid_report'>report</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1322,23 +1322,23 @@ Design Assistant; the main Groundhog UI.</p>
       <pre class="lines">
 
 
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
 69
 70
 71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82</pre>
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 69</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 59</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_luminaires_hash'>get_luminaires_hash</span>
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1419,6 +1419,16 @@ Design Assistant; the main Groundhog UI.</p>
       <pre class="lines">
 
 
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
 87
 88
 89
@@ -1432,20 +1442,10 @@ Design Assistant; the main Groundhog UI.</p>
 97
 98
 99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110</pre>
+100</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 87</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 77</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_radiance_materials_hash'>get_radiance_materials_hash</span>
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1540,35 +1540,15 @@ Design Assistant; the main Groundhog UI.</p>
 51
 52
 53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64</pre>
+54</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 50</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplanes_hash'>get_workplanes_hash</span>
   <span class='id identifier rubyid_obj_hash'>obj_hash</span> <span class='op'>=</span> <span class='const'>Objectives</span><span class='period'>.</span><span class='id identifier rubyid_get_objectives_hash'>get_objectives_hash</span>
-
-  <span class='id identifier rubyid_wp_hash'>wp_hash</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-  <span class='id identifier rubyid_workplanes'>workplanes</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_get_workplanes'>get_workplanes</span><span class='lparen'>(</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_workplanes'>workplanes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_wp'>wp</span><span class='op'>|</span>
-      <span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_wp'>wp</span><span class='rparen'>)</span>
-      <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>==</span> <span class='kw'>nil</span> <span class='kw'>or</span> <span class='kw'>not</span> <span class='id identifier rubyid_value'>value</span> <span class='kw'>then</span>
-          <span class='id identifier rubyid_wp_hash'>wp_hash</span><span class='lbracket'>[</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_name'>get_name</span><span class='lparen'>(</span><span class='id identifier rubyid_wp'>wp</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-      <span class='kw'>else</span>
-          <span class='id identifier rubyid_wp_hash'>wp_hash</span><span class='lbracket'>[</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_name'>get_name</span><span class='lparen'>(</span><span class='id identifier rubyid_wp'>wp</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
-      <span class='kw'>end</span>
-  <span class='rbrace'>}</span>
-    <span class='kw'>return</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplanes</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_wp_hash'>wp_hash</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectives</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_obj_hash'>obj_hash</span><span class='rbrace'>}</span>
+  <span class='id identifier rubyid_wp_hash'>wp_hash</span> <span class='op'>=</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_get_attribute'>get_attribute</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Groundhog</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplanes</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>workplanes</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_wp_hash'>wp_hash</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>objectives</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_obj_hash'>obj_hash</span><span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1635,6 +1615,16 @@ Design Assistant; the main Groundhog UI.</p>
       <pre class="lines">
 
 
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
 154
 155
 156
@@ -1642,20 +1632,10 @@ Design Assistant; the main Groundhog UI.</p>
 158
 159
 160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171</pre>
+161</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 154</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 144</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_select_objective'>select_objective</span><span class='lparen'>(</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
     <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>$(&#39;#compliance_summary_scale_max&#39;).text(&#39;--&#39;);$(&#39;#elux_compliance_scale_max&#39;).text(&#39;--&#39;);$(&#39;#luminaire_scale_max&#39;).text(&#39;--&#39;);</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span> <span class='op'>==</span> <span class='kw'>nil</span>
@@ -1843,6 +1823,16 @@ Design Assistant; the main Groundhog UI.</p>
       <pre class="lines">
 
 
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
 177
 178
 179
@@ -1878,20 +1868,10 @@ Design Assistant; the main Groundhog UI.</p>
 209
 210
 211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222</pre>
+212</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 177</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/DesignAssistant.rb', line 167</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_update'>update</span>
     <span class='id identifier rubyid_web_dialog'>web_dialog</span> <span class='op'>=</span> <span class='const'>IGD</span><span class='op'>::</span><span class='const'>Groundhog</span><span class='period'>.</span><span class='id identifier rubyid_design_assistant'>design_assistant</span>
@@ -1949,7 +1929,7 @@ Design Assistant; the main Groundhog UI.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Dec  1 09:34:42 2016 by
+  Generated on Mon Dec 26 17:04:45 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>
