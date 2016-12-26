@@ -19,16 +19,31 @@ task :clean do
 	FileUtils.rm_rf("doc")
 end
 
-sketchup_plugin_dir = "#{ENV["UserProfile"].gsub("\\","/")}/AppData/Roaming/SketchUp/SketchUp 2016/SketchUp/Plugins"
-
-task :test => [:win64] do
-	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog.rb"
-	FileUtils.rm_rf "#{sketchup_plugin_dir}/IGD_Groundhog"
-	FileUtils.cp_r "IGD_Groundhog.rb","#{sketchup_plugin_dir}/IGD_Groundhog.rb"
-	FileUtils.cp_r "IGD_Groundhog","#{sketchup_plugin_dir}/IGD_Groundhog"
-	FileUtils.rm_rf("./IGD_Groundhog/src/Radiance")
+def sketchup_plugin_dir(v)
+	sketchup_plugin_dir = "#{ENV["UserProfile"].gsub("\\","/")}/AppData/Roaming/SketchUp/SketchUp #{v}/SketchUp/Plugins"
 end
 
+
+
+task :test,[:os, :suv] do |t, args|
+	radiance_version = "Radiance/#{args[:os]}/Radiance"
+	radiance_version = "Radiance/macosx/usr/local/radiance" if args[:os] == "macosx"
+
+	# Replace the Radiance verion in Groundhog
+	FileUtils.rm_rf("./IGD_Groundhog/src/Radiance")
+	FileUtils.cp_r radiance_version, "./IGD_Groundhog/src/Radiance"
+
+	# Remove the groundhog version in Sketchup Plugin directory
+	FileUtils.rm_rf "#{sketchup_plugin_dir(args[:suv])}/IGD_Groundhog.rb"
+	FileUtils.rm_rf "#{sketchup_plugin_dir(args[:suv])}/IGD_Groundhog"
+
+	# Move the new one
+	FileUtils.cp_r "IGD_Groundhog.rb","#{sketchup_plugin_dir(args[:suv])}/IGD_Groundhog.rb"
+	FileUtils.cp_r "IGD_Groundhog","#{sketchup_plugin_dir(args[:suv])}/IGD_Groundhog"
+
+	# Final clean
+	FileUtils.rm_rf("./IGD_Groundhog/src/Radiance")
+end
 
 def compress(os)
 	radiance_version = "Radiance/#{os}/Radiance"
@@ -57,5 +72,4 @@ task :add_build_date do
 	File.open("IGD_Groundhog/built",'w'){|file|
 		file.puts Time.now
 	}
-
 end
