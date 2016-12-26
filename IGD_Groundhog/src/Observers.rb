@@ -20,7 +20,13 @@ module IGD
           model.set_attribute("Groundhog","workplanes",value.to_json)
           DesignAssistant.update
         end
-      end
 
+
+        def onChangeEntity(entity)
+          warn Labeler.get_name(entity)
+        end
+
+
+      end
   end
 end
