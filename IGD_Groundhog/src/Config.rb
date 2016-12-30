@@ -156,12 +156,11 @@ module IGD
 			# @author German Molina
 			# @return [SketchUp::UI::WebDialog] the Configuration web dialog
 			def self.get
-				wd = UI::WebDialog.new("Preferences", false, "Preferences",595, 490, 100, 100, true )
-				wd.set_file("#{OS.main_groundhog_path}/src/html/preferences.html" )
+				wd = Utilities.build_web_dialog("Preferences", false, "Preferences",595, 490, true,"#{OS.main_groundhog_path}/src/html/preferences.html" )
 
 =begin
 				### COULD NOT GET THIS WORKING
-				wd.add_action_callback("update") do |web_dialog,msg|
+				wd.add_action_callback("update") do |action_context,msg|
 
 					version = false
 					system = IGD::Groundhog::OS.getsystem
@@ -198,11 +197,11 @@ module IGD
 				end
 =end
 
-				wd.add_action_callback("follow_link") do |web_dialog,msg|
+				wd.add_action_callback("follow_link") do |action_context,msg|
                     UI.openURL(msg)
                 end
 
-				wd.add_action_callback("check_updates") do |web_dialog,msg|
+				wd.add_action_callback("check_updates") do |action_context,msg|
 					script = ""
 					# CHECK UPDATES
 					date = Time.parse File.readlines("#{IGD::Groundhog::OS.main_groundhog_path}/built").shift.strip
@@ -229,10 +228,10 @@ module IGD
 						script += "$('\#no_internet_message').show();$('\#no_update_message').hide();$('\#update_info').hide();"
 					end
 
-					web_dialog.execute_script(script);
+					wd.execute_script(script);
 				end
 
-				wd.add_action_callback("on_load") do |web_dialog,msg|
+				wd.add_action_callback("on_load") do |action_context,msg|
 					script=""
 					@@default_config.each do |field|
 						id = field[0].downcase
@@ -246,16 +245,27 @@ module IGD
 					script += "$('\#no_internet_message').hide();"
 
 
-					web_dialog.execute_script(script);
+					wd.execute_script(script);
 				end
 
-				wd.set_on_close{
-					@@default_config.each do |field|
-						id = field[0].downcase
-						@@config[field[0]] = wd.get_element_value(id).strip
-					end
-					self.write_config_file
-				}
+				# STUPID SUTIL NAME CHANGE... this would be much easier... anyways... repeat myself
+				if wd.is_a? UI::WebDialog then
+					wd.set_on_close{
+						@@default_config.each do |field|
+							id = field[0].downcase
+							@@config[field[0]] = Utilities.get_element_value(wd,id)
+						end
+						self.write_config_file
+					}
+				elsif wd.is_a? UI::HtmlDialog then
+					wd.set_on_closed{
+						@@default_config.each do |field|
+							id = field[0].downcase
+							@@config[field[0]] = Utilities.get_element_value(wd,id)
+						end
+						self.write_config_file
+					}
+				end
 
 				return wd
 			end

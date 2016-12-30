@@ -268,7 +268,7 @@ module IGD
 				model = Sketchup.active_model
 				OS.clear_path(path)
 				begin
-					op_name="Draw pixels"
+					op_name="Export"
 					model.start_operation(op_name,true)
 
 					FileUtils.cd(path) do
