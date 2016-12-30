@@ -40,6 +40,45 @@ module IGD
 
 			end
 
+
+			# Returns a web dialog or a WebHTML depending on what version of sketchup is
+			#   being used.
+			# @author Germán Molina
+			# @param title [String] the title of the web dialog
+			# @param scrollable [Boolean] Scrollable property
+			# @param pref_key [String] The registry entry where the location and size of the dialog will be saved
+			# @param width [Numeric] The width of the dialog
+			# @param height [Numeric] The height of the dialog
+			# @param resizable [Boolean] Resizable property
+			# @param url [String] The url to set... may be online (http://...) or local
+			def self.build_web_dialog(title,scrollable,pref_key,width,height,resizable,url)
+				#version = Sketchup.version.split(".").shift.to_i
+				#wd = false
+				options = {
+					:dialog_title => title,
+					:preferences_key => pref_key,
+					:scrollable => scrollable,
+					:resizable => resizable,
+					:width => width,
+					:height => height,
+					:left => Random.rand(100..200),
+					:top => Random.rand(100.200),
+				}
+				#if version < 17 then
+					wd = UI::WebDialog.new(options)
+				#else
+				#	options[:style] = UI::HtmlDialog::STYLE_UTILITY
+				#	wd = UI::HtmlDialog.new()
+				#end
+
+				if url.start_with? 'http://' then # url
+					wd.set_url(url)
+				else
+					wd.set_file(url)
+				end
+				return wd
+			end
+
 			# Returns the workplane that has a certain name
 			#
 			# @author German Molina
@@ -150,6 +189,16 @@ module IGD
 					end
 				end
 				return "preferencesModule.set_element_value('#{id}','#{value}');"
+			end
+
+			def self.get_element_value(wd,id)
+				if wd.is_a? UI::WebDialog then
+					return wd.get_element_value(id).strip
+				elsif wd.is_a? UI::HtmlDialog then
+					value = wd.execute_script( "document.getElementById('#{id}').value" )
+					value.strip! if value.is_a? String
+					return value
+				end
 			end
 
 			# Fix the name, eliminating complex symbols
