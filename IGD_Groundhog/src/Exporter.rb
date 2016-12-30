@@ -174,6 +174,27 @@ module IGD
 				return [self.vertex_positions_to_rad_string(positions,name),mat] #Returns the string and the material
 			end
 
+			# Removes all the vertex that are
+			# @param face [Array<Point3D>] The face in Point3D format
+			# @example  face = face.vertices.map{|x| x.position}
+			#     clean_face(face)
+			# @note It is assumed that the face does not have any interior
+			#     loops. It can be closed by using the close_face_2 method
+			def self.clean_face(face)
+				ret = [face.shift]
+				face << ret[0] # add it at the end... so we can close the loop
+				while face.length > 1 do
+					pt = face.shift
+					dir1 = ret[-1].vector_to(pt)
+					dir2 = pt.vector_to(face[0])
+					if not dir1.parallel? dir2 then
+						ret << pt
+					end
+				end
+				return ret
+			end
+
+
 			# Recursively connects the interior and the exterior loops of a face, without
 			# adding any new line or loop to the model
 			#
@@ -247,6 +268,9 @@ module IGD
 				model = Sketchup.active_model
 				OS.clear_path(path)
 				begin
+					op_name="Draw pixels"
+					model.start_operation(op_name,true)
+
 					FileUtils.cd(path) do
 						#Export the faces and obtain the modifiers
 						mod_list=self.export_layers
@@ -264,6 +288,7 @@ module IGD
 						Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 					end
 				rescue Exception => ex
+					model.abort_operation
 					FileUtils.rm_rf(path, secure: true)
 					UI.messagebox ex
 					raise ex
@@ -496,7 +521,16 @@ module IGD
 					points_file = File.open("#{path}/#{name}.pts",'w+')
 					wp_group = workplanes.select{|x| IGD::Groundhog::Labeler.get_name(x) == workplane}
 					wp_group.each{|face|
+						#CLEAN AND CLOSE AND ALL.
+						face = self.close_face_2(face)
+						face = self.clean_face(face)
+						# Unfortunately, until we have a triangulation algorithm,
+						# I have to add the face, get the mesh, and then delete it
+						face = Sketchup.active_model.entities.add_face(face)
 						mesh = face.mesh 4
+						Sketchup.active_model.entities.erase_entities(face)
+
+						# Go on as usual.
 						points = mesh.points
 						polygons = mesh.polygons
 						# Work one of the received polygons at a time
