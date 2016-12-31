@@ -445,7 +445,7 @@ module IGD
 
             objectives.each{|obj_name, value|
               min_max=Results.get_min_max_from_model(obj_name)
-              Results.update_pixel_colors(0,min_max[1],value)	#minimum is 0 by default
+              Results.update_pixel_colors(0,min_max[1],value)	#minimum is 0 by default 
             }
             # Then import electric lighting results
             if Config.calc_elux then
