@@ -68,7 +68,7 @@ module IGD
 					wd = UI::WebDialog.new(options)
 				#else
 				#	options[:style] = UI::HtmlDialog::STYLE_UTILITY
-				#	wd = UI::HtmlDialog.new()
+				#	wd = UI::HtmlDialog.new(options)
 				#end
 
 				if url.start_with? 'http://' then # url
@@ -218,6 +218,7 @@ module IGD
 				return false if not name
 				return name[0]
 			end
+			
 
 			# Returns all the Sketchup::Face within an array.
 			# @author German Molina

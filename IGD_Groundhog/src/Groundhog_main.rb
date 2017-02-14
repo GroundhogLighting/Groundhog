@@ -36,6 +36,7 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Report'
 		Sketchup::require 'IGD_Groundhog/src/Objectives'
 		Sketchup::require 'IGD_Groundhog/src/Metrics'
+		Sketchup::require 'IGD_Groundhog/src/OnlineResources'
 
 
 		Sketchup::require 'IGD_Groundhog/src/Scripts/AnnualIlluminance'
@@ -314,6 +315,23 @@ module IGD
 			@design_assistant.show
 		}
 
+		@online_resources = OnlineResources.get
+		def self.online_resources
+			@online_resources
+		end
+
+		groundhog_menu.add_item("Login to online resources"){
+			if Sketchup.version.to_i < 17 then
+				UI.messagebox "Sorry... you need to use SketchUp 2017 or older for using these features!"	
+			else
+				if Sketchup.is_online then
+					@online_resources.show
+				else
+					UI.messagebox "Sorry... you have to be connected to the internet for using this feature"
+				end
+			end
+		}
+
 =begin
 		groundhog_menu.add_item("Import results"){
 			path=Exporter.getpath #it returns false if not successful
@@ -352,7 +370,7 @@ module IGD
 			path=Exporter.getpath #it returns false if not successful
 			path="" if not path
 
-			path_to_save = UI.savepanel("Export model for radiance simulations", path, "Radiance Model")
+			path_to_save = UI.savepanel("Export model for radiance simulations", path, "RadianceModel")
 
 			if path_to_save then
 				OS.mkdir(path_to_save)
