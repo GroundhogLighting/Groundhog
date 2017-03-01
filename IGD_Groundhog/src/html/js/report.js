@@ -47,7 +47,6 @@ reportModule.update_elux_compliance_summary = function(){
             table.append(row);
         }
     }
-
 };
 
 reportModule.update_compliance_summary = function () {

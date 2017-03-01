@@ -31,7 +31,7 @@ module IGD
 
 			# Gets the name of an entity.
 			# @author German Molina
-			# @param entity [entity] SketchUp entity (should be face)
+			# @param entity [entity] SketchUp entity
 			# @return [String] Name of the entity.
 			# @note: Will ask for the name of anything, even if it is not a face.
 			def self.get_name(entity)
@@ -40,12 +40,24 @@ module IGD
 
 				#first check User-assigned name
 				name=entity.get_attribute("Groundhog","Name")
-				return name if name !=  nil
+				return name if (name !=  nil and name != false)
 				#Second, check if SketchUp assigns a name to this.
 				name = entity.name if entity.respond_to? :name
 				return entity.name if (name != nil and name != "")
 				#Last, return ID
 				return entity.entityID.to_s
+			end
+
+			# Checks if the entity has a Groundhog Name assigned
+			# @param entity [entity] SketchUp entity 
+			# @author Germán Molina
+			# @return Boolean
+			def self.has_gh_name(entity)
+				return false if entity.deleted?
+				return false if not entity	
+				name = entity.get_attribute("Groundhog","Name")
+				return false if (name ==  nil or not name )
+				return true
 			end
 
 			# Same as get_name but fixing the output (ie. replacing blanks and # by underscores)
@@ -306,7 +318,7 @@ module IGD
 			# @param obj [Sketchup::ComponentDefinition] The object to be labeled as illuminance_sensor
 			# @return [Void]
 			def self.to_illuminance_sensor(obj)
-				obj.set_label(face,"illuminance_sensor")
+				self.set_label(obj,"illuminance_sensor")
 			end
 
 			# Label selected face into as solved_workplane

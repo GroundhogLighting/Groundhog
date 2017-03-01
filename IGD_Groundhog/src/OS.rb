@@ -78,6 +78,7 @@ module IGD
 			def self.support_files_groundhog_path
 				dir=self.main_groundhog_path
 				array=dir.split("/")
+				array.push("Assets")
 				array.push("support_files")
 				return File.join(array)
 			end
