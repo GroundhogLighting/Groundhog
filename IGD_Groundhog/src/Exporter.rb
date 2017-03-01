@@ -528,7 +528,7 @@ module IGD
 						# I have to add the face, get the mesh, and then delete it
 						face = Sketchup.active_model.entities.add_face(face)
 						mesh = face.mesh 4
-						Sketchup.active_model.entities.erase_entities(face)
+						#Sketchup.active_model.entities.erase_entities(face)
 
 						# Go on as usual.
 						points = mesh.points

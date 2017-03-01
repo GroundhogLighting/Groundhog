@@ -1294,16 +1294,6 @@ repeated in the “materials.mat” file.</p>
       <pre class="lines">
 
 
-740
-741
-742
-743
-744
-745
-746
-747
-748
-749
 750
 751
 752
@@ -1388,10 +1378,20 @@ repeated in the “materials.mat” file.</p>
 831
 832
 833
-834</pre>
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 740</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 750</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_export_component_definitions'>export_component_definitions</span>
 	<span class='id identifier rubyid_defi'>defi</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_definitions'>definitions</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='id identifier rubyid_x'>x</span><span class='period'>.</span><span class='id identifier rubyid_instances'>instances</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span><span class='op'>!=</span><span class='int'>0</span><span class='rbrace'>}</span>
@@ -2075,16 +2075,6 @@ pages, within the API) in other files with the scene (page)name.</p>
       <pre class="lines">
 
 
-841
-842
-843
-844
-845
-846
-847
-848
-849
-850
 851
 852
 853
@@ -2092,10 +2082,20 @@ pages, within the API) in other files with the scene (page)name.</p>
 855
 856
 857
-858</pre>
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 841</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 851</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_component_string'>get_component_string</span><span class='lparen'>(</span><span class='id identifier rubyid_comp'>comp</span><span class='rparen'>)</span>
 
@@ -3321,12 +3321,12 @@ will return false.</p>
       <pre class="lines">
 
 
-729
-730
-731</pre>
+739
+740
+741</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 729</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 739</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_sky_complement'>sky_complement</span>
 	<span class='kw'>return</span> 	<span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>skyfunc\tglow\tskyglow\n0\n0\n4\t0.99\t0.99\t1.1\t0\n\nskyglow\tsource\tskyball\n0\n0\n4\t0\t0\t1\t360\n\n</span><span class='tstring_end'>&quot;</span></span>
@@ -3574,7 +3574,6 @@ an array of 3D Points</p>
       <pre class="lines">
 
 
-698
 699
 700
 701
@@ -3598,10 +3597,20 @@ an array of 3D Points</p>
 719
 720
 721
-722</pre>
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 698</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 699</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_illuminance_sensors'>write_illuminance_sensors</span>
 
@@ -3610,21 +3619,30 @@ an array of 3D Points</p>
 </span>	<span class='id identifier rubyid_sensors'>sensors</span> <span class='op'>=</span> <span class='id identifier rubyid_sensors'>sensors</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_instances'>instances</span>
 	<span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_sensors'>sensors</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>&lt;</span> <span class='int'>1</span> <span class='comment'>#do not do anything, but success
 </span>
-	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Illuminance_Sensors</span><span class='tstring_end'>&quot;</span></span>
+	<span class='id identifier rubyid_path'>path</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Sensors</span><span class='tstring_end'>&quot;</span></span>
 	<span class='const'>OS</span><span class='period'>.</span><span class='id identifier rubyid_mkdir'>mkdir</span><span class='lparen'>(</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
 
-	<span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/sensors.pts</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w+</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span> <span class='comment'>#The file is opened
-</span>		<span class='id identifier rubyid_sensors'>sensors</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_sensor'>sensor</span><span class='op'>|</span>
-			<span class='id identifier rubyid_vdir'>vdir</span> <span class='op'>=</span> <span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_transformation'>transformation</span><span class='period'>.</span><span class='id identifier rubyid_zaxis'>zaxis</span>
-			<span class='id identifier rubyid_vx'>vx</span> <span class='op'>=</span> <span class='id identifier rubyid_vdir'>vdir</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
-			<span class='id identifier rubyid_vy'>vy</span> <span class='op'>=</span> <span class='id identifier rubyid_vdir'>vdir</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
-			<span class='id identifier rubyid_vz'>vz</span> <span class='op'>=</span> <span class='id identifier rubyid_vdir'>vdir</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span>
-			<span class='id identifier rubyid_pos'>pos</span> <span class='op'>=</span> <span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_transformation'>transformation</span><span class='period'>.</span><span class='id identifier rubyid_origin'>origin</span>
-			<span class='id identifier rubyid_px'>px</span> <span class='op'>=</span> <span class='id identifier rubyid_pos'>pos</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_m'>to_m</span>
-			<span class='id identifier rubyid_py'>py</span> <span class='op'>=</span> <span class='id identifier rubyid_pos'>pos</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_m'>to_m</span>
-			<span class='id identifier rubyid_pz'>pz</span> <span class='op'>=</span> <span class='id identifier rubyid_pos'>pos</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_m'>to_m</span>
-			<span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_px'>px</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_py'>py</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pz'>pz</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_vx'>vx</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_vy'>vy</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_vz'>vz</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-		<span class='kw'>end</span>
+	<span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/sensors.pts</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span> <span class='comment'>#The file is opened
+</span>		<span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/sensor_dictionary.txt</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_dic'>dic</span><span class='op'>|</span>
+			<span class='id identifier rubyid_sensors'>sensors</span><span class='period'>.</span><span class='id identifier rubyid_each_with_index'>each_with_index</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_sensor'>sensor</span><span class='comma'>,</span><span class='id identifier rubyid_index'>index</span><span class='op'>|</span>
+				<span class='id identifier rubyid_vdir'>vdir</span> <span class='op'>=</span> <span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_transformation'>transformation</span><span class='period'>.</span><span class='id identifier rubyid_zaxis'>zaxis</span>
+				<span class='id identifier rubyid_vx'>vx</span> <span class='op'>=</span> <span class='id identifier rubyid_vdir'>vdir</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+				<span class='id identifier rubyid_vy'>vy</span> <span class='op'>=</span> <span class='id identifier rubyid_vdir'>vdir</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+				<span class='id identifier rubyid_vz'>vz</span> <span class='op'>=</span> <span class='id identifier rubyid_vdir'>vdir</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span>
+				<span class='id identifier rubyid_pos'>pos</span> <span class='op'>=</span> <span class='id identifier rubyid_sensor'>sensor</span><span class='period'>.</span><span class='id identifier rubyid_transformation'>transformation</span><span class='period'>.</span><span class='id identifier rubyid_origin'>origin</span>
+				<span class='id identifier rubyid_px'>px</span> <span class='op'>=</span> <span class='id identifier rubyid_pos'>pos</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_m'>to_m</span>
+				<span class='id identifier rubyid_py'>py</span> <span class='op'>=</span> <span class='id identifier rubyid_pos'>pos</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_m'>to_m</span>
+				<span class='id identifier rubyid_pz'>pz</span> <span class='op'>=</span> <span class='id identifier rubyid_pos'>pos</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_m'>to_m</span>
+				<span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_px'>px</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_py'>py</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pz'>pz</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_vx'>vx</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_vy'>vy</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_vz'>vz</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+				<span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_has_gh_name'>has_gh_name</span><span class='lparen'>(</span><span class='id identifier rubyid_sensor'>sensor</span><span class='rparen'>)</span> <span class='kw'>then</span>	
+					<span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_name'>get_name</span><span class='lparen'>(</span><span class='id identifier rubyid_sensor'>sensor</span><span class='rparen'>)</span><span class='rparen'>)</span>						
+					<span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.pt</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>w</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_short_file'>short_file</span><span class='op'>|</span>
+						<span class='id identifier rubyid_short_file'>short_file</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_px'>px</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_py'>py</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pz'>pz</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_vx'>vx</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_vy'>vy</span><span class='embexpr_end'>}</span><span class='tstring_content'>   </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_vz'>vz</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+					<span class='rbrace'>}</span>			
+					<span class='id identifier rubyid_dic'>dic</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_index'>index</span><span class='embexpr_end'>}</span><span class='tstring_content'>,</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>				
+				<span class='kw'>end</span>													
+			<span class='kw'>end</span>
+		<span class='rbrace'>}</span>					
 	<span class='rbrace'>}</span>
 	<span class='kw'>return</span> <span class='kw'>true</span>
 <span class='kw'>end</span></pre>
@@ -3866,16 +3884,6 @@ an array of 3D Points</p>
       <pre class="lines">
 
 
-865
-866
-867
-868
-869
-870
-871
-872
-873
-874
 875
 876
 877
@@ -3931,10 +3939,20 @@ an array of 3D Points</p>
 927
 928
 929
-930</pre>
+930
+931
+932
+933
+934
+935
+936
+937
+938
+939
+940</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 865</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 875</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_rif_file'>write_rif_file</span><span class='lparen'>(</span><span class='id identifier rubyid_illums'>illums</span><span class='comma'>,</span> <span class='id identifier rubyid_windows'>windows</span><span class='rparen'>)</span>
 	<span class='id identifier rubyid_model'>model</span><span class='op'>=</span><span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span>
@@ -4134,7 +4152,8 @@ files to create the model.</p>
 655
 656
 657
-658</pre>
+658
+659</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 608</span>
@@ -4172,6 +4191,7 @@ files to create the model.</p>
 			<span class='kw'>next</span> <span class='kw'>if</span> <span class='id identifier rubyid_h'>h</span><span class='period'>.</span><span class='id identifier rubyid_instances'>instances</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span><span class='op'>==</span><span class='int'>0</span>
 			<span class='kw'>if</span> <span class='id identifier rubyid_h'>h</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Sketchup</span><span class='op'>::</span><span class='const'>ComponentDefinition</span> <span class='kw'>then</span>
 				<span class='kw'>next</span> <span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_solved_workplane?'>solved_workplane?</span><span class='lparen'>(</span><span class='id identifier rubyid_h'>h</span><span class='rparen'>)</span>
+				<span class='kw'>next</span> <span class='kw'>if</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_illuminance_sensor?'>illuminance_sensor?</span><span class='lparen'>(</span><span class='id identifier rubyid_h'>h</span><span class='rparen'>)</span>
 				<span class='id identifier rubyid_hName'>hName</span><span class='op'>=</span><span class='const'>Utilities</span><span class='period'>.</span><span class='id identifier rubyid_fix_name'>fix_name</span><span class='lparen'>(</span><span class='id identifier rubyid_h'>h</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
 				<span class='id identifier rubyid_instances'>instances</span><span class='op'>=</span><span class='id identifier rubyid_h'>h</span><span class='period'>.</span><span class='id identifier rubyid_instances'>instances</span>
 				<span class='id identifier rubyid_lightfile'>lightfile</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>./Components/Lights/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_hName'>hName</span><span class='embexpr_end'>}</span><span class='tstring_content'>.lightsource</span><span class='tstring_end'>&quot;</span></span>
@@ -4271,7 +4291,6 @@ files to create the model.</p>
       <pre class="lines">
 
 
-665
 666
 667
 668
@@ -4298,10 +4317,11 @@ files to create the model.</p>
 689
 690
 691
-692</pre>
+692
+693</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 665</span>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Exporter.rb', line 666</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_write_sky'>write_sky</span>
 
@@ -4794,8 +4814,8 @@ components)</p>
 </span>			<span class='comment'># I have to add the face, get the mesh, and then delete it
 </span>			<span class='id identifier rubyid_face'>face</span> <span class='op'>=</span> <span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_add_face'>add_face</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
 			<span class='id identifier rubyid_mesh'>mesh</span> <span class='op'>=</span> <span class='id identifier rubyid_face'>face</span><span class='period'>.</span><span class='id identifier rubyid_mesh'>mesh</span> <span class='int'>4</span>
-			<span class='const'>Sketchup</span><span class='period'>.</span><span class='id identifier rubyid_active_model'>active_model</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_erase_entities'>erase_entities</span><span class='lparen'>(</span><span class='id identifier rubyid_face'>face</span><span class='rparen'>)</span>
-
+			<span class='comment'>#Sketchup.active_model.entities.erase_entities(face)
+</span>
 			<span class='comment'># Go on as usual.
 </span>			<span class='id identifier rubyid_points'>points</span> <span class='op'>=</span> <span class='id identifier rubyid_mesh'>mesh</span><span class='period'>.</span><span class='id identifier rubyid_points'>points</span>
 			<span class='id identifier rubyid_polygons'>polygons</span> <span class='op'>=</span> <span class='id identifier rubyid_mesh'>mesh</span><span class='period'>.</span><span class='id identifier rubyid_polygons'>polygons</span>
@@ -4827,7 +4847,7 @@ components)</p>
 </div>
 
     <div id="footer">
-  Generated on Fri Dec 30 10:58:32 2016 by
+  Generated on Wed Mar  1 18:04:13 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

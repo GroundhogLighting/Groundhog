@@ -320,7 +320,7 @@ module IGD
 			@online_resources
 		end
 
-		groundhog_menu.add_item("Login to online resources"){
+		groundhog_menu.add_item("Online resources"){
 			if Sketchup.version.to_i < 17 then
 				UI.messagebox "Sorry... you need to use SketchUp 2017 or older for using these features!"	
 			else

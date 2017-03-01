@@ -902,8 +902,8 @@ body .ui-tooltip {
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-	border: 1px solid #003eff;
-	background: #007fff;
+	border: 1px solid #2196F3;
+	background: #2196F3;
 	font-weight: normal;
 	color: #ffffff;
 }

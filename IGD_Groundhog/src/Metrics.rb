@@ -16,7 +16,7 @@ module IGD
       }
 
       da[:write_file] = Proc.new{ |workplane,objective|
-        next "./Results/#{Utilities.fix_name(workplane)}-#{objective["name"]}.txt"
+        next "./Results/#{Utilities.fix_name(workplane)}-#{Utilities.fix_name(objective["name"])}.txt"
       }
 
       da[:get_tasks] = Proc.new { |workplane,objective,options|
@@ -40,7 +40,7 @@ module IGD
       }
 
       udi[:write_file] = Proc.new{ |workplane,objective|
-        next "./Results/#{Utilities.fix_name(workplane)}-#{objective["name"]}.txt"
+        next "./Results/#{Utilities.fix_name(workplane)}-#{Utilities.fix_name(objective["name"])}.txt"
       }
 
       udi[:get_tasks] = Proc.new { |workplane,objective,options|

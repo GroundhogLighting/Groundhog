@@ -139,6 +139,30 @@ in the model.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#get_dynamic_objective_workplane_statistics-class_method" title="get_dynamic_objective_workplane_statistics (class method)">+ (Hash) <strong>get_dynamic_objective_workplane_statistics</strong>(wp, objective) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Calculates the statistic of a workplane with dynamic objective.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#get_gh_pixel_color-class_method" title="get_gh_pixel_color (class method)">+ (Array&lt;Float&gt;) <strong>get_gh_pixel_color</strong>(value, min, good_min, good_max, max) </a>
     
 
@@ -256,6 +280,30 @@ in the model.</p>
     <span class="summary_desc"><div class='inline'>
 <p>Checks all the solved workplanes in the model that correspond to a metric
 and gets the minimum and maximum values from their scale.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_static_objective_workplane_statistics-class_method" title="get_static_objective_workplane_statistics (class method)">+ (Hash) <strong>get_static_objective_workplane_statistics</strong>(wp, objective) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Calculates the statistic of a workplane with static objective.</p>
 </div></span>
   
 </li>
@@ -723,6 +771,191 @@ is useful for importing</p>
 		<span class='id identifier rubyid_raise'>raise</span> <span class='id identifier rubyid_ex'>ex</span>
 	<span class='kw'>end</span>
 	<span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_dynamic_objective_workplane_statistics-class_method">
+  
+    + (<tt>Hash</tt>) <strong>get_dynamic_objective_workplane_statistics</strong>(wp, objective) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Calculates the statistic of a workplane with dynamic objective</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>wp</span>
+      
+      
+        <span class='type'>(<tt>Workplane</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The workplane to analyze</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>objective</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The objective</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A hash with statistics</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Version:</p>
+<ul class="version">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>0.1</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 383</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_dynamic_objective_workplane_statistics'>get_dynamic_objective_workplane_statistics</span><span class='lparen'>(</span><span class='id identifier rubyid_wp'>wp</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
+	
+	<span class='id identifier rubyid_pixels'>pixels</span> <span class='op'>=</span> <span class='id identifier rubyid_wp'>wp</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_result_pixel?'>result_pixel?</span> <span class='id identifier rubyid_x'>x</span><span class='rbrace'>}</span>			
+	<span class='id identifier rubyid_count'>count</span><span class='op'>=</span><span class='id identifier rubyid_pixels'>pixels</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
+	<span class='id identifier rubyid_sum'>sum</span><span class='op'>=</span><span class='int'>0</span>
+	<span class='id identifier rubyid_total_area'>total_area</span> <span class='op'>=</span> <span class='int'>0</span>
+	<span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_pixels'>pixels</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_min'>min</span><span class='op'>=</span><span class='id identifier rubyid_max'>max</span>
+	<span class='id identifier rubyid_good_area'>good_area</span> <span class='op'>=</span> <span class='int'>0</span><span class='semicolon'>;</span>
+	<span class='id identifier rubyid_pixels'>pixels</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pixel'>pixel</span><span class='op'>|</span>
+		<span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_pixel'>pixel</span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_area'>area</span> <span class='op'>=</span> <span class='id identifier rubyid_pixel'>pixel</span><span class='period'>.</span><span class='id identifier rubyid_area'>area</span>					
+		<span class='id identifier rubyid_good_area'>good_area</span> <span class='op'>+=</span> <span class='id identifier rubyid_area'>area</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&gt;=</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>good_pixel</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+		<span class='id identifier rubyid_max'>max</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_max'>max</span>
+		<span class='id identifier rubyid_min'>min</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_min'>min</span>
+		<span class='id identifier rubyid_sum'>sum</span> <span class='op'>+=</span> <span class='id identifier rubyid_value'>value</span><span class='op'>*</span><span class='id identifier rubyid_area'>area</span>
+		<span class='id identifier rubyid_total_area'>total_area</span> <span class='op'>+=</span> <span class='id identifier rubyid_area'>area</span>
+	<span class='kw'>end</span>
+
+	<span class='id identifier rubyid_average'>average</span> <span class='op'>=</span> <span class='id identifier rubyid_sum'>sum</span><span class='op'>/</span><span class='id identifier rubyid_total_area'>total_area</span>
+	<span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_min'>min</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_max'>max</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>=</span><span class='id identifier rubyid_average'>average</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>goal</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>=</span><span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>goal</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_min'>min</span><span class='op'>==</span><span class='id identifier rubyid_average'>average</span> <span class='op'>?</span> <span class='int'>1</span> <span class='op'>:</span> <span class='id identifier rubyid_min'>min</span><span class='op'>/</span><span class='id identifier rubyid_average'>average</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_min'>min</span><span class='op'>==</span><span class='id identifier rubyid_max'>max</span> <span class='op'>?</span> <span class='int'>1</span> <span class='op'>:</span> <span class='id identifier rubyid_min'>min</span><span class='op'>/</span><span class='id identifier rubyid_max'>max</span> <span class='comment'>#fully shaded planes get a Max and Min of 0.
+</span>	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>nsensors</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_count'>count</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>approved_percentage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_good_area'>good_area</span> <span class='op'>/</span> <span class='id identifier rubyid_total_area'>total_area</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>total_area</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_total_area'>total_area</span><span class='op'>/</span><span class='float'>1550.0</span> <span class='comment'>#transform into square meters from sqin
+</span>	<span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1498,6 +1731,221 @@ and gets the minimum and maximum values from their scale</p>
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="get_static_objective_workplane_statistics-class_method">
+  
+    + (<tt>Hash</tt>) <strong>get_static_objective_workplane_statistics</strong>(wp, objective) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Calculates the statistic of a workplane with static objective</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>wp</span>
+      
+      
+        <span class='type'>(<tt>Workplane</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The workplane to analyze</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>objective</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The objective</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A hash with statistics</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Author:</p>
+<ul class="author">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>German Molina</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Version:</p>
+<ul class="version">
+  
+    <li>
+      
+      
+      
+      
+        
+        <div class='inline'>
+<p>0.1</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 423</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_static_objective_workplane_statistics'>get_static_objective_workplane_statistics</span><span class='lparen'>(</span><span class='id identifier rubyid_wp'>wp</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
+	
+	<span class='id identifier rubyid_pixels'>pixels</span> <span class='op'>=</span> <span class='id identifier rubyid_wp'>wp</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_result_pixel?'>result_pixel?</span> <span class='id identifier rubyid_x'>x</span><span class='rbrace'>}</span>
+
+
+	<span class='comment'>#good_min and good_max are assign for static metrics, by default
+</span>	<span class='comment'># If the static metric does not have &quot;good_light&quot; field, it is
+</span>	<span class='comment'># assumed to be binary... that is, 0 is bad, &gt; 0 is good.
+</span>	<span class='id identifier rubyid_good_min'>good_min</span> <span class='op'>=</span> <span class='float'>1e-9</span> <span class='comment'>#just over 0... so 0 is &quot;not approved&quot;
+</span>	<span class='id identifier rubyid_good_max'>good_max</span> <span class='op'>=</span> <span class='float'>9e16</span>
+	<span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>good_light</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>then</span>
+		<span class='id identifier rubyid_good_min'>good_min</span> <span class='op'>=</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>good_light</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+		<span class='id identifier rubyid_good_max'>good_max</span> <span class='op'>=</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>good_light</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> 
+		<span class='id identifier rubyid_good_max'>good_max</span> <span class='op'>=</span> <span class='float'>9e16</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_good_max'>good_max</span>
+		<span class='id identifier rubyid_good_min'>good_min</span> <span class='op'>=</span> <span class='int'>0</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_good_min'>good_min</span>
+	<span class='kw'>end</span>
+		
+
+	<span class='id identifier rubyid_count'>count</span><span class='op'>=</span><span class='id identifier rubyid_pixels'>pixels</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
+	<span class='id identifier rubyid_sum'>sum</span><span class='op'>=</span><span class='int'>0</span>
+	<span class='id identifier rubyid_total_area'>total_area</span> <span class='op'>=</span> <span class='int'>0</span>
+	<span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_pixels'>pixels</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+	<span class='id identifier rubyid_min'>min</span><span class='op'>=</span><span class='id identifier rubyid_max'>max</span>
+	<span class='id identifier rubyid_good_area'>good_area</span> <span class='op'>=</span> <span class='int'>0</span><span class='semicolon'>;</span>
+	<span class='id identifier rubyid_pixels'>pixels</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pixel'>pixel</span><span class='op'>|</span>
+		<span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_pixel'>pixel</span><span class='rparen'>)</span>
+		<span class='id identifier rubyid_area'>area</span> <span class='op'>=</span> <span class='id identifier rubyid_pixel'>pixel</span><span class='period'>.</span><span class='id identifier rubyid_area'>area</span>
+		<span class='id identifier rubyid_good_area'>good_area</span> <span class='op'>+=</span> <span class='id identifier rubyid_area'>area</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&gt;=</span> <span class='id identifier rubyid_good_min'>good_min</span> <span class='kw'>and</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_good_max'>good_max</span>
+		<span class='id identifier rubyid_max'>max</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_max'>max</span>
+		<span class='id identifier rubyid_min'>min</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_min'>min</span>
+		<span class='id identifier rubyid_sum'>sum</span> <span class='op'>+=</span> <span class='id identifier rubyid_value'>value</span><span class='op'>*</span><span class='id identifier rubyid_area'>area</span>
+		<span class='id identifier rubyid_total_area'>total_area</span> <span class='op'>+=</span> <span class='id identifier rubyid_area'>area</span>
+	<span class='kw'>end</span>
+
+	<span class='id identifier rubyid_average'>average</span> <span class='op'>=</span> <span class='id identifier rubyid_sum'>sum</span><span class='op'>/</span><span class='id identifier rubyid_total_area'>total_area</span>
+	<span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_min'>min</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_max'>max</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>=</span><span class='id identifier rubyid_average'>average</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>goal</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>=</span><span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>goal</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_min'>min</span><span class='op'>==</span><span class='id identifier rubyid_average'>average</span> <span class='op'>?</span> <span class='int'>1</span> <span class='op'>:</span> <span class='id identifier rubyid_min'>min</span><span class='op'>/</span><span class='id identifier rubyid_average'>average</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_min'>min</span><span class='op'>==</span><span class='id identifier rubyid_max'>max</span> <span class='op'>?</span> <span class='int'>1</span> <span class='op'>:</span> <span class='id identifier rubyid_min'>min</span><span class='op'>/</span><span class='id identifier rubyid_max'>max</span> <span class='comment'>#fully shaded planes get a Max and Min of 0.
+</span>	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>nsensors</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_count'>count</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>approved_percentage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_good_area'>good_area</span> <span class='op'>/</span> <span class='id identifier rubyid_total_area'>total_area</span>
+	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>total_area</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_total_area'>total_area</span><span class='op'>/</span><span class='float'>1550.0</span> <span class='comment'>#transform into square meters from sqin
+</span>	<span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="get_workplane_list-class_method">
   
     + (<tt>Array &lt;String&gt;</tt>) <strong>get_workplane_list</strong> 
@@ -1768,101 +2216,19 @@ Workplanes</p>
 371
 372
 373
-374
-375
-376
-377
-378
-379
-380
-381
-382
-383
-384
-385
-386
-387
-388
-389
-390
-391
-392
-393
-394
-395
-396
-397
-398
-399
-400
-401
-402
-403
-404
-405
-406
-407
-408
-409
-410
-411
-412
-413
-414
-415</pre>
+374</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'IGD_Groundhog/src/Results.rb', line 366</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_workplane_statistics'>get_workplane_statistics</span><span class='lparen'>(</span><span class='id identifier rubyid_wp'>wp</span><span class='comma'>,</span> <span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
 	<span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_solved_workplane?'>solved_workplane?</span> <span class='id identifier rubyid_wp'>wp</span>
-	<span class='id identifier rubyid_pixels'>pixels</span> <span class='op'>=</span> <span class='id identifier rubyid_wp'>wp</span><span class='period'>.</span><span class='id identifier rubyid_entities'>entities</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_result_pixel?'>result_pixel?</span> <span class='id identifier rubyid_x'>x</span><span class='rbrace'>}</span>
 
-
-	<span class='comment'>#good_min and good_max are assign for static metrics, by default
-</span>	<span class='comment'># If the static metric does not have &quot;good_light&quot; field, it is
-</span>	<span class='comment'># assumed to be binary... that is, 0 is bad, &gt; 0 is good.
-</span>	<span class='id identifier rubyid_good_min'>good_min</span> <span class='op'>=</span> <span class='float'>1e-9</span>
-	<span class='id identifier rubyid_good_max'>good_max</span> <span class='op'>=</span> <span class='float'>9e16</span>
-	<span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>good_light</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>then</span>
-		<span class='id identifier rubyid_good_min'>good_min</span> <span class='op'>=</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>good_light</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-		<span class='id identifier rubyid_good_max'>good_max</span> <span class='op'>=</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>good_light</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-		<span class='id identifier rubyid_good_max'>good_max</span> <span class='op'>=</span> <span class='float'>9e16</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_good_max'>good_max</span>
-	<span class='kw'>end</span>
-	<span class='comment'>#if dynamic, we actually just want to get the good pixels
-</span>	<span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>dynamic</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='kw'>then</span>
-		<span class='id identifier rubyid_good_min'>good_min</span> <span class='op'>=</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>good_pixel</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-		<span class='id identifier rubyid_good_max'>good_max</span> <span class='op'>=</span> <span class='float'>9e16</span>
-	<span class='kw'>end</span>
-
-	<span class='id identifier rubyid_count'>count</span><span class='op'>=</span><span class='id identifier rubyid_pixels'>pixels</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
-	<span class='id identifier rubyid_sum'>sum</span><span class='op'>=</span><span class='int'>0</span>
-	<span class='id identifier rubyid_total_area'>total_area</span> <span class='op'>=</span> <span class='int'>0</span>
-	<span class='id identifier rubyid_max'>max</span><span class='op'>=</span><span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_pixels'>pixels</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-	<span class='id identifier rubyid_min'>min</span><span class='op'>=</span><span class='id identifier rubyid_max'>max</span>
-	<span class='id identifier rubyid_good_area'>good_area</span> <span class='op'>=</span> <span class='int'>0</span><span class='semicolon'>;</span>
-	<span class='id identifier rubyid_pixels'>pixels</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pixel'>pixel</span><span class='op'>|</span>
-		<span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='const'>Labeler</span><span class='period'>.</span><span class='id identifier rubyid_get_value'>get_value</span><span class='lparen'>(</span><span class='id identifier rubyid_pixel'>pixel</span><span class='rparen'>)</span>
-		<span class='id identifier rubyid_area'>area</span> <span class='op'>=</span> <span class='id identifier rubyid_pixel'>pixel</span><span class='period'>.</span><span class='id identifier rubyid_area'>area</span>
-		<span class='id identifier rubyid_good_area'>good_area</span> <span class='op'>+=</span> <span class='id identifier rubyid_area'>area</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&gt;=</span> <span class='id identifier rubyid_good_min'>good_min</span> <span class='kw'>and</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&lt;=</span> <span class='id identifier rubyid_good_max'>good_max</span>
-		<span class='id identifier rubyid_max'>max</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_max'>max</span>
-		<span class='id identifier rubyid_min'>min</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='kw'>if</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_min'>min</span>
-		<span class='id identifier rubyid_sum'>sum</span> <span class='op'>+=</span> <span class='id identifier rubyid_value'>value</span><span class='op'>*</span><span class='id identifier rubyid_area'>area</span>
-		<span class='id identifier rubyid_total_area'>total_area</span> <span class='op'>+=</span> <span class='id identifier rubyid_area'>area</span>
-	<span class='kw'>end</span>
-
-	<span class='id identifier rubyid_average'>average</span> <span class='op'>=</span> <span class='id identifier rubyid_sum'>sum</span><span class='op'>/</span><span class='id identifier rubyid_total_area'>total_area</span>
-	<span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_min'>min</span>
-	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_max'>max</span>
-	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>=</span><span class='id identifier rubyid_average'>average</span>
-	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>goal</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='op'>=</span><span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>goal</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
-	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_average</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_min'>min</span><span class='op'>==</span><span class='id identifier rubyid_average'>average</span> <span class='op'>?</span> <span class='int'>1</span> <span class='op'>:</span> <span class='id identifier rubyid_min'>min</span><span class='op'>/</span><span class='id identifier rubyid_average'>average</span>
-	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>min_over_max</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_min'>min</span><span class='op'>==</span><span class='id identifier rubyid_max'>max</span> <span class='op'>?</span> <span class='int'>1</span> <span class='op'>:</span> <span class='id identifier rubyid_min'>min</span><span class='op'>/</span><span class='id identifier rubyid_max'>max</span> <span class='comment'>#fully shaded planes get a Max and Min of 0.
-</span>	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>nsensors</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_count'>count</span>
-	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>approved_percentage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_good_area'>good_area</span> <span class='op'>/</span> <span class='id identifier rubyid_total_area'>total_area</span>
-	<span class='id identifier rubyid_ret'>ret</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>total_area</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_total_area'>total_area</span><span class='op'>/</span><span class='float'>1550.0</span> <span class='comment'>#transform into square meters from sqin
-</span>	<span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
+	<span class='kw'>if</span> <span class='id identifier rubyid_objective'>objective</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>dynamic</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='kw'>then</span>
+		<span class='kw'>return</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_dynamic_objective_workplane_statistics'>get_dynamic_objective_workplane_statistics</span><span class='lparen'>(</span><span class='id identifier rubyid_wp'>wp</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
+	<span class='kw'>else</span> 
+		<span class='kw'>return</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_static_objective_workplane_statistics'>get_static_objective_workplane_statistics</span><span class='lparen'>(</span><span class='id identifier rubyid_wp'>wp</span><span class='comma'>,</span><span class='id identifier rubyid_objective'>objective</span><span class='rparen'>)</span>
+	<span class='kw'>end</span>				
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2285,7 +2651,7 @@ in the model.</p>
 </div>
 
     <div id="footer">
-  Generated on Fri Dec 30 10:58:34 2016 by
+  Generated on Wed Mar  1 18:04:15 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.3.0).
 </div>

@@ -407,11 +407,13 @@ module IGD
               #then go through the objectives
               obj_array.each{|obj_name|
                 objective = objectives[obj_name]
+                warn objective
                 metric = objective["metric"]
                 file_to_read = Metrics.get_read_file(metric)
                 file_to_read = file_to_read.call(workplane,objective) if file_to_read != false
                 file_to_write = Metrics.get_write_file(metric).call(workplane,objective)
                 score_calculator = Metrics.get_score_calculator(metric)
+
                 if objective["dynamic"] then
                   annual = File.readlines(file_to_read)
                   #remove header

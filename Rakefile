@@ -73,3 +73,7 @@ task :add_build_date do
 		file.puts Time.now
 	}
 end
+
+task :compile_ui do
+	warn `tsc --p ./IGD_Groundhog/src/html`
+end
