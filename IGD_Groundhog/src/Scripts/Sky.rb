@@ -210,14 +210,14 @@ module IGD
                         FileUtils.rm(octree)
                         FileUtils.rm(tmp1)
 
-                        File.open("./Skies/#{Utilities.fix_name(sky)}.skv",'w'){|file|
+                        File.open("./Skies/#{Utilities.fix_name(sky)}.skv",'w'){|f|
                             ret.each{|line|
-                                file.puts line
+                                f.puts line
                             }                             
                         }
                         next []
                 }
-			end 
+            end 
         end #end genskyvec
 
 

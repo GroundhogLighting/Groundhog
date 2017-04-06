@@ -25,7 +25,7 @@ end
 
 
 
-task :test,[:os, :suv] do |t, args|
+task :test,[:os, :suv] => [:compile_ui] do |t, args|
 	radiance_version = "Radiance/#{args[:os]}/Radiance"
 	radiance_version = "Radiance/macosx/usr/local/radiance" if args[:os] == "macosx"
 
@@ -58,13 +58,13 @@ def compress(os)
 	FileUtils.rm "listfile.txt"
 end
 
-task :win64 => [:clean, :add_build_date] do
+task :win64 => [:clean, :add_build_date, :compile_ui] do
 	compress("win64")
 end
-task :win32 => [:clean, :add_build_date] do
+task :win32 => [:clean, :add_build_date, :compile_ui] do
 	compress("win32")
 end
-task :macosx => [:clean, :add_build_date] do
+task :macosx => [:clean, :add_build_date, :compile_ui] do
 	compress("macosx")
 end
 
@@ -75,5 +75,8 @@ task :add_build_date do
 end
 
 task :compile_ui do
-	warn `tsc --p ./IGD_Groundhog/src/html`
+	ui_src = "./ui-src"
+	warn `tsc --p #{ui_src}`
+
+	warn `browserify #{ui_src}/js/main.js --standalone DesignAssistant -o ./IGD_Groundhog/src/html/js/bundle.js`
 end
