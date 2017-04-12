@@ -1,0 +1,99 @@
+
+    <div class="display" id="calculate">
+        <div class="fixed_toolbar">
+            <button id="simulate_button">Calculate</button>
+        </div>        
+
+
+        <div id="calculate" class="accordion">           
+            <h3>Simulation options</h3>
+            
+            <div>
+                <table>
+                    <tr>
+                        <td>Sky subdivition</td>
+                        <td>
+                            <input title="option" id='sky_bins' type='number' value='1' step='1' min='1'>
+                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Static calculation method</td>
+                        <td>
+                            <select title="option" id='static_calculation_method'>
+							<option value="RTRACE">Ray-tracing</option>
+							<option value="DC">Simple Daylight Coefficients</option>
+						</select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Dynamic calculation method</td>
+                        <td>
+                            <select title="option" id='dynamic_calculation_method'>
+							<option value="DC">Simple Daylight Coefficients</option>
+						</select>
+                        </td>
+                    </tr>
+
+                </table>
+                <table>
+
+                    <tr>
+                        <td>Daylighting ray-tracing parameters</td>
+                        <td>
+                            <input title="option" type="text" id="ray_tracing_parameters">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Luminaire ray-tracing parameters</td>
+                        <td>
+                            <input title="option" type="text" id="elux_ray_tracing_parameters">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Daylight coefficients parameters</td>
+                        <td>
+                            <input title="option" type="text" id="dc_parameters">
+                        </td>
+                    </tr>
+
+                </table>
+                <div class="center">
+                    <button id="set_low_parameters">Set to low</button>
+                    <button id="set_med_parameters">Set to medium</button>
+                    <button id="set_high_parameters">Set to high</button>
+                </div>
+            </div>
+
+
+            <h3>Tubular Daylight Devices options</h3>
+            <div>
+                <table>
+                <tr>
+                        <td>Daylight matrix parameters</td>
+                        <td><input title="option" type="text" id="tdd_daylight_parameters"></td>
+                    </tr>
+                    <tr>
+                        <td>Pipe interior parameters</td>
+                        <td><input title="option" type="text" id="tdd_pipe_parameters"></td>
+                    </tr>
+                    <tr>
+                        <td>View matrix parameters</td>
+                        <td><input title="option" type="text" id="tdd_view_parameters"></td>
+                    </tr>
+                    <tr>
+                        <td>Assume one Daylight Matrix</td>
+                        <td><input title="option" type="checkbox" id="tdd_singledaymtx">
+                            <p class="tooltip" title="Calculate a single daylight matrix and use it for all the TDDs. This works well if all the TDDs basically see the same sky and obstructions.">?</p>
+                        </td>
+                    </tr>
+                </table>
+                <div class="center">
+                    <button id="set_low_tdd">Set to low</button>
+                    <button id="set_med_tdd">Set to medium</button>
+                    <button id="set_high_tdd">Set to high</button>
+                </div>
+            </div>  
+         </div>           
+    </div>

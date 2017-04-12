@@ -1,11 +1,12 @@
 "use strict";
-var Glass = require("./material/classes/glass");
-var Metal = require("./material/classes/metal");
-var PerforatedMetal = require("./material/classes/perforated-metal");
-var Plastic = require("./material/classes/plastic");
-var PerforatedPlastic = require("./material/classes/perforated-plastic");
-var Diffuser = require("./material/classes/diffuser");
-var Fabric = require("./material/classes/fabric");
+var Version = require("./version");
+var Glass = require("./materials/classes/glass");
+var Metal = require("./materials/classes/metal");
+var PerforatedMetal = require("./materials/classes/perforated-metal");
+var Plastic = require("./materials/classes/plastic");
+var PerforatedPlastic = require("./materials/classes/perforated-plastic");
+var Diffuser = require("./materials/classes/diffuser");
+var Fabric = require("./materials/classes/fabric");
 var Lux = require("./objectives/objectives/lux");
 var DF = require("./objectives/objectives/df");
 var UDI = require("./objectives/objectives/udi");
@@ -16,7 +17,17 @@ module.exports = {
         return name.toLowerCase().replace(/\s/g, "_");
     },
     sendAction: function (action, msg) {
-        window.location.href = 'skp:' + action + '@' + msg;
+        var v = Version.toLowerCase();
+        if (v === "web_dialog") {
+            window.location.href = 'skp:' + action + '@' + msg;
+            return;
+        }
+        if (v === "debug") {
+            alert('Action: ' + action + ' | msg: ' + msg);
+            return;
+        }
+        alert("Unkown version " + Version);
+        return;
     },
     replaceAll: function (string, search, replacement) {
         return string.replace(new RegExp(search, 'g'), replacement);

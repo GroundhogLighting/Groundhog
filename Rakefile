@@ -74,9 +74,76 @@ task :add_build_date do
 	}
 end
 
-task :compile_ui do
-	ui_src = "./ui-src"
-	warn `tsc --p #{ui_src}`
 
-	warn `browserify #{ui_src}/js/main.js --standalone DesignAssistant -o ./IGD_Groundhog/src/html/js/bundle.js`
+@ui_src = "./ui-src"
+def change_ui_version(version)
+	File.open("#{@ui_src}/ts/version.ts",'w'){ |f| 
+		f.puts "export = '#{version}';"
+	}
+end	
+
+def compile_ui(version)
+	change_ui_version(version)
+	warn `tsc --p #{@ui_src}`
+	warn `browserify #{@ui_src}/js/main.js --standalone DesignAssistant -o ./IGD_Groundhog/src/html/js/design_assistant_#{version}.js`
+
+	File.open("./IGD_Groundhog/src/html/design_assistant_#{version}.html",'w'){|file|
+		file.puts "<!DOCTYPE html>
+						<html>
+
+						<head>
+							<title>Design assistant</title>
+							<meta charset='UTF-8'>
+							<meta http-equiv='X-UA-Compatible' content='IE=edge'/>
+
+							<link href='css/jquery-ui.css' rel='stylesheet'>
+							<link href='css/groundhog-ui.css' rel='stylesheet'>
+							<link rel='stylesheet' href='css/spectrum.css' />
+						</head>
+
+						<body>"
+		
+		selected = "location"
+		sections = ["location","materials","luminaires","observers","photosensors","objectives","calculate","report"]
+		
+		# Create the tabs
+		file.puts "<div id='sidenav'>"
+		sections.each{|section|
+			file.puts "<p #{selected == section ? "class = 'selected'" : ''} href='##{section}'>#{section.capitalize}</p>"
+		}
+		file.puts "</div>"
+
+		# add the actual sections
+		sections.each{|section|
+			file.puts File.readlines("#{@ui_src}/ts/#{section}/template.html")
+		}
+
+		file.puts "
+					<script src='js/JQuery/jquery-3.0.0.js'></script>
+					<script src='js/jQueryUI/jquery-ui.js'></script>
+					<script src='js/Spectrum/spectrum.js'></script>    
+					<script src='js/groundhog-ui.js'></script>
+					
+					<script src='js/design_assistant_#{version}.js'></script>    
+					
+					<script>
+						var DesignAssistant = new DesignAssistant();        
+						DesignAssistant.update();
+					</script>
+					
+				</body>
+
+				</html>
+				"
+	}
+end
+
+task :test_ui do
+	compile_ui("debug")
+end
+
+task :compile_ui do	
+	["web_dialog"].each{|version|
+		compile_ui(version)
+	}
 end

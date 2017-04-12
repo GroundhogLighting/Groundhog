@@ -1,17 +1,13 @@
 
 import Utilities = require('./utilities');
-
-import Material = require('./material/module');
-
+import Material = require('./materials/module');
 import Location = require('./location/module');
-
 import Objectives = require('./objectives/module');
-
 import Luminaires = require('./luminaires/module');
-
 import Calculate = require('./calculate/module');
-
 import Report = require('./report/module');
+import Photosensors = require('./photosensors/module');
+import Observers = require('./observers/module');
 
 export = class DesignAssistant {
     
@@ -21,7 +17,9 @@ export = class DesignAssistant {
     luminaires : any;
     calculate : any;
     report : any;
-    
+    photosensors: any;
+    observers: any;
+
     constructor(){
         let MaterialsModule = new Material();
         this.materials = MaterialsModule;
@@ -39,7 +37,14 @@ export = class DesignAssistant {
         this.report = ReportModule;   
         
         let LuminairesModule = new Luminaires();
-        this.luminaires = LuminairesModule;    
+        this.luminaires = LuminairesModule; 
+
+        let PhotosensorsModule = new Photosensors();
+        this.photosensors = PhotosensorsModule;  
+        
+        let ObserversModule = new Observers();
+        this.observers = ObserversModule;  
+              
     }
 
     update = () : void => {

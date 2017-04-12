@@ -4,8 +4,6 @@ module.exports = (function () {
     function MaterialModule() {
         var _this = this;
         this.updateList = function (filter) {
-            console.log("UPDATING MATERIAL LIST");
-            console.log(_this.materials);
             filter = filter.toLowerCase();
             var list = $("#material_list");
             list.html("");
@@ -15,7 +13,6 @@ module.exports = (function () {
             }
             var html = "<tr><td>Name</td><td>Class</td><td>Color</td><td></td></tr>";
             for (var material_name in _this.materials) {
-                console.log(material_name + " -- ");
                 var material = _this.materials[material_name];
                 var cl = Utilities.getMaterialType(material["class"]);
                 if (material.name.toLowerCase().indexOf(filter) >= 0 || cl.name.toLowerCase().indexOf(filter) >= 0) {

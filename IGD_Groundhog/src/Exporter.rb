@@ -281,7 +281,7 @@ module IGD
 						return false if not self.write_weather
 						return false if not self.export_views
 						return false if not self.export_component_definitions
-						return false if not self.write_illuminance_sensors
+						return false if not self.write_photosensors
 						return false if not self.write_scene_file
 						return false if not self.write_workplanes
 
@@ -696,7 +696,7 @@ module IGD
 			# @author German Molina
 			# @version 0.1
 			# @return [Boolean] Success
-			def self.write_illuminance_sensors
+			def self.write_photosensors
 
 				sensors = Sketchup.active_model.definitions.select {|x| Labeler.illuminance_sensor?(x) }
 				return true if sensors.length < 1 #do not do anything, but success
@@ -709,19 +709,12 @@ module IGD
 				File.open("#{path}/sensors.pts",'w'){ |f| #The file is opened
 					File.open("#{path}/sensor_dictionary.txt",'w'){|dic|
 						sensors.each_with_index do |sensor,index|
-							vdir = sensor.transformation.zaxis
-							vx = vdir[0]
-							vy = vdir[1]
-							vz = vdir[2]
-							pos = sensor.transformation.origin
-							px = pos[0].to_m
-							py = pos[1].to_m
-							pz = pos[2].to_m
-							f.puts("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}")
+							position = Photosensor.get_position(sensor)
+							f.puts("#{position["px"]}   #{position["py"]}   #{position["pz"]}   #{position["nx"]}   #{position["ny"]}   #{position["nz"]}")
 							if Labeler.has_gh_name(sensor) then	
 								name = Utilities.fix_name(Labeler.get_name(sensor))						
 								File.open("#{path}/#{name}.pt",'w'){|short_file|
-									short_file.puts("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}")
+									short_file.puts("#{position["px"]}   #{position["py"]}   #{position["pz"]}   #{position["nx"]}   #{position["ny"]}   #{position["nz"]}")
 								}			
 								dic.puts "#{index},#{name}"				
 							end													

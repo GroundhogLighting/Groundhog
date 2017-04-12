@@ -20,17 +20,15 @@ module.exports = (function () {
             }
             filter = filter.toLowerCase();
             var html = "<tr><td>Luminaire</td><td>Manufacturer</td><td>Lamp</td></tr>";
-            for (var luminaire in _this.luminaires) {
-                if (_this.luminaires.hasOwnProperty(luminaire)) {
-                    var data = _this.luminaires[luminaire];
-                    var desc = data["luminaire"];
-                    var manufacturer = data["manufacturer"];
-                    var lamp = data["lamp"];
-                    if (luminaire.toLowerCase().indexOf(filter) >= 0 ||
-                        manufacturer.toLowerCase().indexOf(filter) >= 0 ||
-                        lamp.toLowerCase().indexOf(filter) >= 0) {
-                        html = html + "<tr><td class='luminaire-name' name=\"" + luminaire + "\">" + luminaire + "</td><td>" + manufacturer + "</td><td>" + lamp + "</td></tr>";
-                    }
+            for (var _i = 0, _a = _this.luminaires; _i < _a.length; _i++) {
+                var luminaire = _a[_i];
+                var desc = luminaire.luminaire;
+                var manufacturer = luminaire.manufacturer;
+                var lamp = luminaire.lamp;
+                if (luminaire.name.toLowerCase().indexOf(filter) >= 0 ||
+                    manufacturer.toLowerCase().indexOf(filter) >= 0 ||
+                    lamp.toLowerCase().indexOf(filter) >= 0) {
+                    html = html + "<tr><td class='luminaire-name' name=\"" + luminaire.name + "\">" + luminaire.name + "</td><td>" + manufacturer + "</td><td>" + lamp + "</td></tr>";
                 }
             }
             list.html(html);

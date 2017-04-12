@@ -1,12 +1,13 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.DesignAssistant = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
-var Glass = require("./material/classes/glass");
-var Metal = require("./material/classes/metal");
-var PerforatedMetal = require("./material/classes/perforated-metal");
-var Plastic = require("./material/classes/plastic");
-var PerforatedPlastic = require("./material/classes/perforated-plastic");
-var Diffuser = require("./material/classes/diffuser");
-var Fabric = require("./material/classes/fabric");
+var Version = require("./version");
+var Glass = require("./materials/classes/glass");
+var Metal = require("./materials/classes/metal");
+var PerforatedMetal = require("./materials/classes/perforated-metal");
+var Plastic = require("./materials/classes/plastic");
+var PerforatedPlastic = require("./materials/classes/perforated-plastic");
+var Diffuser = require("./materials/classes/diffuser");
+var Fabric = require("./materials/classes/fabric");
 var Lux = require("./objectives/objectives/lux");
 var DF = require("./objectives/objectives/df");
 var UDI = require("./objectives/objectives/udi");
@@ -17,7 +18,17 @@ module.exports = {
         return name.toLowerCase().replace(/\s/g, "_");
     },
     sendAction: function (action, msg) {
-        window.location.href = 'skp:' + action + '@' + msg;
+        var v = Version.toLowerCase();
+        if (v === "web_dialog") {
+            window.location.href = 'skp:' + action + '@' + msg;
+            return;
+        }
+        if (v === "debug") {
+            alert('Action: ' + action + ' | msg: ' + msg);
+            return;
+        }
+        alert("Unkown version " + Version);
+        return;
     },
     replaceAll: function (string, search, replacement) {
         return string.replace(new RegExp(search, 'g'), replacement);
@@ -79,7 +90,7 @@ module.exports = {
     }
 };
 
-},{"./material/classes/diffuser":6,"./material/classes/fabric":7,"./material/classes/glass":8,"./material/classes/metal":9,"./material/classes/perforated-metal":10,"./material/classes/perforated-plastic":11,"./material/classes/plastic":12,"./objectives/objectives/da":15,"./objectives/objectives/df":16,"./objectives/objectives/lux":17,"./objectives/objectives/sky_visibility":18,"./objectives/objectives/udi":19}],2:[function(require,module,exports){
+},{"./materials/classes/diffuser":6,"./materials/classes/fabric":7,"./materials/classes/glass":8,"./materials/classes/metal":9,"./materials/classes/perforated-metal":10,"./materials/classes/perforated-plastic":11,"./materials/classes/plastic":12,"./objectives/objectives/da":15,"./objectives/objectives/df":16,"./objectives/objectives/lux":17,"./objectives/objectives/sky_visibility":18,"./objectives/objectives/udi":19,"./version":24}],2:[function(require,module,exports){
 "use strict";
 var Utilities = require("../Utilities");
 module.exports = (function () {
@@ -159,7 +170,7 @@ module.exports = (function () {
     return LocationModule;
 }());
 
-},{"../utilities":21}],4:[function(require,module,exports){
+},{"../utilities":23}],4:[function(require,module,exports){
 "use strict";
 var Utilities = require("../Utilities");
 module.exports = (function () {
@@ -182,17 +193,15 @@ module.exports = (function () {
             }
             filter = filter.toLowerCase();
             var html = "<tr><td>Luminaire</td><td>Manufacturer</td><td>Lamp</td></tr>";
-            for (var luminaire in _this.luminaires) {
-                if (_this.luminaires.hasOwnProperty(luminaire)) {
-                    var data = _this.luminaires[luminaire];
-                    var desc = data["luminaire"];
-                    var manufacturer = data["manufacturer"];
-                    var lamp = data["lamp"];
-                    if (luminaire.toLowerCase().indexOf(filter) >= 0 ||
-                        manufacturer.toLowerCase().indexOf(filter) >= 0 ||
-                        lamp.toLowerCase().indexOf(filter) >= 0) {
-                        html = html + "<tr><td class='luminaire-name' name=\"" + luminaire + "\">" + luminaire + "</td><td>" + manufacturer + "</td><td>" + lamp + "</td></tr>";
-                    }
+            for (var _i = 0, _a = _this.luminaires; _i < _a.length; _i++) {
+                var luminaire = _a[_i];
+                var desc = luminaire.luminaire;
+                var manufacturer = luminaire.manufacturer;
+                var lamp = luminaire.lamp;
+                if (luminaire.name.toLowerCase().indexOf(filter) >= 0 ||
+                    manufacturer.toLowerCase().indexOf(filter) >= 0 ||
+                    lamp.toLowerCase().indexOf(filter) >= 0) {
+                    html = html + "<tr><td class='luminaire-name' name=\"" + luminaire.name + "\">" + luminaire.name + "</td><td>" + manufacturer + "</td><td>" + lamp + "</td></tr>";
                 }
             }
             list.html(html);
@@ -224,12 +233,14 @@ module.exports = (function () {
 },{"../Utilities":1}],5:[function(require,module,exports){
 "use strict";
 var Utilities = require("./utilities");
-var Material = require("./material/module");
+var Material = require("./materials/module");
 var Location = require("./location/module");
 var Objectives = require("./objectives/module");
 var Luminaires = require("./luminaires/module");
 var Calculate = require("./calculate/module");
 var Report = require("./report/module");
+var Photosensors = require("./photosensors/module");
+var Observers = require("./observers/module");
 module.exports = (function () {
     function DesignAssistant() {
         this.update = function () {
@@ -247,11 +258,15 @@ module.exports = (function () {
         this.report = ReportModule;
         var LuminairesModule = new Luminaires();
         this.luminaires = LuminairesModule;
+        var PhotosensorsModule = new Photosensors();
+        this.photosensors = PhotosensorsModule;
+        var ObserversModule = new Observers();
+        this.observers = ObserversModule;
     }
     return DesignAssistant;
 }());
 
-},{"./calculate/module":2,"./location/module":3,"./luminaires/module":4,"./material/module":13,"./objectives/module":14,"./report/module":20,"./utilities":21}],6:[function(require,module,exports){
+},{"./calculate/module":2,"./location/module":3,"./luminaires/module":4,"./materials/module":13,"./objectives/module":14,"./observers/module":20,"./photosensors/module":21,"./report/module":22,"./utilities":23}],6:[function(require,module,exports){
 "use strict";
 var Diffuser = {
     name: "Diffuser",
@@ -550,17 +565,15 @@ module.exports = (function () {
                 return;
             }
             var html = "<tr><td>Name</td><td>Class</td><td>Color</td><td></td></tr>";
-            for (var material in _this.materials) {
-                if (_this.materials.hasOwnProperty(material)) {
-                    var data = _this.materials[material];
-                    var cl = Utilities.getMaterialType(data["class"]);
-                    if (material.toLowerCase().indexOf(filter) >= 0 || cl.name.toLowerCase().indexOf(filter) >= 0) {
-                        var r = data["color"][0];
-                        var g = data["color"][1];
-                        var b = data["color"][2];
-                        var color = "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + ")";
-                        html = html + "<tr><td class='mat-name' name='" + material + "'>" + material + "</td><td class='mat-name' name='" + material + "'>" + cl.name + "</td><td name='" + material + "' class='color mat-name' style='background: " + color + "'></td><td class='icons'><span name=\"" + material + "\" class='ui-icon ui-icon-trash del-material'></span><span name=\"" + material + "\" class='ui-icon ui-icon-pencil edit-material'></span></td></tr>";
-                    }
+            for (var material_name in _this.materials) {
+                var material = _this.materials[material_name];
+                var cl = Utilities.getMaterialType(material["class"]);
+                if (material.name.toLowerCase().indexOf(filter) >= 0 || cl.name.toLowerCase().indexOf(filter) >= 0) {
+                    var r = material["color"][0];
+                    var g = material["color"][1];
+                    var b = material["color"][2];
+                    var color = "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + ")";
+                    html = html + "<tr><td class='mat-name' name='" + material_name + "'>" + material_name + "</td><td class='mat-name' name='" + material_name + "'>" + cl.name + "</td><td name='" + material_name + "' class='color mat-name' style='background: " + color + "'></td><td class='icons'><span name=\"" + material_name + "\" class='ui-icon ui-icon-trash del-material'></span><span name=\"" + material_name + "\" class='ui-icon ui-icon-pencil edit-material'></span></td></tr>";
                 }
             }
             list.html(html);
@@ -700,6 +713,7 @@ module.exports = (function () {
             _this.updateList("");
             _this.addMaterialDialog.dialog("close");
             Utilities.sendAction("add_material", JSON.stringify(mat));
+            return true;
         };
         var addMaterial = this.addMaterial;
         this.addMaterialDialog = $("#add_material_dialog").dialog({
@@ -773,13 +787,13 @@ module.exports = (function () {
         $("#preview_button").on("click", function () {
             Utilities.sendAction('preview', 'msg');
         });
-        this.materials = [];
+        this.materials = {};
         this.updateList("");
     }
     return MaterialModule;
 }());
 
-},{"../utilities":21}],14:[function(require,module,exports){
+},{"../utilities":23}],14:[function(require,module,exports){
 "use strict";
 var Utilities = require("../Utilities");
 var Lux = require("./objectives/lux");
@@ -1251,6 +1265,310 @@ module.exports = Udi;
 
 },{}],20:[function(require,module,exports){
 "use strict";
+var Utilities = require("../utilities");
+module.exports = (function () {
+    function ObserversModule() {
+        var _this = this;
+        this.updateList = function (filter) {
+            var list = $("#observer_list");
+            list.html("");
+            if (Object.keys(_this.observers).length == 0) {
+                $("<div class='center'><h4>There are no observers in your model...</h4></div>").appendTo(list);
+                return;
+            }
+            filter = filter.toLowerCase();
+            var html = "<tr><td>Name</td><td></td></tr>";
+            for (var observer_name in _this.observers) {
+                console.log("aa");
+                var observer = _this.observers[observer_name];
+                if (observer_name.toLowerCase().indexOf(filter) >= 0) {
+                    html = html + "<tr><td class='observer-name' name=\"" + observer_name + "\">" + observer_name + "</td>";
+                    html = html + "<td class='icons'><span name=\"" + observer_name + "\" class='ui-icon ui-icon-trash del-observer'></span><span name=\"" + observer_name + "\" class='ui-icon ui-icon-pencil edit-observer'></span><span name=\"" + observer_name + "\" class='ui-icon ui-icon-circle-zoomin view-observer'></span></td>";
+                }
+            }
+            html += "</tr>";
+            list.html(html);
+            var editObserver = _this.editObserver;
+            $("span.edit-observer").on("click", function () {
+                var name = $(this).attr("name");
+                editObserver(name);
+            });
+            var deleteObserver = _this.deleteObserver;
+            $("span.del-observer").on("click", function () {
+                var name = $(this).attr("name");
+                deleteObserver(name);
+            });
+            var viewObserver = _this.viewObserver;
+            $("span.view-observer").on("click", function () {
+                var name = $(this).attr("name");
+                viewObserver(name);
+            });
+        };
+        this.clearDialog = function () {
+            $("#observer_name").val('');
+            $("#observer_px").val("");
+            $("#observer_py").val("");
+            $("#observer_pz").val("");
+            $("#observer_nx").val("");
+            $("#observer_ny").val("");
+            $("#observer_nz").val("");
+        };
+        this.deleteObserver = function (name) {
+            if (_this.observers.hasOwnProperty(name)) {
+                delete _this.observers[name];
+                _this.updateList("");
+                Utilities.sendAction('remove_observer', name);
+            }
+            else {
+                alert("There is an error with the observer you are trying to remove!");
+                return { success: false };
+            }
+            return { success: true };
+        };
+        this.editObserver = function (name) {
+            if (_this.observers.hasOwnProperty(name)) {
+                var observer = _this.observers[name];
+                $("#observer_name").val(name);
+                $("#observer_name").prop("disabled", true);
+                $("#observer_px").val(observer.px);
+                $("#observer_py").val(observer.py);
+                $("#observer_pz").val(observer.pz);
+                $("#observer_nx").val(observer.nx);
+                $("#observer_ny").val(observer.ny);
+                $("#observer_nz").val(observer.nz);
+            }
+            else {
+                alert("There is an error with the observer you are trying to edit!");
+                return { success: false };
+            }
+            _this.addObserverDialog.dialog("open");
+            return { success: true };
+        };
+        this.addObserver = function () {
+            var name = $.trim($("#observer_name").val());
+            if (_this.observers.hasOwnProperty(name)) {
+                var r = confirm("A observer with this name already exists. Do you want to replace it?");
+                if (!r) {
+                    return false;
+                }
+            }
+            else if (name == "") {
+                alert("Please insert a valid name for the observer");
+                return false;
+            }
+            var ps = {
+                name: name,
+                px: $("#observer_px").val(),
+                py: $("#observer_py").val(),
+                pz: $("#observer_pz").val(),
+                nx: $("#observer_nx").val(),
+                ny: $("#observer_ny").val(),
+                nz: $("#observer_nz").val(),
+            };
+            _this.observers[name] = ps;
+            _this.addObserverDialog.dialog("close");
+            Utilities.sendAction("addObserver", JSON.stringify(ps));
+            _this.updateList("");
+            return true;
+        };
+        this.viewObserver = function (name) {
+            if (_this.observers.hasOwnProperty(name)) {
+                var observer = _this.observers[name];
+                Utilities.sendAction("go_to_view", JSON.stringify(observer));
+            }
+            else {
+                alert("There is an error with the observer you are trying to view!");
+                return { success: false };
+            }
+        };
+        this.observers = {};
+        var addObserver = this.addObserver;
+        this.addObserverDialog = $("#add_observer_dialog").dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                "Create objective": addObserver,
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            },
+            height: 0.8 * $(window).height(),
+            width: 0.6 * $(window).width()
+        });
+        var updateList = this.updateList;
+        $("#filter_observers").keyup(function () {
+            updateList(this.value);
+        });
+        var addObserverDialog = this.addObserverDialog;
+        var clearDialog = this.clearDialog;
+        $("#add_observer_button").button().on("click", function () {
+            clearDialog();
+            $("#observer_name").prop("disabled", false);
+            addObserverDialog.dialog("open");
+        });
+        this.updateList("");
+    }
+    return ObserversModule;
+}());
+
+},{"../utilities":23}],21:[function(require,module,exports){
+"use strict";
+var Utilities = require("../utilities");
+module.exports = (function () {
+    function PhotosensorsModule() {
+        var _this = this;
+        this.updateList = function (filter) {
+            var list = $("#photosensor_list");
+            list.html("");
+            if (Object.keys(_this.photosensors).length == 0) {
+                $("<div class='center'><h4>There are no photosensors in your model...</h4></div>").appendTo(list);
+                return;
+            }
+            filter = filter.toLowerCase();
+            var html = "<tr><td>Name</td><td></td></tr>";
+            for (var sensor_name in _this.photosensors) {
+                var sensor = _this.photosensors[sensor_name];
+                if (sensor_name.toLowerCase().indexOf(filter) >= 0) {
+                    html = html + "<tr><td class='photosensor-name' name=\"" + sensor_name + "\">" + sensor_name + "</td>";
+                    html = html + "<td class='icons'><span name=\"" + sensor_name + "\" class='ui-icon ui-icon-trash del-sensor'></span><span name=\"" + sensor_name + "\" class='ui-icon ui-icon-pencil edit-sensor'></span></td>";
+                }
+            }
+            html += "</tr>";
+            list.html(html);
+            var editSensor = _this.editSensor;
+            $("span.edit-sensor").on("click", function () {
+                var name = $(this).attr("name");
+                Utilities.sendAction("enable_photosensor_tool", "");
+                editSensor(name);
+            });
+            var deleteSensor = _this.deleteSensor;
+            $("span.del-sensor").on("click", function () {
+                var name = $(this).attr("name");
+                deleteSensor(name);
+            });
+        };
+        this.clearDialog = function () {
+            $("#photosensor_name").val('');
+            $("#photosensor_px").val("");
+            $("#photosensor_py").val("");
+            $("#photosensor_pz").val("");
+            $("#photosensor_nx").val("");
+            $("#photosensor_ny").val("");
+            $("#photosensor_nz").val("");
+        };
+        this.deleteSensor = function (name) {
+            if (_this.photosensors.hasOwnProperty(name)) {
+                delete _this.photosensors[name];
+                _this.updateList("");
+                Utilities.sendAction('remove_photosensor', name);
+            }
+            else {
+                alert("There is an error with the photosensor you are trying to remove!");
+                return { success: false };
+            }
+            return { success: true };
+        };
+        this.editSensor = function (name) {
+            if (_this.photosensors.hasOwnProperty(name)) {
+                var sensor = _this.photosensors[name];
+                $("#photosensor_name").val(name);
+                $("#photosensor_name").prop("disabled", true);
+                $("#photosensor_px").val(sensor.px);
+                $("#photosensor_py").val(sensor.py);
+                $("#photosensor_pz").val(sensor.pz);
+                $("#photosensor_nx").val(sensor.nx);
+                $("#photosensor_ny").val(sensor.ny);
+                $("#photosensor_nz").val(sensor.nz);
+            }
+            else {
+                alert("There is an error with the photosensor you are trying to edit!");
+                return { success: false };
+            }
+            _this.addPhotosensorDialog.dialog("open");
+            return { success: true };
+        };
+        this.addSensor = function (close) {
+            var name = $.trim($("#photosensor_name").val());
+            if (_this.photosensors.hasOwnProperty(name) && !$("#photosensor_name").prop("disabled")) {
+                var r = confirm("A photosensor with this name already exists. Do you want to replace it?");
+                if (!r) {
+                    return false;
+                }
+            }
+            else if (name == "") {
+                alert("Please insert a valid name for the photosensor");
+                return false;
+            }
+            var ps = {
+                name: name,
+                px: $("#photosensor_px").val(),
+                py: $("#photosensor_py").val(),
+                pz: $("#photosensor_pz").val(),
+                nx: $("#photosensor_nx").val(),
+                ny: $("#photosensor_ny").val(),
+                nz: $("#photosensor_nz").val(),
+            };
+            for (var key in ps) {
+                if (key === "name") {
+                    continue;
+                }
+                if (ps[key] === "" || isNaN(ps[key])) {
+                    alert("Please introduce a valid number for all inputs");
+                    return;
+                }
+            }
+            if (parseFloat(ps.nx) * parseFloat(ps.nx) + parseFloat(ps.ny) * parseFloat(ps.ny) + parseFloat(ps.nz) * parseFloat(ps.nz) < 0.0000001) {
+                alert("Invalid normal values. They can't be all zero'");
+                return;
+            }
+            _this.photosensors[name] = ps;
+            if (close) {
+                _this.addPhotosensorDialog.dialog("close");
+                Utilities.sendAction("disable_active_tool", "");
+            }
+            Utilities.sendAction("add_photosensor", JSON.stringify(ps));
+            _this.updateList("");
+            return true;
+        };
+        this.photosensors = {};
+        var addSensor = this.addSensor;
+        this.addPhotosensorDialog = $("#add_photosensor_dialog").dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                "Add photosensor": function () { addSensor(true); },
+                Cancel: function () {
+                    Utilities.sendAction("disable_active_tool", "");
+                    $(this).dialog("close");
+                }
+            },
+            height: 0.8 * $(window).height(),
+            width: 0.6 * $(window).width()
+        });
+        var updateList = this.updateList;
+        $("#filter_photosensors").keyup(function () {
+            updateList(this.value);
+        });
+        var addPhotosensorDialog = this.addPhotosensorDialog;
+        var clearDialog = this.clearDialog;
+        $("#add_photosensor_button").button().on("click", function () {
+            clearDialog();
+            $("#photosensor_name").prop("disabled", false);
+            Utilities.sendAction("enable_photosensor_tool", "");
+            addPhotosensorDialog.dialog("open");
+        });
+        $("#add_photosensor_dialog :input").on("change", function () {
+            if ($("#photosensor_name").prop("disabled")) {
+                addSensor(false);
+            }
+        });
+        this.updateList("");
+    }
+    return PhotosensorsModule;
+}());
+
+},{"../utilities":23}],22:[function(require,module,exports){
+"use strict";
 var Utilities = require("../Utilities");
 module.exports = (function () {
     function Report() {
@@ -1348,7 +1666,11 @@ module.exports = (function () {
     return Report;
 }());
 
-},{"../Utilities":1}],21:[function(require,module,exports){
+},{"../Utilities":1}],23:[function(require,module,exports){
 arguments[4][1][0].apply(exports,arguments)
-},{"./material/classes/diffuser":6,"./material/classes/fabric":7,"./material/classes/glass":8,"./material/classes/metal":9,"./material/classes/perforated-metal":10,"./material/classes/perforated-plastic":11,"./material/classes/plastic":12,"./objectives/objectives/da":15,"./objectives/objectives/df":16,"./objectives/objectives/lux":17,"./objectives/objectives/sky_visibility":18,"./objectives/objectives/udi":19,"dup":1}]},{},[5])(5)
+},{"./materials/classes/diffuser":6,"./materials/classes/fabric":7,"./materials/classes/glass":8,"./materials/classes/metal":9,"./materials/classes/perforated-metal":10,"./materials/classes/perforated-plastic":11,"./materials/classes/plastic":12,"./objectives/objectives/da":15,"./objectives/objectives/df":16,"./objectives/objectives/lux":17,"./objectives/objectives/sky_visibility":18,"./objectives/objectives/udi":19,"./version":24,"dup":1}],24:[function(require,module,exports){
+"use strict";
+module.exports = 'web_dialog';
+
+},{}]},{},[5])(5)
 });

@@ -1,0 +1,57 @@
+
+    
+    <div class="display" id="photosensors">
+        <div class="fixed_toolbar">
+            <button id="add_photosensor_button">Add photosensor</button>                    
+            <span>Search:</span>
+            <input type="text" id="filter_photosensors">
+        </div>
+        <table id="photosensor_list" class="selectable row"></table>
+        
+    </div>
+
+    <div id="add_photosensor_dialog" title="Add photosensor">
+        <fieldset>
+            <legend>General information</legend>
+            <table>
+                <tr>
+                    <td><label for="photosensor_name">Name:</label></td>
+                    <td><input type="text" id="photosensor_name"></td>
+                </tr>                
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Position</legend>
+            <table>
+                <tr>
+                    <td><label for="photosensor_px">Position X (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_px"></td>
+                </tr>     
+                <tr>
+                    <td><label for="photosensor_py">Position Y (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_py"></td>
+                </tr>  
+                <tr>
+                    <td><label for="photosensor_pz">Position Z (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_pz"></td>
+                </tr>             
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Normal</legend>
+            <table>
+                <tr>
+                    <td><label for="photosensor_nx">Normal X (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_nx"></td>
+                </tr>     
+                <tr>
+                    <td><label for="photosensor_ny">Normal Y (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_ny"></td>
+                </tr>  
+                <tr>
+                    <td><label for="photosensor_pz">Normal Z (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_nz"></td>
+                </tr>             
+            </table>
+        </fieldset>
+    </div>

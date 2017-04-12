@@ -1,32 +1,28 @@
 <!DOCTYPE html>
-<html>
+						<html>
 
-<head>
-    <title>Design assistant</title>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+						<head>
+							<title>Design assistant</title>
+							<meta charset='UTF-8'>
+							<meta http-equiv='X-UA-Compatible' content='IE=edge'/>
 
-    <link href="css/jquery-ui.css" rel="stylesheet">
-    <link href="css/groundhog-ui.css" rel="stylesheet">
-    <link rel='stylesheet' href='css/spectrum.css' />
-</head>
+							<link href='css/jquery-ui.css' rel='stylesheet'>
+							<link href='css/groundhog-ui.css' rel='stylesheet'>
+							<link rel='stylesheet' href='css/spectrum.css' />
+						</head>
 
-<body>
+						<body>
+<div id='sidenav'>
+<p class = 'selected' href='#location'>Location</p>
+<p  href='#materials'>Materials</p>
+<p  href='#luminaires'>Luminaires</p>
+<p  href='#observers'>Observers</p>
+<p  href='#photosensors'>Photosensors</p>
+<p  href='#objectives'>Objectives</p>
+<p  href='#calculate'>Calculate</p>
+<p  href='#report'>Report</p>
+</div>
 
-    <div id="sidenav">
-        <p class="selected" href="#location">Location</p>
-        <p href="#materials">Materials</p>                
-        <p href="#luminaires">Luminaires</p>                    
-        <p href="#observers">Observers</p>                       
-        <p href="#photosensors">Photosensors</p>                
-        <p href="#objectives">Objectives</p>    
-        <p href="#calculate">Calculate</p>           
-        <p href="#report">Report</p>        
-    </div>
-
-
-
-    
     <div class="display" id="location">
         <div class="fixed_toolbar">
             <button id="change_weather_button">Change weather file</button>
@@ -61,7 +57,6 @@
             </tr>
         </table>
     </div>
-
 
     <div class="display" id="materials">
         <div class="fixed_toolbar">
@@ -117,26 +112,136 @@
 
     </div>
 
-    
 
-    <div class="display" id="observers">
+    <div class="display" id="luminaires">
         <div class="fixed_toolbar">
-
+            <button id="elux_preview">Daytime preview</button>
+            <button id="elux_night_preview">Nighttime preview</button>
+            <span>Search:</span>
+            <input type="text" id="filter_luminaires">
         </div>
+        <div id="luminaire_scale" class="scale center">
+            <p id="luminaire_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale">
+            <p id="luminaire_scale_max">--</p>
+        </div>
+        <table id="luminaire_list" class="selectable row"></table>
+    </div>
 
+
+
+<div class="display" id="observers">
+        <div class="fixed_toolbar">
+            <button id="add_observer_button">Add observer</button>                    
+            <span>Search:</span>
+            <input type="text" id="filter_observers">
+        </div>
+        <table id="observer_list" class="selectable row"></table>
+        
+    </div>
+
+    <div id="add_observer_dialog" title="Add observer">
+        <fieldset>
+            <legend>General information</legend>
+            <table>
+                <tr>
+                    <td><label for="observer_name">Name:</label></td>
+                    <td><input type="text" id="observer_name"></td>
+                </tr>                
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Position</legend>
+            <table>
+                <tr>
+                    <td><label for="observer_px">Position X (m):</label></td>
+                    <td><input type="number" id="observer_px"></td>
+                </tr>     
+                <tr>
+                    <td><label for="observer_py">Position Y (m):</label></td>
+                    <td><input type="number" id="observer_py"></td>
+                </tr>  
+                <tr>
+                    <td><label for="observer_pz">Position Z (m):</label></td>
+                    <td><input type="number" id="observer_pz"></td>
+                </tr>             
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Normal</legend>
+            <table>
+                <tr>
+                    <td><label for="observer_nx">Normal X (m):</label></td>
+                    <td><input type="number" id="observer_nx"></td>
+                </tr>     
+                <tr>
+                    <td><label for="observer_ny">Normal Y (m):</label></td>
+                    <td><input type="number" id="observer_ny"></td>
+                </tr>  
+                <tr>
+                    <td><label for="observer_pz">Normal Z (m):</label></td>
+                    <td><input type="number" id="observer_nz"></td>
+                </tr>             
+            </table>
+        </fieldset>
     </div>
 
     
     <div class="display" id="photosensors">
         <div class="fixed_toolbar">
-
+            <button id="add_photosensor_button">Add photosensor</button>                    
+            <span>Search:</span>
+            <input type="text" id="filter_photosensors">
         </div>
+        <table id="photosensor_list" class="selectable row"></table>
         
     </div>
 
+    <div id="add_photosensor_dialog" title="Add photosensor">
+        <fieldset>
+            <legend>General information</legend>
+            <table>
+                <tr>
+                    <td><label for="photosensor_name">Name:</label></td>
+                    <td><input type="text" id="photosensor_name"></td>
+                </tr>                
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Position</legend>
+            <table>
+                <tr>
+                    <td><label for="photosensor_px">Position X (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_px"></td>
+                </tr>     
+                <tr>
+                    <td><label for="photosensor_py">Position Y (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_py"></td>
+                </tr>  
+                <tr>
+                    <td><label for="photosensor_pz">Position Z (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_pz"></td>
+                </tr>             
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Normal</legend>
+            <table>
+                <tr>
+                    <td><label for="photosensor_nx">Normal X (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_nx"></td>
+                </tr>     
+                <tr>
+                    <td><label for="photosensor_ny">Normal Y (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_ny"></td>
+                </tr>  
+                <tr>
+                    <td><label for="photosensor_pz">Normal Z (m):</label></td>
+                    <td><input type="number" step = 0.01 id="photosensor_nz"></td>
+                </tr>             
+            </table>
+        </fieldset>
+    </div>
 
-
-    
       
     <div class="display" id="objectives">
         <div class="fixed_toolbar">
@@ -152,6 +257,77 @@
                 <ul id="workplane_objectives" class="droplist"></ul>
             </div>
         </div>
+    </div>
+
+    
+    <!-- ADD OBJECTIVE DIALOG -->
+    <div id="create_objective_dialog" title="Add objective">
+        <div id="objective_name_field" class="center">
+            <label for="objective_name">Name: </label>
+            <input type="text" id="objective_name">
+        </div>
+        <fieldset class="center" id="metric_field">
+            <legend>Metric</legend>
+            <select id="metric"></select>
+        </fieldset>
+
+        <fieldset id="compliance_field">
+            <legend>Compliance</legend>
+            <table>
+              <tr>
+                <td>
+                  <input type="number" min="0" max="100" id="objective_goal">
+                </td>
+                <td>
+                  <label for="objective_goal">% of the space</label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    <input type="number" min="0" max="100" id="objective_good_pixel">
+                </td>
+                <td>
+                  <label for="objective_good_pixel">% of occupied time</label>
+                </td>
+              </tr>
+            </table>
+
+        </fieldset>
+
+        <fieldset id="objective_occupied">
+            <legend>Occupancy hours</legend>
+            <label for="objective_occupied_min">From: </label>
+            <input type="number" value="8" min="0" max="24" id="objective_occupied_min">
+            <label for="objective_occupied_max">To:</label>
+            <input type="number" value="18" min="0" max="24" id="objective_occupied_max">
+        </fieldset>
+
+        <fieldset id="objective_good_light">
+            <legend id='objective_good_light_legend'>Illuminance goal (lux)</legend>
+            <label for="objective_good_light_min">From: </label>
+            <input type="number" value="300" min="0" id="objective_good_light_min">
+            <label for="objective_good_light_max">To:</label>
+            <input type="number" value="2000" min="0" id="objective_good_light_max">
+        </fieldset>
+
+        <fieldset id="objective_sim_period">
+            <legend>Simulation period (months)</legend>
+            <label for="objective_sim_period_min">From: </label>
+            <input type="number" value="1" min="1" max="12" step="1" id="objective_sim_period_min">
+            <label for="objective_sim_period_max">To:</label>
+            <input type="number" value="12" min="1" max="12" step="1" id="objective_sim_period_max">
+        </fieldset>
+
+        <fieldset id="objective_date">
+            <legend>Day and time to simulate</legend>
+            <p>Date: <input type="text" id="objective_date_date"></p>
+            <p>Hour: <input type="number" value="12" min="0" max="24" step="0.5" id="objective_date_hour"></p>
+        </fieldset>
+
+        <fieldset id="human_description">
+            <legend>Objective summary</legend>
+            <p id="objective_human_description"></p>
+        </fieldset>
     </div>
 
 
@@ -254,7 +430,6 @@
          </div>           
     </div>
 
-
     <div class="display" id="report">
         <div class="fixed_toolbar">
 
@@ -285,107 +460,19 @@
         </div>
     </div>
 
-    <!-- ADD OBJECTIVE DIALOG -->
-    <div id="create_objective_dialog" title="Add objective">
-        <div id="objective_name_field" class="center">
-            <label for="objective_name">Name: </label>
-            <input type="text" id="objective_name">
-        </div>
-        <fieldset class="center" id="metric_field">
-            <legend>Metric</legend>
-            <select id="metric"></select>
-        </fieldset>
+					<script src='js/JQuery/jquery-3.0.0.js'></script>
+					<script src='js/jQueryUI/jquery-ui.js'></script>
+					<script src='js/Spectrum/spectrum.js'></script>    
+					<script src='js/groundhog-ui.js'></script>
+					
+					<script src='js/design_assistant_web_dialog.js'></script>    
+					
+					<script>
+						var DesignAssistant = new DesignAssistant();        
+						DesignAssistant.update();
+					</script>
+					
+				</body>
 
-        <fieldset id="compliance_field">
-            <legend>Compliance</legend>
-            <table>
-              <tr>
-                <td>
-                  <input type="number" min="0" max="100" id="objective_goal">
-                </td>
-                <td>
-                  <label for="objective_goal">% of the space</label>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                    <input type="number" min="0" max="100" id="objective_good_pixel">
-                </td>
-                <td>
-                  <label for="objective_good_pixel">% of occupied time</label>
-                </td>
-              </tr>
-            </table>
-
-        </fieldset>
-
-        <fieldset id="objective_occupied">
-            <legend>Occupancy hours</legend>
-            <label for="objective_occupied_min">From: </label>
-            <input type="number" value="8" min="0" max="24" id="objective_occupied_min">
-            <label for="objective_occupied_max">To:</label>
-            <input type="number" value="18" min="0" max="24" id="objective_occupied_max">
-        </fieldset>
-
-        <fieldset id="objective_good_light">
-            <legend id='objective_good_light_legend'>Illuminance goal (lux)</legend>
-            <label for="objective_good_light_min">From: </label>
-            <input type="number" value="300" min="0" id="objective_good_light_min">
-            <label for="objective_good_light_max">To:</label>
-            <input type="number" value="2000" min="0" id="objective_good_light_max">
-        </fieldset>
-
-        <fieldset id="objective_sim_period">
-            <legend>Simulation period (months)</legend>
-            <label for="objective_sim_period_min">From: </label>
-            <input type="number" value="1" min="1" max="12" step="1" id="objective_sim_period_min">
-            <label for="objective_sim_period_max">To:</label>
-            <input type="number" value="12" min="1" max="12" step="1" id="objective_sim_period_max">
-        </fieldset>
-
-        <fieldset id="objective_date">
-            <legend>Day and time to simulate</legend>
-            <p>Date: <input type="text" id="objective_date_date"></p>
-            <p>Hour: <input type="number" value="12" min="0" max="24" step="0.5" id="objective_date_hour"></p>
-        </fieldset>
-
-        <fieldset id="human_description">
-            <legend>Objective summary</legend>
-            <p id="objective_human_description"></p>
-        </fieldset>
-    </div>
-
-
-    
-
-    <div class="display" id="luminaires">
-        <div class="fixed_toolbar">
-            <button id="elux_preview">Daytime preview</button>
-            <button id="elux_night_preview">Nighttime preview</button>
-            <span>Search:</span>
-            <input type="text" id="filter_luminaires">
-        </div>
-        <div id="luminaire_scale" class="scale center">
-            <p id="luminaire_scale_min">0</p><img src="images/scale_horizontal.png" alt="scale">
-            <p id="luminaire_scale_max">--</p>
-        </div>
-        <table id="luminaire_list" class="selectable row"></table>
-    </div>
-
-
-
-    <script src="js/JQuery/jquery-3.0.0.js"></script>
-    <script src="js/jQueryUI/jquery-ui.js"></script>
-    <script src='js/Spectrum/spectrum.js'></script>    
-    <script src="js/groundhog-ui.js"></script>
-    
-    <script src='js/bundle.js'></script>    
-    
-    <script>
-        var DesignAssistant = new DesignAssistant();        
-        DesignAssistant.update();
-    </script>
-    
-</body>
-
-</html>
+				</html>
+				

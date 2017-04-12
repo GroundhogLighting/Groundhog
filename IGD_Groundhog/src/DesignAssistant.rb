@@ -160,6 +160,25 @@ module IGD
         return script
       end
 
+      # Collects the photosensors 
+      #
+      # @author Germán Molina
+      # @return [Hash] The photosensors object
+      def self.get_photosensors
+        ret = Hash.new
+
+        sensors = Sketchup.active_model.definitions.select {|x| Labeler.illuminance_sensor?(x) }
+        if sensors.length == 0 then
+          return ret
+        end
+        sensors = sensors[0].instances
+        sensors.each{|sensor|
+          name = Labeler.get_name(sensor)
+          ret[name] = Photosensor.get_position(sensor)
+        }
+        return ret
+      end
+
       # Updates the Design Assistant to the actual state of the model... this is called
       # when the dialog is opened and also, for example, when the user defines a new
       # workplane.
@@ -174,6 +193,8 @@ module IGD
         objectives = hash["objectives"].to_json
         materials = self.get_radiance_materials_hash.to_json
 
+        photosensors = self.get_photosensors.to_json
+
         script = ""
         
         script += "DesignAssistant.materials.materials = #{materials};"    
@@ -183,6 +204,9 @@ module IGD
         script += "DesignAssistant.objectives.objectives = #{objectives};"
         script += "DesignAssistant.objectives.update_workplanes('');"
         script += "DesignAssistant.objectives.update_objectives('');"
+
+        script += "DesignAssistant.photosensors.photosensors = #{photosensors};"
+        script += "DesignAssistant.photosensors.updateList('');"
 
         weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
         
@@ -218,7 +242,8 @@ module IGD
       # @author German Molina
       # @return [SketchUp::UI::WebDialog] the Design Assistant web dialog
       def self.get
-        wd = Utilities.build_web_dialog("Design Assistant",false,"DAsistant",500,500,true,"#{OS.main_groundhog_path}/src/html/design_assistant.html")
+        version = "web_dialog"
+        wd = Utilities.build_web_dialog("Design Assistant",false,"DAsistant",500,500,true,"#{OS.main_groundhog_path}/src/html/design_assistant_#{version}.html")
 
         wd.add_action_callback("on_load") do |action_context,msg|          
           self.update
@@ -239,6 +264,14 @@ module IGD
 
         wd.add_action_callback("follow_link") do |action_context,msg|
           UI.openURL(msg)
+        end
+
+        wd.add_action_callback("add_photosensor") do |action_context,msg|
+          Photosensor.add(msg)
+        end
+
+        wd.add_action_callback("remove_photosensor") do |action_context,msg|
+          Photosensor.delete(msg)
         end
 
         wd.add_action_callback("preview") do |action_context,msg|
@@ -278,6 +311,14 @@ module IGD
             OS.execute_script(script)
             OS.clear_actual_path
           end
+        end
+
+        wd.add_action_callback("enable_photosensor_tool") do |action_context,msg|         
+          Sketchup.active_model.select_tool SetPhotosensorTool.new
+        end
+
+        wd.add_action_callback("disable_active_tool") do |action_context,msg|
+          Utilities.disable_active_tool
         end
 
         wd.add_action_callback("use_material") do |action_context,msg|

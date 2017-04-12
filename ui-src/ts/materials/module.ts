@@ -98,7 +98,7 @@ export = class MaterialModule  {
                     $("#preview_button").on("click",function(){            
                         Utilities.sendAction('preview','msg');
                     });
-                    this.materials=[];
+                    this.materials={};
                     this.updateList("");
     }
 
@@ -111,18 +111,17 @@ export = class MaterialModule  {
             return;
         }
         let html = "<tr><td>Name</td><td>Class</td><td>Color</td><td></td></tr>"
-        for (let material in this.materials) {
-            if (this.materials.hasOwnProperty(material)) {
-                let data = this.materials[material];
-                let cl = Utilities.getMaterialType(data["class"]);
-                if (material.toLowerCase().indexOf(filter) >= 0 || cl.name.toLowerCase().indexOf(filter) >= 0) {
-                    let r = data["color"][0];
-                    let g = data["color"][1];
-                    let b = data["color"][2];
-                    let color = "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + ")";
-                    html = html + "<tr><td class='mat-name' name='" + material + "'>" + material + "</td><td class='mat-name' name='" + material + "'>" + cl.name + "</td><td name='" + material + "' class='color mat-name' style='background: " + color + "'></td><td class='icons'><span name=\"" + material + "\" class='ui-icon ui-icon-trash del-material'></span><span name=\"" + material + "\" class='ui-icon ui-icon-pencil edit-material'></span></td></tr>"
-                }
+        for (let material_name in this.materials) {  
+            let material = this.materials[material_name];   
+            let cl = Utilities.getMaterialType(material["class"]);
+            if (material.name.toLowerCase().indexOf(filter) >= 0 || cl.name.toLowerCase().indexOf(filter) >= 0) {
+                let r = material["color"][0];
+                let g = material["color"][1];
+                let b = material["color"][2];
+                let color = "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + ")";
+                html = html + "<tr><td class='mat-name' name='" + material_name + "'>" + material_name + "</td><td class='mat-name' name='" + material_name + "'>" + cl.name + "</td><td name='" + material_name + "' class='color mat-name' style='background: " + color + "'></td><td class='icons'><span name=\"" + material_name + "\" class='ui-icon ui-icon-trash del-material'></span><span name=\"" + material_name + "\" class='ui-icon ui-icon-pencil edit-material'></span></td></tr>"
             }
+        
         }
         list.html(html);
 
@@ -288,6 +287,7 @@ export = class MaterialModule  {
         this.updateList("");
         this.addMaterialDialog.dialog("close");
         Utilities.sendAction("add_material",JSON.stringify(mat));
+        return true;
     }
         
     

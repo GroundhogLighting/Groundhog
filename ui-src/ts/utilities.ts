@@ -1,11 +1,13 @@
-import { MaterialType } from './material/definitions';
-import Glass = require('./material/classes/glass');
-import Metal = require('./material/classes/metal');
-import PerforatedMetal = require('./material/classes/perforated-metal');
-import Plastic = require('./material/classes/plastic');
-import PerforatedPlastic = require('./material/classes/perforated-plastic');
-import Diffuser = require('./material/classes/diffuser');
-import Fabric = require('./material/classes/fabric');
+import Version = require('./version');
+
+import { MaterialType } from './materials/definitions';
+import Glass = require('./materials/classes/glass');
+import Metal = require('./materials/classes/metal');
+import PerforatedMetal = require('./materials/classes/perforated-metal');
+import Plastic = require('./materials/classes/plastic');
+import PerforatedPlastic = require('./materials/classes/perforated-plastic');
+import Diffuser = require('./materials/classes/diffuser');
+import Fabric = require('./materials/classes/fabric');
 
 
 import { ObjectiveType } from './objectives/definitions';
@@ -22,8 +24,19 @@ export = {
     },
 
     sendAction: function(action: string, msg: string){
-        //alert('skp:'+action+'@'+msg);
-        window.location.href = 'skp:'+action+'@'+msg;
+        
+        let v = Version.toLowerCase();
+
+        if ( v === "web_dialog" ){
+            window.location.href = 'skp:'+action+'@'+msg;
+            return;
+        }
+        if ( v === "debug" ){
+            alert( 'Action: '+ action +' | msg: ' + msg );
+            return;
+        }
+        alert("Unkown version " + Version);
+        return;    
     },
 
     replaceAll: function (string: string, search: string, replacement: string) {        

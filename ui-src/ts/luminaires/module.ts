@@ -47,20 +47,18 @@ export = class LuminairesModule {
         filter = filter.toLowerCase();
         
         let html = "<tr><td>Luminaire</td><td>Manufacturer</td><td>Lamp</td></tr>"
-        for (let luminaire in this.luminaires) {
-            if (this.luminaires.hasOwnProperty(luminaire)) {
-                let data = this.luminaires[luminaire];
-                let desc = data["luminaire"];
-                let manufacturer = data["manufacturer"];
-                let lamp = data["lamp"];
-                if (    luminaire.toLowerCase().indexOf(filter) >= 0 || 
-                        manufacturer.toLowerCase().indexOf(filter) >= 0 ||
-                        lamp.toLowerCase().indexOf(filter) >= 0 
-                    ) {                                
-                        html = html + "<tr><td class='luminaire-name' name=\"" + luminaire + "\">" + luminaire + "</td><td>" + manufacturer + "</td><td>"+lamp+"</td></tr>" 
-                        //<td class='icons'><span name=\"" + luminaire + "\" class='ui-icon ui-icon-trash del-luminaire'></span><span class='ui-icon ui-icon-pencil'></span></td>
-                }
-            }
+        for (let luminaire of this.luminaires) {
+            let desc = luminaire.luminaire;
+            let manufacturer = luminaire.manufacturer;
+            let lamp = luminaire.lamp;
+            if (   
+                    luminaire.name.toLowerCase().indexOf(filter) >= 0 || 
+                    manufacturer.toLowerCase().indexOf(filter) >= 0 ||
+                    lamp.toLowerCase().indexOf(filter) >= 0 
+                ) {                                
+                    html = html + "<tr><td class='luminaire-name' name=\"" + luminaire.name + "\">" + luminaire.name + "</td><td>" + manufacturer + "</td><td>"+lamp+"</td></tr>" 
+                    //<td class='icons'><span name=\"" + luminaire + "\" class='ui-icon ui-icon-trash del-luminaire'></span><span class='ui-icon ui-icon-pencil'></span></td>
+            }        
         }
         list.html(html);
 
