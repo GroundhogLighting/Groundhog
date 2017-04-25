@@ -36,7 +36,8 @@ module IGD
 		Sketchup::require 'IGD_Groundhog/src/Report'
 		Sketchup::require 'IGD_Groundhog/src/Objectives'
 		Sketchup::require 'IGD_Groundhog/src/Metrics'
-		Sketchup::require 'IGD_Groundhog/src/OnlineResources'
+		Sketchup::require 'IGD_Groundhog/src/OnlineResources'		
+		Sketchup::require 'IGD_Groundhog/src/Photosensors'
 
 
 		Sketchup::require 'IGD_Groundhog/src/Scripts/AnnualIlluminance'

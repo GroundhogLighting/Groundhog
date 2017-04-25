@@ -65,27 +65,7 @@ module IGD
 					return self.load_component(url)
 				end
 
-				# Loads the Illuminance Sensor component to the model
-				# @author German Molina
-				# @version 0.1			
-				# @return [Boolean] Sketchup::ComponentDefinition is success, false if not
-				def self.load_illuminance_sensor
-					sensors = Sketchup.active_model.definitions.select {|x| Labeler.illuminance_sensor?(x) }
-
-					# Load it if it is not there
-					if sensors.length < 1 then
-						sensor = self.load_local_component("illuminance_sensor")
-						return false if not sensor
-						sensor.name="GH Illuminance sensor"
-						sensor.description="This represents an illumiance sensor."
-						sensor.casts_shadows= false
-						sensor.receives_shadows= false
-						Labeler.to_illuminance_sensor(sensor);
-					end
-					UI.messagebox("Success!\n\nThe Illuminance sensor has been added to the Model Components.\n\nYou can find it in Window --> Components")
-					return true
-				end
-
+				
 
 			end
     end

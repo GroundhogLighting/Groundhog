@@ -30,6 +30,7 @@ module IGD
       # @param objective_name [Hash] The objective in Hash format
       # @author Germán Molina
       def self.add_objective_to_workplane(wp_name,objective_name)
+        puts "adding #{objective_name} to #{wp_name}"
         # Register the workplane... will replace the old one, if it exists.
         model = Sketchup.active_model
         value = model.get_attribute("Groundhog","workplanes")
