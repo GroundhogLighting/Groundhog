@@ -59,7 +59,6 @@ module.exports = (function () {
             _this.objectives[name] = objective;
             _this.update_objectives("");
             _this.add_objective_dialog.dialog("close");
-            DesignAssistant.objective.update_objective_summary();
             Utilities.sendAction("create_objective", JSON.stringify(objective));
             return { success: true };
         };
@@ -213,6 +212,9 @@ module.exports = (function () {
                 return;
             }
             filter = filter.toLowerCase();
+            var workplanes = _this.workplanes;
+            var add_objective = _this.add_objective;
+            var get_new_row_for_workplane = _this.get_new_row_for_workplane;
             for (var wp_name in _this.workplanes) {
                 if (_this.workplanes.hasOwnProperty(wp_name)) {
                     if (wp_name.toLowerCase().indexOf(filter) >= 0) {
@@ -228,23 +230,23 @@ module.exports = (function () {
                                     return;
                                 }
                                 ;
-                                var wp_name = $(_this).find("h1").text();
+                                var wp_name = $(this).find("h1").text();
                                 var table_name = Utilities.fixName(wp_name) + "_objectives";
                                 var objective = ui.draggable.attr("name");
-                                if (_this.workplanes[wp_name].indexOf(objective) >= 0) {
+                                if (workplanes[wp_name].indexOf(objective) >= 0) {
                                     alert("That workplane has already been assigned that objective!");
                                     return;
                                 }
-                                var new_row = _this.get_new_row_for_workplane(wp_name, objective);
+                                var new_row = get_new_row_for_workplane(wp_name, objective);
                                 var table = $("#" + table_name);
                                 if (table.length == 0) {
-                                    $(_this).find("div").remove();
+                                    $(this).find("div").remove();
                                     table = $("<table id='" + table_name + "'></table>");
-                                    table.appendTo($(_this));
+                                    table.appendTo($(this));
                                 }
                                 new_row.appendTo(table);
-                                _this.workplanes[wp_name].push(objective);
-                                _this.add_objective(wp_name, objective);
+                                workplanes[wp_name].push(objective);
+                                add_objective(wp_name, objective);
                             }
                         });
                         ul.append(li);

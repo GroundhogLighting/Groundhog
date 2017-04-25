@@ -153,7 +153,6 @@ export = class ObjectivesModule {
         this.objectives[name] = objective;
         this.update_objectives("");
         this.add_objective_dialog.dialog("close");
-        DesignAssistant.objective.update_objective_summary();
         
         Utilities.sendAction("create_objective",JSON.stringify(objective));
         return { success: true }
@@ -339,9 +338,10 @@ export = class ObjectivesModule {
             $("<div class='center'><h4>There are no workplanes in your model...</h4></div>").appendTo(ul);
             return;
         }
-        filter = filter.toLowerCase();
-
-
+        filter = filter.toLowerCase();        
+        let workplanes = this.workplanes;
+        let add_objective = this.add_objective;
+        let get_new_row_for_workplane = this.get_new_row_for_workplane;
         for (let wp_name in this.workplanes) {
             if (this.workplanes.hasOwnProperty(wp_name)) {
             if (wp_name.toLowerCase().indexOf(filter) >= 0) {//filter by workplane name
@@ -354,20 +354,19 @@ export = class ObjectivesModule {
                 li.droppable({
                     hoverClass: "hover",
                     accept: ":not(.ui-sortable-helper)",
-                    drop: (event: any, ui: any) => {
+                    drop: function(event: any, ui: any) {
                         if ("TD" != ui.draggable.prop("tagName")) { return };
 
                         let wp_name = $(this).find("h1").text();
-
                         let table_name = Utilities.fixName(wp_name) + "_objectives";
                         let objective = ui.draggable.attr("name");
                         //check if workplane already has the objective
-                        if (this.workplanes[wp_name].indexOf(objective) >= 0) {
+                        if (workplanes[wp_name].indexOf(objective) >= 0) {
                             alert("That workplane has already been assigned that objective!")
                             return;
                         }
                         //add the objective visually to the UI
-                        let new_row = this.get_new_row_for_workplane(wp_name, objective);
+                        let new_row = get_new_row_for_workplane(wp_name, objective);
                         let table = $("#" + table_name);
                         if (table.length == 0) { // if the table does not exist
                             $(this).find("div").remove(); //remove the "drop here" tag
@@ -378,10 +377,10 @@ export = class ObjectivesModule {
                         new_row.appendTo(table);
 
                         //register the objective in the data structure
-                        this.workplanes[wp_name].push(objective);
+                        workplanes[wp_name].push(objective);
 
                         //pass the information to SketchUp
-                        this.add_objective(wp_name,objective);
+                        add_objective(wp_name,objective);
                     }
                 });
                 ul.append(li);

@@ -372,7 +372,7 @@ module IGD
           obj = JSON.parse(msg)
           wp_name = obj["workplane"]
           objective_name = obj["objective"]
-          Objectives.add_objective_to_workplane(wp_name,objective_name)
+          Objectives.add_objective_to_workplane(wp_name,objective_name)         
         end
 
         wd.add_action_callback("create_objective") do |action_context,msg|
@@ -446,8 +446,7 @@ module IGD
               pixel_file = "./Workplanes/#{Utilities.fix_name(workplane)}.pxl"
               #then go through the objectives
               obj_array.each{|obj_name|
-                objective = objectives[obj_name]
-                warn objective
+                objective = objectives[obj_name]                
                 metric = objective["metric"]
                 file_to_read = Metrics.get_read_file(metric)
                 file_to_read = file_to_read.call(workplane,objective) if file_to_read != false

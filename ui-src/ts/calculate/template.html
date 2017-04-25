@@ -9,46 +9,50 @@
             <h3>Daylighting options</h3>
             
             <div>
-                <table>
-                    <tr>
-                        <td>Sky subdivition</td>
-                        <td>
-                            <input title="option" id='sky_bins' type='number' value='1' step='1' min='1'>
-                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Static calculation method</td>
-                        <td>
-                            <select title="option" id='static_calculation_method'>
-							<option value="RTRACE">Ray-tracing</option>
-							<option value="DC">Simple Daylight Coefficients</option>
-						</select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Dynamic calculation method</td>
-                        <td>
-                            <select title="option" id='dynamic_calculation_method'>
-							<option value="DC">Simple Daylight Coefficients</option>
-						</select>
-                        </td>
-                    </tr>
+                <fieldset>  
+                    <legend>General options</legend>
+                    <table>
+                        <tr>
+                            <td>Sky subdivition</td>
+                            <td>
+                                <input title="option" id='sky_bins' type='number' value='1' step='1' min='1'>
+                                <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Static calculation method</td>
+                            <td>
+                                <select title="option" id='static_calculation_method'>
+                                <option value="RTRACE">Ray-tracing</option>
+                                <option value="DC">Simple Daylight Coefficients</option>
+                            </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dynamic calculation method</td>
+                            <td>
+                                <select title="option" id='dynamic_calculation_method'>
+                                <option value="DC">Simple Daylight Coefficients</option>
+                            </select>
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td>Static calculation parameters</td>
-                        <td>
-                            <input title="option" type="text" id="ray_tracing_parameters">
-                        </td>
-                    </tr>                    
+                        <tr>
+                            <td>Static calculation parameters</td>
+                            <td>
+                                <input title="option" type="text" id="ray_tracing_parameters">
+                            </td>
+                        </tr>                    
 
-                    <tr>
-                        <td>Dynamic calculation parameters</td>
-                        <td>
-                            <input title="option" type="text" id="dc_parameters">
-                        </td>
-                    </tr>
-                </table>
+                        <tr>
+                            <td>Dynamic calculation parameters</td>
+                            <td>
+                                <input title="option" type="text" id="dc_parameters">
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+
                 <fieldset>  
                     <legend>Tubular Daylight Devices options</legend>
                     <table>

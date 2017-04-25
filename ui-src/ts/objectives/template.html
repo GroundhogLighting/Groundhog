@@ -32,6 +32,22 @@
     
 
     
+    <div class="display" id="objectives">
+        <div class="fixed_toolbar">
+            <button id="create_objective_button">New objective</button>
+        </div>
+        <div class="wrap">
+            <div class="resizable resizable1">
+                <div class="center"><label for="objectives_filter">Filter:</label> <input id="objectives_filter" type="text"></div>
+                <table id='objectives_list'  class='draglist'></table>
+            </div>
+            <div class="resizable resizable2">
+                <div class="center"><label for="workplane_objectives_filter">Filter:</label><input id="workplane_objectives_filter" type="text"></div>
+                <ul id="workplane_objectives" class="droplist"></ul>
+            </div>
+        </div>
+    </div>
+
     <!-- ADD OBJECTIVE DIALOG -->
     <div id="create_objective_dialog" title="Add objective">
         <div id="objective_name_field" class="center">

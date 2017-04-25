@@ -16,7 +16,6 @@
 <p class = 'selected' href='#location'>Location</p>
 <p  href='#materials'>Materials</p>
 <p  href='#luminaires'>Luminaires</p>
-<p  href='#observers'>Observers</p>
 <p  href='#photosensors'>Photosensors</p>
 <p  href='#objectives'>Objectives</p>
 <p  href='#calculate'>Calculate</p>
@@ -128,63 +127,6 @@
     </div>
 
 
-
-<div class="display" id="observers">
-        <div class="fixed_toolbar">
-            <button id="add_observer_button">Add observer</button>                    
-            <span>Search:</span>
-            <input type="text" id="filter_observers">
-        </div>
-        <table id="observer_list" class="selectable row"></table>
-        
-    </div>
-
-    <div id="add_observer_dialog" title="Add observer">
-        <fieldset>
-            <legend>General information</legend>
-            <table>
-                <tr>
-                    <td><label for="observer_name">Name:</label></td>
-                    <td><input type="text" id="observer_name"></td>
-                </tr>                
-            </table>
-        </fieldset>
-        <fieldset>
-            <legend>Position</legend>
-            <table>
-                <tr>
-                    <td><label for="observer_px">Position X (m):</label></td>
-                    <td><input type="number" id="observer_px"></td>
-                </tr>     
-                <tr>
-                    <td><label for="observer_py">Position Y (m):</label></td>
-                    <td><input type="number" id="observer_py"></td>
-                </tr>  
-                <tr>
-                    <td><label for="observer_pz">Position Z (m):</label></td>
-                    <td><input type="number" id="observer_pz"></td>
-                </tr>             
-            </table>
-        </fieldset>
-        <fieldset>
-            <legend>Normal</legend>
-            <table>
-                <tr>
-                    <td><label for="observer_nx">Normal X (m):</label></td>
-                    <td><input type="number" id="observer_nx"></td>
-                </tr>     
-                <tr>
-                    <td><label for="observer_ny">Normal Y (m):</label></td>
-                    <td><input type="number" id="observer_ny"></td>
-                </tr>  
-                <tr>
-                    <td><label for="observer_pz">Normal Z (m):</label></td>
-                    <td><input type="number" id="observer_nz"></td>
-                </tr>             
-            </table>
-        </fieldset>
-    </div>
-
     
     <div class="display" id="photosensors">
         <div class="fixed_toolbar">
@@ -241,7 +183,7 @@
             </table>
         </fieldset>
     </div>
-    <div class="display" id="objectives">
+    <!--div class="display" id="objectives">
         <div class="fixed_toolbar interior-tab-container">
             <button class="interior-tab selected" href="#daylighting-objective-tab">Daylighting</button>
             <button class="interior-tab" href="#tabs-2">Electric Lighting</button>
@@ -271,10 +213,26 @@
  
 
 
+    </div-->
+    
+
+    
+    <div class="display" id="objectives">
+        <div class="fixed_toolbar">
+            <button id="create_objective_button">New objective</button>
+        </div>
+        <div class="wrap">
+            <div class="resizable resizable1">
+                <div class="center"><label for="objectives_filter">Filter:</label> <input id="objectives_filter" type="text"></div>
+                <table id='objectives_list'  class='draglist'></table>
+            </div>
+            <div class="resizable resizable2">
+                <div class="center"><label for="workplane_objectives_filter">Filter:</label><input id="workplane_objectives_filter" type="text"></div>
+                <ul id="workplane_objectives" class="droplist"></ul>
+            </div>
         </div>
     </div>
 
-    
     <!-- ADD OBJECTIVE DIALOG -->
     <div id="create_objective_dialog" title="Add objective">
         <div id="objective_name_field" class="center">
@@ -356,46 +314,50 @@
             <h3>Daylighting options</h3>
             
             <div>
-                <table>
-                    <tr>
-                        <td>Sky subdivition</td>
-                        <td>
-                            <input title="option" id='sky_bins' type='number' value='1' step='1' min='1'>
-                            <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Static calculation method</td>
-                        <td>
-                            <select title="option" id='static_calculation_method'>
-							<option value="RTRACE">Ray-tracing</option>
-							<option value="DC">Simple Daylight Coefficients</option>
-						</select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Dynamic calculation method</td>
-                        <td>
-                            <select title="option" id='dynamic_calculation_method'>
-							<option value="DC">Simple Daylight Coefficients</option>
-						</select>
-                        </td>
-                    </tr>
+                <fieldset>  
+                    <legend>General options</legend>
+                    <table>
+                        <tr>
+                            <td>Sky subdivition</td>
+                            <td>
+                                <input title="option" id='sky_bins' type='number' value='1' step='1' min='1'>
+                                <p class="tooltip" title="The greater this input, the greater the number of sky subdivitions. A value of 1 leads to 145 sky divitions (Tregenza subdivition), 2 results in 578 and 4 in 2305.">?</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Static calculation method</td>
+                            <td>
+                                <select title="option" id='static_calculation_method'>
+                                <option value="RTRACE">Ray-tracing</option>
+                                <option value="DC">Simple Daylight Coefficients</option>
+                            </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dynamic calculation method</td>
+                            <td>
+                                <select title="option" id='dynamic_calculation_method'>
+                                <option value="DC">Simple Daylight Coefficients</option>
+                            </select>
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td>Static calculation parameters</td>
-                        <td>
-                            <input title="option" type="text" id="ray_tracing_parameters">
-                        </td>
-                    </tr>                    
+                        <tr>
+                            <td>Static calculation parameters</td>
+                            <td>
+                                <input title="option" type="text" id="ray_tracing_parameters">
+                            </td>
+                        </tr>                    
 
-                    <tr>
-                        <td>Dynamic calculation parameters</td>
-                        <td>
-                            <input title="option" type="text" id="dc_parameters">
-                        </td>
-                    </tr>
-                </table>
+                        <tr>
+                            <td>Dynamic calculation parameters</td>
+                            <td>
+                                <input title="option" type="text" id="dc_parameters">
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+
                 <fieldset>  
                     <legend>Tubular Daylight Devices options</legend>
                     <table>
