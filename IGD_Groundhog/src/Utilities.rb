@@ -191,6 +191,21 @@ module IGD
 				return "preferencesModule.set_element_value('#{id}','#{value}');"
 			end
 
+			# Dis-select any tool currently being used. useful
+			# for ending some actions (i.e. placing photosensors)
+			#
+			# @author Germán Molina			
+			def self.disable_active_tool
+				Sketchup.active_model.select_tool nil
+			end
+			
+			# Gets the element value of a certain element in the
+			# web dialog.
+			# 
+			# @author Germán Molina
+			# @param wd [Sketchup::WebDialog or Sketchup::HTMLDialog] The dialog 
+			# @param id [String] The name of the item
+			# @return [String] The value
 			def self.get_element_value(wd,id)
 				if wd.is_a? UI::WebDialog then
 					return wd.get_element_value(id).strip

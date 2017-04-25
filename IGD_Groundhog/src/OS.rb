@@ -5,13 +5,16 @@ module IGD
 		module OS
 
 			# Identifies the OS. Returns "MAC", "WIN" or "OTHER" when used.
-			# From {http://www.sketchup.com/intl/en/developer/docs/faq SketchUp FAQ}
-			# Added by German Molina
+			#
+			# @author German Molina
 			# @return [String] Operating System. "WIN","MAC" or "OTHER"
 			def self.getsystem
 
-				mac = ( Object::RUBY_PLATFORM =~ /darwin/i ? true : false )
-				win = ( (Object::RUBY_PLATFORM =~ /mswin/i || Object::RUBY_PLATFORM =~ /mingw/i) ? true : false )
+				#mac = ( Object::RUBY_PLATFORM =~ /darwin/i ? true : false )
+				#win = ( (Object::RUBY_PLATFORM =~ /mswin/i || Object::RUBY_PLATFORM =~ /mingw/i) ? true : false )
+
+				win = Sketchup.platform == :platform_win
+  				mac = Sketchup.platform == :platform_osx
 
 				os=""
 				if mac # You are running on a Mac computer.

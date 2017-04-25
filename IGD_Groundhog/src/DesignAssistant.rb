@@ -156,8 +156,27 @@ module IGD
           script += "$('#luminaire_scale_max').text('--');"
           script += "$('#compliance_summary_scale_max').text('#{max.round}');"
         end
-        script += "reportModule.highlight_objective('#{objective}');"
+        script += "DesignAssistant.report.highlight_objective('#{objective}');"
         return script
+      end
+
+      # Collects the photosensors 
+      #
+      # @author Germán Molina
+      # @return [Hash] The photosensors object
+      def self.get_photosensors
+        ret = Hash.new
+
+        sensors = Sketchup.active_model.definitions.select {|x| Labeler.illuminance_sensor?(x) }
+        if sensors.length == 0 then
+          return ret
+        end
+        sensors = sensors[0].instances
+        sensors.each{|sensor|
+          name = Labeler.get_name(sensor)
+          ret[name] = Photosensor.get_position(sensor)
+        }
+        return ret
       end
 
       # Updates the Design Assistant to the actual state of the model... this is called
@@ -165,6 +184,7 @@ module IGD
       # workplane.
       # @author German Molina
       def self.update
+
         wd = IGD::Groundhog.design_assistant
         return if not wd.visible?
 
@@ -172,36 +192,42 @@ module IGD
         workplanes = hash["workplanes"].to_json
         objectives = hash["objectives"].to_json
         materials = self.get_radiance_materials_hash.to_json
+
+        photosensors = self.get_photosensors.to_json
+
         script = ""
-        script += "materials = JSON.parse('#{materials}');"
-        script += "materialModule.update_list('');"
-        script += "workplanes = JSON.parse('#{workplanes}');"
-        script += "objectives = JSON.parse('#{objectives}');"
-        script += "objectiveModule.update_workplanes('');"
-        script += "objectiveModule.update_objectives('');"
+        
+        script += "DesignAssistant.materials.materials = #{materials};"    
+        script += "DesignAssistant.materials.updateList('');"
+
+        script += "DesignAssistant.objectives.workplanes = #{workplanes};"        
+        script += "DesignAssistant.objectives.objectives = #{objectives};"
+        script += "DesignAssistant.objectives.update_workplanes('');"
+        script += "DesignAssistant.objectives.update_objectives('');"
+
+        script += "DesignAssistant.photosensors.photosensors = #{photosensors};"
+        script += "DesignAssistant.photosensors.updateList('');"
 
         weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
+        
         if weather != nil then
-          weather = JSON.parse(weather)
-          script += "document.getElementById('weather_city').innerHTML='#{weather["city"]}';"
-          script += "document.getElementById('weather_state').innerHTML='#{weather["state"]}';"
-          script += "document.getElementById('weather_country').innerHTML='#{weather["country"]}';"
-          script += "document.getElementById('weather_latitude').innerHTML='#{weather["latitude"]}';"
-          script += "document.getElementById('weather_longitude').innerHTML='#{weather["longitude"]}';"
-          script += "document.getElementById('weather_timezone').innerHTML='GMT #{weather["timezone"]}';"
+            weather = JSON.parse(weather)
+            weather.delete "data"
+            weather = weather.to_json 
+            script += "DesignAssistant.location.setWeatherData(#{weather});"           
         end
 
         report = self.get_actual_report
-        script += "results = JSON.parse('#{report.to_json}');"
-        script += "reportModule.update_compliance_summary();"
-        script += "reportModule.update_objective_summary();"
-        script += "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"
-        script += "reportModule.update_elux_compliance_summary();"
+        script += "DesignAssistant.report.results = #{report.to_json};"
+        script += "DesignAssistant.report.update_compliance_summary();"
+        script += "DesignAssistant.report.update_objective_summary();"
+        script += "DesignAssistant.report.elux_results = #{self.get_elux_report.to_json};"
+        script += "DesignAssistant.report.update_elux_compliance_summary();"
 
         #update luminaire list
         luminaires = self.get_luminaires_hash.to_json
-        script += "luminaires = JSON.parse('#{luminaires}');"
-        script += "luminaireModule.update_list('');"
+        script += "DesignAssistant.luminaires.luminaires = #{luminaires};"
+        script += "DesignAssistant.luminaires.updateList('');"
 
         #remark the first objective
         objective = hash["objectives"].keys.shift
@@ -216,9 +242,10 @@ module IGD
       # @author German Molina
       # @return [SketchUp::UI::WebDialog] the Design Assistant web dialog
       def self.get
-        wd = Utilities.build_web_dialog("Design Assistant",false,"DAsistant",500,500,true,"#{OS.main_groundhog_path}/src/html/design_assistant.html")
+        version = "web_dialog"
+        wd = Utilities.build_web_dialog("Design Assistant",false,"DAsistant",500,500,true,"#{OS.main_groundhog_path}/src/html/design_assistant_#{version}.html")
 
-        wd.add_action_callback("on_load") do |action_context,msg|
+        wd.add_action_callback("on_load") do |action_context,msg|          
           self.update
         end
 
@@ -228,18 +255,23 @@ module IGD
           weather = Sketchup.active_model.get_attribute("Groundhog","Weather")
           if weather != nil then
             weather = JSON.parse(weather)
-            script = "document.getElementById('weather_city').innerHTML='#{weather["city"]}';"
-            script += "document.getElementById('weather_state').innerHTML='#{weather["state"]}';"
-            script += "document.getElementById('weather_country').innerHTML='#{weather["country"]}';"
-            script += "document.getElementById('weather_latitude').innerHTML='#{weather["latitude"]}';"
-            script += "document.getElementById('weather_longitude').innerHTML='#{weather["longitude"]}';"
-            script += "document.getElementById('weather_timezone').innerHTML='GMT #{weather["timezone"]}';"
+            weather.delete "data"
+            weather = weather.to_json 
+            script = "DesignAssistant.location.setWeatherData(#{weather})"
             wd.execute_script(script)
           end
         end
 
         wd.add_action_callback("follow_link") do |action_context,msg|
           UI.openURL(msg)
+        end
+
+        wd.add_action_callback("add_photosensor") do |action_context,msg|
+          Photosensor.add(msg)
+        end
+
+        wd.add_action_callback("remove_photosensor") do |action_context,msg|
+          Photosensor.delete(msg)
         end
 
         wd.add_action_callback("preview") do |action_context,msg|
@@ -279,6 +311,14 @@ module IGD
             OS.execute_script(script)
             OS.clear_actual_path
           end
+        end
+
+        wd.add_action_callback("enable_photosensor_tool") do |action_context,msg|         
+          Sketchup.active_model.select_tool SetPhotosensorTool.new
+        end
+
+        wd.add_action_callback("disable_active_tool") do |action_context,msg|
+          Utilities.disable_active_tool
         end
 
         wd.add_action_callback("use_material") do |action_context,msg|
@@ -332,7 +372,7 @@ module IGD
           obj = JSON.parse(msg)
           wp_name = obj["workplane"]
           objective_name = obj["objective"]
-          Objectives.add_objective_to_workplane(wp_name,objective_name)
+          Objectives.add_objective_to_workplane(wp_name,objective_name)         
         end
 
         wd.add_action_callback("create_objective") do |action_context,msg|
@@ -349,10 +389,10 @@ module IGD
           workplanes = hash["workplanes"].to_json
           objectives = hash["objectives"].to_json
           script = ""
-          script += "workplanes = JSON.parse('#{workplanes}');"
-          script += "objectives = JSON.parse('#{objectives}');"
-          script += "objectiveModule.update_workplanes('');"
-          script += "objectiveModule.update_objectives('');"
+          script += "ObjectivesModule.workplanes = JSON.parse('#{workplanes}');"
+          script += "ObjectivesModule.objectives = JSON.parse('#{objectives}');"
+          script += "ObjectivesModule.update_workplanes('');"
+          script += "ObjectivesModule.update_objectives('');"
           wd.execute_script(script)
         end
 
@@ -406,8 +446,7 @@ module IGD
               pixel_file = "./Workplanes/#{Utilities.fix_name(workplane)}.pxl"
               #then go through the objectives
               obj_array.each{|obj_name|
-                objective = objectives[obj_name]
-                warn objective
+                objective = objectives[obj_name]                
                 metric = objective["metric"]
                 file_to_read = Metrics.get_read_file(metric)
                 file_to_read = file_to_read.call(workplane,objective) if file_to_read != false
@@ -474,9 +513,9 @@ module IGD
 
             script = ""
             script += "results = JSON.parse('#{report.to_json}');"
-            script += "reportModule.update_compliance_summary();"
+            script += "DesignAssistant.report.update_compliance_summary();"
             script += "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"
-            script += "reportModule.update_elux_compliance_summary();"
+            script += "DesignAssistant.report.update_elux_compliance_summary();"
 
             #remark first objective
             script += self.select_objective("ELUX") if Config.calc_elux

@@ -1,0 +1,345 @@
+
+@import url("opensans.css");
+body {margin:0;padding:10px; width: 100%; box-sizing: border-box; font-size: 80%; font-family: 'Open Sans', Sans-Serif; 	text-align: justify; background-color: #f1f0ee;}
+
+body, html {
+    background-color: #E6E6E6;
+    box-sizing: border-box;
+    padding: 0;
+    margin:0;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+#sidenav p{
+    display:block;
+    background: #DEDBDE;
+    border-radius: 0;
+    margin:0;
+    font-size: 12pt;
+}
+
+
+#sidenav p:hover, #sidenav p.selected{
+    color: black;
+    background: #E6E6E6;
+}
+
+#sidenav p.selected{
+    border-right: 0;
+}
+
+#sidenav{
+    margin:0;
+    padding:0;
+    position:absolute;
+    left:0;
+    background: rgb(190,190,190);
+    width:auto;
+    min-height: 100vh;
+}
+
+div.display{
+
+    position:absolute;
+    background: transparent;
+    right:0;
+    width:auto;
+    height: 100vh;
+    overflow: scroll;
+    padding: 3.5em 2.5em 2em 2.5em;
+}
+
+p.tooltip{
+    display:inline;
+    font-weight: bold;
+}
+
+p.link {
+    cursor:pointer;
+}
+
+legend{
+    font-weight: bold;
+}
+
+input, select{
+    margin: 0 1em 0 .5em;
+}
+
+input[type="number"]{
+    width: 5em;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table.selectable, table.selectable tr:last-child{
+    border: 1px solid #CECECE;
+}
+
+table.selectable{
+    margin: 10px auto;
+     text-align:center;
+     background: white;
+}
+
+table.selectable tr:first-child{
+    background-color: #E9E9E9;
+    font-weight: bold;
+    color: #333333;
+}
+
+table.column tr:first-child{
+    cursor:pointer;
+}
+
+
+table.selectable td{
+    padding: 3px 7px 3px 7px;
+}
+
+table.selectable tr{
+    border-bottom: 1px solid #E4E4E4;
+}
+
+table.row tr {
+    cursor: pointer;
+}
+
+table.row tr:hover{
+    background-color: #E4E4E4
+}
+
+table td.selected{
+    background: #007FFF;
+    color: white;
+}
+
+
+table.bold_header tr:first-child{
+    font-weight:bold;
+}
+
+table.bold_first_row td:first-child{
+    font-weight:bold;
+}
+
+table.with_border, table.with_border  * {
+    border: 1px solid black;
+    padding: 0.3em;
+    text-align:center;
+    margin: 0 auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.center{
+    text-align: center;
+    height: auto;
+    margin:1em;
+}
+
+fieldset{
+    margin-top: 0.5em;
+}
+
+a, a:visited{
+    text-decoration: none;
+    color: #DC2829;
+    font-weight: bold;
+}
+
+#material_list td.icons {
+    margin: 2px;
+    position: relative;
+    padding: 4px 0;
+    float: left;
+    border:none;
+}
+span.ui-icon {
+    cursor: pointer;
+    float: left;
+    margin: 0 4px;
+    border:none;
+    padding:0;
+}
+
+td.success{
+    background: #F1FEEA;
+    color: #373737;
+}
+
+td.not-success{
+    background: #FFCFCF;
+    color: #A63E7A;
+}
+
+input.color {
+    width: 4em
+}
+
+div.scale {
+    height: 2.5em;
+}
+
+div.scale *{
+    display: inline-block;
+}
+div.scale img{
+    height: 100%;
+    width: 50%;
+}
+
+div.scale p{
+    height: 100%;
+    font-size: 1.1em;
+    padding: 0 3px 0 3px;
+    margin:0.4em 0 0 0;
+    vertical-align: top;
+}
+
+div.fixed_toolbar {
+    position: fixed;
+    color: white;
+    padding: 5px 15px 5px 15px;
+    width:100%;
+    background: #007FFF;
+    margin:0px;
+    min-height: 2em;
+    z-index: 100;
+    -webkit-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    /*-moz-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);*/
+    box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+}
+
+div.fixed_toolbar button{
+    padding:0;
+    background: transparent;
+    color: white;
+    font-weight: normal;
+    border: 0px;
+    border-radius:0px;
+    border-right: 1px solid white;
+
+}
+
+input[type="text"]{
+    border: 1px solid black;
+}
+
+
+div.fixed_toolbar input[type="text"]{
+    border:none;
+}
+
+ul.droplist{
+    padding:0 0 0 5px;
+}
+
+ul.droplist li{
+    border: 1px solid gray;
+    list-style-type: none;
+    text-align: center;
+    background: white;
+    margin: 0.8em;
+
+}
+
+ul.droplist li.hover{
+    -webkit-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    /*-moz-box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);*/
+    box-shadow: 0px 2px 8px -3px rgba(0,0,0,0.8);
+    background:  #DEDBDE;
+}
+
+
+ul.droplist li h1{
+    font-size: 1em;
+    background: #DEDBDE;
+    margin:0;
+    padding: 0.3em;
+}
+
+ul.droplist li div{
+    padding: 0.2em;
+    margin: 0.6em;
+    border: 2px dashed gray;
+}
+
+ul.droplist li table{
+    width: 100%;
+    margin:auto;
+}
+
+
+ul.droplist li table tr td{
+    padding: 0.4em 0.1em 0.4em 0.1em;
+    border-bottom: 1px solid #CECECE;
+}
+
+
+ul.droplist li table tr td span{
+    display: block;
+    float: right;
+}
+
+
+
+table.draglist {
+  width: 80%;
+  margin:auto;
+}
+
+table.draglist tr{
+    padding: 0.5em;
+    border: 1px solid gray;
+    background: #f0f0f0;
+    width: 100%;
+    cursor:pointer;
+}
+
+table.draglist tr td{
+    padding: 0.8em 0 0.8em 0.8em;
+    color: #444444;
+    font-weight: bold;
+}
+
+table.draglist tr td:last-child span{
+    float:right;
+}
+
+table.draglist tr:hover{
+    background:  #DEDBDE;
+}
+
+.wrap {   
+    width: 100%;
+    /*
+    height:90%;
+    */
+    background: white;
+    border: 1px solid #CECECE;
+    overflow-y: scroll;
+}
+
+.resizable {
+    width: 49%;
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+div.resizable2{
+    border-left: 3px solid #CECECE;
+}
+
+.ui-resizable-e {
+    cursor: e-resize;
+    width: 6px;
+    right: -5px;
+    top: 0;
+    bottom: 0;
+    background-color: gray;
+}
