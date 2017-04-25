@@ -528,7 +528,7 @@ module IGD
 						# I have to add the face, get the mesh, and then delete it
 						face = Sketchup.active_model.entities.add_face(face)
 						mesh = face.mesh 4
-						Sketchup.active_model.entities.erase_entities(face)
+						#Sketchup.active_model.entities.erase_entities(face)
 
 						# Go on as usual.
 						points = mesh.points
@@ -638,6 +638,7 @@ module IGD
 						next if h.instances.count==0
 						if h.is_a? Sketchup::ComponentDefinition then
 							next if Labeler.solved_workplane?(h)
+							next if Labeler.illuminance_sensor?(h)
 							hName=Utilities.fix_name(h.name)
 							instances=h.instances
 							lightfile = "./Components/Lights/#{hName}.lightsource"
@@ -702,21 +703,30 @@ module IGD
 				sensors = sensors[0].instances
 				return true if sensors.length < 1 #do not do anything, but success
 
-				path="./Illuminance_Sensors"
+				path="./Sensors"
 				OS.mkdir(path)
 
-				File.open("#{path}/sensors.pts",'w+'){ |f| #The file is opened
-					sensors.each do |sensor|
-						vdir = sensor.transformation.zaxis
-						vx = vdir[0]
-						vy = vdir[1]
-						vz = vdir[2]
-						pos = sensor.transformation.origin
-						px = pos[0].to_m
-						py = pos[1].to_m
-						pz = pos[2].to_m
-						f.puts("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}")
-					end
+				File.open("#{path}/sensors.pts",'w'){ |f| #The file is opened
+					File.open("#{path}/sensor_dictionary.txt",'w'){|dic|
+						sensors.each_with_index do |sensor,index|
+							vdir = sensor.transformation.zaxis
+							vx = vdir[0]
+							vy = vdir[1]
+							vz = vdir[2]
+							pos = sensor.transformation.origin
+							px = pos[0].to_m
+							py = pos[1].to_m
+							pz = pos[2].to_m
+							f.puts("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}")
+							if Labeler.has_gh_name(sensor) then	
+								name = Utilities.fix_name(Labeler.get_name(sensor))						
+								File.open("#{path}/#{name}.pt",'w'){|short_file|
+									short_file.puts("#{px}   #{py}   #{pz}   #{vx}   #{vy}   #{vz}")
+								}			
+								dic.puts "#{index},#{name}"				
+							end													
+						end
+					}					
 				}
 				return true
 			end

@@ -107,6 +107,7 @@ module IGD
 					end
 					rad = value["rad"]
 					if value["support_files"] then
+						OS.mkdir("Materials")
 						OS.mkdir("Materials/Cal")
 						value["support_files"].each {|s|
 							filename = s["name"]
