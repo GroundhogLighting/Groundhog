@@ -104,7 +104,7 @@ def compile_ui(version)
 						<body>"
 		
 		selected = "location"
-		sections = ["location","materials","luminaires","observers","photosensors","objectives","calculate","report"]
+		sections = ["location","materials","luminaires","photosensors","objectives","calculate","report"] #"observers",
 		
 		# Create the tabs
 		file.puts "<div id='sidenav'>"
