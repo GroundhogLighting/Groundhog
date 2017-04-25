@@ -95,32 +95,41 @@ module.exports = {
 var Utilities = require("../Utilities");
 module.exports = (function () {
     function CalculateModule() {
-        $("#set_low_parameters").on("click", function () {
+        $("#daylight_set_low_parameters").on("click", function () {
             $("#ray_tracing_parameters").val("-ab 4 -ad 1000 -lw 1e-3");
             $("#elux_ray_tracing_parameters").val("-ab 4 -ad 1000 -lw 1e-3");
             $("#dc_parameters").val("-ab 4 -ad 1000 -lw 1e-3");
         });
-        $("#set_med_parameters").on("click", function () {
+        $("#daylight_set_med_parameters").on("click", function () {
             $("#ray_tracing_parameters").val("-ab 7 -ad 3000 -lw 1e-4");
             $("#elux_ray_tracing_parameters").val("-ab 7 -ad 3000 -lw 1e-4");
             $("#dc_parameters").val("-ab 7 -ad 3000 -lw 1e-4");
         });
-        $("#set_high_parameters").on("click", function () {
+        $("#daylight_set_high_parameters").on("click", function () {
             $("#ray_tracing_parameters").val("-ab 9 -ad 9999 -lw 1e-5");
             $("#elux_ray_tracing_parameters").val("-ab 9 -ad 9999 -lw 1e-5");
             $("#dc_parameters").val("-ab 9 -ad 9999 -lw 1e-5");
         });
-        $("#set_low_tdd").on("click", function () {
+        $("#electric_set_low_parameters").on("click", function () {
+            $("#elux_ray_tracing_parameters").val("-ab 4 -ad 1000 -lw 1e-3");
+        });
+        $("#electric_set_med_parameters").on("click", function () {
+            $("#elux_ray_tracing_parameters").val("-ab 7 -ad 3000 -lw 1e-4");
+        });
+        $("#electric_set_high_parameters").on("click", function () {
+            $("#elux_ray_tracing_parameters").val("-ab 9 -ad 9999 -lw 1e-5");
+        });
+        $("#tdd_set_low_parameters").on("click", function () {
             $("#tdd_daylight_parameters").val("-ab 3 -ad 512 -lw 1e-3");
             $("#tdd_pipe_parameters").val("-ab 4 -ad 128 -lw 1e-2");
             $("#tdd_view_parameters").val("-ab 3 -ad 512 -lw 1e-3");
         });
-        $("#set_med_tdd").on("click", function () {
+        $("#tdd_set_med_parameters").on("click", function () {
             $("#tdd_daylight_parameters").val("-ab 3 -ad 512 -lw 1e-3");
             $("#tdd_pipe_parameters").val("-ab 4 -ad 128 -lw 1e-2");
             $("#tdd_view_parameters").val("-ab 3 -ad 512 -lw 1e-3");
         });
-        $("#set_high_tdd").on("click", function () {
+        $("#tdd_set_high_parameters").on("click", function () {
             $("#tdd_daylight_parameters").val("-ab 3 -ad 1000 -lw 1e-3");
             $("#tdd_pipe_parameters").val("-ab 4 -ad 128 -lw 1e-2");
             $("#tdd_view_parameters").val("-ab 6 -ad 5512 -lw 1e-5");
@@ -1438,6 +1447,7 @@ module.exports = (function () {
             var editSensor = _this.editSensor;
             $("span.edit-sensor").on("click", function () {
                 var name = $(this).attr("name");
+                Utilities.sendAction("enable_photosensor_tool", "");
                 editSensor(name);
             });
             var deleteSensor = _this.deleteSensor;
@@ -1523,6 +1533,7 @@ module.exports = (function () {
             _this.photosensors[name] = ps;
             if (close) {
                 _this.addPhotosensorDialog.dialog("close");
+                Utilities.sendAction("disable_active_tool", "");
             }
             Utilities.sendAction("add_photosensor", JSON.stringify(ps));
             _this.updateList("");

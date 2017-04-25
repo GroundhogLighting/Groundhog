@@ -15,12 +15,29 @@
         $("div.fixed_toolbar").offset({ top: 0, left: 0 });
     }
 
+
+
+    /* INTERIOR TABS */
+    
+    function selectInteriorTab(dest) {
+        $("div.interior-display").hide();        
+        $("div" + dest).show();
+    }
+    var interiorTabs = $("button.interior-tab")
+    //interiorTabs.button();
+    interiorTabs.on("click", function () {
+        $("button.interior-tab").removeClass("selected");
+        $(this).toggleClass("selected");
+        selectInteriorTab($(this).attr('href'));
+    });
+
     /* HIDE ALL BUT THE SELECTED DISPLAY */
     function selectDisplay(dest) {
-        $("div.display").hide();
+        $("div.display").hide();        
         $("div" + dest).show();
     }
 
+    
     $('input[type=checkbox]').on("change", function () {
         if (this.checked) {
             this.value = "true";

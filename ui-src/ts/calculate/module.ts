@@ -6,36 +6,50 @@ export = class CalculateModule {
 
     constructor(){        
         //Daylight simulation
-        $("#set_low_parameters").on("click", function () { 
+        $("#daylight_set_low_parameters").on("click", function () { 
             $("#ray_tracing_parameters").val("-ab 4 -ad 1000 -lw 1e-3")
             $("#elux_ray_tracing_parameters").val("-ab 4 -ad 1000 -lw 1e-3")
             $("#dc_parameters").val("-ab 4 -ad 1000 -lw 1e-3")
         });
 
-        $("#set_med_parameters").on("click", function () { 
+        $("#daylight_set_med_parameters").on("click", function () { 
             $("#ray_tracing_parameters").val("-ab 7 -ad 3000 -lw 1e-4")
             $("#elux_ray_tracing_parameters").val("-ab 7 -ad 3000 -lw 1e-4")
             $("#dc_parameters").val("-ab 7 -ad 3000 -lw 1e-4")
         });
 
-        $("#set_high_parameters").on("click", function () { 
+        $("#daylight_set_high_parameters").on("click", function () { 
             $("#ray_tracing_parameters").val("-ab 9 -ad 9999 -lw 1e-5")
             $("#elux_ray_tracing_parameters").val("-ab 9 -ad 9999 -lw 1e-5")
             $("#dc_parameters").val("-ab 9 -ad 9999 -lw 1e-5")
         });
 
+        //Electric light simulation
+        $("#electric_set_low_parameters").on("click", function () {             
+            $("#elux_ray_tracing_parameters").val("-ab 4 -ad 1000 -lw 1e-3");
+        });
 
-        $("#set_low_tdd").on("click", function () {
+        $("#electric_set_med_parameters").on("click", function () { 
+            $("#elux_ray_tracing_parameters").val("-ab 7 -ad 3000 -lw 1e-4");
+        });
+
+        $("#electric_set_high_parameters").on("click", function () { 
+            $("#elux_ray_tracing_parameters").val("-ab 9 -ad 9999 -lw 1e-5");
+        });
+
+
+        // TDDs
+        $("#tdd_set_low_parameters").on("click", function () {
             $("#tdd_daylight_parameters").val("-ab 3 -ad 512 -lw 1e-3");
             $("#tdd_pipe_parameters").val("-ab 4 -ad 128 -lw 1e-2");
             $("#tdd_view_parameters").val("-ab 3 -ad 512 -lw 1e-3");
         });
-        $("#set_med_tdd").on("click", function () {
+        $("#tdd_set_med_parameters").on("click", function () {
             $("#tdd_daylight_parameters").val("-ab 3 -ad 512 -lw 1e-3");
             $("#tdd_pipe_parameters").val("-ab 4 -ad 128 -lw 1e-2");
             $("#tdd_view_parameters").val("-ab 3 -ad 512 -lw 1e-3");
         });
-        $("#set_high_tdd").on("click", function () {
+        $("#tdd_set_high_parameters").on("click", function () {
             $("#tdd_daylight_parameters").val("-ab 3 -ad 1000 -lw 1e-3");
             $("#tdd_pipe_parameters").val("-ab 4 -ad 128 -lw 1e-2");
             $("#tdd_view_parameters").val("-ab 6 -ad 5512 -lw 1e-5");

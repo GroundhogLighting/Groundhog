@@ -5,8 +5,8 @@
         </div>        
 
 
-        <div id="calculate" class="accordion">           
-            <h3>Simulation options</h3>
+        <div class="accordion">           
+            <h3>Daylighting options</h3>
             
             <div>
                 <table>
@@ -35,65 +35,67 @@
                         </td>
                     </tr>
 
-                </table>
-                <table>
-
                     <tr>
-                        <td>Daylighting ray-tracing parameters</td>
+                        <td>Static calculation parameters</td>
                         <td>
                             <input title="option" type="text" id="ray_tracing_parameters">
                         </td>
+                    </tr>                    
+
+                    <tr>
+                        <td>Dynamic calculation parameters</td>
+                        <td>
+                            <input title="option" type="text" id="dc_parameters">
+                        </td>
                     </tr>
+                </table>
+                <fieldset>  
+                    <legend>Tubular Daylight Devices options</legend>
+                    <table>
+                        <tr>
+                            <td>Daylight matrix parameters</td>
+                            <td><input title="option" type="text" id="tdd_daylight_parameters"></td>
+                        </tr>
+                        <tr>
+                            <td>Pipe interior parameters</td>
+                            <td><input title="option" type="text" id="tdd_pipe_parameters"></td>
+                        </tr>
+                        <tr>
+                            <td>View matrix parameters</td>
+                            <td><input title="option" type="text" id="tdd_view_parameters"></td>
+                        </tr>
+                        <tr>
+                            <td>Assume one Daylight Matrix</td>
+                            <td><input title="option" type="checkbox" id="tdd_singledaymtx">
+                                <p class="tooltip" title="Calculate a single daylight matrix and use it for all the TDDs. This works well if all the TDDs basically see the same sky and obstructions.">?</p>
+                            </td>
+                        </tr>
+                    </table> 
+                </fieldset>
+                <div class="center">
+                    <button id="daylight_set_low_parameters">Set to low</button>
+                    <button id="daylight_set_med_parameters">Set to medium</button>
+                    <button id="daylight_set_high_parameters">Set to high</button>
+                </div>
+            </div>
+
+            <h3>Electric lighting options</h3>
+            <div>
+                <table>
                     <tr>
                         <td>Luminaire ray-tracing parameters</td>
                         <td>
                             <input title="option" type="text" id="elux_ray_tracing_parameters">
                         </td>
                     </tr>
-
-                    <tr>
-                        <td>Daylight coefficients parameters</td>
-                        <td>
-                            <input title="option" type="text" id="dc_parameters">
-                        </td>
-                    </tr>
-
-                </table>
+                </table>   
                 <div class="center">
-                    <button id="set_low_parameters">Set to low</button>
-                    <button id="set_med_parameters">Set to medium</button>
-                    <button id="set_high_parameters">Set to high</button>
-                </div>
+                    <button id="electric_set_low_parameters">Set to low</button>
+                    <button id="electric_set_med_parameters">Set to medium</button>
+                    <button id="electric_set_high_parameters">Set to high</button>
+                </div>             
             </div>
 
-
-            <h3>Tubular Daylight Devices options</h3>
-            <div>
-                <table>
-                <tr>
-                        <td>Daylight matrix parameters</td>
-                        <td><input title="option" type="text" id="tdd_daylight_parameters"></td>
-                    </tr>
-                    <tr>
-                        <td>Pipe interior parameters</td>
-                        <td><input title="option" type="text" id="tdd_pipe_parameters"></td>
-                    </tr>
-                    <tr>
-                        <td>View matrix parameters</td>
-                        <td><input title="option" type="text" id="tdd_view_parameters"></td>
-                    </tr>
-                    <tr>
-                        <td>Assume one Daylight Matrix</td>
-                        <td><input title="option" type="checkbox" id="tdd_singledaymtx">
-                            <p class="tooltip" title="Calculate a single daylight matrix and use it for all the TDDs. This works well if all the TDDs basically see the same sky and obstructions.">?</p>
-                        </td>
-                    </tr>
-                </table>
-                <div class="center">
-                    <button id="set_low_tdd">Set to low</button>
-                    <button id="set_med_tdd">Set to medium</button>
-                    <button id="set_high_tdd">Set to high</button>
-                </div>
-            </div>  
+              
          </div>           
     </div>
