@@ -466,7 +466,7 @@ module IGD
 				tr.each_with_index{|t,index|
 					#Write the windows that have a group
 					groups.each{|group|
-						file_name = "#{Labeler.get_fixed_name(windows[0].parent)}_#{Utilities.fix_name(group)}_#{index}"
+						file_name = "#{Labeler.get_fixed_name(windows[0].parent)}_#{Utilities.fix_name(group)}_#{index}" if not not_in_component
 						file_name = "#{Utilities.fix_name(group)}" if not_in_component
 						group_path = "#{path}/#{file_name}.wingroup"
 						wins.puts "!xform ./Windows/#{file_name}.wingroup"
@@ -475,7 +475,7 @@ module IGD
 							win_name = "#{Labeler.get_fixed_name(win)}_#{index}"
 							win_name = "#{Labeler.get_fixed_name(win)}" if not_in_component
 							info = Exporter.get_transformed_rad_string(win,t,win_name)
-							group_file.puts Material.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
+							group_file.puts Materials.get_mat_string(info[1],"#{Labeler.get_name(win)}_mat",false)
 							group_file.puts info[0].gsub("%MAT_NAME%","#{Labeler.get_name(win)}_mat ")
 						}
 						group_file.close
