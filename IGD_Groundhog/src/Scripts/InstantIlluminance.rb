@@ -23,7 +23,7 @@ module IGD
                     script << "oconv ./black_scene.rad ./Skies/white_sky.rad > ./black_octree.oct"
                     script << "rtrace -I+ -h -af sky_visibility.amb -ab 1 -ad 30000 ./black_octree.oct < #{wp_file} > tmp1-sky_visibility.tmp"
                     script << "rcollate -oc 1 -hi -or #{nsensors} -oc 1 ./tmp1-sky_visibility.tmp > tmp2-sky_visibility.tmp"
-                    script << "rmtxop -fa -c 47.435 119.93 11.635 ./tmp2-sky_visibility.tmp > tmp3-sky_visibility.tmp"
+                    script << "rmtxop -fa -c  47.45 119.95 11.60 ./tmp2-sky_visibility.tmp > tmp3-sky_visibility.tmp"
                     script << "rcollate -oc 1 -ho  ./tmp3-sky_visibility.tmp > ./Results/#{Utilities.fix_name(@target)}-sky_visibility.txt"
 
                     next script
@@ -53,7 +53,7 @@ module IGD
                     script << "#{OS.oconv_command( {:lights_on => false, :sky => sky})} > octree-#{sky}.oct"
                     script << "rtrace -I+ -h -af #{sky}.amb #{options["ray_tracing_parameters"]} ./octree-#{sky}.oct < #{wp_file} > tmp1-#{sky}.tmp"
                     script << "rcollate -oc 1 -hi -or #{nsensors} -oc 1 ./tmp1-#{sky}.tmp > tmp2-#{sky}.tmp"
-                    script << "rmtxop -fa -c 47.435 119.93 11.635 ./tmp2-#{sky}.tmp > tmp3-#{sky}.tmp"
+                    script << "rmtxop -fa -c 47.45 119.95 11.60 ./tmp2-#{sky}.tmp > tmp3-#{sky}.tmp"
                     script << "rcollate -oc 1 -ho  ./tmp3-#{sky}.tmp > ./Results/#{Utilities.fix_name(@target["workplane"])}-#{sky}.txt"
 
                     next script
@@ -76,7 +76,7 @@ module IGD
                     sky = Utilities.fix_name(@target["sky"])
                     skyvecfile ="./Skies/#{Utilities.fix_name(@target["sky"])}.skv"
                     script << "rmtxop ./DC/#{workplane}.dc #{skyvecfile} > tmp1-#{sky}.tmp "
-                    script << "rmtxop -fa -c 47.435 119.93 11.635 ./tmp1-#{sky}.tmp > tmp2-#{sky}.tmp "
+                    script << "rmtxop -fa -c 47.45 119.95 11.60 ./tmp1-#{sky}.tmp > tmp2-#{sky}.tmp "
                     script << "rcollate -oc 1 -ho ./tmp2-#{sky}.tmp > ./Results/#{workplane}-#{sky}.txt"
                     next script
                 }
