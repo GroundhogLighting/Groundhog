@@ -512,9 +512,9 @@ module IGD
 
 
             script = ""
-            script += "results = JSON.parse('#{report.to_json}');"
+            script += "DesignAssistant.report.results = JSON.parse('#{report.to_json}');"
             script += "DesignAssistant.report.update_compliance_summary();"
-            script += "elux_results = JSON.parse('#{self.get_elux_report.to_json}');"
+            script += "DesignAssistant.report.elux_results = JSON.parse('#{self.get_elux_report.to_json}');"
             script += "DesignAssistant.report.update_elux_compliance_summary();"
 
             #remark first objective
