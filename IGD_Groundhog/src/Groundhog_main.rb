@@ -366,7 +366,7 @@ module IGD
 
 
 		### EXPORT
-		groundhog_menu.add_item("Export to Radiance") {
+		groundhog_menu.add_item("Export Radiance model") {
 
 			path=Exporter.getpath #it returns false if not successful
 			path="" if not path
@@ -394,7 +394,7 @@ module IGD
 			example = file.split("/").pop.gsub(".skp","").tr("_"," ")
 			gh_examples_menu.add_item(example) {
 				path = file
-				UI.messagebox("Unable to open '#{example}' Example File.") if not Sketchup.open_file path
+				Sketchup.open_file path
 			}
 		}
 

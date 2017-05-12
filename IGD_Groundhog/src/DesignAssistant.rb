@@ -234,7 +234,7 @@ module IGD
         script += self.select_objective(objective)
 
         #execute
-        wd.execute_script(script)
+        IGD::Groundhog.design_assistant.execute_script(script)
       end
 
       # Returns the Design Assistant.
@@ -258,7 +258,7 @@ module IGD
             weather.delete "data"
             weather = weather.to_json 
             script = "DesignAssistant.location.setWeatherData(#{weather})"
-            wd.execute_script(script)
+            IGD::Groundhog.design_assistant.execute_script(script)
           end
         end
 
@@ -383,17 +383,16 @@ module IGD
         wd.add_action_callback("delete_objective") do |action_context,msg|
           name = msg
           Objectives.delete_objective(name)
-
           #update design assistant.
           hash = self.get_workplanes_hash
           workplanes = hash["workplanes"].to_json
           objectives = hash["objectives"].to_json
           script = ""
-          script += "ObjectivesModule.workplanes = JSON.parse('#{workplanes}');"
-          script += "ObjectivesModule.objectives = JSON.parse('#{objectives}');"
-          script += "ObjectivesModule.update_workplanes('');"
-          script += "ObjectivesModule.update_objectives('');"
-          wd.execute_script(script)
+          script += "DesignAssistant.objectives.workplanes = JSON.parse('#{workplanes}');"
+          script += "DesignAssistant.objectives.objectives = JSON.parse('#{objectives}');"
+          script += "DesignAssistant.objectives.update_workplanes('');"
+          script += "DesignAssistant.objectives.update_objectives('');"
+          IGD::Groundhog.design_assistant.execute_script(script)
         end
 
 
@@ -407,13 +406,13 @@ module IGD
           hash = self.get_workplanes_hash
           workplanes = hash["workplanes"].to_json
           script = ""
-          script += "workplanes = JSON.parse('#{workplanes}');"
-          script += "objectiveModule.update_workplanes('');"
-          wd.execute_script(script)
+          script += "DesignAssistant.objectives.workplanes = JSON.parse('#{workplanes}');"
+          script += "DesignAssistant.objectives.update_workplanes('');"
+          IGD::Groundhog.design_assistant.execute_script(script)
         end
 
         wd.add_action_callback("remark") do |action_context, objective|
-          wd.execute_script self.select_objective(objective)
+          IGD::Groundhog.design_assistant.execute_script self.select_objective(objective)
         end
 
 
@@ -469,9 +468,11 @@ module IGD
                     sensor_working_hours = data.each_with_index.select{|val, index|
                       hour = (index+0.5)%24
                       hour >= early and hour <= late
-                    }.map{|value,index| value}
-                    results << score_calculator.call(workplane,objective,sensor_working_hours)
+                    }.map{|value,index| value}                    
+                    results << score_calculator.call(workplane,objective,sensor_working_hours)                    
                   }
+
+                  
                   File.open(file_to_write,'w'){ |f| f.puts results }
                 else
                   if score_calculator != false then
@@ -521,7 +522,7 @@ module IGD
             script += self.select_objective("ELUX") if Config.calc_elux
             script += self.select_objective(objectives.keys.shift) if not Config.calc_elux
 
-            wd.execute_script(script)
+            IGD::Groundhog.design_assistant.execute_script(script)
           end
 
         end
