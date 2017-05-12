@@ -1000,10 +1000,11 @@ module.exports = (function () {
             row.append(name_column);
             var actions_column = $("<td></td>");
             var delete_button = $("<span name='" + workplane + "' title='" + objective + "' class='ui-icon ui-icon-trash del-objective'></span>");
+            var remove_objective = _this.remove_objective;
             delete_button.on("click", function () {
                 var wp = $(this).attr("name");
                 var obj = $(this).parent().siblings("td").text();
-                this.remove_objective(wp, obj);
+                remove_objective(wp, obj);
             });
             actions_column.append(delete_button);
             row.append(actions_column);

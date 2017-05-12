@@ -17,8 +17,8 @@ export = class ObjectivesModule {
     workplanes: any;
 
     constructor(){
-        this.objectives = {};
-        this.workplanes = {};
+        this.objectives = {};//{"DA(300,50%)":{"name":"DA(300,50%)","metric":"DA","dynamic":true,"good_pixel":50,"good_light":{"min":300,"max":null},"goal":50,"occupied":{"min":8,"max":18},"sim_period":{"min":1,"max":12}}};//{};
+        this.workplanes ={};// {"Basement":[],"1st Floor":["DA(300,50%)"]}; //{};
 
         let create_objective = this.create_objective;
         this.add_objective_dialog =  $("#create_objective_dialog").dialog({
@@ -284,47 +284,48 @@ export = class ObjectivesModule {
         }
     }
 
-        parseObjective = (obj: any) => {
-            this.adapt_objective_dialog(obj.metric);
-            $("#metric").val(obj["metric"]);
-            $("#objective_name").val(obj.name);
-            let metric = Utilities.getObjectiveType(obj.metric);
-            for (let item of metric.requirements) {             
-                // get values
-                if (item.value !== null && typeof item.value === 'object'){
-                    for (let sub_item_name in item.value) {
-                        if (item.value.hasOwnProperty(sub_item_name)) {
-                            $("#objective_"+item.name+"_"+sub_item_name).val(obj[item.name][sub_item_name]);
-                        }
+    parseObjective = (obj: any) => {
+        this.adapt_objective_dialog(obj.metric);
+        $("#metric").val(obj["metric"]);
+        $("#objective_name").val(obj.name);
+        let metric = Utilities.getObjectiveType(obj.metric);
+        for (let item of metric.requirements) {             
+            // get values
+            if (item.value !== null && typeof item.value === 'object'){
+                for (let sub_item_name in item.value) {
+                    if (item.value.hasOwnProperty(sub_item_name)) {
+                        $("#objective_"+item.name+"_"+sub_item_name).val(obj[item.name][sub_item_name]);
                     }
-                }else{
-                    $("#objective_"+item.name).val(obj[item.name]);
-                }                
-            }
+                }
+            }else{
+                $("#objective_"+item.name).val(obj[item.name]);
+            }                
         }
+    }
 
-        editObjective = (objective_name: string) => {
-            $("#objective_name").prop("disabled",true);
-            let obj = this.objectives[objective_name];
-            let metric = Utilities.getObjectiveType(obj["metric"]);
-            this.parseObjective(obj);        
-            this.add_objective_dialog.dialog("open");
-        };
+    editObjective = (objective_name: string) => {
+        $("#objective_name").prop("disabled",true);
+        let obj = this.objectives[objective_name];
+        let metric = Utilities.getObjectiveType(obj["metric"]);
+        this.parseObjective(obj);        
+        this.add_objective_dialog.dialog("open");
+    };
 
-        
+    
 
-
-        get_new_row_for_workplane = (workplane: string, objective: string) => {
+    
+    get_new_row_for_workplane = (workplane: string, objective: string) => {
         let row = $("<tr></tr>");
         let name_column = $("<td>" + objective + "</td>");
         row.append(name_column);
 
         let actions_column = $("<td></td>");
         let delete_button = $("<span name='" + workplane + "' title='" + objective + "' class='ui-icon ui-icon-trash del-objective'></span>")
+        let remove_objective = this.remove_objective;
         delete_button.on("click", function () {
             let wp = $(this).attr("name");
             let obj = $(this).parent().siblings("td").text();
-            this.remove_objective(wp, obj);
+            remove_objective(wp, obj);
         });
         actions_column.append(delete_button);
         row.append(actions_column);

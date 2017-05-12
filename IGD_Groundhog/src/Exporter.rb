@@ -287,6 +287,7 @@ module IGD
 
 						Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 					end
+					model.commit_operation
 				rescue Exception => ex
 					model.abort_operation
 					FileUtils.rm_rf(path, secure: true)
