@@ -3,12 +3,12 @@ require 'JSON'
 
 task :default => :all
 
-task :all => [:doc, :win32, :win64, :macosx] do
+task :all => [:win32, :win64, :macosx] do
 	FileUtils.rm_rf "./IGD_Groundhog/src/Radiance"
 end
 
 task :doc => [:clean] do
-	puts `yardoc IGD_Groundhog/src/*.rb IGD_Groundhog/src/Scripts/*.rb - Readme.md`
+	puts `yardoc ./IGD_Groundhog/src/*.rb ./IGD_Groundhog/src/Scripts/*.rb - ./Readme.md`
 	FileUtils.rm_rf("IGD_Groundhog/doc")
 	FileUtils.cp_r("doc","IGD_Groundhog/doc")
 end
@@ -20,7 +20,7 @@ task :clean do
 end
 
 def sketchup_plugin_dir(v)
-	sketchup_plugin_dir = "#{ENV["UserProfile"].gsub("\\","/")}/AppData/Roaming/SketchUp/SketchUp #{v}/SketchUp/Plugins"
+	"#{ENV["UserProfile"].gsub("\\","/")}/AppData/Roaming/SketchUp/SketchUp #{v}/SketchUp/Plugins"
 end
 
 
