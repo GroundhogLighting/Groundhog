@@ -266,16 +266,17 @@ export = class ObjectivesModule {
                     let objective_name = $(this).attr("name");
                     Utilities.sendAction("delete_objective",objective_name);
                 });
+                let editObjective = this.editObjective;
                 edit_button.on("click", function () {
-                let objective_name = $(this).attr("name");
-                this.editObjective(objective_name);
+                    let objective_name = $(this).attr("name");
+                    editObjective(objective_name);
                 });
                 new_row.append(action_column);
                 action_column.append(edit_button);
                 action_column.append(delete_button);
                 drag.draggable({
-                appendTo: "body",
-                helper: "clone"
+                    appendTo: "body",
+                    helper: "clone"
                 });
 
                 list.append(new_row)

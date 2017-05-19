@@ -939,7 +939,7 @@ module.exports = (function () {
                 return;
             }
             filter = filter.toLowerCase();
-            for (var objective in _this.objectives) {
+            var _loop_2 = function (objective) {
                 if (_this.objectives.hasOwnProperty(objective)) {
                     if (objective.toLowerCase().indexOf(filter) >= 0) {
                         var new_row = $("<tr></tr>");
@@ -952,9 +952,10 @@ module.exports = (function () {
                             var objective_name = $(this).attr("name");
                             Utilities.sendAction("delete_objective", objective_name);
                         });
+                        var editObjective_1 = _this.editObjective;
                         edit_button.on("click", function () {
                             var objective_name = $(this).attr("name");
-                            this.editObjective(objective_name);
+                            editObjective_1(objective_name);
                         });
                         new_row.append(action_column);
                         action_column.append(edit_button);
@@ -966,6 +967,9 @@ module.exports = (function () {
                         list.append(new_row);
                     }
                 }
+            };
+            for (var objective in _this.objectives) {
+                _loop_2(objective);
             }
         };
         this.parseObjective = function (obj) {
