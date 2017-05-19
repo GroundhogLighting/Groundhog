@@ -8,7 +8,9 @@ module IGD
       # @author Germán Molina
       # @return [Hash] The objectives hash
       def self.get_objectives_hash
-        JSON.parse Sketchup.active_model.get_attribute("Groundhog","objectives")
+        s = Sketchup.active_model.get_attribute("Groundhog","objectives")
+        s = "{}" if s == nil
+        JSON.parse s
       end
 
       # Receives an objective (in Hash format), and stores it in the model dictionary.

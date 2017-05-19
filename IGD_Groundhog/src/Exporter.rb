@@ -250,7 +250,7 @@ module IGD
 
 					#erase the inner loop from the list
 					inner_loops.delete(min_inner_loop)
-				end
+				end				
 				return outer_loop
 			end
 
@@ -511,7 +511,7 @@ module IGD
 			def self.write_workplanes
 				workplanes = Utilities.get_workplanes(Sketchup.active_model.entities)
 				return true if workplanes.length == 0 #success... just, no workplanes.
-				wp_names = wp_names = workplanes.map{|x| Labeler.get_name(x) }.uniq
+				wp_names = workplanes.map{|x| Labeler.get_name(x) }.uniq
 				path = "./Workplanes"
 				OS.mkdir(path)
 
@@ -523,13 +523,13 @@ module IGD
 					wp_group = workplanes.select{|x| IGD::Groundhog::Labeler.get_name(x) == workplane}
 					wp_group.each{|face|
 						#CLEAN AND CLOSE AND ALL.
-						face = self.close_face_2(face)
-						face = self.clean_face(face)
+						#aux_face = self.close_face_2(face)						
+						#aux_face = self.clean_face(aux_face)
 						# Unfortunately, until we have a triangulation algorithm,
 						# I have to add the face, get the mesh, and then delete it
-						face = Sketchup.active_model.entities.add_face(face)
+						#aux_face = Sketchup.active_model.entities.add_face(aux_face)
 						mesh = face.mesh 4
-						#Sketchup.active_model.entities.erase_entities(face)
+						#Sketchup.active_model.entities.erase_entities(aux_face)
 
 						# Go on as usual.
 						points = mesh.points
@@ -544,7 +544,7 @@ module IGD
 								points_file.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t#{normal.x}\t#{normal.y}\t#{normal.z}"
 							}
 						}
-					}
+					} # ed of wp_group.each
 
 					pixels_file.close
 					points_file.close
