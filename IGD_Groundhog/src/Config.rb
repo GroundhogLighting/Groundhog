@@ -80,7 +80,9 @@ module IGD
 			# @author German Molina
 			# @return [String] The albedo
 			def self.albedo
-				self.get_element("ALBEDO")
+				ret = self.get_element("ALBEDO")
+				ret = 0.2 if ret == nil
+				return ret
 			end
 
 			# Gets the luminaire shape threshold. This value is meant to control the shape of the

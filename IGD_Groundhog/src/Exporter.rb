@@ -534,12 +534,15 @@ module IGD
 						# Go on as usual.
 						points = mesh.points
 						polygons = mesh.polygons
+						normals = polygons.each_with_index.map{|p,i| mesh.normal_at(i+1)}
 						# Work one of the received polygons at a time
 						polygons.each_with_index{|polygon, index|
 							triangles = Triangle.triangulate(points,[polygon])
-							normal = mesh.normal_at(index+1)
+							#normal = mesh.normal_at(index+1)
+							normal = normals[index]
 							triangles.each { |triangle|
 								pos = Triangle.get_center(triangle)
+								#warn pos.inspect
 								pixels_file.puts "#{triangle[0].x.to_m},#{triangle[0].y.to_m},#{triangle[0].z.to_m},#{triangle[1].x.to_m},#{triangle[1].y.to_m},#{triangle[1].z.to_m},#{triangle[2].x.to_m},#{triangle[2].y.to_m},#{triangle[2].z.to_m}"
 								points_file.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t#{normal.x}\t#{normal.y}\t#{normal.z}"
 							}

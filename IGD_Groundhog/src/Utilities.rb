@@ -221,7 +221,7 @@ module IGD
 			# @param name [String] The name to fix
 			# @return [String] The fixed name
 			def self.fix_name(name)
-				return name.tr("# :%/\\áéíóúäëïöüâêîôû","_")
+				return name.tr("|# :%/\\áéíóúäëïöüâêîôû","_")
 			end
 
 

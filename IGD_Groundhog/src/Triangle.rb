@@ -144,6 +144,8 @@ module IGD
       # @param triangle [Array] an array of 3 SketchUp::3DPoint
       # @return [SketchUp::Point3d] The normal of the triangle
       def self.get_center(triangle)
+        #warn " -- GET CENTER"
+        #warn triangle.inspect
         return Geom::Point3d.new([(triangle[0].x+triangle[1].x+triangle[2].x)/3, (triangle[0].y+triangle[1].y+triangle[2].y)/3,(triangle[0].z+triangle[1].z+triangle[2].z)/3])
       end
 
