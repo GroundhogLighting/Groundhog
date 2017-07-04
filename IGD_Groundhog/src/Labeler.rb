@@ -264,12 +264,12 @@ module IGD
 					return
 				end
 				
-				entities.each_with_index do |ent,i|
-					if Labeler.workplane? ent
+				entities.each do |ent|													
+					if Labeler.workplane? ent then
 						self.replace_workplane(Labeler.get_name(ent),name) 
 						IGD::Groundhog::DesignAssistant.update						
-					end				
-					ent.set_attribute("Groundhog","Name",name) if not Labeler.workplane? ent
+					end	
+					ent.set_attribute("Groundhog","Name",name)
 				end			
 			end
 

@@ -522,6 +522,10 @@ module IGD
 					points_file = File.open("#{path}/#{name}.pts",'w+')
 					wp_group = workplanes.select{|x| IGD::Groundhog::Labeler.get_name(x) == workplane}
 					wp_group.each{|face|
+						if face.vertices.length >= 50 then
+							UI.messagebox "One of the workplanes named '#{Labeler.get_name(face)}' has too many vertices. Please simplify it or split it."
+							next
+						end
 						#CLEAN AND CLOSE AND ALL.
 						#aux_face = self.close_face_2(face)						
 						#aux_face = self.clean_face(aux_face)

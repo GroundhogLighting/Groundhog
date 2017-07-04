@@ -119,7 +119,7 @@ module IGD
 					Labeler.set_workplane_value(group,wp_value.to_json)
 
 					group.casts_shadows=false
-					group.receives_shadows=false
+					group.receives_shadows=true
 
 					#hide the edges
 					group.entities.select{|x| x.is_a? Sketchup::Edge}.each{|x| x.hidden=true}
