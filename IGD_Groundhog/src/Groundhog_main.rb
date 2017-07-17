@@ -314,6 +314,7 @@ module IGD
 
 		groundhog_menu.add_item("Open Design Assistant"){
 			@design_assistant.show
+			DesignAssistant.update
 		}
 
 		@online_resources = OnlineResources.get

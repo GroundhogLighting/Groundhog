@@ -23,7 +23,7 @@ module.exports = {
             return;
         }
         if (v === "debug") {
-            alert('Action: ' + action + ' | msg: ' + msg);
+            console.log('Action: ' + action + ' | msg: ' + msg);
             return;
         }
         alert("Unkown version " + Version);

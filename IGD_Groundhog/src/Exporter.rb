@@ -87,18 +87,21 @@ module IGD
 			# @return [String] The string to be written in the .rad file
 			def self.vertex_positions_to_rad_string(positions_list,name)
 				ret = ""
-				positions_list.each {|positions|
+				n_positions = positions_list.length				
+				positions_list.each_with_index {|positions,index|
+					given_name = name
+					given_name = "#{name}_#{index}" if n_positions > 1					
 					string1=""
 					string2=""
 					if positions.length == 2 then #a circle
-						string1="%MAT_NAME%\tring\t"+name+"\n0\n0\n8\n" #Write the standard first three lines
+						string1="%MAT_NAME%\tring\t"+given_name+"\n0\n0\n8\n" #Write the standard first three lines
 						center = positions.shift
 						normal = positions.shift
 						radius = normal.length
 						normal.normalize!
 						string2="\t#{center.x.to_m} #{center.y.to_m} #{center.z.to_m}\n\t#{normal.x} #{normal.y} #{normal.z}\n\t0 #{radius.to_m}\n"
 					elsif positions.length >= 3 #a polygon
-						string1="%MAT_NAME%\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
+						string1="%MAT_NAME%\tpolygon\t"+given_name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
 						string2=""
 						positions.each{|pos|
 							string2=string2+"\t#{pos.x.to_m.to_f}\t#{pos.y.to_m.to_f}\t#{pos.z.to_m.to_f}\n"

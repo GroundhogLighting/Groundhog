@@ -5,10 +5,12 @@ export = class Report {
 
     results: any;
     elux_results: any;
+    d_assistant:any;
 
-    constructor(){
+    constructor( d_assistant : any ){
         this.results = {};        
         this.elux_results = {};
+        this.d_assistant = d_assistant;
 
         $("#remark_elux").on("click",function(){
             Utilities.sendAction("remark","ELUX");
@@ -19,17 +21,17 @@ export = class Report {
     update_objective_summary = () => {
         let div = $("#objective_summary");
         div.html("");
-        let objs = Object.keys(DesignAssistant.objectives.objectives);
+        let objs = Object.keys(this.d_assistant.objectives.objectives);
 
         for (let i = 0; i < objs.length; i++) {
             /* FIRST, its own div */
             let newDiv = $("<div></div>");
             let name = $("<h4>" + objs[i] + "</h4>");
             newDiv.append(name);
-            let obj = DesignAssistant.objectives.objectives[objs[i]];
-            DesignAssistant.objectives.parseObjective(obj);
+            let obj = this.d_assistant.objectives.objectives[objs[i]];
+            this.d_assistant.objectives.parseObjective(obj);
             let metric = Utilities.getObjectiveType(obj.metric);
-            let text = DesignAssistant.objectives.get_human_description(metric);            
+            let text = this.d_assistant.objectives.get_human_description(metric);            
             let description = $("<p>" + text + "</p>");
             newDiv.append(description);
             div.append(newDiv);
@@ -71,7 +73,7 @@ export = class Report {
     update_compliance_summary = () => {
         let table = $("#compliance_summary");
         table.html("");
-        let objs = Object.keys(DesignAssistant.objectives.objectives);
+        let objs = Object.keys(this.d_assistant.objectives.objectives);
 
         /* FIRST, ADD HEADER */
         let header = $("<tr></tr>");
@@ -98,7 +100,7 @@ export = class Report {
                     if (this.results[wp_name].hasOwnProperty(obj_name)) {
                         let s = this.results[wp_name][obj_name] * 100;
                         col.text(Math.round(s) + "%");
-                        if (DesignAssistant.objectives.objectives[obj_name]["goal"] <= s) {
+                        if (this.d_assistant.objectives.objectives[obj_name]["goal"] <= s) {
                             col.addClass("success");
                         } else {
                             col.addClass("not-success");
