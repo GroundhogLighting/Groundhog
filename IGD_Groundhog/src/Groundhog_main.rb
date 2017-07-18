@@ -183,6 +183,7 @@ module IGD
 				end
 			end
 
+=begin
 			if groups.length >= 1 then
 				context_menu.add_item("Label as Tubular Daylight Device (GH)") {
 					Labeler.to_tdd(groups)
@@ -193,7 +194,6 @@ module IGD
 					Labeler.to_tdd(components)
 				}
 			end
-
 			if faces.length == 1 then
 				if Labeler.tdd?(faces[0].parent) then
 					context_menu.add_item("Label as TDD's Dome (GH)"){
@@ -204,6 +204,7 @@ module IGD
 					}
 				end
 			end
+=end
 
 			if faces.length>=1 then
 				context_menu.add_item("Label as Illum (GH)") {

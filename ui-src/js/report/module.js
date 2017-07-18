@@ -1,20 +1,20 @@
 "use strict";
 var Utilities = require("../Utilities");
 module.exports = (function () {
-    function Report(d_assistant) {
+    function Report() {
         var _this = this;
         this.update_objective_summary = function () {
             var div = $("#objective_summary");
             div.html("");
-            var objs = Object.keys(_this.d_assistant.objectives.objectives);
+            var objs = Object.keys(DesignAssistant.objectives.objectives);
             for (var i = 0; i < objs.length; i++) {
                 var newDiv = $("<div></div>");
                 var name_1 = $("<h4>" + objs[i] + "</h4>");
                 newDiv.append(name_1);
-                var obj = _this.d_assistant.objectives.objectives[objs[i]];
-                _this.d_assistant.objectives.parseObjective(obj);
+                var obj = DesignAssistant.objectives.objectives[objs[i]];
+                DesignAssistant.objectives.parseObjective(obj);
                 var metric = Utilities.getObjectiveType(obj.metric);
-                var text = _this.d_assistant.objectives.get_human_description(metric);
+                var text = DesignAssistant.objectives.get_human_description(metric);
                 var description = $("<p>" + text + "</p>");
                 newDiv.append(description);
                 div.append(newDiv);
@@ -53,7 +53,7 @@ module.exports = (function () {
         this.update_compliance_summary = function () {
             var table = $("#compliance_summary");
             table.html("");
-            var objs = Object.keys(_this.d_assistant.objectives.objectives);
+            var objs = Object.keys(DesignAssistant.objectives.objectives);
             var header = $("<tr></tr>");
             header.append($("<td></td>"));
             for (var i = 0; i < objs.length; i++) {
@@ -74,7 +74,7 @@ module.exports = (function () {
                         if (_this.results[wp_name].hasOwnProperty(obj_name)) {
                             var s = _this.results[wp_name][obj_name] * 100;
                             col.text(Math.round(s) + "%");
-                            if (_this.d_assistant.objectives.objectives[obj_name]["goal"] <= s) {
+                            if (DesignAssistant.objectives.objectives[obj_name]["goal"] <= s) {
                                 col.addClass("success");
                             }
                             else {
@@ -89,7 +89,6 @@ module.exports = (function () {
         };
         this.results = {};
         this.elux_results = {};
-        this.d_assistant = d_assistant;
         $("#remark_elux").on("click", function () {
             Utilities.sendAction("remark", "ELUX");
         });
