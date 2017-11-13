@@ -171,7 +171,7 @@
     "window.restoreFullscreen": false,
 
     // Ajuste el nivel de zoom de la ventana. El tamaño original es 0 y cada incremento (por ejemplo, 1) o disminución (por ejemplo, -1) representa una aplicación de zoom un 20 % más grande o más pequeño. También puede especificar decimales para ajustar el nivel de zoom con una granularidad más precisa.
-    "window.zoomLevel": 0,
+    "window.zoomLevel": -1,
 
 
 // Configuración de los archivos
