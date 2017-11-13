@@ -45,7 +45,8 @@ module IGD
 				ret = false
 				model=Sketchup.active_model
 				if values.length != pixels.length then
-					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match")
+					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match for objective '#{objective["name"]}' in workplane '#{workplane}'")						
+					UI.messagebox(" N-pixels: #{pixels.length} | N-values: #{values.length} ")
 					return false
 				end
 				#pixels need to have 3 values for each vertex
@@ -118,7 +119,7 @@ module IGD
 					Labeler.set_workplane_value(group,wp_value.to_json)
 
 					group.casts_shadows=false
-					group.receives_shadows=false
+					group.receives_shadows=true
 
 					#hide the edges
 					group.entities.select{|x| x.is_a? Sketchup::Edge}.each{|x| x.hidden=true}
@@ -351,7 +352,7 @@ module IGD
 				end
 
 				pixels = Utilities.readTextFile(pixels_file,",",0)
-
+				
 				return self.draw_pixels(values,pixels,workplane,objective)
 			end
 

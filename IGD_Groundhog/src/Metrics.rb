@@ -197,7 +197,7 @@ module IGD
         lat = Sketchup.active_model.shadow_info["Latitude"]
         lon = -Sketchup.active_model.shadow_info["Longitude"]
         mer = -Sketchup.active_model.shadow_info["TZOffset"]
-        sky = "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo} +s"
+        "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo} +s"
       end
 
       # Returns the Task that calculates annual illuminance values according to the

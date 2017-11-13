@@ -6,7 +6,7 @@ export = class Report {
     results: any;
     elux_results: any;
 
-    constructor(){
+    constructor(  ){
         this.results = {};        
         this.elux_results = {};
 

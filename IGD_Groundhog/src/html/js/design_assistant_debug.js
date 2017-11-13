@@ -1000,10 +1000,11 @@ module.exports = (function () {
             row.append(name_column);
             var actions_column = $("<td></td>");
             var delete_button = $("<span name='" + workplane + "' title='" + objective + "' class='ui-icon ui-icon-trash del-objective'></span>");
+            var remove_objective = _this.remove_objective;
             delete_button.on("click", function () {
                 var wp = $(this).attr("name");
                 var obj = $(this).parent().siblings("td").text();
-                this.remove_objective(wp, obj);
+                remove_objective(wp, obj);
             });
             actions_column.append(delete_button);
             row.append(actions_column);
@@ -1021,7 +1022,6 @@ module.exports = (function () {
             var add_objective = _this.add_objective;
             var get_new_row_for_workplane = _this.get_new_row_for_workplane;
             for (var wp_name in _this.workplanes) {
-                console.log(wp_name);
                 if (_this.workplanes.hasOwnProperty(wp_name)) {
                     if (wp_name.toLowerCase().indexOf(filter) >= 0) {
                         var li = $("<li></li>");
@@ -1037,7 +1037,6 @@ module.exports = (function () {
                                 }
                                 ;
                                 var wp_name = $(this).find("h1").text();
-                                console.log(wp_name);
                                 var table_name = Utilities.fixName(wp_name) + "_objectives";
                                 var objective = ui.draggable.attr("name");
                                 if (workplanes[wp_name].indexOf(objective) >= 0) {
@@ -1074,8 +1073,8 @@ module.exports = (function () {
                 }
             }
         };
-        this.objectives = {};
-        this.workplanes = { "workplane": [] };
+        this.objectives = { "DA(300,50%)": { "name": "DA(300,50%)", "metric": "DA", "dynamic": true, "good_pixel": 50, "good_light": { "min": 300, "max": null }, "goal": 50, "occupied": { "min": 8, "max": 18 }, "sim_period": { "min": 1, "max": 12 } } };
+        this.workplanes = { "Basement": [], "1st Floor": ["DA(300,50%)"] };
         var create_objective = this.create_objective;
         this.add_objective_dialog = $("#create_objective_dialog").dialog({
             autoOpen: false,

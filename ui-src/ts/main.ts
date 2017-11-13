@@ -33,9 +33,6 @@ export = class DesignAssistant {
         let CalculateModule = new Calculate();
         this.calculate = CalculateModule;
 
-        let ReportModule = new Report();
-        this.report = ReportModule;   
-        
         let LuminairesModule = new Luminaires();
         this.luminaires = LuminairesModule; 
 
@@ -44,7 +41,10 @@ export = class DesignAssistant {
         
         let ObserversModule = new Observers();
         this.observers = ObserversModule;  
-              
+        
+        let ReportModule = new Report(this);
+        this.report = ReportModule;   
+        
     }
 
     update = () : void => {

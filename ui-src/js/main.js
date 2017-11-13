@@ -21,14 +21,14 @@ module.exports = (function () {
         this.objectives = ObjectivesModule;
         var CalculateModule = new Calculate();
         this.calculate = CalculateModule;
-        var ReportModule = new Report();
-        this.report = ReportModule;
         var LuminairesModule = new Luminaires();
         this.luminaires = LuminairesModule;
         var PhotosensorsModule = new Photosensors();
         this.photosensors = PhotosensorsModule;
         var ObserversModule = new Observers();
         this.observers = ObserversModule;
+        var ReportModule = new Report(this);
+        this.report = ReportModule;
     }
     return DesignAssistant;
 }());

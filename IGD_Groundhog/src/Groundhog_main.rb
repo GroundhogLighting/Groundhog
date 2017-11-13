@@ -183,6 +183,7 @@ module IGD
 				end
 			end
 
+=begin
 			if groups.length >= 1 then
 				context_menu.add_item("Label as Tubular Daylight Device (GH)") {
 					Labeler.to_tdd(groups)
@@ -193,7 +194,6 @@ module IGD
 					Labeler.to_tdd(components)
 				}
 			end
-
 			if faces.length == 1 then
 				if Labeler.tdd?(faces[0].parent) then
 					context_menu.add_item("Label as TDD's Dome (GH)"){
@@ -204,6 +204,7 @@ module IGD
 					}
 				end
 			end
+=end
 
 			if faces.length>=1 then
 				context_menu.add_item("Label as Illum (GH)") {
@@ -314,6 +315,7 @@ module IGD
 
 		groundhog_menu.add_item("Open Design Assistant"){
 			@design_assistant.show
+			DesignAssistant.update
 		}
 
 		@online_resources = OnlineResources.get
@@ -366,7 +368,7 @@ module IGD
 
 
 		### EXPORT
-		groundhog_menu.add_item("Export to Radiance") {
+		groundhog_menu.add_item("Export Radiance model") {
 
 			path=Exporter.getpath #it returns false if not successful
 			path="" if not path
@@ -394,7 +396,7 @@ module IGD
 			example = file.split("/").pop.gsub(".skp","").tr("_"," ")
 			gh_examples_menu.add_item(example) {
 				path = file
-				UI.messagebox("Unable to open '#{example}' Example File.") if not Sketchup.open_file path
+				Sketchup.open_file path
 			}
 		}
 

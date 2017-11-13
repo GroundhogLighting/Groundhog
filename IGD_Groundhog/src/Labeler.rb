@@ -263,14 +263,22 @@ module IGD
 					UI.messagebox("No selected entities can be named")
 					return
 				end
+				
+				entities.each do |ent|													
+					if Labeler.workplane? ent then
+						self.replace_workplane(Labeler.get_name(ent),name) 
+						IGD::Groundhog::DesignAssistant.update						
+					end	
+					ent.set_attribute("Groundhog","Name",name)
+				end			
+			end
 
-				if entities.length==1 then
-					entities[0].set_attribute("Groundhog","Name",name)
-				else
-					entities.each_with_index do |ent,i|
-						ent.set_attribute("Groundhog","Name",name+"_#{i}")
-					end
-				end
+			def self.replace_workplane(old_name,new_name)
+				workplanes = Utilities.get_workplane_by_name(old_name)
+				hash = JSON.parse Sketchup.active_model.get_attribute("Groundhog","workplanes")
+				hash[new_name] = hash[old_name]				
+				hash.delete old_name if workplanes.length == 1
+				Sketchup.active_model.set_attribute("Groundhog","workplanes",hash.to_json)
 			end
 
 			# Assigns a value to a pixel.
@@ -402,11 +410,16 @@ module IGD
 				faces=Utilities.get_faces(entities)
 				name = Utilities.get_name
 				return if not name
+				already_workplanes = entities.select{|x| Labeler.workplane? x }
+				if already_workplanes.length > 0 then
+					UI.messagebox "Some of the selected faces are already workplanes... please remove labels before doing this."
+					return
+				end
 				if faces.length > 0 then
 					faces.each do |face|
-						self.set_label(face,"workplane")
-						Utilities.set_oriented_surface_materials(face,"workplane","red",0.2)
 						self.set_name([face],name)
+						self.set_label(face,"workplane")
+						Utilities.set_oriented_surface_materials(face,"workplane","red",0.2)						
 						face.add_observer(WorkplaneObserver.new)
 					end
 
@@ -468,6 +481,15 @@ module IGD
 				faces=Utilities.get_faces(entities)
 				if faces.length>=1 then
 					faces.each do |i|
+						if self.workplane? i then
+							name = self.get_name(i)
+							wps = Utilities.get_workplane_by_name(name)
+							if wps.length == 1 then
+								hash = JSON.parse Sketchup.active_model.get_attribute("Groundhog","workplanes")
+								hash.delete name
+								Sketchup.active_model.set_attribute("Groundhog","workplanes",hash.to_json)
+							end							
+						end
 						self.set_label(i,nil)
 						i.material=nil
 						i.back_material=nil
@@ -515,6 +537,20 @@ module IGD
 			# @param entity [SketchUp::Entity] The entity to get the value from
 			# @param label [String] The label to be assigned
 			def self.set_label(entity, label)
+				if self.workplane? entity then
+					warn "it is a workplane!"
+					# erase it.
+					name = self.get_name(entity)
+					warn "the name is #{name}"
+					workplanes = Utilities.get_workplane_by_name(name)
+					if workplanes.length == 1 then
+						warn "only one of them."
+						hash = JSON.parse Sketchup.active_model.get_attribute "Groundhog","workplanes"
+						hash.delete name
+						Sketchup.active_model.set_attribute("Groundhog","workplanes",hash.to_json)
+						DesignAssistant.update
+					end
+				end
 				entity.set_attribute("Groundhog","Label", label)
 			end
 

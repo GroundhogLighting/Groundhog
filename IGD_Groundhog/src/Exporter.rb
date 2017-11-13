@@ -87,18 +87,21 @@ module IGD
 			# @return [String] The string to be written in the .rad file
 			def self.vertex_positions_to_rad_string(positions_list,name)
 				ret = ""
-				positions_list.each {|positions|
+				n_positions = positions_list.length				
+				positions_list.each_with_index {|positions,index|
+					given_name = name
+					given_name = "#{name}_#{index}" if n_positions > 1					
 					string1=""
 					string2=""
 					if positions.length == 2 then #a circle
-						string1="%MAT_NAME%\tring\t"+name+"\n0\n0\n8\n" #Write the standard first three lines
+						string1="%MAT_NAME%\tring\t"+given_name+"\n0\n0\n8\n" #Write the standard first three lines
 						center = positions.shift
 						normal = positions.shift
 						radius = normal.length
 						normal.normalize!
 						string2="\t#{center.x.to_m} #{center.y.to_m} #{center.z.to_m}\n\t#{normal.x} #{normal.y} #{normal.z}\n\t0 #{radius.to_m}\n"
 					elsif positions.length >= 3 #a polygon
-						string1="%MAT_NAME%\tpolygon\t"+name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
+						string1="%MAT_NAME%\tpolygon\t"+given_name+"\n0\n0\n"+(3*positions.length).to_s #Write the standard first three lines
 						string2=""
 						positions.each{|pos|
 							string2=string2+"\t#{pos.x.to_m.to_f}\t#{pos.y.to_m.to_f}\t#{pos.z.to_m.to_f}\n"
@@ -250,7 +253,7 @@ module IGD
 
 					#erase the inner loop from the list
 					inner_loops.delete(min_inner_loop)
-				end
+				end				
 				return outer_loop
 			end
 
@@ -287,6 +290,7 @@ module IGD
 
 						Sketchup.active_model.materials.remove(Sketchup.active_model.materials["GH_default_material"])
 					end
+					model.commit_operation
 				rescue Exception => ex
 					model.abort_operation
 					FileUtils.rm_rf(path, secure: true)
@@ -510,7 +514,7 @@ module IGD
 			def self.write_workplanes
 				workplanes = Utilities.get_workplanes(Sketchup.active_model.entities)
 				return true if workplanes.length == 0 #success... just, no workplanes.
-				wp_names = wp_names = workplanes.map{|x| Labeler.get_name(x) }.uniq
+				wp_names = workplanes.map{|x| Labeler.get_name(x) }.uniq
 				path = "./Workplanes"
 				OS.mkdir(path)
 
@@ -521,29 +525,36 @@ module IGD
 					points_file = File.open("#{path}/#{name}.pts",'w+')
 					wp_group = workplanes.select{|x| IGD::Groundhog::Labeler.get_name(x) == workplane}
 					wp_group.each{|face|
+						if face.vertices.length >= 50 then
+							UI.messagebox "One of the workplanes named '#{Labeler.get_name(face)}' has too many vertices. Please simplify it or split it."
+							next
+						end
 						#CLEAN AND CLOSE AND ALL.
-						face = self.close_face_2(face)
-						face = self.clean_face(face)
+						#aux_face = self.close_face_2(face)						
+						#aux_face = self.clean_face(aux_face)
 						# Unfortunately, until we have a triangulation algorithm,
 						# I have to add the face, get the mesh, and then delete it
-						face = Sketchup.active_model.entities.add_face(face)
+						#aux_face = Sketchup.active_model.entities.add_face(aux_face)
 						mesh = face.mesh 4
-						#Sketchup.active_model.entities.erase_entities(face)
+						#Sketchup.active_model.entities.erase_entities(aux_face)
 
 						# Go on as usual.
 						points = mesh.points
 						polygons = mesh.polygons
+						normals = polygons.each_with_index.map{|p,i| mesh.normal_at(i+1)}
 						# Work one of the received polygons at a time
 						polygons.each_with_index{|polygon, index|
 							triangles = Triangle.triangulate(points,[polygon])
-							normal = mesh.normal_at(index+1)
+							#normal = mesh.normal_at(index+1)
+							normal = normals[index]
 							triangles.each { |triangle|
 								pos = Triangle.get_center(triangle)
+								#warn pos.inspect
 								pixels_file.puts "#{triangle[0].x.to_m},#{triangle[0].y.to_m},#{triangle[0].z.to_m},#{triangle[1].x.to_m},#{triangle[1].y.to_m},#{triangle[1].z.to_m},#{triangle[2].x.to_m},#{triangle[2].y.to_m},#{triangle[2].z.to_m}"
 								points_file.puts "#{pos.x.to_m}\t#{pos.y.to_m}\t#{pos.z.to_m}\t#{normal.x}\t#{normal.y}\t#{normal.z}"
 							}
 						}
-					}
+					} # ed of wp_group.each
 
 					pixels_file.close
 					points_file.close

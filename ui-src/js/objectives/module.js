@@ -134,7 +134,7 @@ module.exports = (function () {
                 return;
             }
             filter = filter.toLowerCase();
-            for (var objective in _this.objectives) {
+            var _loop_2 = function (objective) {
                 if (_this.objectives.hasOwnProperty(objective)) {
                     if (objective.toLowerCase().indexOf(filter) >= 0) {
                         var new_row = $("<tr></tr>");
@@ -147,9 +147,10 @@ module.exports = (function () {
                             var objective_name = $(this).attr("name");
                             Utilities.sendAction("delete_objective", objective_name);
                         });
+                        var editObjective_1 = _this.editObjective;
                         edit_button.on("click", function () {
                             var objective_name = $(this).attr("name");
-                            this.editObjective(objective_name);
+                            editObjective_1(objective_name);
                         });
                         new_row.append(action_column);
                         action_column.append(edit_button);
@@ -161,6 +162,9 @@ module.exports = (function () {
                         list.append(new_row);
                     }
                 }
+            };
+            for (var objective in _this.objectives) {
+                _loop_2(objective);
             }
         };
         this.parseObjective = function (obj) {
@@ -195,10 +199,11 @@ module.exports = (function () {
             row.append(name_column);
             var actions_column = $("<td></td>");
             var delete_button = $("<span name='" + workplane + "' title='" + objective + "' class='ui-icon ui-icon-trash del-objective'></span>");
+            var remove_objective = _this.remove_objective;
             delete_button.on("click", function () {
                 var wp = $(this).attr("name");
                 var obj = $(this).parent().siblings("td").text();
-                this.remove_objective(wp, obj);
+                remove_objective(wp, obj);
             });
             actions_column.append(delete_button);
             row.append(actions_column);

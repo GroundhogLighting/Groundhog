@@ -86,7 +86,7 @@ module IGD
 			# @param wp_name [String] The name of the workplane
 			def self.get_workplane_by_name(wp_name)
 				wp = Utilities.get_workplanes(Sketchup.active_model.entities).select{|x| Labeler.get_name(x)==wp_name}
-        return wp
+        		return wp
 			end
 
 			# Compares a two version strings in format "A.B.C"
@@ -221,7 +221,7 @@ module IGD
 			# @param name [String] The name to fix
 			# @return [String] The fixed name
 			def self.fix_name(name)
-				return name.tr("# :%/\\áéíóúäëïöüâêîôû","_")
+				return name.tr("|# :%/\\áéíóúäëïöüâêîôû","_")
 			end
 
 
