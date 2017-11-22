@@ -1,0 +1,125 @@
+
+  
+
+* {
+  box-sizing: border-box;
+  font-family: 'open sans';
+}
+
+
+html,body{
+  padding: 0;
+  background-color: #F2F2F2;
+}
+
+#sidenav {
+  position: fixed;  
+  height: 100%;
+  width: 140px;  
+  margin:0;
+}
+
+#sidenav > p {
+  padding: 6px 15px;
+  height: 35px;
+  margin: 0;
+  cursor: pointer;
+  color: #616161
+}
+
+#sidenav > p:hover {
+  background-color: #E6E6E6;
+}
+
+#sidenav >p.selected{
+  color: black;
+  background-color: #E6E6E6;
+}
+
+div.display {  
+  color: rgba(0,0,0,0.7);
+  position: fixed;
+  top: 0;
+  background-color: white;
+  height: 97vh;
+  display: block;  
+  box-shadow: 0 0px 10px rgba(0,0,0,0.12), 0 0px 5px rgba(0,0,0,0.24);
+  transition: left 0.3s cubic-bezier(.25,.8,.25,1);    
+    
+}
+
+div.display > * {
+  margin-left:auto;
+  margin-right:auto;
+}
+
+div.fixed_toolbar {
+  height: 35px;
+  color: white;
+  background-color: #4285F4;
+  padding: 5px;
+  width: 100%;
+  margin:0;
+  margin-bottom: 20px;
+}
+div.fixed_toolbar * {  
+  font-size: 9.5pt;
+}
+
+
+div.fixed_toolbar input {
+  border: none;
+}
+
+
+div.fixed_toolbar button {
+  
+  background-color: transparent;
+  color: white;
+  border: 1px solid transparent;
+  border-right: 1px solid white;
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+  font-size:0.8em;
+  
+}
+
+table.bold_first_row tr:first-child {
+  font-weight: bold;
+}
+
+table.bold_first_column td:first-child {
+  font-weight: bold;
+}
+
+table.selectable_row tr:nth-child(n+2) {
+    cursor: pointer;
+}
+
+
+table.selectable_row tr:nth-child(n+2):hover {
+    background-color: #E6E6E6;
+}
+
+table tr td {
+  padding: 5px 20px;
+  border-bottom: 1px solid rgba(0,0,0,0.13);
+  margin:0;  
+}
+
+td input {
+  border:none;
+  color: inherit;
+}
+
+td input[type=number] {
+  width: 4em;
+}
+
+.material-icons {
+  font-size: 1.2em;
+}
+

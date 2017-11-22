@@ -6,9 +6,9 @@
 							<meta charset='UTF-8'>
 							<meta http-equiv='X-UA-Compatible' content='IE=edge'/>
 
-							<link href='css/jquery-ui.css' rel='stylesheet'>
-							<link href='css/groundhog-ui.css' rel='stylesheet'>
-							<link rel='stylesheet' href='css/spectrum.css' />
+							<link href='../css/opensans.css' rel='stylesheet'>
+                            <link href='../css/iconfont/material-icons.css' rel='stylesheet'>
+                            <link href='../css/groundhog-ui.css' rel='stylesheet'>
 						</head>
 
 						<body>
@@ -28,8 +28,8 @@
             <button id="get_epw_weather">Get weather files online</button>
         </div>
 
-
-        <table id="weather_info" class="with_border bold_first_row">
+            
+        <table id="weather_info" class="with_border bold_first_column">
             <tr>
                 <td>City</td>
                 <td id="weather_city">not set</td>
@@ -54,6 +54,9 @@
                 <td>Time Zone</td>
                 <td id="weather_timezone">not set</td>
             </tr>
+            <tr>
+                <td>Albedo</td><td><input type="number" value="20" min="0" max="100" step="1"></input></td>
+            </tr>
         </table>
     </div>
 
@@ -64,11 +67,11 @@
             <span>Search:</span>
             <input type="text" id="filter_materials">
         </div>
-        <table id="material_list" class="selectable row"> </table>
+        <table id="material_list" class="selectable_row bold_first_row"> </table>
     </div>
 
     <!-- ADD MATERIAL DIALOG -->
-    <div id="add_material_dialog" title="Create material">
+    <div class="dialog" id="add_material_dialog" title="Create material">
         <fieldset>
             <legend>General information</legend>
             <table>
@@ -138,7 +141,7 @@
         
     </div>
 
-    <div id="add_photosensor_dialog" title="Add photosensor">
+    <div class="dialog" id="add_photosensor_dialog" title="Add photosensor">
         <fieldset>
             <legend>General information</legend>
             <table>
@@ -234,7 +237,7 @@
     </div>
 
     <!-- ADD OBJECTIVE DIALOG -->
-    <div id="create_objective_dialog" title="Add objective">
+    <div class="dialog" id="create_objective_dialog" title="Add objective">
         <div id="objective_name_field" class="center">
             <label for="objective_name">Name: </label>
             <input type="text" id="objective_name">
@@ -439,12 +442,12 @@
         </div>
     </div>
 
-					<script src='js/JQuery/jquery-3.0.0.js'></script>
-					<script src='js/jQueryUI/jquery-ui.js'></script>
-					<script src='js/Spectrum/spectrum.js'></script>    
-					<script src='js/groundhog-ui.js'></script>
+					<script src='../js/JQuery/jquery-3.0.0.js'></script>
+					<!--script src='../js/jQueryUI/jquery-ui.js'></script>
+					<script src='../js/Spectrum/spectrum.js'></script-->    
+					<script src='../js/groundhog-ui.js'></script>
 					
-					<script src='js/design_assistant_debug.js'></script>    
+					<script src='debug.js'></script>    
 					
 					<script>
 						var DesignAssistant = new DesignAssistant();        

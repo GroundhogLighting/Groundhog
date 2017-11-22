@@ -8,10 +8,23 @@
 ehthumbs.db
 Thumbs.db
 .vscode
+.vscode/settings.json
+.sass-cache
+
 
 #        YARD        #
 ######################
 .yardoc
+
+## UI
+ui/dist*
+ui/node_modules
+ui/.sass-cache
+ui/yarn-error.log
+ui/designassistantJS
+ui/designassistant/node_modules
+ui/preferencesJS
+ui/preferences/node_modules
 
 
 #      RADIANCE      #

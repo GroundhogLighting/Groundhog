@@ -24,7 +24,7 @@
         $("div" + dest).show();
     }
     var interiorTabs = $("button.interior-tab")
-    //interiorTabs.button();
+    interiorTabs.button();
     interiorTabs.on("click", function () {
         $("button.interior-tab").removeClass("selected");
         $(this).toggleClass("selected");

@@ -1,0 +1,57 @@
+
+
+<div class="display" id="observers">
+        <div class="fixed_toolbar">
+            <button id="add_observer_button">Add observer</button>                    
+            <span>Search:</span>
+            <input type="text" id="filter_observers">
+        </div>
+        <table id="observer_list" class="selectable row"></table>
+        
+    </div>
+
+    <div class="dialog" id="add_observer_dialog" title="Add observer">
+        <fieldset>
+            <legend>General information</legend>
+            <table>
+                <tr>
+                    <td><label for="observer_name">Name:</label></td>
+                    <td><input type="text" id="observer_name"></td>
+                </tr>                
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Position</legend>
+            <table>
+                <tr>
+                    <td><label for="observer_px">Position X (m):</label></td>
+                    <td><input type="number" id="observer_px"></td>
+                </tr>     
+                <tr>
+                    <td><label for="observer_py">Position Y (m):</label></td>
+                    <td><input type="number" id="observer_py"></td>
+                </tr>  
+                <tr>
+                    <td><label for="observer_pz">Position Z (m):</label></td>
+                    <td><input type="number" id="observer_pz"></td>
+                </tr>             
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>Normal</legend>
+            <table>
+                <tr>
+                    <td><label for="observer_nx">Normal X (m):</label></td>
+                    <td><input type="number" id="observer_nx"></td>
+                </tr>     
+                <tr>
+                    <td><label for="observer_ny">Normal Y (m):</label></td>
+                    <td><input type="number" id="observer_ny"></td>
+                </tr>  
+                <tr>
+                    <td><label for="observer_pz">Normal Z (m):</label></td>
+                    <td><input type="number" id="observer_nz"></td>
+                </tr>             
+            </table>
+        </fieldset>
+    </div>
