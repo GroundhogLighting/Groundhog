@@ -20,6 +20,7 @@ module GH
         RESULT_PIXEL = 5
         LUMINAIRE = 6
         PHOTOSENSOR = 7
+        
 
     end
 end

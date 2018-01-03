@@ -187,7 +187,7 @@ module.exports = (function () {
 "use strict";
 var Utilities = require("../Utilities");
 module.exports = (function () {
-    function LuminairesModule() {
+    function LuminairesModule(debug) {
         var _this = this;
         this.useLuminaire = function (name) {
             var msg = _this.luminaires[name];
@@ -195,7 +195,8 @@ module.exports = (function () {
             Utilities.sendAction("use_luminaire", JSON.stringify(msg));
         };
         this.deleteLuminaire = function (name) {
-            alert("Deleting " + name);
+            var msg = _this.luminaires[name];
+            Utilities.sendAction("delete_luminaire", JSON.stringify(msg));
         };
         this.updateList = function (filter) {
             var list = $("#luminaire_list");
@@ -206,25 +207,33 @@ module.exports = (function () {
             }
             filter = filter.toLowerCase();
             var html = "<tr><td>Luminaire</td><td>Manufacturer</td><td>Lamp</td></tr>";
-            for (var _i = 0, _a = _this.luminaires; _i < _a.length; _i++) {
-                var luminaire = _a[_i];
-                var desc = luminaire.luminaire;
+            for (var luminaire_name in _this.luminaires) {
+                var luminaire = _this.luminaires[luminaire_name];
                 var manufacturer = luminaire.manufacturer;
                 var lamp = luminaire.lamp;
                 if (luminaire.name.toLowerCase().indexOf(filter) >= 0 ||
                     manufacturer.toLowerCase().indexOf(filter) >= 0 ||
                     lamp.toLowerCase().indexOf(filter) >= 0) {
-                    html = html + "<tr><td class='luminaire-name' name=\"" + luminaire.name + "\">" + luminaire.name + "</td><td>" + manufacturer + "</td><td>" + lamp + "</td></tr>";
+                    html = html + "<tr>" +
+                        "<td class='luminaire-name' name=\"" + luminaire.name + "\">" + luminaire.name + "</td>" +
+                        "<td>" + manufacturer + "</td>" +
+                        "<td>" + lamp + "</td>" +
+                        "<td name='" + luminaire_name + "'>"
+                        + "<i name='" + luminaire_name + "' class='material-icons del-luminaire'>delete</i>"
+                        + "</td>";
+                    "</tr>";
                 }
             }
             list.html(html);
+            var useLuminaire = _this.useLuminaire;
             $("td.luminaire-name").on("click", function () {
                 var name = $(this).attr("name");
-                this.useLuminaire(name);
+                useLuminaire(name);
             });
-            $("span.del-luminaire").on("click", function () {
+            var deleteLuminaire = _this.deleteLuminaire;
+            $("i.del-luminaire").on("click", function () {
                 var name = $(this).attr("name");
-                this.deleteLuminaire(name);
+                deleteLuminaire(name);
             });
         };
         this.luminaires = {};
@@ -238,7 +247,29 @@ module.exports = (function () {
         $("#elux_night_preview").on("click", function () {
             Utilities.sendAction("night_preview", "msg");
         });
-        this.updateList("");
+        if (debug) {
+            this.luminaires = {
+                "Luminaire 1": {
+                    "name": "Luminaire 1",
+                    "manufacturer": "ERCO",
+                    "lamp": "13W"
+                },
+                "Luminaire 2": {
+                    "name": "Luminaire 2",
+                    "manufacturer": "Philips",
+                    "lamp": "13W"
+                },
+                "Luminaire 3": {
+                    "name": "Luminaire 3",
+                    "manufacturer": "ERCO",
+                    "lamp": "3W"
+                }
+            };
+        }
+        else {
+            this.luminaires = {};
+        }
+        this.updateList($("#filter_luminaires").val());
     }
     return LuminairesModule;
 }());
@@ -265,13 +296,13 @@ module.exports = (function () {
         this.materials = MaterialsModule;
         var LocationModule = new Location(debug);
         this.location = LocationModule;
-        var ObjectivesModule = new Objectives();
+        var ObjectivesModule = new Objectives(debug);
         this.objectives = ObjectivesModule;
         var CalculateModule = new Calculate();
         this.calculate = CalculateModule;
-        var LuminairesModule = new Luminaires();
+        var LuminairesModule = new Luminaires(debug);
         this.luminaires = LuminairesModule;
-        var PhotosensorsModule = new Photosensors();
+        var PhotosensorsModule = new Photosensors(debug);
         this.photosensors = PhotosensorsModule;
         var ObserversModule = new Observers();
         this.observers = ObserversModule;
@@ -615,6 +646,7 @@ module.exports = (function () {
             $("i.edit-material").on("click", function () {
                 var name = $(this).attr("name");
                 editMaterial(name);
+                openDialog("add_material_dialog");
             });
         };
         this.adaptDialog = function (c) {
@@ -737,6 +769,8 @@ module.exports = (function () {
             return true;
         };
         var addMaterial = this.addMaterial;
+        this.addMaterialDialog = $("#add_material_dialog");
+        setOnSubmit(this.addMaterialDialog, addMaterial);
         var classes = ["Glass", "Plastic", "Metal", "Perforated metal", "Perforated plastic", "Diffuser", "Fabric"];
         for (var i = 0; i < classes.length; i++) {
             var cl = classes[i];
@@ -750,6 +784,7 @@ module.exports = (function () {
         $("#add_material_button").on("click", function () {
             $("#material_name").val("");
             $("#material_name").removeAttr("disabled");
+            openDialog("add_material_dialog");
         });
         var updateList = this.updateList;
         $("#filter_materials").keyup(function () {
@@ -828,35 +863,12 @@ var UDI = require("./objectives/udi");
 var DA = require("./objectives/da");
 var SkyVisibility = require("./objectives/sky_visibility");
 module.exports = (function () {
-    function ObjectivesModule() {
+    function ObjectivesModule(debug) {
         var _this = this;
         this.metrics = [Lux, DF, UDI, DA, SkyVisibility];
-        this.add_objective = function (wp_name, obj_name) {
+        this.addObjective = function (wp_name, obj_name) {
             var message = { "workplane": wp_name, "objective": obj_name };
             Utilities.sendAction("add_objective", JSON.stringify(message));
-        };
-        this.get_human_description = function (metric) {
-            var description = metric.human_language;
-            var requirements = metric.requirements;
-            for (var _i = 0, requirements_1 = requirements; _i < requirements_1.length; _i++) {
-                var item = requirements_1[_i];
-                if (item.value !== null && typeof item.value === 'object') {
-                    for (var sub_item_name in item.value) {
-                        if (item.value.hasOwnProperty(sub_item_name)) {
-                            description = Utilities.replaceAll(description, "%" + item.name + "_" + sub_item_name + "%", $("#objective_" + item.name + "_" + sub_item_name).val());
-                        }
-                    }
-                }
-                else {
-                    description = Utilities.replaceAll(description, "%" + item.name + "%", $("#objective_" + item.name).val());
-                }
-            }
-            return description;
-        };
-        this.update_human_description = function () {
-            var metric = $("#metric").val();
-            metric = Utilities.getObjectiveType(metric);
-            $("#objective_human_description").text(_this.get_human_description(metric));
         };
         this.create_objective = function () {
             var failure = { success: false };
@@ -879,11 +891,11 @@ module.exports = (function () {
                 return failure;
             }
             _this.objectives[name] = objective;
-            _this.update_objectives("");
+            _this.updateList("");
             Utilities.sendAction("create_objective", JSON.stringify(objective));
             return { success: true };
         };
-        this.remove_objective = function (workplane, objective) {
+        this.removeObjective = function (workplane, objective) {
             Utilities.sendAction("remove_objective", JSON.stringify({ "workplane": workplane, "objective": objective }));
         };
         this.adapt_objective_dialog = function (metric_name) {
@@ -891,9 +903,8 @@ module.exports = (function () {
             $("#create_objective_dialog").children().hide();
             $("#objective_good_pixel").hide();
             $("label[for='objective_good_pixel']").hide();
-            $("#objective_name_field").show();
+            $("#objectiveName_field").show();
             $("#metric_field").show();
-            $("#compliance_field").show();
             $("#human_description").show();
             var _loop_1 = function (item) {
                 $("#objective_" + item.name).show();
@@ -918,11 +929,10 @@ module.exports = (function () {
                 _loop_1(item);
             }
             $("#objective_good_light_legend").text(metric.good_light_legend);
-            _this.update_human_description();
         };
         this.get_objective_object = function (metric_name) {
             var ret = {};
-            ret["name"] = $.trim($("#objective_name").val());
+            ret["name"] = $.trim($("#objectiveName").val());
             ret["metric"] = metric_name;
             var metric = Utilities.getObjectiveType(metric_name);
             ret["dynamic"] = metric.dynamic;
@@ -947,47 +957,118 @@ module.exports = (function () {
             $("#objective_good_light_legend").text(metric.good_light_legend);
             return { success: true, object: ret };
         };
-        this.update_objectives = function (filter) {
+        this.editWorkplane = function (workplaneName) {
+            console.log("About to edit workplane " + workplaneName);
+            return { success: true };
+        };
+        this.updateList = function (filter) {
+            filter = filter.toLowerCase();
             var list = $("#objectives_list");
             list.html("");
             if (Object.keys(_this.objectives).length == 0) {
                 $("<div class='center'><h4>There are no objectives in your model...</h4></div>").appendTo(list);
                 return;
             }
-            filter = filter.toLowerCase();
-            var _loop_2 = function (objective) {
-                if (_this.objectives.hasOwnProperty(objective)) {
-                    if (objective.toLowerCase().indexOf(filter) >= 0) {
-                        var new_row = $("<tr></tr>");
-                        var drag = $(("<td name='" + objective + "'>" + objective + "</td>"));
-                        new_row.append(drag);
-                        var action_column = $("<td></td>");
-                        var delete_button = $("<span name=\"" + objective + "\" class='ui-icon ui-icon-trash del-material'></span>");
-                        var edit_button = $("<span name=\"" + objective + "\" class='ui-icon ui-icon-pencil edit-material'></span>");
-                        delete_button.on("click", function () {
-                            var objective_name = $(this).attr("name");
-                            Utilities.sendAction("delete_objective", objective_name);
+            var objectives = $("<tr></tr>");
+            objectives.append($("<td></td>"));
+            var _loop_2 = function (objectiveName) {
+                if (_this.objectives.hasOwnProperty(objectiveName)) {
+                    if (objectiveName.toLowerCase().indexOf(filter) >= 0) {
+                        var td = $(("<td name='" + objectiveName + "'>" + objectiveName + "</td>"));
+                        objectives.append(td);
+                        var checkBox = $("<input type='checkbox' name='" + objectiveName + "'>");
+                        var editButton = $("<i name='" + objectiveName + "' class='material-icons edit-material'>mode_edit</i>");
+                        var deleteButton = $("<i name='" + objectiveName + "' class='material-icons edit-material'>delete</i>");
+                        td.append(checkBox);
+                        td.append(deleteButton);
+                        td.append(editButton);
+                        checkBox.click(function () {
+                            console.log("check | uncheck whole objective");
+                        });
+                        deleteButton.click(function () {
+                            var objectiveName = $(this).attr("name");
+                            Utilities.sendAction("delete_objective", objectiveName);
                         });
                         var editObjective_1 = _this.editObjective;
-                        edit_button.on("click", function () {
-                            var objective_name = $(this).attr("name");
-                            editObjective_1(objective_name);
+                        editButton.click(function () {
+                            var objectiveName = $(this).attr("name");
+                            editObjective_1(objectiveName);
                         });
-                        new_row.append(action_column);
-                        action_column.append(edit_button);
-                        action_column.append(delete_button);
-                        list.append(new_row);
+                        objectives.append(td);
                     }
                 }
             };
-            for (var objective in _this.objectives) {
-                _loop_2(objective);
+            for (var objectiveName in _this.objectives) {
+                _loop_2(objectiveName);
+            }
+            list.append(objectives);
+            var _loop_3 = function (workplaneName) {
+                if (_this.workplanes.hasOwnProperty(workplaneName)) {
+                    if (workplaneName.toLowerCase().indexOf(filter) >= 0) {
+                        var tr_1 = $("<tr></tr>");
+                        var td_1 = $(("<td name='" + workplaneName + "'>" + workplaneName + "</td>"));
+                        tr_1.append(td_1);
+                        var checkBox = $("<input type='checkbox' name='" + workplaneName + "'>");
+                        var editButton = $("<i name='" + workplaneName + "' class='material-icons edit-material'>mode_edit</i>");
+                        var deleteButton = $("<i name='" + workplaneName + "' class='material-icons edit-material'>delete</i>");
+                        td_1.append(checkBox);
+                        td_1.append(deleteButton);
+                        td_1.append(editButton);
+                        checkBox.click(function () {
+                            console.log("check | uncheck whole workplane");
+                        });
+                        deleteButton.click(function () {
+                            var workplaneName = $(this).attr("name");
+                            Utilities.sendAction("delete_workplane", workplaneName);
+                        });
+                        var editWorkplane_1 = _this.editWorkplane;
+                        editButton.click(function () {
+                            var workplaneName = $(this).attr("name");
+                            editWorkplane_1(workplaneName);
+                        });
+                        tr_1.append(td_1);
+                        var a_1 = _this.workplanes[workplaneName];
+                        objectives.children("td").each(function () {
+                            var obj = $(this);
+                            var objName = $(this).attr("name");
+                            if (objName !== undefined) {
+                                console.log(objName);
+                                td_1 = $("<td></td>");
+                                var check = $("<input type='checkbox' id='" + workplaneName + "|||" + objName + "'>");
+                                var label = $("<label for='" + workplaneName + "|||" + objName + "'></label>");
+                                if (a_1.indexOf(objName) > -1) {
+                                    check.prop('checked', true);
+                                }
+                                else {
+                                    check.prop('checked', false);
+                                }
+                                check.click(function () {
+                                    var name = $(this).attr("id").split("|||");
+                                    var msg = { workplane: name[0], objective: name[1] };
+                                    if ($(this).is(':checked')) {
+                                        Utilities.sendAction("add_objective_to_workplane", JSON.stringify(msg));
+                                    }
+                                    else {
+                                        Utilities.sendAction("delete_objective_from_workplane", JSON.stringify(msg));
+                                    }
+                                });
+                                td_1.append(check);
+                                td_1.append(label);
+                                tr_1.append(td_1);
+                            }
+                        });
+                        list.append(tr_1);
+                    }
+                }
+            };
+            for (var workplaneName in _this.workplanes) {
+                _loop_3(workplaneName);
             }
         };
         this.parseObjective = function (obj) {
             _this.adapt_objective_dialog(obj.metric);
             $("#metric").val(obj["metric"]);
-            $("#objective_name").val(obj.name);
+            $("#objectiveName").val(obj.name);
             var metric = Utilities.getObjectiveType(obj.metric);
             for (var _i = 0, _a = metric.requirements; _i < _a.length; _i++) {
                 var item = _a[_i];
@@ -1003,82 +1084,62 @@ module.exports = (function () {
                 }
             }
         };
-        this.editObjective = function (objective_name) {
-            $("#objective_name").prop("disabled", true);
-            var obj = _this.objectives[objective_name];
+        this.editObjective = function (objectiveName) {
+            $("#objectiveName").prop("disabled", true);
+            var obj = _this.objectives[objectiveName];
             var metric = Utilities.getObjectiveType(obj["metric"]);
             _this.parseObjective(obj);
+            openDialog("add_objective_dialog");
         };
-        this.get_new_row_for_workplane = function (workplane, objective) {
-            var row = $("<tr></tr>");
-            var name_column = $("<td>" + objective + "</td>");
-            row.append(name_column);
-            var actions_column = $("<td></td>");
-            var delete_button = $("<span name='" + workplane + "' title='" + objective + "' class='ui-icon ui-icon-trash del-objective'></span>");
-            var remove_objective = _this.remove_objective;
-            delete_button.on("click", function () {
-                var wp = $(this).attr("name");
-                var obj = $(this).parent().siblings("td").text();
-                remove_objective(wp, obj);
-            });
-            actions_column.append(delete_button);
-            row.append(actions_column);
-            return row;
-        };
-        this.update_workplanes = function (filter) {
-            var ul = $("#workplane_objectives");
-            ul.html("");
-            if (Object.keys(_this.workplanes).length === 0) {
-                $("<div class='center'><h4>There are no workplanes in your model...</h4></div>").appendTo(ul);
-                return;
-            }
-            filter = filter.toLowerCase();
-            var workplanes = _this.workplanes;
-            var add_objective = _this.add_objective;
-            var get_new_row_for_workplane = _this.get_new_row_for_workplane;
-            for (var wp_name in _this.workplanes) {
-                if (_this.workplanes.hasOwnProperty(wp_name)) {
-                    if (wp_name.toLowerCase().indexOf(filter) >= 0) {
-                        var li = $("<li></li>");
-                        var title = $("<h1></h1>");
-                        title.text(wp_name);
-                        li.append(title);
-                        ul.append(li);
-                        var objectives = _this.workplanes[wp_name];
-                        if (objectives.length == 0) {
-                            li.append($("<div>Drop objectives here</div>"));
-                            li.addClass("empty");
-                        }
-                        else {
-                            var table = $("<table id='" + Utilities.fixName(wp_name) + "_objectives'>");
-                            for (var i = 0; i < objectives.length; i++) {
-                                var row = _this.get_new_row_for_workplane(wp_name, objectives[i]);
-                                table.append(row);
-                            }
-                            li.append(table);
-                        }
-                    }
+        if (debug) {
+            this.objectives = {
+                "DA(300,50%)": {
+                    "name": "UDI(300-3000,50%)",
+                    "metric": "DA",
+                    "dynamic": true,
+                    "good_pixel": 50,
+                    "good_light": { "min": 300, "max": null },
+                    "goal": 50, "occupied": { "min": 8, "max": 18 }, "sim_period": { "min": 1, "max": 12 }
+                },
+                "UDI(300-3000,50%)": {
+                    "name": "UDI(300-3000,50%)",
+                    "metric": "UDI",
+                    "dynamic": true,
+                    "good_pixel": 50,
+                    "good_light": { "min": 300, "max": 3000 },
+                    "goal": 50, "occupied": { "min": 8, "max": 18 }, "sim_period": { "min": 1, "max": 12 }
+                },
+                "DF 10%": {
+                    "name": "DF 10%",
+                    "metric": "DF",
+                    "dynamic": false,
+                    "good_pixel": 50,
+                    "good_light": { "min": 300, "max": 3000 },
+                    "goal": 50, "occupied": { "min": 8, "max": 18 }, "sim_period": { "min": 1, "max": 12 }
                 }
-            }
-        };
-        this.objectives = {};
-        this.workplanes = {};
+            };
+            this.workplanes = {
+                "Basement": [],
+                "1st Floor": [
+                    "DA(300,50%)", "DF 10%"
+                ]
+            };
+        }
+        else {
+            this.objectives = {};
+            this.workplanes = {};
+        }
         var create_objective = this.create_objective;
-        var update_workplanes = this.update_workplanes;
-        $("#workplane_objectives_filter").keyup(function () {
-            update_workplanes(this.value);
-        });
+        this.add_objective_dialog = $("#create_objective_dialog");
+        setOnSubmit(this.add_objective_dialog, create_objective);
         var adapt_objective_dialog = this.adapt_objective_dialog;
         $("#metric").on("change", function () {
             adapt_objective_dialog(this.value);
         });
         var add_objective_dialog = this.add_objective_dialog;
         $("#create_objective_button").on("click", function () {
-            $("#objective_name").removeAttr("disabled");
-        });
-        var update_human_description = this.update_human_description;
-        $("#create_objective_dialog input").change(function () {
-            update_human_description();
+            $("#objectiveName").removeAttr("disabled");
+            openDialog("create_objective_dialog");
         });
         for (var _i = 0, _a = this.metrics; _i < _a.length; _i++) {
             var metric = _a[_i];
@@ -1088,12 +1149,11 @@ module.exports = (function () {
             }));
         }
         this.adapt_objective_dialog(this.metrics[0].metric);
-        var update_objectives = this.update_objectives;
+        var updateList = this.updateList;
         $("#objectives_filter").keyup(function () {
-            update_objectives(this.value);
+            updateList(this.value);
         });
-        this.update_objectives("");
-        this.update_workplanes("");
+        this.updateList("");
     }
     return ObjectivesModule;
 }());
@@ -1373,7 +1433,7 @@ module.exports = (function () {
 "use strict";
 var Utilities = require("../Utilities");
 module.exports = (function () {
-    function PhotosensorsModule() {
+    function PhotosensorsModule(debug) {
         var _this = this;
         this.updateList = function (filter) {
             var list = $("#photosensor_list");
@@ -1387,20 +1447,25 @@ module.exports = (function () {
             for (var sensor_name in _this.photosensors) {
                 var sensor = _this.photosensors[sensor_name];
                 if (sensor_name.toLowerCase().indexOf(filter) >= 0) {
-                    html = html + "<tr><td class='photosensor-name' name=\"" + sensor_name + "\">" + sensor_name + "</td>";
-                    html = html + "<td class='icons'><span name=\"" + sensor_name + "\" class='ui-icon ui-icon-trash del-sensor'></span><span name=\"" + sensor_name + "\" class='ui-icon ui-icon-pencil edit-sensor'></span></td>";
+                    html = html + "<tr>" +
+                        "<td class='photosensor-name' name=\"" + sensor_name + "\">" + sensor_name + "</td>"
+                        + "<td name='" + sensor_name + "'>"
+                        + "<i name='" + sensor_name + "' class='material-icons edit-sensor'>mode_edit</i>"
+                        + "<i name='" + sensor_name + "' class='material-icons del-sensor'>delete</i>"
+                        + "</td>"
+                        + "</tr>";
                 }
             }
-            html += "</tr>";
+            "</tr>";
             list.html(html);
             var editSensor = _this.editSensor;
-            $("span.edit-sensor").on("click", function () {
+            $("i.edit-sensor").on("click", function () {
                 var name = $(this).attr("name");
                 Utilities.sendAction("enable_photosensor_tool", "");
                 editSensor(name);
             });
             var deleteSensor = _this.deleteSensor;
-            $("span.del-sensor").on("click", function () {
+            $("i.del-sensor").on("click", function () {
                 var name = $(this).attr("name");
                 deleteSensor(name);
             });
@@ -1488,6 +1553,17 @@ module.exports = (function () {
         };
         this.photosensors = {};
         var addSensor = this.addSensor;
+        $("#add_photosensor_button").on("click", function () {
+            openDialog("add_photosensor_dialog");
+        });
+        this.addPhotosensorDialog = $("#add_photosensor_dialog");
+        setOnSubmit(this.addPhotosensorDialog, function () {
+            addSensor(true);
+            Utilities.sendAction("disable_active_tool", "");
+        });
+        setOnCancel(this.addPhotosensorDialog, function () {
+            Utilities.sendAction("disable_active_tool", "");
+        });
         var updateList = this.updateList;
         $("#filter_photosensors").keyup(function () {
             updateList(this.value);
@@ -1504,7 +1580,17 @@ module.exports = (function () {
                 addSensor(false);
             }
         });
-        this.updateList("");
+        if (debug) {
+            this.photosensors = {
+                "Sensor 1": {},
+                "Sensor 2": {},
+                "Sensor 3": {}
+            };
+        }
+        else {
+            this.photosensors = {};
+        }
+        this.updateList($("#filter_photosensors").val());
     }
     return PhotosensorsModule;
 }());

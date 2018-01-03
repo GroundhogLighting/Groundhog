@@ -31,7 +31,10 @@ export = class MaterialModule  {
                                     height: 0.9 * $(window).height(),
                                     width: 0.6 * $(window).width()
                                 });
-        */                                                
+        */     
+        this.addMaterialDialog = $("#add_material_dialog");
+        setOnSubmit(this.addMaterialDialog, addMaterial); 
+        
         let classes = ["Glass","Plastic","Metal","Perforated metal","Perforated plastic", "Diffuser", "Fabric"];
 
         //Load materials in select
@@ -48,7 +51,7 @@ export = class MaterialModule  {
         $("#add_material_button").on("click", function () { // .button()
             $("#material_name").val("");
             $("#material_name").removeAttr("disabled");                        
-            //addMaterialDialog.dialog("open");
+            openDialog("add_material_dialog");
         });
 
 
@@ -134,6 +137,7 @@ export = class MaterialModule  {
 
     updateList = ( filter: string ) :void => {
         filter = filter.toLowerCase();
+       
         let list = $("#material_list");
         list.html("");
         if(Object.keys(this.materials).length == 0){
@@ -181,6 +185,7 @@ export = class MaterialModule  {
         $("i.edit-material").on("click", function () {
             let name = $(this).attr("name");
             editMaterial(name);
+            openDialog("add_material_dialog");
         });
        
     }

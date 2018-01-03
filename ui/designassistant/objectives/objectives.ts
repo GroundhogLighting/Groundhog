@@ -17,13 +17,51 @@ export = class ObjectivesModule {
     objectives:any;
     workplanes: any;
 
-    constructor(){
-        this.objectives = {};//{"DA(300,50%)":{"name":"DA(300,50%)","metric":"DA","dynamic":true,"good_pixel":50,"good_light":{"min":300,"max":null},"goal":50,"occupied":{"min":8,"max":18},"sim_period":{"min":1,"max":12}}};//{};
-        this.workplanes ={};// {"Basement":[],"1st Floor":["DA(300,50%)"]}; //{};
+    constructor(debug: boolean){
+        if(debug){
+            this.objectives = {
+                "DA(300,50%)":{ 
+                    "name":"UDI(300-3000,50%)",
+                    "metric":"DA",
+                    "dynamic":true,
+                    "good_pixel":50,
+                    "good_light":{"min":300,"max":null},
+                    "goal":50,"occupied":{"min":8,"max":18},"sim_period":{"min":1,"max":12}
+                },
+                "UDI(300-3000,50%)":{ 
+                    "name":"UDI(300-3000,50%)",
+                    "metric":"UDI",
+                    "dynamic":true,
+                    "good_pixel":50,
+                    "good_light":{"min":300,"max":3000},
+                    "goal":50,"occupied":{"min":8,"max":18},"sim_period":{"min":1,"max":12}
+                },
+                "DF 10%":{ 
+                    "name":"DF 10%",
+                    "metric":"DF",
+                    "dynamic":false,
+                    "good_pixel":50,
+                    "good_light":{"min":300,"max":3000},
+                    "goal":50,"occupied":{"min":8,"max":18},"sim_period":{"min":1,"max":12}
+                }
+            };
+            this.workplanes = {
+                "Basement":[],
+                "1st Floor":[
+                    "DA(300,50%)","DF 10%"
+                ]
+            }; 
+
+        }else{
+            this.objectives = {};
+            this.workplanes ={};
+        }
 
         let create_objective = this.create_objective;
+        this.add_objective_dialog =  $("#create_objective_dialog");
+        setOnSubmit(this.add_objective_dialog,create_objective);
         /*
-        this.add_objective_dialog =  $("#create_objective_dialog").dialog({
+        .dialog({
             autoOpen: false,
             modal: true,
             buttons: {
@@ -39,11 +77,12 @@ export = class ObjectivesModule {
 
 
         //objectives....
+        /*
         let update_workplanes = this.update_workplanes;
         $("#workplane_objectives_filter").keyup(function () {
             update_workplanes(this.value);
         });
-
+*/
         let adapt_objective_dialog = this.adapt_objective_dialog;
         $("#metric").on("change", function () {
             adapt_objective_dialog(this.value);
@@ -51,14 +90,14 @@ export = class ObjectivesModule {
 
         let add_objective_dialog = this.add_objective_dialog;
         $("#create_objective_button").on("click", function () { //button().
-            $("#objective_name").removeAttr("disabled");
-            //add_objective_dialog.dialog("open");
+            $("#objectiveName").removeAttr("disabled");
+            openDialog("create_objective_dialog");
         });
 
         //$("#objective_date_date").datepicker();
 
-        let update_human_description = this.update_human_description;
         /*
+        let update_human_description = this.update_human_description;
         $(".resizable1").resizable({
             autoHide: true,
             handles: 'e',
@@ -77,12 +116,12 @@ export = class ObjectivesModule {
                 });
             }
         });
-        */
-
+        
         $("#create_objective_dialog input").change(function(){
             update_human_description();
         });
-
+        */
+        
         for (let metric of this.metrics) {            
             $('#metric').append($('<option>', {
                 value: metric.metric,
@@ -93,50 +132,21 @@ export = class ObjectivesModule {
 
 
         this.adapt_objective_dialog(this.metrics[0].metric);
-        let update_objectives = this.update_objectives;
+        let updateList = this.updateList;
         $("#objectives_filter").keyup(function () {
-            update_objectives(this.value)
+            updateList(this.value)
         });    
 
-        this.update_objectives("");
-        this.update_workplanes("");
+        this.updateList("");        
 
     }// END OF CONSTRUCTOR
 
         
 
-    add_objective = (wp_name : string, obj_name: string): void => {
+    addObjective = (wp_name : string, obj_name: string): void => {
         let message = { "workplane": wp_name, "objective": obj_name}//objectives[obj_name] };
         Utilities.sendAction("add_objective",JSON.stringify(message));
     };
-
-
-
-    get_human_description = (metric: ObjectiveType) : string => {       
-        let description = metric.human_language;
-        let requirements = metric.requirements;
-        //replace the data in the description
-        for (let item of requirements) {          
-            // get values
-            if (item.value !== null && typeof item.value === 'object'){
-                for (let sub_item_name in item.value) {
-                    if (item.value.hasOwnProperty(sub_item_name)) {
-                        description = Utilities.replaceAll(description,"%"+item.name+"_"+sub_item_name+"%",$("#objective_"+item.name+"_"+sub_item_name).val());
-                    }
-                }
-            }else{
-                description = Utilities.replaceAll(description,"%"+item.name+"%", $("#objective_"+item.name).val());
-            }            
-        }
-        return description;
-    };
-
-    update_human_description = () : void => {
-        //change human description
-        let metric = $("#metric").val();   
-        metric = Utilities.getObjectiveType(metric);
-        $("#objective_human_description").text(this.get_human_description(metric));
-    }
 
     create_objective = () : Response => {
         let failure = { success: false }
@@ -156,7 +166,7 @@ export = class ObjectivesModule {
             return failure;
         }
         this.objectives[name] = objective;
-        this.update_objectives("");
+        this.updateList("");
         //this.add_objective_dialog.dialog("close");
         
         Utilities.sendAction("create_objective",JSON.stringify(objective));
@@ -165,7 +175,7 @@ export = class ObjectivesModule {
 
 
 
-    remove_objective = (workplane: string, objective:string) => {
+    removeObjective = (workplane: string, objective:string) => {
         Utilities.sendAction("remove_objective",JSON.stringify({ "workplane": workplane, "objective": objective }));
     };
 
@@ -182,9 +192,9 @@ export = class ObjectivesModule {
         $("label[for='objective_good_pixel']").hide();
 
         //show the default things
-        $("#objective_name_field").show();
+        $("#objectiveName_field").show();
         $("#metric_field").show();
-        $("#compliance_field").show();
+        //$("#compliance_field").show();
         $("#human_description").show();
 
         // Then, show only specific items that are needed.
@@ -211,7 +221,7 @@ export = class ObjectivesModule {
         }
         //change legend
         $("#objective_good_light_legend").text(metric.good_light_legend);
-        this.update_human_description();
+        //this.update_human_description();
     };
 
 
@@ -219,7 +229,7 @@ export = class ObjectivesModule {
     get_objective_object = (metric_name: string) : Response => {
         //get the requirements
         let ret: any = {};
-        ret["name"] = $.trim($("#objective_name").val());
+        ret["name"] = $.trim($("#objectiveName").val());
         ret["metric"] = metric_name;
         let metric = Utilities.getObjectiveType(metric_name);
         ret["dynamic"] = metric.dynamic;
@@ -248,44 +258,137 @@ export = class ObjectivesModule {
         return {success: true, object: ret};
     }
 
+    editWorkplane = (workplaneName : string) : Response => {
+        console.log("About to edit workplane "+ workplaneName);   
+        return { success: true}     
+    }
 
         
-    update_objectives = (filter: string) => {
+    updateList = (filter: string) => {
+
+        filter = filter.toLowerCase();
+        
         let list = $("#objectives_list");
         list.html("");
         if (Object.keys(this.objectives).length == 0) {
             $("<div class='center'><h4>There are no objectives in your model...</h4></div>").appendTo(list);
             return;
         }
-        filter = filter.toLowerCase();
-        for (let objective in this.objectives) {
-            if (this.objectives.hasOwnProperty(objective)) {
-            if (objective.toLowerCase().indexOf(filter) >= 0) {//filter by objective name
-                let new_row = $("<tr></tr>");
-                let drag = $(("<td name='"+objective+"'>" + objective +"</td>"));
-                new_row.append(drag); //
-                let action_column = $("<td></td>");
-                let delete_button = $("<span name=\"" + objective + "\" class='ui-icon ui-icon-trash del-material'></span>")
-                let edit_button = $("<span name=\"" + objective + "\" class='ui-icon ui-icon-pencil edit-material'></span>")
-                delete_button.on("click", function () {
-                    let objective_name = $(this).attr("name");
-                    Utilities.sendAction("delete_objective",objective_name);
-                });
-                let editObjective = this.editObjective;
-                edit_button.on("click", function () {
-                    let objective_name = $(this).attr("name");
-                    editObjective(objective_name);
-                });
-                new_row.append(action_column);
-                action_column.append(edit_button);
-                action_column.append(delete_button);
-                /*drag.draggable({
-                    appendTo: "body",
-                    helper: "clone"
-                });
-                */
-                list.append(new_row)
+
+        let objectives = $("<tr></tr>");
+        objectives.append($("<td></td>"));
+        // For each objective
+        for (let objectiveName in this.objectives) {
+            if (this.objectives.hasOwnProperty(objectiveName)) {
+                //filter by objective name
+                if (objectiveName.toLowerCase().indexOf(filter) >= 0) {                    
+
+                    let td = $(("<td name='"+objectiveName+"'>" + objectiveName +"</td>"));
+                    objectives.append(td); 
+
+                    let checkBox = $("<input type='checkbox' name='"+objectiveName+"'>");
+                    let editButton = $("<i name='" + objectiveName + "' class='material-icons edit-material'>mode_edit</i>");
+                    let deleteButton = $("<i name='" + objectiveName + "' class='material-icons edit-material'>delete</i>")
+                    
+                    td.append(checkBox);
+                    td.append(deleteButton);
+                    td.append(editButton);
+
+                    checkBox.click(function(){
+                        console.log("check | uncheck whole objective");
+                    })
+
+                    deleteButton.click(function () {
+                        let objectiveName = $(this).attr("name");
+                        Utilities.sendAction("delete_objective",objectiveName);
+                    });
+                    
+                    let editObjective = this.editObjective;
+                    editButton.click(function () {
+                        let objectiveName = $(this).attr("name");
+                        editObjective(objectiveName);
+                    });
+                    
+                    objectives.append(td);
+                }
             }
+        } // End iterating objectives
+
+        list.append(objectives);
+
+        // Iterate workplanes
+        for (let workplaneName in this.workplanes) {
+            if (this.workplanes.hasOwnProperty(workplaneName)) {
+                //filter by objective name
+                if (workplaneName.toLowerCase().indexOf(filter) >= 0) {
+                    let tr = $("<tr></tr>");
+
+                    // Add workplane name
+                    let td = $(("<td name='"+workplaneName+"'>" + workplaneName +"</td>"));
+                    tr.append(td); 
+
+                    let checkBox = $("<input type='checkbox' name='"+workplaneName+"'>");
+                    let editButton = $("<i name='" + workplaneName + "' class='material-icons edit-material'>mode_edit</i>");
+                    let deleteButton = $("<i name='" + workplaneName + "' class='material-icons edit-material'>delete</i>")
+                    
+                    td.append(checkBox);
+                    td.append(deleteButton);
+                    td.append(editButton);
+
+
+                    checkBox.click(function(){
+                        console.log("check | uncheck whole workplane");
+                    })
+
+                    deleteButton.click(function () {
+                        let workplaneName = $(this).attr("name");
+                        Utilities.sendAction("delete_workplane",workplaneName);
+                    });
+                    
+                    let editWorkplane = this.editWorkplane;
+                    editButton.click(function () {
+                        let workplaneName = $(this).attr("name");
+                        editWorkplane(workplaneName);
+                    });
+                    
+                    tr.append(td);
+
+                    // Check the objectives.
+                    let a = this.workplanes[workplaneName];
+                    objectives.children("td").each(function(){
+                        let obj = $(this);
+                        let objName = $(this).attr("name");
+                        if(objName !== undefined){                            
+                            td = $("<td></td>");
+                            let check = $("<input type='checkbox' id='"+workplaneName+"|||"+objName+"'>");
+                            let label = $("<label for='"+workplaneName+"|||"+objName+"'></label>")
+                            
+                            
+                            if(a.indexOf(objName) > -1){
+                                check.prop('checked', true);
+                            }else{
+                                check.prop('checked', false);
+                            }
+                            
+                            check.click(function(){
+                                let name = $(this).attr("id").split("|||");
+                                let msg = {workplane: name[0], objective: name[1]};
+                                if($(this).is(':checked')){
+                                    Utilities.sendAction("add_objective_to_workplane",JSON.stringify(msg));
+                                }else{
+                                    Utilities.sendAction("delete_objective_from_workplane",JSON.stringify(msg));
+                                }
+                            });
+                            
+                            td.append(check);
+                            td.append(label);
+                            tr.append(td);
+                        }
+                    });
+
+
+                    list.append(tr);
+                }
             }
         }
     }
@@ -293,7 +396,7 @@ export = class ObjectivesModule {
     parseObjective = (obj: any) => {
         this.adapt_objective_dialog(obj.metric);
         $("#metric").val(obj["metric"]);
-        $("#objective_name").val(obj.name);
+        $("#objectiveName").val(obj.name);
         let metric = Utilities.getObjectiveType(obj.metric);
         for (let item of metric.requirements) {             
             // get values
@@ -309,109 +412,13 @@ export = class ObjectivesModule {
         }
     }
 
-    editObjective = (objective_name: string) => {
-        $("#objective_name").prop("disabled",true);
-        let obj = this.objectives[objective_name];
+    editObjective = (objectiveName: string) => {
+        $("#objectiveName").prop("disabled",true);
+        let obj = this.objectives[objectiveName];
         let metric = Utilities.getObjectiveType(obj["metric"]);
         this.parseObjective(obj);        
-        //this.add_objective_dialog.dialog("open");
+        openDialog("add_objective_dialog");
     };
-
-    
-
-    
-    get_new_row_for_workplane = (workplane: string, objective: string) => {
-        let row = $("<tr></tr>");
-        let name_column = $("<td>" + objective + "</td>");
-        row.append(name_column);
-
-        let actions_column = $("<td></td>");
-        let delete_button = $("<span name='" + workplane + "' title='" + objective + "' class='ui-icon ui-icon-trash del-objective'></span>")
-        let remove_objective = this.remove_objective;
-        delete_button.on("click", function () {
-            let wp = $(this).attr("name");
-            let obj = $(this).parent().siblings("td").text();
-            remove_objective(wp, obj);
-        });
-        actions_column.append(delete_button);
-        row.append(actions_column);
-        return row;
-    }
-
-    update_workplanes = (filter: string) : void => {
-        let ul = $("#workplane_objectives"); ul.html("");
-
-        if (Object.keys(this.workplanes).length === 0) {
-            $("<div class='center'><h4>There are no workplanes in your model...</h4></div>").appendTo(ul);
-            return;
-        }
-        filter = filter.toLowerCase();        
-        let workplanes = this.workplanes;
-        let add_objective = this.add_objective;
-        let get_new_row_for_workplane = this.get_new_row_for_workplane;
-        for (let wp_name in this.workplanes) {
-            if (this.workplanes.hasOwnProperty(wp_name)) {
-            if (wp_name.toLowerCase().indexOf(filter) >= 0) {//filter by workplane name
-                //first, create the h3 header
-                let li = $("<li></li>");
-                let title = $("<h1></h1>");
-                title.text(wp_name);
-                li.append(title);
-
-                /*
-                li.droppable({
-                    hoverClass: "hover",
-                    accept: ":not(.ui-sortable-helper)",
-                    drop: function(event: any, ui: any) {
-                        if ("TD" != ui.draggable.prop("tagName")) { return };
-
-                        let wp_name = $(this).find("h1").text();
-                        let table_name = Utilities.fixName(wp_name) + "_objectives";
-                        let objective = ui.draggable.attr("name");
-                        //check if workplane already has the objective
-                        if (workplanes[wp_name].indexOf(objective) >= 0) {
-                            alert("That workplane has already been assigned that objective!")
-                            return;
-                        }
-                        //add the objective visually to the UI
-                        let new_row = get_new_row_for_workplane(wp_name, objective);
-                        let table = $("#" + table_name);
-                        if (table.length == 0) { // if the table does not exist
-                            $(this).find("div").remove(); //remove the "drop here" tag
-                            table = $("<table id='" + table_name + "'></table>"); // Create it
-                            table.appendTo($(this)); //append it
-                        }
-                        //now we are sure it exists
-                        new_row.appendTo(table);
-
-                        //register the objective in the data structure
-                        workplanes[wp_name].push(objective);
-
-                        //pass the information to SketchUp
-                        add_objective(wp_name,objective);
-                    }
-                });
-                */
-                ul.append(li);
-
-                // Fill with objectives
-                let objectives = this.workplanes[wp_name];
-                if (objectives.length == 0) {
-                li.append($("<div>Drop objectives here</div>"))
-                li.addClass("empty");
-                } else {
-                let table = $("<table id='" + Utilities.fixName(wp_name) + "_objectives'>");
-                for (let i = 0; i < objectives.length; i++) {
-                    let row = this.get_new_row_for_workplane(wp_name, objectives[i]);
-                    table.append(row);
-                }
-                li.append(table);
-                }
-
-            }
-            }
-        }
-    }
 
 
 }// END OF CLASS

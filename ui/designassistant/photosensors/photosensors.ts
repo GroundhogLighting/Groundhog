@@ -6,27 +6,26 @@ export = class PhotosensorsModule  {
     photosensors: any;
     addPhotosensorDialog: any;
 
-    constructor (){
+    constructor (debug: boolean){
          
         
         this.photosensors = {};
 
         let addSensor = this.addSensor;
-        /*
-        this.addPhotosensorDialog =  $("#add_photosensor_dialog").dialog({
-            autoOpen: false,
-            modal: true,
-            buttons: {
-                "Add photosensor": function(){ addSensor(true)},
-                Cancel: function () {
-                    Utilities.sendAction("disable_active_tool","");
-                    $(this).dialog("close");                    
-                }
-            },
-            height: 0.8 * $(window).height(),
-            width: 0.6 * $(window).width()
+        $("#add_photosensor_button").on("click", function () {                                     
+            openDialog("add_photosensor_dialog");
         });
-        */
+
+        this.addPhotosensorDialog =  $("#add_photosensor_dialog");
+        setOnSubmit(this.addPhotosensorDialog, function(){ 
+            addSensor(true);
+            Utilities.sendAction("disable_active_tool","");   
+        }); 
+        
+        setOnCancel(this.addPhotosensorDialog, function(){
+            Utilities.sendAction("disable_active_tool","");                               
+        });
+       
         let updateList = this.updateList;
         $("#filter_photosensors").keyup(function () {
             updateList(this.value);
@@ -48,8 +47,24 @@ export = class PhotosensorsModule  {
             }
         })
                
-
-        this.updateList("");
+        /* INITIALIZE */
+        if(debug){
+            this.photosensors = {
+                "Sensor 1":{
+                    
+                }, 
+                "Sensor 2":{
+                    
+                },
+                "Sensor 3":{
+                    
+                }            
+        }
+            
+        }else{
+            this.photosensors={};
+        }
+        this.updateList($("#filter_photosensors").val());        
 
 
     }
@@ -71,18 +86,22 @@ export = class PhotosensorsModule  {
                     sensor_name.toLowerCase().indexOf(filter) >= 0                    
                 ) {  
                                               
-                    html = html + "<tr><td class='photosensor-name' name=\"" + sensor_name + "\">" + sensor_name + "</td>"                
-                    html = html + "<td class='icons'><span name=\"" + sensor_name + "\" class='ui-icon ui-icon-trash del-sensor'></span><span name=\""+sensor_name+"\" class='ui-icon ui-icon-pencil edit-sensor'></span></td>"
-                    
+                    html = html + "<tr>" + 
+                        "<td class='photosensor-name' name=\"" + sensor_name + "\">" + sensor_name + "</td>"              
+                        +"<td name='" + sensor_name + "'>"
+                            +"<i name='" + sensor_name + "' class='material-icons edit-sensor'>mode_edit</i>"
+                            +"<i name='" + sensor_name + "' class='material-icons del-sensor'>delete</i>"                        
+                        +"</td>"
+                    +"</tr>";
                 }        
         }
-        html += "</tr>";
+        "</tr>";
         list.html(html);
 
         
 
         let editSensor = this.editSensor;
-         $("span.edit-sensor").on("click", function () {
+         $("i.edit-sensor").on("click", function () {
             let name = $(this).attr("name");                              
             Utilities.sendAction("enable_photosensor_tool","");  
             editSensor(name);
@@ -91,7 +110,7 @@ export = class PhotosensorsModule  {
         
 
         let deleteSensor = this.deleteSensor;
-        $("span.del-sensor").on("click", function () {
+        $("i.del-sensor").on("click", function () {
             let name = $(this).attr("name");
             deleteSensor(name);
         });

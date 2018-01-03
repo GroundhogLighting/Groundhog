@@ -31,16 +31,16 @@ export = class DesignAssistant {
         let LocationModule = new Location(debug);
         this.location = LocationModule;
         
-        let ObjectivesModule = new Objectives();
+        let ObjectivesModule = new Objectives(debug);
         this.objectives = ObjectivesModule;
 
         let CalculateModule = new Calculate();
         this.calculate = CalculateModule;
 
-        let LuminairesModule = new Luminaires();
+        let LuminairesModule = new Luminaires(debug);
         this.luminaires = LuminairesModule; 
 
-        let PhotosensorsModule = new Photosensors();
+        let PhotosensorsModule = new Photosensors(debug);
         this.photosensors = PhotosensorsModule;  
         
         let ObserversModule = new Observers();

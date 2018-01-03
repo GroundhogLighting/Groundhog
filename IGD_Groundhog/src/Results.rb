@@ -1,3 +1,36 @@
+
+def draw_all_wps(dir)
+	model = Sketchup.active_model
+	model.start_operation("aaa")
+	
+	Dir.chdir(dir){
+		wps = Dir["*.pxl"]
+
+		wps.each{|wp|
+			puts wp	
+			group = Sketchup.active_model.entities.add_group
+			group.name=wp
+			entities=group.entities
+
+			pixels = File.readlines(wp);
+			pixels.each{|pxl|
+				pts = []
+				data = pxl.split("\t").map{|x| x.to_f.m}
+				
+				3.times{
+					aux = []
+					3.times{
+						aux << data.shift
+					}
+					pts << aux
+				}
+				face = entities.add_face pts				
+			}			
+		}
+	}
+	model.commit_operation
+end
+
 module IGD
 	module Groundhog
 
