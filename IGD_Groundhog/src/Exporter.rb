@@ -652,7 +652,7 @@ module IGD
 							next if Labeler.illuminance_sensor?(h)
 							hName=Utilities.fix_name(h.name)
 							instances=h.instances
-							lightfile = "./Components/Lights/#{hName}.lightsource"
+							lightfile = "./Components/Lights/#{hName}.rad"
 							instances.each do |inst|
 								next if not inst.parent.is_a? Sketchup::Model
 								next if Labeler.tdd?(inst)
