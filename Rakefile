@@ -67,7 +67,7 @@ def compress(os)
 		w.puts "IGD_Groundhog.rb"
 		w.puts "IGD_Groundhog"
 	}
-	puts `7z a -tzip Groundhog_#{os}.rbz @listfile.txt -x!.yardoc -x!*.DS_Store`
+	puts `./7za a -tzip Groundhog_#{os}.rbz @listfile.txt -x!.yardoc -x!*.DS_Store`
 	FileUtils.rm "listfile.txt"
 	
 end
@@ -97,6 +97,7 @@ def change_ui_version(version)
 end	
 
 def compile_ui(version)
+	return
 	change_ui_version(version)
 	warn `tsc --p #{@ui_src}`
 	warn `browserify #{@ui_src}/js/main.js --standalone DesignAssistant -o ./IGD_Groundhog/src/html/js/design_assistant_#{version}.js`

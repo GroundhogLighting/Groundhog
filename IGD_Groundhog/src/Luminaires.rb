@@ -116,8 +116,12 @@ module IGD
       def self.ies2rad(definition, path)
 
         #definition = instance.definition
-        multiplier = 1 #for now... no diming
-
+        multiplier = JSON.parse(Labeler.get_value(definition))["multiplier"]
+        if not multiplier then
+          multiplier = 1
+        end
+        multiplier = multiplier.to_f
+        
         verbose = true
       
         OS.mkdir(path)
@@ -259,7 +263,7 @@ module IGD
           area = 3.141592654*illum["radius"]*illum["radius"]
           illum_file.puts "0#{$/}1 #{mult/area}#{$/}"
         else #box
-          illum_file.puts "0#{$/}4 #{multiplier} #{illum["xdim"]} #{illum["ydim"]} #{illum["zdim"]}"
+          illum_file.puts "0#{$/}4 #{mult} #{illum["xdim"]} #{illum["ydim"]} #{illum["zdim"]}"
         end
 
         illum_file.puts "#{name}_dist illum #{name}_light"

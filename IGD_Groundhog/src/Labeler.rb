@@ -354,6 +354,9 @@ module IGD
 				data = Hash.new
 				data["ies"] = text
 
+				# Get a multiplier
+				multiplier = UI.inputbox ["Multiplier\n"], [""], "Set a multiplier"
+				multiplier = 1 if not multiplier				
 
 				text.each {|line|
 					data["luminaire"] = line.gsub("[LUMINAIRE]","").strip if line.start_with? "[LUMINAIRE]"
@@ -364,7 +367,7 @@ module IGD
 
 					break if line.start_with? "TILT="
 				}
-
+				data["multiplier"] = multiplier
 				self.set_value(comp,data.to_json)
 
 				#update
