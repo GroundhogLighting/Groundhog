@@ -1,0 +1,22 @@
+button {
+    border:none;
+    margin: 0.07in;
+    cursor: pointer;
+    height: 0.325in;
+    min-width: 0.55in;
+    border-radius: 0.0125in;
+
+    &.flat{
+        background-color:white;
+        color: $primary;
+    }
+
+    &.primary {
+        @include level-1;
+        background-color: $primary;
+        color:white;
+    
+    }
+}
+
+

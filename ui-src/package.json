@@ -1,0 +1,29 @@
+{
+  "name": "ui-src",
+  "version": "1.0.0",
+  "description": "SketchUp Groundhog UI",
+  "author": "German Molina <germolinal@gmail.com>",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "precommit": "npm run lint"
+  },
+  "dependencies": {
+    "bootstrap-vue": "^2.0.0-rc.2",
+    "npm": "^5.7.1",
+    "nuxt": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "eslint": "^4.15.0",
+    "eslint-friendly-formatter": "^3.0.0",
+    "eslint-loader": "^1.7.1",
+    "eslint-plugin-vue": "^4.0.0",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.7"
+  }
+}

@@ -16,16 +16,9 @@ Thumbs.db
 ######################
 .yardoc
 
-## UI
-ui/dist*
-ui/node_modules
-ui/.sass-cache
-ui/yarn-error.log
-ui/designassistantJS
-ui/designassistant/node_modules
-ui/preferencesJS
-ui/preferences/node_modules
-
+# UI
+ui-src/node_modules*
+ui-src/dist*
 
 #      RADIANCE      #
 ######################
