@@ -367,7 +367,7 @@ module IGD
 
 					break if line.start_with? "TILT="
 				}
-				data["multiplier"] = multiplier
+				data["multiplier"] = multiplier.shift
 				self.set_value(comp,data.to_json)
 
 				#update
