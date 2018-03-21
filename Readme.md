@@ -1,8 +1,12 @@
 
-# Groundhog Readme File
+# Welcome to Groundhog for SketchUp's repository
+
 ![](http://www.groundhoglighting.com/assets/Scene_1.png)
 
-# Downloads
+Groundhog is a SketchUp Extension for exporting Radiance models. Developed
+by Germán Molina, Sergio Vera and Waldo Bustamante.
+
+## Downloads
 
 * [macOS](https://github.com/GroundhogLighting/Groundhog/raw/master/Groundhog_macosx.rbz)
 * [Windows x64](https://github.com/GroundhogLighting/Groundhog/raw/master/Groundhog_win32.rbz)
