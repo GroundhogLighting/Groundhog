@@ -1,6 +1,6 @@
 
 # Groundhog Readme File
-![](http://groundhogproject.org/images/Scene_1.png)
+![](http://www.groundhoglighting.com/assets/Scene_1.png)
 
 # Downloads
 
