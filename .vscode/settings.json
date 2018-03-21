@@ -42,7 +42,7 @@
     "editor.scrollBeyondLastLine": true,
 
     // Controla el número de caracteres tras los cuales el editor salta a la línea siguiente. Si el valor se establece en 0, se activa el ajuste del ancho de la ventanilla (ajuste de línea). Si se establece en -1, hace que el editor no ajuste las líneas nunca.
-    "editor.wrappingColumn": 300,
+    "editor.wordWrap": 300,
 
     // Controla el sangrado de las líneas ajustadas. Puede ser uno los valores 'none', 'same' o 'indent'.
     "editor.wrappingIndent": "same",
