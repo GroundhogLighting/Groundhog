@@ -42,11 +42,16 @@ div.view-container{
   i {
     vertical-align: middle;    
   }
-  a {    
+  ul {
+    padding:0;
+  }
+  li {    
     display:block;  
     color: #616161;
     padding: 5px 12px 5px 12px;
     border-radius:2px;
+    list-style-type: none;
+    cursor: pointer;
 
     span {
       margin-right: 20px;
@@ -58,7 +63,7 @@ div.view-container{
       background-color: #EAEAEA;
     }
 
-    &.nuxt-link-exact-active{
+    &.selected{
       background-color: #E6E6E6;
       color: #212121;
       font-weight: bold;

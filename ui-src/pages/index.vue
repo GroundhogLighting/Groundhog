@@ -1,64 +1,86 @@
 <template>
-<div>
 
-    <b-navbar fixed variant="primary">
-        <a href="#">Get weather data</a>
-    </b-navbar>
-
-  <div class="view-container">  
-
-    <table>
-      <tr>
-        <td>Country</td>
-        <td><input v-on:change="updateLocation()" v-model="location.country" type="text" v-editable size="15"></td>
-      </tr>
-      <tr>
-        <td>City</td>
-        <td><input v-on:change="updateLocation()" v-model="location.city" type="text" v-editable size="15"></td>
-      </tr>
-      <tr>
-        <td>Latitude</td>
-        <td><input v-on:change="updateLocation()" v-model="location.latitude" type="text" v-editable size="15"></td>
-      </tr>
-      <tr>
-        <td>Longitude</td>
-        <td><input v-on:change="updateLocation()" v-model="location.longitude" type="text" v-editable size="15"></td>
-      </tr>
-      <tr>
-        <td>Time Zone (GMT)</td>
-        <td><input v-on:change="updateLocation()" v-model="location.time_zone" type="text" v-editable size="15"></td>
-      </tr>
-      <tr>
-        <td>Albedo (%)</td>
-        <td><input v-on:change="updateLocation()" v-model="location.albedo" type="text" v-editable size="15"></td>
-      </tr>
-    </table>
+  <b-container fluid >
+    <b-row>
+      
+      <div id="sidebar" >
+        <ul>
+          <li v-bind:class="{ selected: selectedTab === 'location' }" onclick="selectedTab = 'location'" >
+            <i class="material-icons" >location_on</i>
+            <span class="d-none d-sm-inline">Location</span>
+          </li>
+          <li v-bind:class="{ selected: selectedTab === 'materials' }" onclick="selectedTab='materials'">
+            <i class="material-icons" >format_paint</i>
+            <span class="d-none d-sm-inline">Materials</span>
+          </li>
+          <li v-bind:class="{ selected: selectedTab === 'tasks' }" onclick="selectedTab='tasks'">
+            <i class="material-icons" >brightness_low</i>
+            <span class="d-none d-sm-inline">Tasks</span>
+          </li>
+          <li v-bind:class="{ selected: selectedTab === 'luminaires' }" onclick="selectedTab='luminaires'">
+            <i class="material-icons" >lightbulb_outline</i>
+            <span class="d-none d-sm-inline">Luminaires</span>
+          </li>
+          <li v-bind:class="{ selected: selectedTab === 'calculate' }" onclick="selectedTab='calculate'">
+            <i class="material-icons" >play_arrow</i>
+            <span class="d-none d-sm-inline">Calculate</span>
+          </li>
+          <li v-bind:class="{ selected: selectedTab === 'report' }" onclick="selectedTab='report'">
+            <i class="material-icons" >poll</i>
+            <span class="d-none d-sm-inline">Report</span>
+          </li>
+        </ul>
+      </div>      
+      
+            
+      <div id="view">
+        <location v-show="selectedTab === 'location'"></location>
+        <materials v-show="selectedTab === 'materials'"></materials>
+        <tasks v-show="selectedTab === 'tasks'"></tasks>
+        <luminaires v-show="selectedTab === 'luminaires'"></luminaires>
+        <calculate v-show="selectedTab === 'calculate'"></calculate>
+        <report v-show="selectedTab === 'report'"></report>
+      </div>
+    </b-row>
     
-  </div>
-</div>
+        
+  </b-container>
 </template>
 
 <script>
-import "~/plugins/init-location";
-import EditableInput from "~/components/editable-input";
+
+import Location from "~/components/location"
+import Materials from "~/components/materials"
+import Tasks from "~/components/tasks"
+import Luminaires from "~/components/luminaires"
+import Calculate from "~/components/calculate"
+import Report from "~/components/report"
+
 
 export default {
-  
-  directives : {
-    editable : EditableInput
+  components : {
+    Location : Location,
+    Materials : Materials,
+    Tasks : Tasks,
+    Luminaires : Luminaires,
+    Calculate : Calculate,
+    Report : Report
   },
   methods : {
-    updateLocation(){
-      console.log("Updating location!");
-    }
+    
   },
 
-  data(){
-    return{
-      location: project_location
+  data : function(){
+    return {
+      selectedTab : "location"
     }
-  }
-
+  } 
 }
+
 </script>
 
+<style lang="scss">
+@import "assets/style.scss";
+
+
+</style>

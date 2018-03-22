@@ -3,12 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-const _20dcd87e = () => import('..\\pages\\tasks\\index.vue' /* webpackChunkName: "pages_tasks_index" */).then(m => m.default || m)
-const _0ae5e420 = () => import('..\\pages\\materials\\index.vue' /* webpackChunkName: "pages_materials_index" */).then(m => m.default || m)
-const _194c8eb4 = () => import('..\\pages\\calculate\\index.vue' /* webpackChunkName: "pages_calculate_index" */).then(m => m.default || m)
-const _9d01ec0e = () => import('..\\pages\\luminaires\\index.vue' /* webpackChunkName: "pages_luminaires_index" */).then(m => m.default || m)
-const _d7d418d8 = () => import('..\\pages\\report\\index.vue' /* webpackChunkName: "pages_report_index" */).then(m => m.default || m)
-const _6093aa70 = () => import('..\\pages\\index.vue' /* webpackChunkName: "pages_index" */).then(m => m.default || m)
+const _3f7b81d1 = () => import('../pages/index.vue' /* webpackChunkName: "pages/index" */).then(m => m.default || m)
 
 
 
@@ -63,39 +58,14 @@ const scrollBehavior = function (to, from, savedPosition) {
 export function createRouter () {
   return new Router({
     mode: 'history',
-    base: '/',
+    base: './',
     linkActiveClass: 'nuxt-link-active',
     linkExactActiveClass: 'nuxt-link-exact-active',
     scrollBehavior,
     routes: [
 		{
-			path: "/tasks",
-			component: _20dcd87e,
-			name: "tasks"
-		},
-		{
-			path: "/materials",
-			component: _0ae5e420,
-			name: "materials"
-		},
-		{
-			path: "/calculate",
-			component: _194c8eb4,
-			name: "calculate"
-		},
-		{
-			path: "/luminaires",
-			component: _9d01ec0e,
-			name: "luminaires"
-		},
-		{
-			path: "/report",
-			component: _d7d418d8,
-			name: "report"
-		},
-		{
 			path: "/",
-			component: _6093aa70,
+			component: _3f7b81d1,
 			name: "index"
 		}
     ],

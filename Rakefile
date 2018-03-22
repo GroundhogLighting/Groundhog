@@ -89,71 +89,23 @@ task :add_build_date do
 end
 
 
-@ui_src = "./ui"
 def change_ui_version(version)
 	File.open("#{@ui_src}/common/version.ts",'w'){ |f| 
 		f.puts "export = '#{version}';"
 	}
 end	
 
-def compile_ui(app,version)
-	change_ui_version(version)
-	warn `tsc --p #{@ui_src}/#{app}`		
-	warn `browserify #{@ui_src}/#{app}JS/#{app}/main.js --standalone DesignAssistant -o ./GH_Groundhog/src/html/#{app}/#{version}.js`
-
-	File.open("./GH_Groundhog/src/html/#{app}/#{version}.html",'w'){|file|
-		file.puts "<!DOCTYPE html>
-						<html>
-
-						<head>
-							<title>Design assistant</title>
-							<meta charset='UTF-8'>
-							<meta http-equiv='X-UA-Compatible' content='IE=edge'/>
-
-							<link href='../css/opensans.css' rel='stylesheet'>
-                            <link href='../css/iconfont/material-icons.css' rel='stylesheet'>
-                            <link href='../css/groundhog-ui.css' rel='stylesheet'>
-						</head>
-
-						<body>"
-		
-		selected = "location"
-		sections = ["location","materials","luminaires","photosensors","objectives","calculate","report"] #"observers",
-		
-		# Create the tabs
-		file.puts "<div id='sidenav'>"
-		sections.each{|section|
-			file.puts "<p #{selected == section ? "class = 'selected'" : ''} href='##{section}'>#{section.capitalize}</p>"
-		}
-		file.puts "</div>"
-
-		# add the actual sections
-		sections.each{|section|
-			file.puts File.readlines("#{@ui_src}/#{app}/#{section}/template.html")
-		}
-
-		file.puts "
-					<script src='../js/JQuery/jquery-3.0.0.js'></script>
-					<!--script src='../js/jQueryUI/jquery-ui.js'></script>
-					<script src='../js/Spectrum/spectrum.js'></script-->    
-					<script src='../js/groundhog-ui.js'></script>
-					
-					<script src='#{version}.js'></script>    
-					
-					<script>
-						var DesignAssistant = new DesignAssistant();        
-						DesignAssistant.update();
-					</script>
-					
-				</body>
-
-				</html>
-				"
-	} # Close HTML file
-
-	## Replace javascript fileutils
-	FileUtils.rm_rf("./GH_Groundhog/src/html/js")
-	FileUtils.cp_r("#{@ui_src}/common/js","./GH_Groundhog/src/html/js")
+def compile_design_assistant(version)
+	
+	destination = "./GH_Groundhog/src/html"
+	origin = "./ui-src"
+	Dir.chdir(origin){
+		# Generate a dist folder with the compiled
+		warn `npm run generate` 		
+	}
+	# Replace javascript fileutils
+	FileUtils.rm_rf("#{destination}/#{version}")
+	FileUtils.cp_r("#{origin}/dist","#{destination}/#{version}")
 end
 
 task :test_ui do
@@ -164,10 +116,13 @@ task :test_ui do
 	}
 end
 
-task :compile_ui do	
+task :compile_design_assistant do	
+=begin
 	["debug"].each{|version|
 		["designassistant"].each{|app|	
 			compile_ui(app,version)
 		}
 	}
+=end	
+	compile_design_assistant("html_dialog")
 end
