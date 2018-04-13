@@ -1,6 +1,9 @@
+var isDev = require('./plugins/is-dev');
+
 module.exports = {
   router: {
-    base: './', 
+    base: (isDev ? '/' : './'), 
+    mode : 'hash'
   },
   
   /* MODULES */
@@ -15,7 +18,7 @@ module.exports = {
   */
   generate: {
     minify: {
-      //removeComments: true,      
+      removeComments: true,      
     },
     //routes : function(e){
     //  console.log(e);

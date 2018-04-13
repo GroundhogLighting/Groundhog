@@ -10,7 +10,8 @@ module GH
         WORKPLANES_KEY = "workplanes"
         LABEL_KEY = "label"
         NAME_KEY = "name"
-
+        WEATHER_KEY="weather"
+        
         # Labels
         WORKPLANE = 0
         WINDOW = 1

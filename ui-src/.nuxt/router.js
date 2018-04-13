@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-const _3f7b81d1 = () => import('../pages/index.vue' /* webpackChunkName: "pages/index" */).then(m => m.default || m)
+const _89b78220 = () => import('..\\pages\\index.vue' /* webpackChunkName: "pages_index" */).then(m => m.default || m)
 
 
 
@@ -57,15 +57,15 @@ const scrollBehavior = function (to, from, savedPosition) {
 
 export function createRouter () {
   return new Router({
-    mode: 'history',
-    base: './',
+    mode: 'hash',
+    base: '/',
     linkActiveClass: 'nuxt-link-active',
     linkExactActiveClass: 'nuxt-link-exact-active',
     scrollBehavior,
     routes: [
 		{
 			path: "/",
-			component: _3f7b81d1,
+			component: _89b78220,
 			name: "index"
 		}
     ],

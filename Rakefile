@@ -1,20 +1,23 @@
 require 'fileutils'
 require 'JSON'
 
+@ui_src = "./ui-src"
+
 task :default => :all
 
+
 task :all => [:win32, :win64, :macosx] do
-	FileUtils.rm_rf "./IGD_Groundhog/src/Radiance"
+	FileUtils.rm_rf "./GH_Groundhog/src/Radiance"
 end
 
 task :doc => [:clean] do
-	puts `yardoc ./IGD_Groundhog/src/*.rb ./IGD_Groundhog/src/Scripts/*.rb - ./Readme.md`
-	FileUtils.rm_rf("IGD_Groundhog/doc")
-	FileUtils.cp_r("doc","IGD_Groundhog/doc")
+	puts `yardoc ./GH_Groundhog/src/*.rb ./GH_Groundhog/src/Scripts/*.rb - ./Readme.md`
+	FileUtils.rm_rf("GH_Groundhog/doc")
+	FileUtils.cp_r("doc","GH_Groundhog/doc")
 end
 
 task :clean do
-	FileUtils.rm(Dir["IGD_Groundhog/Examples/*.skb"])
+	FileUtils.rm(Dir["GH_Groundhog/Examples/*.skb"])
 	FileUtils.rm(Dir["*.rbz"])
 	FileUtils.rm_rf("doc")
 end
@@ -27,26 +30,24 @@ def sketchup_plugin_dir(os,v)
 	end
 end
 
-
-
-task :test,[:os, :suv] => [:compile_ui] do |t, args|
+task :test,[:os, :suv]  do |t, args| #=> [:design_assistant]
 	radiance_version = "Radiance/#{args[:os]}/Radiance"
 	radiance_version = "Radiance/macosx/usr/local/radiance" if args[:os] == "macosx"
 
 	# Replace the Radiance version in Groundhog
-	FileUtils.rm_rf("./IGD_Groundhog/src/Radiance")
-	FileUtils.cp_r radiance_version, "./IGD_Groundhog/src/Radiance"
+	FileUtils.rm_rf("./GH_Groundhog/src/Radiance")
+	FileUtils.cp_r radiance_version, "./GH_Groundhog/src/Radiance"
 
 	# Remove the groundhog version in Sketchup Plugin directory
-	FileUtils.rm_rf "#{sketchup_plugin_dir(args[:os],args[:suv])}/IGD_Groundhog.rb"
-	FileUtils.rm_rf "#{sketchup_plugin_dir(args[:os],args[:suv])}/IGD_Groundhog"
+	FileUtils.rm_rf "#{sketchup_plugin_dir(args[:os],args[:suv])}/GH_Groundhog.rb"
+	FileUtils.rm_rf "#{sketchup_plugin_dir(args[:os],args[:suv])}/GH_Groundhog"
 
 	# Move the new one
-	FileUtils.cp_r "IGD_Groundhog.rb","#{sketchup_plugin_dir(args[:os],args[:suv])}/IGD_Groundhog.rb"
-	FileUtils.cp_r "IGD_Groundhog","#{sketchup_plugin_dir(args[:os],args[:suv])}/IGD_Groundhog"
+	FileUtils.cp_r "GH_Groundhog.rb","#{sketchup_plugin_dir(args[:os],args[:suv])}/GH_Groundhog.rb"
+	FileUtils.cp_r "GH_Groundhog","#{sketchup_plugin_dir(args[:os],args[:suv])}/GH_Groundhog"
 
 	# Final clean
-	FileUtils.rm_rf("./IGD_Groundhog/src/Radiance")
+	FileUtils.rm_rf("./GH_Groundhog/src/Radiance")
 end
 
 def this_os
@@ -60,12 +61,12 @@ end
 def compress(os)
 	radiance_version = "Radiance/#{os}/Radiance"
 	radiance_version = "Radiance/macosx/usr/local/radiance" if os == "macosx"	
-	FileUtils.rm_rf("./IGD_Groundhog/src/Radiance")
-	FileUtils.cp_r radiance_version, "./IGD_Groundhog/src/Radiance"	
+	FileUtils.rm_rf("./GH_Groundhog/src/Radiance")
+	FileUtils.cp_r radiance_version, "./GH_Groundhog/src/Radiance"	
 	
 	File.open("listfile.txt",'w'){|w|
-		w.puts "IGD_Groundhog.rb"
-		w.puts "IGD_Groundhog"
+		w.puts "GH_Groundhog.rb"
+		w.puts "GH_Groundhog"
 	}
 	puts `7z a -tzip Groundhog_#{os}.rbz @listfile.txt -x!.yardoc -x!*.DS_Store`
 	FileUtils.rm "listfile.txt"
@@ -75,54 +76,63 @@ end
 task :win64 => [:clean, :add_build_date, :compile_ui] do
 	compress("win64")
 end
+
 task :win32 => [:clean, :add_build_date, :compile_ui] do
 	compress("win32")
 end
+
 task :macosx => [:clean, :add_build_date, :compile_ui] do
 	compress("macosx")
 end
 
 task :add_build_date do
-	File.open("IGD_Groundhog/built",'w'){|file|
+	File.open("GH_Groundhog/built",'w'){|file|
 		file.puts Time.now
 	}
 end
 
 
 def change_ui_version(version)
-	File.open("#{@ui_src}/common/version.ts",'w'){ |f| 
-		f.puts "export = '#{version}';"
+	File.open("#{@ui_src}/plugins/skp-version.js",'w'){ |f| 
+		f.puts "module.exports = '#{version}';"
 	}
 end	
 
-def compile_design_assistant(version)
+def set_is_dev(is_dev)
+	File.open("#{@ui_src}/plugins/is-dev.js",'w'){ |f| 
+		f.puts "module.exports = #{is_dev};"
+	}
+end	
+
+
+task :design_assistant,[:version] do |t, args|
 	
-	destination = "./GH_Groundhog/src/html"
-	origin = "./ui-src"
-	Dir.chdir(origin){
-		# Generate a dist folder with the compiled
-		warn `npm run generate` 		
-	}
-	# Replace javascript fileutils
-	FileUtils.rm_rf("#{destination}/#{version}")
-	FileUtils.cp_r("#{origin}/dist","#{destination}/#{version}")
-end
+	destination = "./GH_Groundhog/src/html"	
 
-task :test_ui do
-	["debug"].each{|version|
-		["designassistant"].each{|app|	
-			compile_ui(app,version)
-		}
-	}
-end
+	if args[:version] == nil then
+		versions = ["html_dialog","web_dialog"]
+	else
+		raise "Incorrect Design Assistant version '#{args[:version]}'" if args[:version] != "html_dialog" and args[:version] != "web_dialog"
+		versions = [args[:version]]
+	end
 
-task :compile_design_assistant do	
-=begin
-	["debug"].each{|version|
-		["designassistant"].each{|app|	
-			compile_ui(app,version)
+	versions.each{|version|
+		# Change version
+		change_ui_version(version)
+
+		# Set DEV to false
+		set_is_dev(false)
+
+		# Generate
+		Dir.chdir(@ui_src){
+			# Generate a dist folder with the compiled
+			warn `npm run generate` 		
 		}
+
+		# Replace javascript fileutils
+		FileUtils.rm_rf("#{destination}/#{version}/design_assistant")
+		FileUtils.cp_r("#{@ui_src}/dist","#{destination}/#{version}/design_assistant")
 	}
-=end	
-	compile_design_assistant("html_dialog")
+	set_is_dev(true)
+
 end

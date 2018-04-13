@@ -18,10 +18,13 @@ module GH
         require 'json'
 
         Sketchup::require 'GH_Groundhog/src/Error'
+        Sketchup::require 'GH_Groundhog/src/OS'
 		Sketchup::require 'GH_Groundhog/src/Constants'
         Sketchup::require 'GH_Groundhog/src/Version'
         Sketchup::require 'GH_Groundhog/src/Utilities'
         Sketchup::require 'GH_Groundhog/src/Labeler'
+		Sketchup::require 'GH_Groundhog/src/Weather'
+		Sketchup::require 'GH_Groundhog/src/DesignAssistant'
 		
 
 		#########################################
@@ -195,32 +198,32 @@ module GH
 
 
 
-=begin
-
-
-
+		
+		
+		
 		#######################
 		### MENUS
 		#######################
-
+		
 		### GROUNDHOG MENU
-
+		
 		extensions_menu = UI.menu "Plugins"
 		groundhog_menu=extensions_menu.add_submenu("Groundhog")
-
-
-
-
-
+		
+		
+		
+		
+		
 		@design_assistant = DesignAssistant.get
 		def self.design_assistant
 			@design_assistant
 		end
-
+		
 		groundhog_menu.add_item("Open Design Assistant"){
 			@design_assistant.show
-			DesignAssistant.update
+			#DesignAssistant.update
 		}
+=begin
 
 		@online_resources = OnlineResources.get
 		def self.online_resources

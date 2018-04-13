@@ -1,3 +1,5 @@
+$readonly : #919191;
+$borders: #919191;
 
 // IMPORT BOOTSTRAP
 @import "~bootstrap/scss/bootstrap";
@@ -8,6 +10,10 @@
 @import "./fonts.scss";
 @import "./tables.scss";
 @import "./buttons.scss";
+@import "./forms.scss";
+@import "./modals.scss";
+@import "./color-pick.scss";
+
 
 html,body{
   background-color:#F2F2F2;
@@ -89,10 +95,19 @@ nav.navbar {
     border-right: 1px solid white;
     padding-right: 0.07in;
   }
-  a:visited{
-    color:white;
-    text-decoration: none;
+  a {
+    color: white;
+    cursor: pointer;
+     
+    &:visited{
+      color:white;
+      text-decoration: none;
+    }
+    &:hover {
+      text-decoration: none;
+    }
   }
+  
 }
 
 .sorry{

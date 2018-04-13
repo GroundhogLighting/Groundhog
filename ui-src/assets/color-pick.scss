@@ -1,0 +1,25 @@
+div.md-color-pick{
+    width: 100%;
+    margin-top: 20px;
+
+    *{
+        display:inline-block;
+        height: 30px;
+    }
+
+    input {
+        width:60px;
+        border:none;
+        margin-right:4px;
+    }
+    
+    label{
+        margin-right: 5px;
+        color: $readonly;
+        font-size: 87%;
+    }
+
+    div{
+        height:20px;
+    }
+}

@@ -11,8 +11,7 @@ if(require("~/plugins/is-dev")){
     
   
   
-  }else{
-  
+  }else{  
     workplanes = [];
     tasks = [];
   }

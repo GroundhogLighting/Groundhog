@@ -16,13 +16,16 @@
             <td v-for="t in tasks" :key=t.name><i class="material-icons">mode_edit</i>{{t.name}}</td>            
           </tr>  
         </thead>
-        <tr v-for="wp in workplanes" :key=wp.name>
-          <td><i class="material-icons">mode_edit</i>{{wp.name}}</td>
-          <td v-on:click="toggleTask(wp,t.name)" class="clickable" v-for="t in tasks" :key=t.name>
-            <i v-show="includes(wp,t.name)" class="material-icons">check_box</i>
-            <i v-show="!includes(wp,t.name)" class="material-icons">check_box_outline_blank</i>     
-          </td>       
-        </tr>
+        
+        <tbody>
+          <tr v-for="wp in workplanes" :key=wp.name>
+            <td><i class="material-icons">mode_edit</i>{{wp.name}}</td>
+            <td v-on:click="toggleTask(wp,t.name)" class="clickable" v-for="t in tasks" :key=t.name>
+              <i v-show="includes(wp,t.name)" class="material-icons">check_box</i>
+              <i v-show="!includes(wp,t.name)" class="material-icons">check_box_outline_blank</i>     
+            </td>       
+          </tr>
+        </tbody>
       </table>
     </div>
 
@@ -33,6 +36,7 @@
 
 
 import "~/plugins/init-tasks"
+import SKPHelper from "~/plugins/skp-helper";
 
 export default {  
   methods : {    
@@ -56,7 +60,8 @@ export default {
   data () {
     return {
       tasks: tasks,
-      workplanes: workplanes
+      workplanes: workplanes,
+      skp : SKPHelper
     }
   }
 }

@@ -2,12 +2,14 @@
 <div>
 
     <b-navbar fixed variant="primary">
-        <a href="#">Get weather data</a>
+      <a href="#" v-on:click="skp.call_action('set_weather_file','')">Set weather file</a>
+      <a href="#" v-on:click="skp.call_action('follow_link','http://www.energyplus.net/weather')">Find more weather files</a>
     </b-navbar>
 
   <div class="view-container">  
-    {{location.city}}
     <table>
+      <tbody>
+
       <tr>
         <td>Country</td>
         <td><input v-on:change="updateLocation()" v-model="location.country" type="text" v-editable size="15"></td>
@@ -26,12 +28,13 @@
       </tr>
       <tr>
         <td>Time Zone (GMT)</td>
-        <td><input v-on:change="updateLocation()" v-model="location.time_zone" type="text" v-editable size="15"></td>
+        <td><input v-on:change="updateLocation()" v-model="location.timezone" type="text" v-editable size="15"></td>
       </tr>
       <tr>
         <td>Albedo (%)</td>
         <td><input v-on:change="updateLocation()" v-model="location.albedo" type="text" v-editable size="15"></td>
       </tr>
+      </tbody>
     </table>
     
   </div>
@@ -41,21 +44,24 @@
 <script>
 import "~/plugins/init-location";
 import EditableInput from "./editable-input";
+import SKPHelper from "~/plugins/skp-helper";
 
 export default {
   
   directives : {
     editable : EditableInput
   },
+
   methods : {
     updateLocation(){
-      alert("Updating location!");
-    }
+      this.skp.call_action('update_model_location','');
+    },
+    
   },
-
   data(){
     return{
-      location: project_location
+      location: project_location,
+      skp: SKPHelper
     }
   }
 

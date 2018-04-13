@@ -5,27 +5,27 @@
       
       <div id="sidebar" >
         <ul>
-          <li v-bind:class="{ selected: selectedTab === 'location' }" onclick="selectedTab = 'location'" >
+          <li v-bind:class="{ selected: selectedTab === 'location' }" v-on:click="selectedTab = 'location'" >
             <i class="material-icons" >location_on</i>
             <span class="d-none d-sm-inline">Location</span>
           </li>
-          <li v-bind:class="{ selected: selectedTab === 'materials' }" onclick="selectedTab='materials'">
+          <li v-bind:class="{ selected: selectedTab === 'materials' }" v-on:click="selectedTab='materials'">
             <i class="material-icons" >format_paint</i>
             <span class="d-none d-sm-inline">Materials</span>
           </li>
-          <li v-bind:class="{ selected: selectedTab === 'tasks' }" onclick="selectedTab='tasks'">
+          <li v-bind:class="{ selected: selectedTab === 'tasks' }" v-on:click="selectedTab='tasks'">
             <i class="material-icons" >brightness_low</i>
             <span class="d-none d-sm-inline">Tasks</span>
           </li>
-          <li v-bind:class="{ selected: selectedTab === 'luminaires' }" onclick="selectedTab='luminaires'">
+          <li v-bind:class="{ selected: selectedTab === 'luminaires' }" v-on:click="selectedTab='luminaires'">
             <i class="material-icons" >lightbulb_outline</i>
             <span class="d-none d-sm-inline">Luminaires</span>
           </li>
-          <li v-bind:class="{ selected: selectedTab === 'calculate' }" onclick="selectedTab='calculate'">
+          <li v-bind:class="{ selected: selectedTab === 'calculate' }" v-on:click="selectedTab='calculate'">
             <i class="material-icons" >play_arrow</i>
             <span class="d-none d-sm-inline">Calculate</span>
           </li>
-          <li v-bind:class="{ selected: selectedTab === 'report' }" onclick="selectedTab='report'">
+          <li v-bind:class="{ selected: selectedTab === 'report' }" v-on:click="selectedTab='report'">
             <i class="material-icons" >poll</i>
             <span class="d-none d-sm-inline">Report</span>
           </li>
@@ -34,12 +34,14 @@
       
             
       <div id="view">
+     
         <location v-show="selectedTab === 'location'"></location>
         <materials v-show="selectedTab === 'materials'"></materials>
         <tasks v-show="selectedTab === 'tasks'"></tasks>
-        <luminaires v-show="selectedTab === 'luminaires'"></luminaires>
+        <!--luminaires v-show="selectedTab === 'luminaires'"></luminaires>
         <calculate v-show="selectedTab === 'calculate'"></calculate>
-        <report v-show="selectedTab === 'report'"></report>
+        <report v-show="selectedTab === 'report'"></report-->
+     
       </div>
     </b-row>
     
