@@ -31,7 +31,6 @@ export default {
             var b = this.$refs.blue.value;
 
             this.bgc="background-color: rgb("+Math.round(255*r)+","+Math.round(255*g)+","+Math.round(255*b)+")";
-            console.log(this.bgc);
             this.$emit('input', {
                 r: r, g:g, b:b
             })

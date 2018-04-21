@@ -1,0 +1,30 @@
+@import "../../common/palette";
+@import "../../common/elevations";
+
+div.v-sidenav{
+    .v-sidenav-item {
+        
+        transform: translate(0, 0%);
+        @include mat-elevation(5);
+        color: $background;
+        background-color: $primary;
+
+        &:hover {
+            background-color: lighten-color($primary,0.30);            
+        }
+
+        &.v-selected{
+            background-color: $secondary;            
+        }
+        @media only screen and (max-width: $small) {
+            span {
+                display:none;
+            }
+            i{
+                //font-size:0.32in;
+                padding: 5px;
+            }
+        }
+    
+    }
+}

@@ -1,6 +1,9 @@
 var isDev = require('./plugins/is-dev');
 
 module.exports = {
+  plugins : [
+    './plugins/vue-material.nuxt'
+  ],
   router: {
     base: (isDev ? '/' : './'), 
     mode : 'hash'
@@ -11,7 +14,7 @@ module.exports = {
     //'bootstrap-vue/nuxt',
 
     // Or if you have custom bootstrap CSS...
-    ['bootstrap-vue/nuxt', { css: false }],
+    //['bootstrap-vue/nuxt', { css: false }],    
   ],
   /*
   ** Headers of the page

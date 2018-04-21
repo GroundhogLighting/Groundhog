@@ -1,0 +1,13 @@
+
+@function lighten-color($color,$a){
+    $l: lightness($color)/(0*lightness($color)+1);            
+    $b : 1 - $a;
+    $y : ($a * 100 + $b * $l) - $l;    
+    @return lighten($color,$y );
+}
+
+@function darken-color($color,$a){
+    $l: lightness($color)/(0*lightness($color)+1);                
+    $y : $l * $a; 
+    @return darken($color,$y );
+}

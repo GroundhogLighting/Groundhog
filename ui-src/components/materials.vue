@@ -1,9 +1,9 @@
 <template>
   <div>
-    <b-navbar fixed variant="primary">        
-      <input class="sorry" type="text" placeholder="Filter"/>
-      <a href="#" v-b-modal.material-editor>Create material</a>
-    </b-navbar>
+    <md-navbar fixed variant="primary">        
+      <input  type="text" placeholder="Filter"/>
+      <a href="#" v-on:click="showCreateDialog = !showCreateDialog">Create material</a>
+    </md-navbar>
     
     <div class="view-container"> 
       <!-- NO MATERIALS MESSAGE -->
@@ -31,22 +31,39 @@
     </div>
 
 
-    <b-modal id="material-editor" title="">
+    <md-dialog :title="'I am the Title'" v-if="showCreateDialog" @close="showCreateDialog = false">        
+        <div slot="body">
+          <form>        
+            <md-input v-model="selectedMaterial.name" :label="'Name'"></md-input>
+            <md-select v-model="selectedMaterial.class" :options="Object.keys(materialProps)"></md-select>
+            
+            <md-color-pick v-model="selectedMaterial.color"></md-color-pick>
 
-      <form>        
-          <md-input v-model="selectedMaterial.name" :label="'Name'"></md-input>
-          <md-select v-model="selectedMaterial.class" :options="Object.keys(materialProps)"></md-select>
-          
-          <md-color-pick v-model="selectedMaterial.color"></md-color-pick>
+            <md-input :type="'number'" :step="0.01" v-for="(item, index) in Object.keys(materialProps[selectedMaterial.class])" 
+                      :key="index" 
+                      v-model="selectedMaterial[item]" :label="Object.keys(materialProps[selectedMaterial.class])[index]"></md-input>
 
-          <md-input v-for="(item, index) in Object.keys(materialProps[selectedMaterial.class])" 
-                    :key="index" 
-                    v-model="selectedMaterial[item]" :label="Object.keys(materialProps[selectedMaterial.class])[index]"></md-input>
+            
+          </form>
+        </div>
 
-          
-      </form>
-    </b-modal>
+        <div slot="footer">
+          <md-button :variant="'primary'" @click="showCreateDialog=false">Primary</md-button>
+          <md-button :variant="'accent'" @click="showCreateDialog=false">Accent</md-button>
+          <md-button :variant="'warn'" @click="showCreateDialog=false">Warn</md-button>
+          <md-button :variant="'basic'" @click="showCreateDialog=false">Basic</md-button>
+          <md-button :variant="'disabled'" @click="showCreateDialog=false">Disabled</md-button>
+          <md-button :variant="'link'" @click="showCreateDialog=false">Link</md-button>
 
+          <md-raised-button :variant="'primary'" @click="showCreateDialog=false">Primary</md-raised-button>
+          <md-raised-button :variant="'accent'" @click="showCreateDialog=false">Accent</md-raised-button>
+          <md-raised-button :variant="'warn'" @click="showCreateDialog=false">Warn</md-raised-button>
+          <md-raised-button :variant="'basic'" @click="showCreateDialog=false">Basic</md-raised-button>
+          <md-raised-button :variant="'disabled'" @click="showCreateDialog=false">Disabled</md-raised-button>
+          <md-raised-button :variant="'link'" @click="showCreateDialog=false">Link</md-raised-button>
+
+        </div>
+    </md-dialog>
 
   </div>
 
@@ -58,9 +75,6 @@
 
 import "~/plugins/init-materials"
 import SKPHelper from "~/plugins/skp-helper";
-import MdSelect from "./vue-md/md-select";
-import MdInput from "./vue-md/md-input";
-import MdColorPick from "./vue-md/md-color-pick";
 
 // Material properties (Color is there by default)
 var materialProperties = {
@@ -102,11 +116,6 @@ export default {
       }    
     }
   },
-  components :{
-    MdSelect,
-    MdInput,
-    MdColorPick
-  },
   data () {
     return {
       materials: materials,
@@ -120,7 +129,8 @@ export default {
         color: {r:0.6, g:0.6,b:0.6}
       },
       editing: false,
-      materialProps : materialProperties
+      materialProps : materialProperties,
+      showCreateDialog : false
     }
   }
 }

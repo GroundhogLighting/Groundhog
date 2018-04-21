@@ -615,20 +615,11 @@
     // Controla la familia de fuentes del terminal, que está establecida de manera predeterminada en el valor de editor.fontFamily.
     "terminal.integrated.fontFamily": "",
 
-    // Controla si las ligaduras tipográficas están habilitadas en el terminal.
-    "terminal.integrated.fontLigatures": false,
-
-    // Controla el tamaño de fuente del terminal, que está establecida de manera predeterminada en el valor de editor.fontSize.
-    "terminal.integrated.fontSize": 0,
-
-    // Controla el alto de la línea del terminal, que está establecida de manera predeterminada en normal.
-    "terminal.integrated.lineHeight": 1.2,
-
     // Controls whether the terminal cursor blinks.
     "terminal.integrated.cursorBlinking": false,
 
     // Controls whether locale variables are set at startup of the terminal, this defaults to true on OS X, false on other platforms.
-    "terminal.integrated.setLocaleVariables": false,
+    "terminal.integrated.setLocaleVariables": true,
 
 
 // Vista Problemas

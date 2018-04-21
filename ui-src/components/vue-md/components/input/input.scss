@@ -1,0 +1,44 @@
+div.md-input{
+    position: relative;
+    margin-bottom: 15px;
+    
+    label{
+        color:$readonly; 
+        font-size:inherit; //18px;
+        font-weight:normal;
+        position:absolute;
+        pointer-events:none;
+        left:5px;
+        top:3px;
+        transition:0.2s ease all; 
+        -moz-transition:0.2s ease all; 
+        -webkit-transition:0.2s ease all;
+    }
+    
+    /* active state */
+    input:focus ~ label, input:valid ~ label		{
+        top:-20px;
+        font-size:14px;
+        color:$primary;
+    }
+  
+
+    input{
+        display:block;
+        border: none;        
+        border-bottom:1px solid #919191;
+        box-shadow:none;
+        margin-top:25px;
+
+        &:focus, &:valid{ 
+            outline:none;
+            border-bottom:2px solid $primary;         
+        }
+
+        &:invalid{
+            border:none;
+            border-bottom:2px solid $warn; 
+        }
+        
+    }
+}

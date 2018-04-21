@@ -1,0 +1,136 @@
+
+@import "../../common/elevations";
+@import "../../common/palette";
+
+@function hover-color($color){
+    $a: 0.85;    
+    @return lighten-color($color,$a);
+}
+
+@function ripple-color($color){
+    $a: 0.70;    
+    @return lighten-color($color,$a);
+}
+
+@mixin flat-button-feedback($color) {
+    color: $color;   
+    border: 1px solid $color;                         
+    &:hover {
+        color: $secondary;
+        border: 1px solid $secondary;
+        //background-color: hover-color($color);        
+    }      
+
+    &:active {
+        background-color: ripple-color($secondary);                
+        background-size: 100%;
+    } 
+}
+
+
+@mixin raised-button-feedback($color) {
+    background-color: $color;                                    
+    &:active {
+        background-color: ripple-color($color);                
+        background-size: 100%;
+    } 
+}
+
+button {
+    border: 1px solid transparent;                         
+    
+    margin: 0.025in;
+    padding: 0 0.1in;
+    cursor: pointer;
+    height: 0.325in;
+    min-width: 0.55in;
+    //border-radius: 0.0125in;
+    font-size: 14px;
+    
+    overflow: visible;
+
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    cursor:pointer;
+
+    &.flat {
+        background-color: white;
+        background-position: center;
+        
+        &:hover {
+            transition: background 0.2s;
+        }
+
+        &:active{            
+            transition: background 0s;
+        }
+
+        &.primary{
+            @include flat-button-feedback($primary);
+        }
+
+        &.accent{
+            @include flat-button-feedback($secondary);                        
+        }
+
+        &.warn{
+            @include flat-button-feedback($warn);                        
+        }
+
+        &.basic, &.link{
+            @include flat-button-feedback(black);                        
+        }
+
+        &.disabled{
+            color: #bbbbbb;
+            cursor:default;
+
+        }
+    }
+
+    &.raised {
+        color: white;
+        background-position: center;
+        @include mat-elevation(2);
+
+        &:hover {
+            transition: background 0.2s;
+        }
+
+        &:active{            
+            transition: background 0s;
+        }
+
+        &.primary{
+            @include raised-button-feedback($primary);
+        }
+
+        &.accent{
+            @include raised-button-feedback($secondary);                        
+        }
+
+        &.warn{
+            @include raised-button-feedback($warn);                        
+        }
+
+        &.basic{            
+            @include raised-button-feedback(black);                        
+            color: black;
+            background-color:white;
+        }
+
+        &.link{
+            @include raised-button-feedback(black);                        
+        }
+
+        &.disabled{
+            color: #adadad;
+            background-color:#dcdcdc;
+        }
+    }
+    
+}
+

@@ -1,10 +1,10 @@
 <template>
 <div>
 
-    <b-navbar fixed variant="primary">
-      <a href="#" v-on:click="skp.call_action('set_weather_file','')">Set weather file</a>
-      <a href="#" v-on:click="skp.call_action('follow_link','http://www.energyplus.net/weather')">Find more weather files</a>
-    </b-navbar>
+    <md-navbar fixed variant="primary">
+      <md-button :variant="'primary'" v-on:click.native="skp.call_action('set_weather_file','')">Set weather file</md-button>
+      <md-button :variant="'primary'" v-on:click.native="skp.call_action('follow_link','http://www.energyplus.net/weather')">Find more weather files</md-button>      
+    </md-navbar>
 
   <div class="view-container">  
     <table>
