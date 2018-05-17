@@ -1,10 +1,10 @@
 <template>
 <div>
 
-    <md-navbar fixed variant="primary">
-      <md-button :variant="'primary'" v-on:click.native="skp.call_action('set_weather_file','')">Set weather file</md-button>
-      <md-button :variant="'primary'" v-on:click.native="skp.call_action('follow_link','http://www.energyplus.net/weather')">Find more weather files</md-button>      
-    </md-navbar>
+    <a-navbar fixed variant="primary">
+      <a-button :variant="'primary'" v-on:click.native="skp.call_action('set_weather_file','')">Set weather file</a-button>
+      <a-button :variant="'primary'" v-on:click.native="skp.call_action('follow_link','http://www.energyplus.net/weather')">Find more weather files</a-button>      
+    </a-navbar>
 
   <div class="view-container">  
     <table>

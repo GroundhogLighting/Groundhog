@@ -3,7 +3,7 @@ form {
     text-align: left;
 
 
-    div.md-select{        
+    div.a-select{        
 
         .selected {
             border-bottom: 1px solid $borders;                                                         
@@ -15,7 +15,7 @@ form {
             cursor:pointer;
             background: white;
             position:absolute;            
-            @include level-2;    
+            //@include mat-elevation(2);    
             z-index: 9999;        
             div{
                 cursor:pointer;

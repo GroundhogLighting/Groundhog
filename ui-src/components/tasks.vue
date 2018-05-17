@@ -1,9 +1,9 @@
 <template>
   <div>
-    <md-navbar fixed variant="primary">        
+    <a-navbar fixed variant="primary">        
       <input type="text" placeholder="Filter"/>
-      <a href="#">Create task</a>
-    </md-navbar>
+      <a-button :variant="'primary'">Create task</a-button>
+    </a-navbar>
     
     <div class="view-container"> 
       <!-- NO TASKS MESSAGE -->

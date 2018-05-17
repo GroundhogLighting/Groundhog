@@ -2,7 +2,8 @@ var isDev = require('./plugins/is-dev');
 
 module.exports = {
   plugins : [
-    './plugins/vue-material.nuxt'
+    './plugins/clean-ui.nuxt'
+    //'./node_modules/clean-ui/clean-ui.nuxt'
   ],
   router: {
     base: (isDev ? '/' : './'), 

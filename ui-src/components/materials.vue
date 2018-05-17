@@ -1,9 +1,11 @@
 <template>
   <div>
-    <md-navbar fixed variant="primary">        
+    <a-navbar fixed variant="primary">   
+      <i slot="toggle-icon" class="material-icons">menu</i>     
+      
       <input  type="text" placeholder="Filter"/>
-      <a href="#" v-on:click="showCreateDialog = !showCreateDialog">Create material</a>
-    </md-navbar>
+      <a-button :variant="'primary'" v-on:click.native="showCreateDialog = !showCreateDialog">Create material</a-button>
+    </a-navbar>
     
     <div class="view-container"> 
       <!-- NO MATERIALS MESSAGE -->
@@ -31,39 +33,21 @@
     </div>
 
 
-    <md-dialog :title="'I am the Title'" v-if="showCreateDialog" @close="showCreateDialog = false">        
-        <div slot="body">
+    <a-dialog :actions="dialogActions" :title="'Create a new material'" v-if="showCreateDialog" @close="showCreateDialog = false">        
+        
           <form>        
-            <md-input v-model="selectedMaterial.name" :label="'Name'"></md-input>
-            <md-select v-model="selectedMaterial.class" :options="Object.keys(materialProps)"></md-select>
+            <a-input v-model="selectedMaterial.name" :label="'Name'"></a-input>
+            <a-select v-model="selectedMaterial.class" :options="Object.keys(materialProps)"></a-select>
             
-            <md-color-pick v-model="selectedMaterial.color"></md-color-pick>
+            <a-color-pick v-model="selectedMaterial.color"></a-color-pick>
 
-            <md-input :type="'number'" :step="0.01" v-for="(item, index) in Object.keys(materialProps[selectedMaterial.class])" 
+            <a-input :type="'number'" :step="0.01" v-for="(item, index) in Object.keys(materialProps[selectedMaterial.class])" 
                       :key="index" 
-                      v-model="selectedMaterial[item]" :label="Object.keys(materialProps[selectedMaterial.class])[index]"></md-input>
+                      v-model="selectedMaterial[item]" :label="Object.keys(materialProps[selectedMaterial.class])[index]"></a-input>
 
             
-          </form>
-        </div>
-
-        <div slot="footer">
-          <md-button :variant="'primary'" @click="showCreateDialog=false">Primary</md-button>
-          <md-button :variant="'accent'" @click="showCreateDialog=false">Accent</md-button>
-          <md-button :variant="'warn'" @click="showCreateDialog=false">Warn</md-button>
-          <md-button :variant="'basic'" @click="showCreateDialog=false">Basic</md-button>
-          <md-button :variant="'disabled'" @click="showCreateDialog=false">Disabled</md-button>
-          <md-button :variant="'link'" @click="showCreateDialog=false">Link</md-button>
-
-          <md-raised-button :variant="'primary'" @click="showCreateDialog=false">Primary</md-raised-button>
-          <md-raised-button :variant="'accent'" @click="showCreateDialog=false">Accent</md-raised-button>
-          <md-raised-button :variant="'warn'" @click="showCreateDialog=false">Warn</md-raised-button>
-          <md-raised-button :variant="'basic'" @click="showCreateDialog=false">Basic</md-raised-button>
-          <md-raised-button :variant="'disabled'" @click="showCreateDialog=false">Disabled</md-raised-button>
-          <md-raised-button :variant="'link'" @click="showCreateDialog=false">Link</md-raised-button>
-
-        </div>
-    </md-dialog>
+          </form>        
+    </a-dialog>
 
   </div>
 
@@ -104,6 +88,9 @@ export default {
     deleteMaterial(matName){
       this.skp.call_action('delete_material',matName);
     },
+    createMaterial(){
+      console.log("Creating a material!");
+    }
   },
   directives : {
     colorCell : {
@@ -130,7 +117,12 @@ export default {
       },
       editing: false,
       materialProps : materialProperties,
-      showCreateDialog : false
+      showCreateDialog : false,
+      dialogActions: {
+        'Create material' : function(){
+          console.log("Create!");
+        }
+      }
     }
   }
 }

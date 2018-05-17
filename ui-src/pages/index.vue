@@ -1,49 +1,47 @@
 <template>
 
   <div v-fluid >    
-    
-
-          
-      <md-sidenav >
+  
+      <a-sidenav >
         
-        <md-sidenav-item v-on:click.native="selectedTab = 'location'" v-selected>
+        <a-sidenav-item v-on:click.native="selectedTab = 'location'" v-selected>
           <i class="material-icons" >location_on</i>
           <span >Location</span>
-        </md-sidenav-item>
+        </a-sidenav-item>
 
-        <md-sidenav-item v-on:click.native="selectedTab = 'materials'">
+        <a-sidenav-item v-on:click.native="selectedTab = 'materials'">
           <i class="material-icons" >format_paint</i>
           <span >Materials</span>
-        </md-sidenav-item>
+        </a-sidenav-item>
         
-        <md-sidenav-item v-on:click.native="selectedTab = 'tasks'">
+        <a-sidenav-item v-on:click.native="selectedTab = 'tasks'">
             <i class="material-icons" >brightness_low</i>
             <span >Tasks</span>
-        </md-sidenav-item>
+        </a-sidenav-item>
         
-        <md-sidenav-item v-on:click.native="selectedTab = 'luminaires'">
+        <a-sidenav-item v-on:click.native="selectedTab = 'luminaires'">
           <i class="material-icons" >lightbulb_outline</i>
           <span >Luminaires</span>
-        </md-sidenav-item>
+        </a-sidenav-item>
 
-        <md-sidenav-item v-on:click.native="selectedTab = 'calculate'">
+        <a-sidenav-item v-on:click.native="selectedTab = 'calculate'">
           <i class="material-icons" >play_arrow</i>
           <span >Calculate</span>
-        </md-sidenav-item>
+        </a-sidenav-item>
 
-        <md-sidenav-item v-on:click.native="selectedTab = 'report'">
+        <a-sidenav-item v-on:click.native="selectedTab = 'report'">
           <i class="material-icons" >poll</i>
           <span >Report</span>
-        </md-sidenav-item>
+        </a-sidenav-item>
         
-      </md-sidenav>  
+      </a-sidenav>  
             
       <!--div id="view"-->
      
         <location v-show="selectedTab === 'location'"></location>
-        <materials v-show="selectedTab === 'materials'"></materials>
+        <!--materials v-show="selectedTab === 'materials'"></materials>
         <tasks v-show="selectedTab === 'tasks'"></tasks>
-        <!--luminaires v-show="selectedTab === 'luminaires'"></luminaires>
+        <luminaires v-show="selectedTab === 'luminaires'"></luminaires>
         <calculate v-show="selectedTab === 'calculate'"></calculate>
         <report v-show="selectedTab === 'report'"></report-->
      
@@ -56,22 +54,22 @@
 <script>
 
 import Location from "~/components/location"
-import Materials from "~/components/materials"
-import Tasks from "~/components/tasks"
-import Luminaires from "~/components/luminaires"
-import Calculate from "~/components/calculate"
-import Report from "~/components/report"
+//import Materials from "~/components/materials"
+//import Tasks from "~/components/tasks"
+//import Luminaires from "~/components/luminaires"
+//import Calculate from "~/components/calculate"
+//import Report from "~/components/report"
 
 
 export default {
 
   components : {
     Location : Location,
-    Materials : Materials,
-    Tasks : Tasks,
-    Luminaires : Luminaires,
-    Calculate : Calculate,
-    Report : Report
+    //Materials : Materials,
+    //Tasks : Tasks,
+    //Luminaires : Luminaires,
+    //Calculate : Calculate,
+    //Report : Report
   },
   methods : {
     selectTab: function(){

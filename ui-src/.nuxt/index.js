@@ -12,7 +12,7 @@ import { setContext, getLocation, getRouteData } from './utils'
 
 
 /* Plugins */
-import nuxt_plugin_vuematerial_391c165d from 'nuxt_plugin_vuematerial_391c165d' // Source: ../plugins/vue-material.nuxt
+import nuxt_plugin_cleanui_6051fe93 from 'nuxt_plugin_cleanui_6051fe93' // Source: ../plugins/clean-ui.nuxt
 
 
 // Component: <no-ssr>
@@ -134,7 +134,7 @@ async function createApp (ssrContext) {
 
   // Plugin execution
   
-  if (typeof nuxt_plugin_vuematerial_391c165d === 'function') await nuxt_plugin_vuematerial_391c165d(app.context, inject)
+  if (typeof nuxt_plugin_cleanui_6051fe93 === 'function') await nuxt_plugin_cleanui_6051fe93(app.context, inject)
   
 
   // If server-side, wait for async component to be resolved first

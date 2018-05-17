@@ -6,26 +6,24 @@ $borders: #919191;
 //@import "~bootstrap/scss/bootstrap";
 //@import "~bootstrap-vue/dist/bootstrap-vue";
 
-$t: 10;
 
-//$primary: rgb($t,$t,$t);
 $secondary: #ff4081;
 $warn: #f44336;
 
 $background: white;
-
+$curtain: rgba(0,0,0,0.4);
 
 
 // SETUP FONTS
-@import url('https://fonts.googleapis.com/css?family=Montserrat');
-$font-family: 'Montserrat', 'sans-serif';
-
+//@import url('https://fonts.googleapis.com/css?family=Montserrat');
+//$font-family: 'Montserrat', 'sans-serif';
+/*
 
 @font-face {
     font-family: 'Material Icons';
     font-style: normal;
     font-weight: 400;
-    src: url(~/assets/material-design-icons/iconfont/MaterialIcons-Regular.eot); /* For IE6-8 */
+    src: url(~/assets/material-design-icons/iconfont/MaterialIcons-Regular.eot); //
     src: local('Material Icons'),
       local('MaterialIcons-Regular'),
       url(~/assets/material-design-icons/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
@@ -37,7 +35,7 @@ $font-family: 'Montserrat', 'sans-serif';
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
+    font-size: 24px;  //
     display: inline-block;
     line-height: 1;
     text-transform: none;
@@ -46,20 +44,20 @@ $font-family: 'Montserrat', 'sans-serif';
     white-space: nowrap;
     direction: ltr;
   
-    /* Support for all WebKit browsers. */
+    // Support for all WebKit browsers. 
     -webkit-font-smoothing: antialiased;
-    /* Support for Safari and Chrome. */
+    // Support for Safari and Chrome. 
     text-rendering: optimizeLegibility;
   
-    /* Support for Firefox. */
+    // Support for Firefox. 
     -moz-osx-font-smoothing: grayscale;
   
-    /* Support for IE. */
+    // Support for IE. 
     font-feature-settings: 'liga';
   }
-  
+  */
 
-@import "../components/vue-md/vue-material";
+@import "../node_modules/clean-ui/clean-ui";
 
 
 body{
@@ -85,10 +83,12 @@ body{
 }
 
 div.view-container{
-  box-sizing: border-box;
-  padding: 40px;
-  padding-top: 100px;
+  box-sizing: border-box;  
+  padding: 100px 40px 40px 60px;
   min-height: 100vh;
+  @media only screen and (max-width: $small) {
+    padding: 100px 5px 5px 30px;
+  }
 }
 
 /*
