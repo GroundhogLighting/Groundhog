@@ -1,1 +1,1 @@
-module.exports = 'html_dialog';
+module.exports = 'web_dialog';

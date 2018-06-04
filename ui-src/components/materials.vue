@@ -1,17 +1,17 @@
 <template>
-  <div>
+  <div v-container v-with-sidenav> 
     <a-navbar fixed variant="primary">   
       <i slot="toggle-icon" class="material-icons">menu</i>     
       
-      <input  type="text" placeholder="Filter"/>
-      <a-button :variant="'primary'" v-on:click.native="showCreateDialog = !showCreateDialog">Create material</a-button>
+      <a-input :label="'Filter'" :type="'text'"/>
+      <a-button :variant="'primary'" v-on:click.native="$refs.createDialog.show()">Create material</a-button>
     </a-navbar>
     
-    <div class="view-container"> 
+    
       <!-- NO MATERIALS MESSAGE -->
-      <span class="sorry" v-show="!materials || materials.length == 0">There are no materials in your model</span>  
+      <span class='no-data' v-show="!materials || materials.length == 0">There are no materials in your model</span>  
       
-      <table v-show="materials.length > 0" class="selectable-row">
+      <a-table v-show="materials.length > 0" class="selectable-row">
         <thead>
           <tr>
             <th v-for="h in fields" :key=h.key>{{h.label}}</th>
@@ -20,35 +20,41 @@
           </tr>  
         </thead>
         <tbody>
-          <tr v-for="m in materials" :key=m.name >
-            <td v-on:click="useMaterial(m.name)" v-for="h in fields" :key=h.key>{{m[h.key]}}</td>
-            <td v-on:click="useMaterial(m.name)" v-color-cell=m.color></td>
+          <tr class="selectable" v-for="m in materials" :key=m.name >
+            <td v-on:click="use(m.name)" v-for="h in fields" :key=h.key>{{m[h.key]}}</td>
+            <color-cell v-on:click.native="use(m.name)" :color="m.color"></color-cell>
+            <!--td v-on:click="use(m.name)" v-color-cell=m.color></td-->
             <td class="actions">
-              <i v-on:click="editMaterial(m.name)" class="material-icons">mode_edit</i>
-              <i v-on:click="deleteMaterial(m.name)" class="material-icons">delete</i>
+              <i v-on:click="edit(m.name)" class="material-icons">mode_edit</i>
+              <i v-on:click="remove(m.name)" class="material-icons">delete</i>
             </td>
           </tr>
         </tbody>
-      </table>
-    </div>
+      </a-table>
 
-
-    <a-dialog :actions="dialogActions" :title="'Create a new material'" v-if="showCreateDialog" @close="showCreateDialog = false">        
+    <a-dialog @close="onCloseDialog()" :actions="dialogActions" :title="'Material editor'" ref='createDialog'>        
         
           <form>        
-            <a-input v-model="selectedMaterial.name" :label="'Name'"></a-input>
+            <a-input v-model="selectedMaterial.name" :disabled = "editing" :label="'Name'"></a-input>            
             <a-select v-model="selectedMaterial.class" :options="Object.keys(materialProps)"></a-select>
             
-            <a-color-pick v-model="selectedMaterial.color"></a-color-pick>
+            <a-hsv-color-pick  v-model="selectedMaterial.color"></a-hsv-color-pick>
 
-            <a-input :type="'number'" :step="0.01" v-for="(item, index) in Object.keys(materialProps[selectedMaterial.class])" 
-                      :key="index" 
-                      v-model="selectedMaterial[item]" :label="Object.keys(materialProps[selectedMaterial.class])[index]"></a-input>
+            <a-input v-for="(item, index) in materialProps[selectedMaterial.class]" 
+                :type="'number'" 
+                :required="true"                 
+                :max="item.max"
+                :min="item.min"
+                :key="index"  
+                v-model="selectedMaterial[index]"               
+                :label="index">
+            </a-input>
 
             
           </form>        
+          
     </a-dialog>
-
+    <a-toast ref='materialUpdated'>Material list updated</a-toast>    
   </div>
 
   
@@ -59,49 +65,85 @@
 
 import "~/plugins/init-materials"
 import SKPHelper from "~/plugins/skp-helper";
+import ColorCell from './others/color-cell'
 
 // Material properties (Color is there by default)
 var materialProperties = {
   Plastic : {
-    specularity : 0.05,
-    roughness: 0
+    specularity : {default: 0.05, min: 0, max:1},
+    roughness: {default: 0.0, min: 0, max:1},
   },
   Metal : {
-    specularity : 0.05,
-    roughness: 0
+    specularity: {default: 0.95, min: 0, max:1},
+    roughness: {default: 0.0, min: 0, max:1},
   },
   Dielectric : {
-    refraction_index : 1.52,
-    hartmann_constant: 0
+    refraction_index : {default: 1.52},
+    hartmann_constant: {default: 0}
   }
 };
 
 
 export default {  
   methods : {    
-    useMaterial(matName){
+    onCloseDialog(){
+      this.selectedMaterial = {
+        class: Object.keys(materialProperties)[0],
+        color: {r:0.6, g:0.6,b:0.6}
+      };
+      this.editing = false;
+    },
+    use(matName){
       this.skp.call_action('use_material',matName);
     },
-    editMaterial(matName){
-      this.skp.call_action('edit_material',matName);
+    edit(matName){
+      var mat = materials.find(function(m){ return m.name === matName});
+
+      this.selectedMaterial = mat;
+      this.$refs.createDialog.show();
+      this.editing=true;
+      
     },
-    deleteMaterial(matName){
+    remove(matName){
+      var i = materials.findIndex(function(m){
+          return m.name === matName;
+        });        
+      if (i > -1) {
+        materials.splice(i, 1);
+      }
       this.skp.call_action('delete_material',matName);
     },
-    createMaterial(){
-      console.log("Creating a material!");
+    create(){
+      const selectedMaterial = this.selectedMaterial;
+      const props = Object.keys(this.materialProps[selectedMaterial.class]);
+      var newMat = {};
+
+      newMat.name = selectedMaterial.name;
+      newMat.class = selectedMaterial.class;
+      newMat.color = selectedMaterial.color;
+      
+      props.forEach(function(p){
+        newMat[p] = selectedMaterial[p];
+      })
+
+      if(this.editing){
+        var i = materials.findIndex(function(m){
+          return m.name === newMat.name;
+        });        
+        materials[i] = newMat;
+        this.skp.call_action('edit_material',newMat);
+      }else{
+        materials.push(newMat);
+        this.skp.call_action('create_material',newMat);
+      }
+      this.$refs.createDialog.show();
+      this.$refs.materialUpdated.show();
+      
+      this.editing = false;
     }
   },
-  directives : {
-    colorCell : {
-      inserted: function (el,binding) {
-        let color = binding.value;
-        let r = color.r;
-        let g = color.g;
-        let b = color.b;
-        el.style.background="rgb("+r+","+g+","+b+")";
-      }    
-    }
+  components : {
+    ColorCell : ColorCell
   },
   data () {
     return {
@@ -116,13 +158,8 @@ export default {
         color: {r:0.6, g:0.6,b:0.6}
       },
       editing: false,
-      materialProps : materialProperties,
-      showCreateDialog : false,
-      dialogActions: {
-        'Create material' : function(){
-          console.log("Create!");
-        }
-      }
+      materialProps : materialProperties,      
+      dialogActions: { 'Accept' : this.create }      
     }
   }
 }

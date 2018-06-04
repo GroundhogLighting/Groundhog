@@ -1,9 +1,8 @@
 var isDev = require('./plugins/is-dev');
 
 module.exports = {
-  plugins : [
-    './plugins/clean-ui.nuxt'
-    //'./node_modules/clean-ui/clean-ui.nuxt'
+  plugins : [    
+    '~/node_modules/clean-ui/clean-ui.nuxt'    
   ],
   router: {
     base: (isDev ? '/' : './'), 
@@ -12,10 +11,7 @@ module.exports = {
   
   /* MODULES */
   modules: [
-    //'bootstrap-vue/nuxt',
-
-    // Or if you have custom bootstrap CSS...
-    //['bootstrap-vue/nuxt', { css: false }],    
+    
   ],
   /*
   ** Headers of the page
@@ -24,9 +20,6 @@ module.exports = {
     minify: {
       removeComments: true,      
     },
-    //routes : function(e){
-    //  console.log(e);
-    //}
   },
   head: {
     title: 'ui-src',

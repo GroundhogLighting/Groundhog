@@ -4,7 +4,7 @@ var skpVersion = require('./skp-version');
 module.exports = {
     call_action : function(actionName, args){
         if(isDev){
-            alert("calling "+actionName+'(\"'+args+'\");');
+            console.log("SKP >>>>> calling "+actionName+'(\"'+args+'\");');
         }else{
             if(skpVersion === 'html_dialog'){
                 eval('sketchup.'+actionName+'(\"'+args+'\");');

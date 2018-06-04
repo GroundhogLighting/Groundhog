@@ -1,43 +1,46 @@
 <template>
-<div>
+<div v-container v-with-sidenav> 
 
     <a-navbar fixed variant="primary">
       <a-button :variant="'primary'" v-on:click.native="skp.call_action('set_weather_file','')">Set weather file</a-button>
       <a-button :variant="'primary'" v-on:click.native="skp.call_action('follow_link','http://www.energyplus.net/weather')">Find more weather files</a-button>      
     </a-navbar>
 
-  <div class="view-container">  
-    <table>
+
+    <a-double-entry-table>
+      <thead>
+
+      </thead>
       <tbody>
 
       <tr>
-        <td>Country</td>
-        <td><input v-on:change="updateLocation()" v-model="location.country" type="text" v-editable size="15"></td>
+        <td>Country</td>        
+        <a-editable-cell @submit="updateLocation()" v-model="location.country"></a-editable-cell>        
       </tr>
       <tr>
-        <td>City</td>
-        <td><input v-on:change="updateLocation()" v-model="location.city" type="text" v-editable size="15"></td>
+        <td>City</td>        
+        <a-editable-cell @submit="updateLocation()" v-model="location.city"></a-editable-cell>        
       </tr>
       <tr>
-        <td>Latitude</td>
-        <td><input v-on:change="updateLocation()" v-model="location.latitude" type="text" v-editable size="15"></td>
+        <td>Latitude</td>        
+        <a-editable-cell @submit="updateLocation()" v-model="location.latitude"></a-editable-cell>        
       </tr>
       <tr>
-        <td>Longitude</td>
-        <td><input v-on:change="updateLocation()" v-model="location.longitude" type="text" v-editable size="15"></td>
+        <td>Longitude</td>        
+        <a-editable-cell @submit="updateLocation()" v-model="location.longitude"></a-editable-cell>
       </tr>
       <tr>
         <td>Time Zone (GMT)</td>
-        <td><input v-on:change="updateLocation()" v-model="location.timezone" type="text" v-editable size="15"></td>
+        <a-editable-cell @submit="updateLocation()" v-model="location.timezone"></a-editable-cell>
       </tr>
       <tr>
-        <td>Albedo (%)</td>
-        <td><input v-on:change="updateLocation()" v-model="location.albedo" type="text" v-editable size="15"></td>
+        <td>Albedo (%)</td>        
+        <a-editable-cell @submit="updateLocation()" v-model="location.albedo"></a-editable-cell>                
       </tr>
       </tbody>
-    </table>
+    </a-double-entry-table>
     
-  </div>
+  
 </div>
 </template>
 
@@ -51,15 +54,15 @@ export default {
   directives : {
     editable : EditableInput
   },
-
   methods : {
-    updateLocation(){
+    updateLocation(){      
       this.skp.call_action('update_model_location','');
     },
     
   },
   data(){
     return{
+      test: false,
       location: project_location,
       skp: SKPHelper
     }

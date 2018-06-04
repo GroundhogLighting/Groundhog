@@ -12,7 +12,7 @@ import { setContext, getLocation, getRouteData } from './utils'
 
 
 /* Plugins */
-import nuxt_plugin_cleanui_6051fe93 from 'nuxt_plugin_cleanui_6051fe93' // Source: ../plugins/clean-ui.nuxt
+import nuxt_plugin_cleanui_041bd780 from 'nuxt_plugin_cleanui_041bd780' // Source: ../node_modules/clean-ui/clean-ui.nuxt
 
 
 // Component: <no-ssr>
@@ -134,7 +134,7 @@ async function createApp (ssrContext) {
 
   // Plugin execution
   
-  if (typeof nuxt_plugin_cleanui_6051fe93 === 'function') await nuxt_plugin_cleanui_6051fe93(app.context, inject)
+  if (typeof nuxt_plugin_cleanui_041bd780 === 'function') await nuxt_plugin_cleanui_041bd780(app.context, inject)
   
 
   // If server-side, wait for async component to be resolved first

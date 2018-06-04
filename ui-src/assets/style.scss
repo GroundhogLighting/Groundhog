@@ -1,127 +1,42 @@
 
-$readonly : #919191;
-$borders: #919191;
+$primary:#16253c;
+$secondary: #cc7212;
 
-// IMPORT BOOTSTRAP
-//@import "~bootstrap/scss/bootstrap";
-//@import "~bootstrap-vue/dist/bootstrap-vue";
-
-
-$secondary: #ff4081;
-$warn: #f44336;
-
-$background: white;
+$background: darken(white,4);
 $curtain: rgba(0,0,0,0.4);
 
+$color: lighten(black,10);
 
-// SETUP FONTS
-//@import url('https://fonts.googleapis.com/css?family=Montserrat');
-//$font-family: 'Montserrat', 'sans-serif';
-/*
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+$font-family: 'Montserrat', 'sans-serif';
 
-@font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: url(~/assets/material-design-icons/iconfont/MaterialIcons-Regular.eot); //
-    src: local('Material Icons'),
-      local('MaterialIcons-Regular'),
-      url(~/assets/material-design-icons/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
-      url(~/assets/material-design-icons/iconfont/MaterialIcons-Regular.woff) format('woff'),
-      url(~/assets/material-design-icons/iconfont/MaterialIcons-Regular.ttf) format('truetype');
-  }
-  
-  .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;  //
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-  
-    // Support for all WebKit browsers. 
-    -webkit-font-smoothing: antialiased;
-    // Support for Safari and Chrome. 
-    text-rendering: optimizeLegibility;
-  
-    // Support for Firefox. 
-    -moz-osx-font-smoothing: grayscale;
-  
-    // Support for IE. 
-    font-feature-settings: 'liga';
-  }
-  */
 
 @import "../node_modules/clean-ui/clean-ui";
 
-
-body{
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 16px;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #212529;
-  text-align: left;
-  background-color: #fff;
-}
-
-
-#view {
-  background-color: white;
-  min-height: 100vh;  
-  text-align: center;
-  flex: 1;  
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-
-}
-
-div.view-container{
-  box-sizing: border-box;  
-  padding: 100px 40px 40px 60px;
-  min-height: 100vh;
-  @media only screen and (max-width: $small) {
-    padding: 100px 5px 5px 30px;
+@media only screen and (min-width: $small) {
+  div.a-navbar{
+    left: 150px
   }
 }
 
-/*
-nav.navbar {
-  font-size:0.115in;
-  min-height: 0.36in;
-  input {
-    border-color:transparent;
-  }
-
-  button{
-    font-size:110%;
-    color:white;
-    text-decoration: none;
-    border-right: 1px solid white;
-    padding-right: 0.07in;
-  }
-  a {
-    color: white;
-    cursor: pointer;
-     
-    &:visited{
-      color:white;
-      text-decoration: none;
-    }
-    &:hover {
-      text-decoration: none;
-    }
-  }
+span.no-data{
+  position:absolute;
+  top: 30vh;
+  color: lighten($color,40);
+  transform: translate(-50%,0);
   
 }
-*/
 
-.sorry{
-  color:rgba(0,0,0,0.54);
+div.a-container{
+  text-align: center;
+}
+
+form{
+  text-align: left;
+}
+
+@media only screen and (max-width: $small) {
+  div.a-navbar{
+    //display:none;
+  }
 }
