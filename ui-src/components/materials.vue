@@ -68,7 +68,7 @@ import SKPHelper from "~/plugins/skp-helper";
 import ColorCell from './others/color-cell'
 
 // Material properties (Color is there by default)
-var materialProperties = {
+const materialProperties = {
   Plastic : {
     specularity : {default: 0.05, min: 0, max:1},
     roughness: {default: 0.0, min: 0, max:1},
