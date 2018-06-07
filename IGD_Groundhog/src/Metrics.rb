@@ -116,7 +116,21 @@ module IGD
 
       @@library["SKY_VISIBILITY"] = sky_visibility
 
+      ###### LEED EQc7 opt2 (LEED_EQc7_opt2) ######
+      leed_eqc7_opt2 = Hash.new
 
+      leed_eqc7_opt2[:write_file] = Proc.new{ |workplane,objective|
+        sky = self.get_equinox_sky(objective)
+        next "./Results/#{Utilities.fix_name(workplane)}-#{Utilities.fix_name(sky)}.txt"
+      }
+
+      leed_eqc7_opt2[:get_tasks] = Proc.new { |workplane,objective,options|
+        sky = self.get_equinox_sky(objective)
+        target = {"workplane" =>workplane, "sky" => sky}
+        next self.calc_static_illuminance_tasks(target,options)
+      }
+
+      @@library["LEED_EQc7_opt2"] = leed_eqc7_opt2
 
       ################################################
       ################ END OF LIBARY #################
@@ -210,7 +224,7 @@ module IGD
       def self.calc_annual_illuminance_tasks(workplane, options)
         return DCAnnualIlluminance.new(workplane)
       end
-      
+
       # Returns the Task that calculates illuminance in a static moment of the year
       #
       # @param target [Hash] A hash containing the sky at the moment and the workplane
