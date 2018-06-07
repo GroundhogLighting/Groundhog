@@ -45,7 +45,7 @@ module IGD
 				ret = false
 				model=Sketchup.active_model
 				if values.length != pixels.length then
-					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match for objective '#{objective["name"]}' in workplane '#{workplane}'")						
+					UI.messagebox("Number of lines in 'Pixels' and 'Values' do not match for objective '#{objective["name"]}' in workplane '#{workplane}'")
 					UI.messagebox(" N-pixels: #{pixels.length} | N-values: #{values.length} ")
 					return false
 				end
@@ -237,7 +237,7 @@ module IGD
 				op_name="Update pixels"
 				begin
 					model.start_operation(op_name,true)
-					
+
 					#good_min and good_max are assign for static metrics, by default
 					# If the static metric does not have "good_light" field, it is
 					# assumed to be binary... that is, 0 is bad, > 0 is good.
@@ -352,7 +352,7 @@ module IGD
 				end
 
 				pixels = Utilities.readTextFile(pixels_file,",",0)
-				
+
 				return self.draw_pixels(values,pixels,workplane,objective)
 			end
 
@@ -369,9 +369,9 @@ module IGD
 
 				if objective["dynamic"] then
 					return self.get_dynamic_objective_workplane_statistics(wp,objective)
-				else 
+				else
 					return self.get_static_objective_workplane_statistics(wp,objective)
-				end				
+				end
 			end
 
 			# Calculates the statistic of a workplane with dynamic objective
@@ -382,8 +382,8 @@ module IGD
 			# @param objective [Hash] The objective
 			# @version 0.1
 			def self.get_dynamic_objective_workplane_statistics(wp,objective)
-				
-				pixels = wp.entities.select{|x| Labeler.result_pixel? x}			
+
+				pixels = wp.entities.select{|x| Labeler.result_pixel? x}
 				count=pixels.length
 				sum=0
 				total_area = 0
@@ -392,7 +392,7 @@ module IGD
 				good_area = 0;
 				pixels.each do |pixel|
 					value = Labeler.get_value(pixel)
-					area = pixel.area					
+					area = pixel.area
 					good_area += area if value >= objective["good_pixel"]
 					max = value if value > max
 					min = value if value < min
@@ -422,7 +422,7 @@ module IGD
 			# @param objective [Hash] The objective
 			# @version 0.1
 			def self.get_static_objective_workplane_statistics(wp,objective)
-				
+
 				pixels = wp.entities.select{|x| Labeler.result_pixel? x}
 
 
@@ -433,21 +433,31 @@ module IGD
 				good_max = 9e16
 				if objective.key? "good_light" then
 					good_min = objective["good_light"]["min"]
-					good_max = objective["good_light"]["max"] 
+					good_max = objective["good_light"]["max"]
 					good_max = 9e16 if not good_max
 					good_min = 0 if not good_min
 				end
-		
 
-				count=pixels.length
-				sum=0
+
+				count = pixels.length
+				sum = 0
 				total_area = 0
-				max=Labeler.get_value(pixels[0])
-				min=max
-				good_area = 0;
+				max = Labeler.get_value(pixels[0])
+				min = max
+				good_area = 0
+				below_area = 0
+				above_area = 0
 				pixels.each do |pixel|
 					value = Labeler.get_value(pixel)
 					area = pixel.area
+					case
+					when value < good_min
+						below_area += area
+					when value > good_max
+						above_area += area
+					else
+						good_area += area
+					end
 					good_area += area if value >= good_min and value <= good_max
 					max = value if value > max
 					min = value if value < min
@@ -459,13 +469,15 @@ module IGD
 				ret = Hash.new
 				ret["min"] = min
 				ret["max"] = max
-				ret["average"]=average
-				ret["goal"]=objective["goal"]
+				ret["average"] = average
+				ret["goal"] = objective["goal"]
 				ret["min_over_average"] = min==average ? 1 : min/average
-				ret["min_over_max"] = min==max ? 1 : min/max #fully shaded planes get a Max and Min of 0.
+				ret["min_over_max"] = min==max ? 1 : min/max # fully shaded planes get a Max and Min of 0.
 				ret["nsensors"] = count
 				ret["approved_percentage"] = good_area / total_area
-				ret["total_area"] = total_area/1550.0 #transform into square meters from sqin
+				ret["below_percentage"] = below_area / total_area
+				ret["above_percentage"] = above_area / total_area
+				ret["total_area"] = total_area/1550.0 # transform into square meters from sqin
 				return ret
 			end
 
