@@ -33,9 +33,10 @@ module IGD
           month = data[1].to_i
           day = data[2].to_i
           hour = data[3].to_f
-          direct = data[14]
-          diffuse = data[15]
-          weather["data"] << {"month" => month, "day" => day, "hour" => (hour-0.5), "direct_normal" => direct, "diffuse_horizontal" => diffuse}
+          global_horizontal = data[13]
+          direct_normal = data[14]
+          diffuse_horizontal = data[15]
+          weather["data"] << {"month" => month, "day" => day, "hour" => (hour-0.5), "global_horizontal" => global_horizontal, "direct_normal" => direct_normal, "diffuse_horizontal" => diffuse_horizontal}
         }
 
         return weather
