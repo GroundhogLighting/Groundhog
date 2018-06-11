@@ -35,20 +35,24 @@
     <a-dialog @close="onCloseDialog()" :actions="dialogActions" :title="'Material editor'" ref='createDialog'>        
         
           <form>        
-            <a-input v-model="selectedMaterial.name" :disabled = "editing" :label="'Name'"></a-input>            
+            <a-input v-model="selectedMaterial.name" :label="'Name'"></a-input>            
+            <br>
             <a-select v-model="selectedMaterial.class" :options="Object.keys(materialProps)"></a-select>
             
             <a-hsv-color-pick  v-model="selectedMaterial.color"></a-hsv-color-pick>
 
-            <a-input v-for="(item, index) in materialProps[selectedMaterial.class]" 
+            <div v-for="(item, index) in materialProps[selectedMaterial.class]" :key="index"  >
+              <a-input 
                 :type="'number'" 
                 :required="true"                 
                 :max="item.max"
-                :min="item.min"
-                :key="index"  
+                :min="item.min"                
                 v-model="selectedMaterial[index]"               
                 :label="index">
-            </a-input>
+              </a-input>
+              <br>
+            </div>
+            
 
             
           </form>        
@@ -91,18 +95,14 @@ export default {
         class: Object.keys(materialProperties)[0],
         color: {r:0.6, g:0.6,b:0.6}
       };
-      this.editing = false;
     },
     use(matName){
       this.skp.call_action('use_material',matName);
     },
     edit(matName){
       var mat = materials.find(function(m){ return m.name === matName});
-
-      this.selectedMaterial = mat;
-      this.$refs.createDialog.show();
-      this.editing=true;
-      
+      this.selectedMaterial = Object.assign({oldName : mat.name},mat);    
+      this.$refs.createDialog.show();      
     },
     remove(matName){
       var i = materials.findIndex(function(m){
@@ -113,33 +113,23 @@ export default {
       }
       this.skp.call_action('delete_material',matName);
     },
-    create(){
-      const selectedMaterial = this.selectedMaterial;
-      const props = Object.keys(this.materialProps[selectedMaterial.class]);
-      var newMat = {};
+    submitEdit(){
 
-      newMat.name = selectedMaterial.name;
-      newMat.class = selectedMaterial.class;
-      newMat.color = selectedMaterial.color;
-      
-      props.forEach(function(p){
-        newMat[p] = selectedMaterial[p];
-      })
-
-      if(this.editing){
-        var i = materials.findIndex(function(m){
-          return m.name === newMat.name;
-        });        
-        materials[i] = newMat;
-        this.skp.call_action('edit_material',newMat);
-      }else{
+      var newMat = this.selectedMaterial;
+      var oldName = newMat.oldName;
+      if(oldName){ // editing
+        delete newMat.oldName;
+        var mat = materials.find(function(e){return e.name == oldName});
+        mat = Object.assign(mat,newMat);  
+        newMat.oldName = oldName;    
+        this.skp.call_action('edit_material',JSON.stringify(newMat));
+      }else{ // Creating
         materials.push(newMat);
-        this.skp.call_action('create_material',newMat);
+        this.skp.call_action('add_material',JSON.stringify(newMat));
       }
+
       this.$refs.createDialog.show();
-      this.$refs.materialUpdated.show();
-      
-      this.editing = false;
+      this.$refs.materialUpdated.show();      
     }
   },
   components : {
@@ -157,9 +147,8 @@ export default {
         class: Object.keys(materialProperties)[0],
         color: {r:0.6, g:0.6,b:0.6}
       },
-      editing: false,
       materialProps : materialProperties,      
-      dialogActions: { 'Accept' : this.create }      
+      dialogActions: { 'Accept' : this.submitEdit }      
     }
   }
 }

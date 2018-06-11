@@ -21,6 +21,7 @@ $font-family: 'Montserrat', 'sans-serif';
 
 span.no-data{
   position:absolute;
+  font-size: 85%;
   top: 30vh;
   color: lighten($color,40);
   transform: translate(-50%,0);
@@ -31,8 +32,10 @@ div.a-container{
   text-align: center;
 }
 
+
 form{
-  text-align: left;
+  //text-align: left;
+
 }
 
 /*

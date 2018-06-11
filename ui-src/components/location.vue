@@ -14,24 +14,29 @@
       <tbody>
 
       <tr>
-        <td>Country</td>        
-        <a-editable-cell @submit="updateLocation()" v-model="location.country"></a-editable-cell>        
+        <td>Country</td>   
+        <td v-if="hasWEA">{{location.country}}</td>     
+        <a-editable-cell v-if="!hasWEA" @submit="updateLocation()" v-model="location.country"></a-editable-cell>        
       </tr>
       <tr>
         <td>City</td>        
-        <a-editable-cell @submit="updateLocation()" v-model="location.city"></a-editable-cell>        
+        <td v-if="hasWEA">{{location.city}}</td>     
+        <a-editable-cell v-if="!hasWEA" @submit="updateLocation()" v-model="location.city"></a-editable-cell>        
       </tr>
       <tr>
         <td>Latitude</td>        
-        <a-editable-cell @submit="updateLocation()" v-model="location.latitude"></a-editable-cell>        
+        <td v-if="hasWEA">{{location.latitude}}</td>     
+        <a-editable-cell v-if="!hasWEA" @submit="updateLocation()" v-model="location.latitude"></a-editable-cell>        
       </tr>
       <tr>
-        <td>Longitude</td>        
-        <a-editable-cell @submit="updateLocation()" v-model="location.longitude"></a-editable-cell>
+        <td>Longitude</td>    
+        <td v-if="hasWEA">{{location.longitude}}</td>         
+        <a-editable-cell v-if="!hasWEA" @submit="updateLocation()" v-model="location.longitude"></a-editable-cell>
       </tr>
       <tr>
         <td>Time Zone (GMT)</td>
-        <a-editable-cell @submit="updateLocation()" v-model="location.timezone"></a-editable-cell>
+        <td v-if="hasWEA">{{location.timezone}}</td>     
+        <a-editable-cell v-if="!hasWEA" @submit="updateLocation()" v-model="location.timezone"></a-editable-cell>
       </tr>
       <tr>
         <td>Albedo (%)</td>        
@@ -64,6 +69,7 @@ export default {
     return{
       test: false,
       location: project_location,
+      hasWEA: has_weather_file,
       skp: SKPHelper
     }
   }

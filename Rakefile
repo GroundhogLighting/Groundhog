@@ -6,7 +6,7 @@ require 'JSON'
 task :default => :all
 
 
-task :all => [:win32, :win64, :macosx] do
+task :all => [:win32, :win64, :macos] do
 	FileUtils.rm_rf "./GH_Groundhog/src/Radiance"
 end
 
@@ -23,28 +23,37 @@ task :clean do
 end
 
 def sketchup_plugin_dir(os,v)
-	if os == "macosx" then
+	if os == "macos" then
 		return "#{ENV["HOME"]}/Library/Application Support/SketchUp #{v}/SketchUp/Plugins"
 	else
 	 return "#{ENV["UserProfile"].gsub("\\","/")}/AppData/Roaming/SketchUp/SketchUp #{v}/SketchUp/Plugins"
 	end
 end
 
-task :test,[:os, :suv]  do |t, args| #=> [:design_assistant]
-	radiance_version = "Radiance/#{args[:os]}/Radiance"
-	radiance_version = "Radiance/macosx/usr/local/radiance" if args[:os] == "macosx"
+task :test,[:suv]  do |t, args| #=> [:design_assistant]
+	os = this_os
+	if args[:suv]== nil then		
+		version = '2017'
+	else
+		version = args[:suv]
+	end		
+
+	warn "Testing version #{version} in #{os}"
+	
+	radiance_version = "Radiance/#{os}/Radiance"
+	radiance_version = "Radiance/macos/usr/local/radiance" if os == "macos"
 
 	# Replace the Radiance version in Groundhog
 	FileUtils.rm_rf("./GH_Groundhog/src/Radiance")
 	FileUtils.cp_r radiance_version, "./GH_Groundhog/src/Radiance"
 
 	# Remove the groundhog version in Sketchup Plugin directory
-	FileUtils.rm_rf "#{sketchup_plugin_dir(args[:os],args[:suv])}/GH_Groundhog.rb"
-	FileUtils.rm_rf "#{sketchup_plugin_dir(args[:os],args[:suv])}/GH_Groundhog"
+	FileUtils.rm_rf "#{sketchup_plugin_dir(os,version)}/GH_Groundhog.rb"
+	FileUtils.rm_rf "#{sketchup_plugin_dir(os,version)}/GH_Groundhog"
 
 	# Move the new one
-	FileUtils.cp_r "GH_Groundhog.rb","#{sketchup_plugin_dir(args[:os],args[:suv])}/GH_Groundhog.rb"
-	FileUtils.cp_r "GH_Groundhog","#{sketchup_plugin_dir(args[:os],args[:suv])}/GH_Groundhog"
+	FileUtils.cp_r "GH_Groundhog.rb","#{sketchup_plugin_dir(os,version)}/GH_Groundhog.rb"
+	FileUtils.cp_r "GH_Groundhog","#{sketchup_plugin_dir(os,version)}/GH_Groundhog"
 
 	# Final clean
 	FileUtils.rm_rf("./GH_Groundhog/src/Radiance")
@@ -52,15 +61,15 @@ end
 
 def this_os
 	if RUBY_PLATFORM.include? "darwin" then
-		return "macosx"
+		return "macos"
 	else
-		return "win"
+		return "win64" # we only allow WIN64 now.
 	end
 end
 
 def compress(os)
 	radiance_version = "Radiance/#{os}/Radiance"
-	radiance_version = "Radiance/macosx/usr/local/radiance" if os == "macosx"	
+	radiance_version = "Radiance/macos/usr/local/radiance" if os == "macos"	
 	FileUtils.rm_rf("./GH_Groundhog/src/Radiance")
 	FileUtils.cp_r radiance_version, "./GH_Groundhog/src/Radiance"	
 	
@@ -81,8 +90,8 @@ task :win32 => [:clean, :add_build_date, :compile_ui] do
 	compress("win32")
 end
 
-task :macosx => [:clean, :add_build_date, :compile_ui] do
-	compress("macosx")
+task :macos => [:clean, :add_build_date, :compile_ui] do
+	compress("macos")
 end
 
 task :add_build_date do

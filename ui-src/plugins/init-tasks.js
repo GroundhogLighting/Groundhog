@@ -13,8 +13,8 @@ if(require("~/plugins/is-dev")){
     ];
 
     workplanes = [
-      {name: "WP1", pixel_size: 0.25,tasks:["Task 2","Task 1"]},
-      {name: "WP2", pixel_size: 0.25,tasks:["Task 2"]},
+      {name: "Small Kitchen", pixel_size: 0.25,tasks:["Task 2","Task 1"]},
+      {name: "Workplane with long name", pixel_size: 0.25,tasks:["Task 2"]},
   
     ]
     

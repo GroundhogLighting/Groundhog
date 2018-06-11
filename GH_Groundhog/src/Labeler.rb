@@ -1,7 +1,15 @@
 module GH
     module Groundhog
         module Labeler
-            
+			
+			# returns the label of an Entity
+			# @author German Molina
+			# @param entity [SketchUp::Entity] The entity to get the value from
+			# @return [Variable] Label
+			def self.get_label(entity)
+				entity.get_attribute(GROUNDHOG_DICTIONARY,LABEL_KEY)
+			end
+
             # Sets the Groundhog-assigned label an entity
 			#
 			# @author German Molina
@@ -16,10 +24,7 @@ module GH
 					name = self.get_name(entity)
 					workplanes = Utilities.get_workplane_by_name(name)
 					if workplanes.length == 1 then
-						hash = JSON.parse Sketchup.active_model.get_attribute "Groundhog","workplanes"
-						hash.delete name
-						Sketchup.active_model.set_attribute(GROUNDHOG_DICTIONARY,WORKPLANES_KEY,hash.to_json)
-						#DesignAssistant.update
+						Utilities.unregister_workplane(name)						
 					end
                 end
                 # Then, label
@@ -62,26 +67,26 @@ module GH
                 end
                 
                 entities.each do |ent|													
-                    if self.is_labeled?(ent,WORKPLANE) then
-                        self.replace_workplane(Labeler.get_name(ent),name) 
-                        #IGD::Groundhog::DesignAssistant.update						
+                    if self.workplane?(ent) then
+						# If it is a workplane, the registry may to change
+						old_name = self.get_name(ent)												
+
+						# If the new workplane does not exist, register it
+						if not Utilities.workplane_registered?(name) then
+							Utilities.register_workplane(name)
+						end
+
+						# If the old workplane will get empty, unregister it
+						if Utilities.get_workplane_by_name(old_name).length == 1 then
+							Utilities.unregister_workplane(old_name)
+						end
+						
                     end	
-                    ent.set_attribute(GROUNDHOG_DICTIONARY,NAME_KEY,name)
+					ent.set_attribute(GROUNDHOG_DICTIONARY,NAME_KEY,name)
                 end			
             end
 
-            # Replaces the name of a workplane, updating the model dictionary
-            #
-            # @author German Molina
-            # @param old_name The current name of the workplane
-            # @param new_name The new name for the workplane
-            def self.replace_workplane(old_name,new_name)
-				workplanes = Utilities.get_workplane_by_name(old_name)
-				hash = JSON.parse Sketchup.active_model.get_attribute(GROUNDHOG_DICTIONARY,WORKPLANES_KEY)
-				hash[new_name] = hash[old_name]				
-				hash.delete old_name if workplanes.length == 1
-				Sketchup.active_model.set_attribute(GROUNDHOG_DICTIONARY,WORKPLANES_KEY,hash.to_json)
-            end
+			
             
             # Returns the workplane that has a certain name
 			#
@@ -115,7 +120,102 @@ module GH
 				return entity.entityID.to_s
 			end
 
+			# Checks if an entity is a window
+			# @author German Molina
+			# @param entity [SketchUp::Entity] Entity to test.
+			# @return [Boolean]
+			def self.window?(entity)
+				entity.get_attribute(GROUNDHOG_DICTIONARY,LABEL_KEY)== WINDOW
+			end
 
+			# Checks if an entity is a workplane
+			# @author German Molina
+			# @param entity [SketchUp::Entity] Entity to test.
+			# @return [Boolean]
+			def self.workplane?(entity)
+				entity.get_attribute(GROUNDHOG_DICTIONARY,LABEL_KEY) == WORKPLANE
+			end
+
+			# Checks if an entity is a Illum
+			# @author German Molina
+			# @param entity [SketchUp::Entity] Entity to test.
+			# @return [Boolean]
+			def self.illum?(entity)
+				entity.get_attribute(GROUNDHOG_DICTIONARY,LABEL_KEY) == ILLUM
+			end
+
+			# Label selected faces as workplanes
+			# @author German Molina
+			# @param entities [Array<entities>] An array with the entities to be labeled as Workplane
+			# @version 0.2
+			# @return [Void]
+			def self.to_workplane(entities)
+
+				# Check if there are faces
+				faces=Utilities.get_faces(entities)
+				if faces.length < 1 then
+					UI.messagebox "There are no faces in your selection. Please try again with another selection"
+					return
+				end
+
+				# Ask for a name... return if 'cancel'
+				name = Utilities.get_name_from_user				
+				return if not name
+								
+				# Start operation
+				model = Sketchup.active_model
+				
+				model.start_operation('label as workplane')
+				faces.each do |face|
+				
+					# Check if there is a workplane in the selection
+					if Labeler.workplane?(face) then
+						UI.messagebox "Some of the selected faces are already workplanes... please remove labels before doing this."						
+						model.abort_operation
+						return
+					end
+
+					self.set_name([face],name)
+					self.label_as(face,WORKPLANE)
+					Utilities.set_oriented_surface_materials(face,"workplane","red",0.2)						
+					face.add_observer(WorkplaneObserver.new)
+				end
+
+				# Commit
+				model.commit_operation
+
+				# Register the workplane				
+				Utilities.register_workplane(name) if not Utilities.workplane_registered?(name)
+
+			
+			end
+
+
+			# Delete label from entities
+			# @author German Molina
+			# @param entities [Array<SketchUp::Entities>] An array with the entities whose Label will be removed
+			# @return [Void]
+			def self.to_nothing(entities)
+				faces=Utilities.get_faces(entities)
+				if faces.length>=1 then
+					faces.each do |i|
+						if self.workplane? i then
+							name = self.get_name(i)
+							wps = Utilities.get_workplane_by_name(name)
+							if wps.length == 1 then
+								Utilities.unregister_workplane(name)
+							end							
+						end
+						if self.workplane?(i) or self.window?(i) or self.illum?(i) then
+							i.material=nil
+							i.back_material=nil
+						end
+						self.label_as(i,nil)
+					end
+				else
+					UI.messagebox("No faces selected")
+				end
+			end
 
 
         end

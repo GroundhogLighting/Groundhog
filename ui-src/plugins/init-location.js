@@ -1,3 +1,4 @@
+
 if(require("~/plugins/is-dev")){
       
     project_location = {
@@ -8,7 +9,16 @@ if(require("~/plugins/is-dev")){
         "timezone" : -4,
         "albedo" : 0.2
     }
+    has_weather_file = true;
 }else{  
-    project_location = {};
+    project_location = {
+        "country" : "",
+        "city": "",
+        "latitude" : "",
+        "longitude" : "",
+        "timezone" : "",
+        "albedo" : 0.2
+    };
+    has_weather_file = false;
 }
   

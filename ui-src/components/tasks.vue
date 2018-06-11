@@ -29,43 +29,49 @@
       <!-- EDIT TASK DIALOG -->
       <a-dialog :actions="{'Accept' : submitEditTask}" ref='taskEditor' :title="'Task editor'"  @close="selectedTask = {}">
         {{selectedTask}}
-
-        <a-input :label="'Name'" v-model="selectedTask.name"></a-input>
-        <a-select v-model="selectedTask.class" :options="Object.keys(taskProps)"></a-select>
-            
-        <a-input v-for="(item, index) in taskProps[selectedTask.class]" 
-            :type="'number'" 
-            :required="true"                 
-            :max="item.max"
-            :min="item.min"
-            :key="index"  
-            v-model="selectedTask[index]"               
-            :label="index">
-        </a-input>
-
-        <a-button :variant="'primary'" @click.native="fillSelectedTaskWithDefaults()"></a-button>
+        <form>
+          <a-input :label="'Name'" v-model="selectedTask.name"></a-input>
+          <br>
+          <a-select v-model="selectedTask.class" :options="Object.keys(taskProps)"></a-select>
+          <br>
+          <div v-for="(item, index) in taskProps[selectedTask.class]" :key="index">
+            <a-input  
+              :type="'number'" 
+              :required="true"                 
+              :max="item.max"
+              :min="item.min"              
+              v-model="selectedTask[index]"               
+              :label="index">
+          </a-input>
+            <br>  
+          </div>    
+          
+        </form>
       </a-dialog>
 
       <!-- EDIT WORKPLANE DIALOG -->
       <a-dialog :actions="{'Accept' : submitEditWorkplane}" ref='workplaneEditor' :title="'Workplane editor'"  @close="selectedWorkplane = {}">
         {{selectedWorkplane}}
-        <a-table>
-          <thead>
+        <div class='form'>
+          <a-table>
+            <thead>
 
-          </thead>
-          <tbody>
-            <tr>
-              <td>Name</td>
-              
-              <a-editable-cell v-model="selectedWorkplane.name"></a-editable-cell>  
-              
-            </tr>
-            <tr>
-              <td>Desired pixel size</td>
-              <a-editable-cell v-model="selectedWorkplane.pixel_size"></a-editable-cell>  
-            </tr>
-          </tbody>
-        </a-table>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Name</td>
+                
+                <a-editable-cell v-model="selectedWorkplane.name"></a-editable-cell>  
+                
+              </tr>
+              <tr>
+                <td>Desired pixel size</td>
+                <a-editable-cell v-model="selectedWorkplane.pixel_size"></a-editable-cell>  
+              </tr>
+            </tbody>
+          </a-table>
+        
+        </div>
       </a-dialog>
 
       {{workplanes}}
@@ -131,6 +137,7 @@ export default {
     removeTask: function(taskName){
       this.skp.call_action('remove_task',taskName);
     },
+    /*
     fillSelectedTaskWithDefaults: function(){    
       console.log('FILLING!');  
       var task = this.selectedTask;
@@ -145,7 +152,7 @@ export default {
         })
         this.selectedTask = Object.assign(this.selectedTask,task);
       }
-    },
+    },*/
     createTask: function(){
       
       this.$refs.taskEditor.show()
@@ -156,13 +163,16 @@ export default {
       this.$refs.taskEditor.show();
     },
     submitEditWorkplane : function(){
+      
       var newWP = this.selectedWorkplane;
       var oldName = newWP.oldName;
       delete newWP.oldName;
       var wp = workplanes.find(function(e){return e.name == oldName});
       wp = Object.assign(wp,newWP);
       newWP.oldName = oldName;
-      this.skp.call_action('edit_workplane',JSON.stringify(newWP));
+
+      //var msg = JSON.stringify(newWP);            
+      this.skp.call_action('edit_workplane',newWP);
     },
     submitEditTask : function(){
       var newTask = this.selectedTask;

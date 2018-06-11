@@ -13,6 +13,15 @@ module GH
                 raise ex
             end
 
+            def self.warn(msg)
+                warn "Groundhog Warning: #{msg}"
+            end
+            
+            def self.log(msg)
+                caller_locations(1, 1).first.tap{|loc| 
+                    puts " log:: #{loc.path.split('src').pop}:#{loc.lineno}:#{msg}"
+                }
+            end
             
         end
     end

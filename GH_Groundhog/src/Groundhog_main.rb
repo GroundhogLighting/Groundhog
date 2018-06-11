@@ -25,6 +25,7 @@ module GH
         Sketchup::require 'GH_Groundhog/src/Labeler'
 		Sketchup::require 'GH_Groundhog/src/Weather'
 		Sketchup::require 'GH_Groundhog/src/DesignAssistant'
+		Sketchup::require 'GH_Groundhog/src/Observers/Workplanes'
 		
 
 		#########################################
@@ -42,8 +43,8 @@ module GH
         model = Sketchup.active_model
         #Objectives will be stored here.
         model.set_attribute(GROUNDHOG_DICTIONARY,OBJECTIVES_KEY,Hash.new.to_json) if model.get_attribute(GROUNDHOG_DICTIONARY,OBJECTIVES_KEY) == nil 
-        #Workplane's objectives will be stored here.
-        model.set_attribute(GROUNDHOG_DICTIONARY,WORKPLANES_KEY,Hash.new.to_json) if model.get_attribute(GROUNDHOG_DICTIONARY,WORKPLANES_KEY) == nil 
+        #Workplane's objectives and properties will be stored here.
+        model.set_attribute(GROUNDHOG_DICTIONARY,WORKPLANES_KEY,[].to_json) if model.get_attribute(GROUNDHOG_DICTIONARY,WORKPLANES_KEY) == nil 
 
         #############################
         # ADD REQUIRED PROGRAMS TO PATH

@@ -4,7 +4,7 @@
             <tr>
                 <td></td>
                 <td v-for="(wp,wpIndex) in workplanes" v-bind:key="wpIndex">
-                    {{wp.name}}
+                    {{wp.name | limitString(7)}}
                     
                     <i v-on:click="editWP(wp.name)" class="material-icons action">edit</i>
                     <i v-on:click="removeWP(wp.name)"  class="material-icons action">delete</i>                  
@@ -69,9 +69,9 @@ export default {
             this.$emit('removeTask',taskName);
         },
         removeWP: function(wpName){ 
-            var index;
-            workplanes.find(function(wp,i){i = index; return wp.name === wpName});
-            workplanes.splice(index,1);  
+            
+            var i = workplanes.findIndex(function(wp){return wp.name === wpName});
+            workplanes.splice(i,1);  
             
             // Inform main UI
             this.$emit('removeWP',wpName);        
