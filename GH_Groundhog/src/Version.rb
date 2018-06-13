@@ -33,18 +33,18 @@ module GH
             def self.check_version_compatibility
 
                 
-                model_groundhog_version = model_groundhog_version()
-                current_groundhog_version = installed_groundhog_version()   
+                model_groundhog_version = self.model_groundhog_version
+                current_groundhog_version = self.installed_groundhog_version   
                 
                 if model_groundhog_version == nil then
-                    update_model_groundhog_version()                    
+                    self.update_model_groundhog_version                    
                 else
                     # Do something about compatibility!
-                    compare = compare_versions(current_model_version,current_groundhog_version)                    
-                    if compare < 0 then #model version is newer than GH version
-                        UI.messagebox("We are sorry. This model was edited using a newer version (#{current_model_version}) than the one you have installed (#{current_groundhog_version}). You may have to redefine all Workplanes and Objectives.")
-                    else #model version is older than GH version.
-                        UI.messagebox("This model was developed using an older version of Groundhog (#{current_model_version}). Unfortunately, compatibility was ")
+                    compare = self.compare_versions(model_groundhog_version,current_groundhog_version)                    
+                    if compare < 0 then # model version is newer than current version
+                        UI.messagebox("Warning: We are sorry. This model was edited using a newer version (#{current_model_version}) than the one you have installed (#{current_groundhog_version}). You may have to redefine all Workplanes and Objectives.")
+                    elsif compare > 0 then # model version is older than current version.
+                        UI.messagebox("Warning: This model was developed using an older version of Groundhog (#{current_model_version}). It may be incompatible")
                     end
                 end
                 

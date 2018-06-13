@@ -14,7 +14,7 @@
         <tbody>
             <tr v-for="(task,taskIndex) in tasks" v-bind:key="taskIndex">
                 <td>
-                    {{task.name}}  
+                    {{task.name | limitString(7)}}  
                     <i v-on:click="editTask(task.name)"  class="material-icons action">edit</i>
                     <i v-on:click="removeTask(task.name)"  class="material-icons action">delete</i>                  
                 </td>

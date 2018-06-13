@@ -29,6 +29,24 @@ module GH
                 end
                 # Then, label
 				entity.set_attribute(GROUNDHOG_DICTIONARY,LABEL_KEY, label)
+			end
+			
+			# Sets the Groundhog-assigned value to an entity
+			#
+			# @author German Molina
+			# @param entity [SketchUp::Entity] The entity to get the value from
+			# @param value The value to be assigned			
+            def self.set_value(entity,value)                                
+				entity.set_attribute(GROUNDHOG_DICTIONARY,VALUE_KEY, value)
+			end
+			
+			# Gets the Groundhog-assigned value to an entity
+			#
+			# @author German Molina
+			# @param entity [SketchUp::Entity] The entity to get the value from
+			# @param value The value to be assigned			
+            def self.get_value(entity)                                
+				entity.get_attribute(GROUNDHOG_DICTIONARY,VALUE_KEY)
             end
 
             # Checks if an entity has a certain label 
@@ -73,7 +91,7 @@ module GH
 
 						# If the new workplane does not exist, register it
 						if not Utilities.workplane_registered?(name) then
-							Utilities.register_workplane(name)
+							Utilities.register_default_workplane(name)
 						end
 
 						# If the old workplane will get empty, unregister it
@@ -185,8 +203,10 @@ module GH
 				model.commit_operation
 
 				# Register the workplane				
-				Utilities.register_workplane(name) if not Utilities.workplane_registered?(name)
-
+				if not Utilities.workplane_registered?(name) then
+					wp = Utilities.register_default_workplane(name) 
+					Utilities.push_workplane_to_ui(wp)				
+				end				
 			
 			end
 

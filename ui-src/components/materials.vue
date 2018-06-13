@@ -21,9 +21,9 @@
         </thead>
         <tbody>
           <tr class="selectable" v-for="m in materials" :key=m.name >
-            <td v-on:click="use(m.name)" v-for="h in fields" :key=h.key>{{m[h.key]}}</td>
-            <color-cell v-on:click.native="use(m.name)" :color="m.color"></color-cell>
-            <!--td v-on:click="use(m.name)" v-color-cell=m.color></td-->
+            <td v-on:click="use(m)" v-for="h in fields" :key=h.key>{{m[h.key]}}</td>
+            <color-cell v-on:click.native="use(m)" :color="m.color"></color-cell>
+            <!--td v-on:click="use(m)" v-color-cell=m.color></td-->
             <td class="actions">
               <i v-on:click="edit(m.name)" class="material-icons">mode_edit</i>
               <i v-on:click="remove(m.name)" class="material-icons">delete</i>
@@ -34,12 +34,12 @@
 
     <a-dialog @close="onCloseDialog()" :actions="dialogActions" :title="'Material editor'" ref='createDialog'>        
         
-          <form>        
+          <div class='form'>        
             <a-input v-model="selectedMaterial.name" :label="'Name'"></a-input>            
             <br>
             <a-select v-model="selectedMaterial.class" :options="Object.keys(materialProps)"></a-select>
             
-            <a-hsv-color-pick  v-model="selectedMaterial.color"></a-hsv-color-pick>
+            <color-pick  v-model="selectedMaterial.color"></color-pick>
 
             <div v-for="(item, index) in materialProps[selectedMaterial.class]" :key="index"  >
               <a-input 
@@ -55,8 +55,7 @@
             
 
             
-          </form>        
-          
+          </div>                  
     </a-dialog>
     <a-toast ref='materialUpdated'>Material list updated</a-toast>    
   </div>
@@ -70,6 +69,7 @@
 import "~/plugins/init-materials"
 import SKPHelper from "~/plugins/skp-helper";
 import ColorCell from './others/color-cell'
+import ColorPick from './others/color-pick'
 
 // Material properties (Color is there by default)
 const materialProperties = {
@@ -96,8 +96,8 @@ export default {
         color: {r:0.6, g:0.6,b:0.6}
       };
     },
-    use(matName){
-      this.skp.call_action('use_material',matName);
+    use(mat){      
+      this.skp.call_action('use_material',mat);
     },
     edit(matName){
       var mat = materials.find(function(m){ return m.name === matName});
@@ -122,10 +122,10 @@ export default {
         var mat = materials.find(function(e){return e.name == oldName});
         mat = Object.assign(mat,newMat);  
         newMat.oldName = oldName;    
-        this.skp.call_action('edit_material',JSON.stringify(newMat));
+        this.skp.call_action('edit_material',newMat);
       }else{ // Creating
         materials.push(newMat);
-        this.skp.call_action('add_material',JSON.stringify(newMat));
+        this.skp.call_action('add_material',newMat);
       }
 
       this.$refs.createDialog.show();
@@ -133,7 +133,8 @@ export default {
     }
   },
   components : {
-    ColorCell : ColorCell
+    ColorCell : ColorCell,
+    ColorPick: ColorPick
   },
   data () {
     return {
@@ -152,6 +153,7 @@ export default {
     }
   }
 }
-  
+
+SKPHelper.call_action('load_materials','');
   
 </script>

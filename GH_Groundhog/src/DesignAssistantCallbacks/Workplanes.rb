@@ -2,6 +2,15 @@ module GH
     module Groundhog
         module DesignAssistant
 
+            def self.load_workplanes(wd)
+                wd.add_action_callback("load_workplanes"){ |action_context,wp_name|
+                    # Get registry
+                    Utilities.get_workplanes_registry.each{|wp|
+                        Utilities.push_workplane_to_ui(wp)
+                    }
+                }
+            end # end of load_workplanes
+
             def self.remove_workplane(wd)
                 wd.add_action_callback("remove_workplane"){ |action_context,wp_name|
                     # Remove from the model                    
@@ -21,7 +30,8 @@ module GH
                     old_name = new_workplane['oldName']
                     new_name = new_workplane['name']
                     new_workplane.delete('oldName')
-                    
+                    new_workplane['pixel_size']=new_workplane['pixel_size'].to_f
+
                     # Edit surfaces in the model
                     if old_name != new_name then
                         Sketchup.active_model.start_operation('rename workplane surfaces')                        
@@ -44,6 +54,7 @@ module GH
                 }
             end # End of edit_workplane
 
+            
         end # End of DesignAssistant module
     end # End of Groundhog module
 end # End of GH module

@@ -1,4 +1,6 @@
 require_relative "./Utilities/Workplanes"
+require_relative "./Utilities/Tasks"
+require_relative "./Utilities/Materials"
 
 module GH
     module Groundhog

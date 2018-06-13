@@ -1,21 +1,21 @@
 {
   "publicPath": "./_nuxt/",
   "all": [
-    "pages/index.f286ce978c5e8cb4aea4.js",
+    "pages/index.dbbdd76701eda81ecfd2.js",
     "layouts/default.a486d4ae4c3664dde50c.js",
     "vendor.6d87906513f878d30a83.js",
     "app.b0cd8d07deab87a285bc.js",
-    "manifest.895ee8aea2358ff89487.js",
+    "manifest.e1906eb09a567fb59718.js",
     "LICENSES",
     "index.spa.html"
   ],
   "initial": [
-    "manifest.895ee8aea2358ff89487.js",
+    "manifest.e1906eb09a567fb59718.js",
     "vendor.6d87906513f878d30a83.js",
     "app.b0cd8d07deab87a285bc.js"
   ],
   "async": [
-    "pages/index.f286ce978c5e8cb4aea4.js",
+    "pages/index.dbbdd76701eda81ecfd2.js",
     "layouts/default.a486d4ae4c3664dde50c.js"
   ],
   "modules": {
@@ -84,6 +84,9 @@
     ],
     "c8671930": [
       3
+    ],
+    "402fbc65": [
+      0
     ],
     "9ab757ea": [
       2
@@ -231,6 +234,9 @@
     ],
     "61caf969": [
       2
+    ],
+    "a6992a0e": [
+      0
     ],
     "9a2f85d2": [
       2
@@ -421,6 +427,12 @@
     "4b1e5f22": [
       0
     ],
+    "e174704c": [
+      3
+    ],
+    "2ea586e5": [
+      2
+    ],
     "1293f1c5": [
       2
     ],
@@ -577,9 +589,6 @@
     "1e8160ee": [
       2
     ],
-    "e174704c": [
-      3
-    ],
     "42b5ca1a": [
       3
     ],
@@ -618,6 +627,9 @@
     ],
     "071d2668": [
       2
+    ],
+    "4c9ec6ad": [
+      0
     ],
     "1c5882d5": [
       3
@@ -710,9 +722,6 @@
       2
     ],
     "13dbd541": [
-      2
-    ],
-    "2ea586e5": [
       2
     ],
     "4e7c0144": [

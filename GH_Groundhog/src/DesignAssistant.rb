@@ -230,14 +230,9 @@ module GH
             options[:style] = UI::HtmlDialog::STYLE_WINDOW
             wd = UI::HtmlDialog.new(options)
           end
-          url = "#{OS.main_groundhog_path}/src/html/#{version}/design_assistant/index.html"          
-          #url = "http://localhost:3000"
+          url = "#{OS.main_groundhog_path}/src/html/#{version}/design_assistant/index.html"                                        
+          wd.set_file(url)
           
-          if url.start_with? 'http://' then # url
-            wd.set_url(url)
-          else
-            wd.set_file(url)
-          end
           
           ###############################
           ## ADD CALLBACKS
@@ -257,6 +252,24 @@ module GH
           require_relative './DesignAssistantCallbacks/Workplanes'
           self.remove_workplane(wd)
           self.edit_workplane(wd)
+          self.load_workplanes(wd)
+          
+          # Task callbacks
+          require_relative './DesignAssistantCallbacks/Tasks'
+          self.load_tasks(wd)
+          self.add_task(wd)
+          self.remove_task(wd)
+          self.edit_task(wd)
+          self.match_task_and_wp(wd)
+
+          # Material callbacks
+          require_relative './DesignAssistantCallbacks/Materials'
+          self.load_materials(wd)
+          self.add_material(wd)
+          self.edit_material(wd)
+          self.delete_material(wd)
+          self.use_material(wd)
+
 =begin
           wd.add_action_callback("on_load") do |action_context,msg|          
             self.update

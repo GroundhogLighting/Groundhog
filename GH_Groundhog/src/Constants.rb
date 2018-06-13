@@ -6,11 +6,12 @@ module GH
 
         # Keys of variables in the model
         VERSION_KEY = "version"                         
-        OBJECTIVES_KEY = "objectives"
+        TASKS_KEY = "tasks"
         WORKPLANES_KEY = "workplanes"
         LABEL_KEY = "label"
         NAME_KEY = "name"
         WEATHER_KEY="weather"
+        VALUE_KEY="value"
         
         # Labels
         WORKPLANE = 0

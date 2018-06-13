@@ -12,6 +12,7 @@ $font-family: 'Montserrat', 'sans-serif';
 
 
 @import "../node_modules/clean-ui/clean-ui";
+@import "../components/others/color-pick";
 
 @media only screen and (min-width: $small) {
   div.a-navbar{
@@ -33,10 +34,10 @@ div.a-container{
 }
 
 
-form{
+//div.form{
   //text-align: left;
 
-}
+//}
 
 /*
 table.a-table{

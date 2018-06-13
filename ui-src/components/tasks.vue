@@ -27,8 +27,7 @@
       ></task-table>
 
       <!-- EDIT TASK DIALOG -->
-      <a-dialog :actions="{'Accept' : submitEditTask}" ref='taskEditor' :title="'Task editor'"  @close="selectedTask = {}">
-        {{selectedTask}}
+      <a-dialog :actions="{'Accept' : submitEditTask}" ref='taskEditor' :title="'Task editor'"  @close="selectedTask = {}">        
         <form>
           <a-input :label="'Name'" v-model="selectedTask.name"></a-input>
           <br>
@@ -50,8 +49,7 @@
       </a-dialog>
 
       <!-- EDIT WORKPLANE DIALOG -->
-      <a-dialog :actions="{'Accept' : submitEditWorkplane}" ref='workplaneEditor' :title="'Workplane editor'"  @close="selectedWorkplane = {}">
-        {{selectedWorkplane}}
+      <a-dialog :actions="{'Accept' : submitEditWorkplane}" ref='workplaneEditor' :title="'Workplane editor'"  @close="selectedWorkplane = {}">        
         <div class='form'>
           <a-table>
             <thead>
@@ -74,10 +72,6 @@
         </div>
       </a-dialog>
 
-      {{workplanes}}
-      <br>
-      <br>
-      {{tasks}}
   </div>
 </template>
 
@@ -132,27 +126,11 @@ export default {
       this.$refs.workplaneEditor.show();
     },
     check: function(taskName,wpName){
-      this.skp.call_action('match_task_and_wp',JSON.stringify({task: taskName, workplane: wpName}));
+      this.skp.call_action('match_task_and_wp',{task: taskName, workplane: wpName});
     },
     removeTask: function(taskName){
       this.skp.call_action('remove_task',taskName);
-    },
-    /*
-    fillSelectedTaskWithDefaults: function(){    
-      console.log('FILLING!');  
-      var task = this.selectedTask;
-      if(task.class){// if there is a class selected
-        const props = this.taskProps[task.class];
-        Object.keys(props).forEach(function(p){
-          if(!task[p]){ // if there is no property
-            // add the default
-            console.log(p+" is not there... filling with " + props[p].default)
-            task[p] = props[p].default;
-          }
-        })
-        this.selectedTask = Object.assign(this.selectedTask,task);
-      }
-    },*/
+    },    
     createTask: function(){
       
       this.$refs.taskEditor.show()
@@ -170,8 +148,7 @@ export default {
       var wp = workplanes.find(function(e){return e.name == oldName});
       wp = Object.assign(wp,newWP);
       newWP.oldName = oldName;
-
-      //var msg = JSON.stringify(newWP);            
+      
       this.skp.call_action('edit_workplane',newWP);
     },
     submitEditTask : function(){
@@ -182,10 +159,10 @@ export default {
         var task = tasks.find(function(e){return e.name == oldName});
         task = Object.assign(task,newTask);  
         newTask.oldName = oldName;    
-        this.skp.call_action('edit_task',JSON.stringify(newTask));
+        this.skp.call_action('edit_task',newTask);
       }else{ // Creating
         tasks.push(newTask);
-        this.skp.call_action('add_task',JSON.stringify(newTask));
+        this.skp.call_action('add_task',newTask);
       }
     }
   },
@@ -200,6 +177,9 @@ export default {
     }
   }
 }
+
+SKPHelper.call_action('load_workplanes','')
+SKPHelper.call_action('load_tasks','')
   
   
 </script>

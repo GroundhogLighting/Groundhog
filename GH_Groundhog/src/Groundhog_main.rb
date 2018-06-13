@@ -41,11 +41,7 @@ module GH
         # INITIALIZE GROUNDHOG MODEL
         #############################
         model = Sketchup.active_model
-        #Objectives will be stored here.
-        model.set_attribute(GROUNDHOG_DICTIONARY,OBJECTIVES_KEY,Hash.new.to_json) if model.get_attribute(GROUNDHOG_DICTIONARY,OBJECTIVES_KEY) == nil 
-        #Workplane's objectives and properties will be stored here.
-        model.set_attribute(GROUNDHOG_DICTIONARY,WORKPLANES_KEY,[].to_json) if model.get_attribute(GROUNDHOG_DICTIONARY,WORKPLANES_KEY) == nil 
-
+        
         #############################
         # ADD REQUIRED PROGRAMS TO PATH
         #############################
@@ -63,10 +59,10 @@ module GH
 		#######################
 	
 		UI.add_context_menu_handler do |context_menu|
-			faces=Utilities.get_faces(Sketchup.active_model.selection)
-			components = Utilities.get_components(Sketchup.active_model.selection)
-			groups = Utilities.get_groups(Sketchup.active_model.selection)
-			nameables = Utilities.get_nameables(Sketchup.active_model.selection)
+			faces=Utilities.get_faces(model.selection)
+			components = Utilities.get_components(model.selection)
+			groups = Utilities.get_groups(model.selection)
+			nameables = Utilities.get_nameables(model.selection)
 
 			if nameables.length > 0 then
 				context_menu.add_item("Assign Name (GH)") {
@@ -182,7 +178,7 @@ module GH
 							defaults=[]
 							sys=UI.inputbox prompts, defaults, "Name of the window group"
 							model.abort_operation if not sys
-							Utilities.group_windows(Sketchup.active_model.selection, sys[0])
+							Utilities.group_windows(model.selection, sys[0])
 
 							model.commit_operation
 						rescue Exception => ex
@@ -221,8 +217,7 @@ module GH
 		end
 		
 		groundhog_menu.add_item("Open Design Assistant"){
-			@design_assistant.show
-			#DesignAssistant.update
+			@design_assistant.show			
 		}
 =begin
 

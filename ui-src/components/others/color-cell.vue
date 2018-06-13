@@ -9,7 +9,7 @@ export default {
     props: ['color'],
     computed: {
         bck: function(){
-            return "background-color: rgb("+this.color.r+","+this.color.g+","+this.color.b+")";
+            return "background-color: rgb("+Math.round(255*this.color.r)+","+Math.round(255*this.color.g)+","+Math.round(255*this.color.b)+")";
         }
     }        
 }
