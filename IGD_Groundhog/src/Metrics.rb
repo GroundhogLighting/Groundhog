@@ -116,7 +116,21 @@ module IGD
 
       @@library["SKY_VISIBILITY"] = sky_visibility
 
+      ###### LEED EQc7 opt2 (LEED_EQc7_opt2) ######
+      leed_eqc7_opt2 = Hash.new
 
+      leed_eqc7_opt2[:write_file] = Proc.new{ |workplane,objective|
+        sky = self.get_equinox_sky(objective)
+        next "./Results/#{Utilities.fix_name(workplane)}-#{Utilities.fix_name(sky)}.txt"
+      }
+
+      leed_eqc7_opt2[:get_tasks] = Proc.new { |workplane,objective,options|
+        sky = self.get_equinox_sky(objective)
+        target = {"workplane" =>workplane, "sky" => sky}
+        next self.calc_static_illuminance_tasks(target,options)
+      }
+
+      @@library["LEED_EQc7_opt2"] = leed_eqc7_opt2
 
       ################################################
       ################ END OF LIBARY #################
@@ -200,6 +214,72 @@ module IGD
         "gensky #{month} #{day} #{hour} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo} +s"
       end
 
+      # Returns the Perez clearest sky corresponding to an equinox objective.
+      #
+      # @param objective [Hash] The objective in Hash format
+      # @author Adrià González-Esteve
+      # @return [String] The sky definition as a gendaylit command
+      def self.get_equinox_sky(objective)
+        objective["date"]["date"]  = "3/21/2018"
+        day = 21
+        hour = objective["date"]["hour"]
+
+        Sketchup.active_model.shadow_info["ShadowTime"] = Time.new(2018, 3, 21, hour, 0, 0,"+01:00")
+        sun = Sketchup.active_model.shadow_info["SunDirection"]
+        zenith = sun.angle_between(Geom::Vector3d.new(0,0,1)).radians
+        zenith_coefficient = 1.041*zenith**3
+
+        objective["irradiance"] = {"global_horizontal" => 0.0, "diffuse_horizontal" => 0.0}
+        [3,9].each do |month|
+          weather = JSON.parse(Sketchup.active_model.get_attribute("Groundhog","Weather"))
+          weather_data = weather["data"]
+          prev_index = weather_data.index do |x| x["month"]==month && x["day"]==day && x["hour"]==hour-0.5 end
+          prev_fortnight_data = (-7..7).to_a.map do |x| weather_data[x*24+prev_index] end
+          next_index = weather_data.index do |x| x["month"]==month && x["day"]==day && x["hour"]==hour+0.5 end
+          next_fortnight_data = (-7..7).to_a.map do |x| weather_data[x*24+next_index] end
+          fortnight_data = []
+          prev_fortnight_data.zip(next_fortnight_data).each do |prev_data, next_data|
+            data = Hash.new
+            data["global_horizontal"] = 0.5*(prev_data["global_horizontal"].to_f+next_data["global_horizontal"].to_f)
+            data["direct_normal"] = 0.5*(prev_data["direct_normal"].to_f+next_data["direct_normal"].to_f)
+            data["diffuse_horizontal"] = 0.5*(prev_data["diffuse_horizontal"].to_f+next_data["diffuse_horizontal"].to_f)
+            fortnight_data << data
+          end
+          clearness_epsilons = fortnight_data.map do |x| ((x["diffuse_horizontal"]+x["direct_normal"])/x["diffuse_horizontal"]+zenith_coefficient)/(1+zenith_coefficient) end
+          index = clearness_epsilons.each_with_index.max.last
+          objective["irradiance"]["global_horizontal"] += fortnight_data[index]["global_horizontal"]
+          objective["irradiance"]["diffuse_horizontal"] += fortnight_data[index]["diffuse_horizontal"]
+        end
+        objective["irradiance"]["global_horizontal"] *= 0.5
+        objective["irradiance"]["diffuse_horizontal"] *= 0.5
+        Objectives.create_objective(objective)
+
+        return self.get_sky_irradiance(objective)
+      end
+
+      # Returns the Perez sky corresponding to a certain objective for diffuse and direct components.
+      #
+      # @param objective [Hash] The objective in Hash format
+      # @author Adrià González-Esteve
+      # @return [String] The sky definition as a gendaylit command
+      def self.get_sky_irradiance(objective)
+        albedo = Config.albedo
+
+        date = Date.strptime(objective["date"]["date"], '%m/%d/%Y')
+        month = date.month
+        day = date.day
+        hour = objective["date"]["hour"]
+
+        lat = Sketchup.active_model.shadow_info["Latitude"]
+        lon = -Sketchup.active_model.shadow_info["Longitude"]
+        mer = -Sketchup.active_model.shadow_info["TZOffset"]
+
+        global_horizontal = objective["irradiance"]["global_horizontal"]
+        diffuse_horizontal = objective["irradiance"]["diffuse_horizontal"]
+
+        "gendaylit #{month} #{day} #{hour} -G #{global_horizontal-diffuse_horizontal} #{diffuse_horizontal} -a #{lat} -o #{lon} -m #{15*mer} -g #{albedo}"
+      end
+
       # Returns the Task that calculates annual illuminance values according to the
       # input weather file.
       #
@@ -210,7 +290,7 @@ module IGD
       def self.calc_annual_illuminance_tasks(workplane, options)
         return DCAnnualIlluminance.new(workplane)
       end
-      
+
       # Returns the Task that calculates illuminance in a static moment of the year
       #
       # @param target [Hash] A hash containing the sky at the moment and the workplane
