@@ -23,5 +23,5 @@ Thumbs.db
 7za.exe
 
 # UI
-./ui-src/node_modules
-./ui-src/dist
+ui-src/node_modules
+ui-src/dist
