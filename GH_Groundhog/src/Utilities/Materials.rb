@@ -15,8 +15,9 @@ module GH
 				
                 materials.add m["name"] if materials[m["name"]] == nil #add it if it does not exist
 				mat = materials[m["name"]]
-				mat.color=[m["color"]['r'],m["color"]['g'],m["color"]['b']].map{|x| (x*255).to_i}
-				
+				mat.color=[m["color"]['r'],m["color"]['g'],m["color"]['b']].map{|x| (x.to_f*255).to_i}
+				m['class'] = m['class'].downcase
+
 				mat.alpha=1 # default is opaque
 				if m['class'] == 'glass' then
 					# Do something with Alpha

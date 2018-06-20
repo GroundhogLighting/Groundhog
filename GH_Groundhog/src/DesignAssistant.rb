@@ -218,8 +218,8 @@ module GH
             :resizable => true,
             :width => 500,
             :height => 500,
-            :left => Random.rand(100..200),
-            :top => Random.rand(100.200),
+            :min_width => 300,
+            :min_height => 600            
           }
 
           if skp_version < 17 then
@@ -227,7 +227,7 @@ module GH
             wd = UI::WebDialog.new(options)
           else
             version = "html_dialog"
-            options[:style] = UI::HtmlDialog::STYLE_WINDOW
+            options[:style] = UI::HtmlDialog::STYLE_UTILITY
             wd = UI::HtmlDialog.new(options)
           end
           url = "#{OS.main_groundhog_path}/src/html/#{version}/design_assistant/index.html"                                        
@@ -247,6 +247,7 @@ module GH
           require_relative './DesignAssistantCallbacks/Location'
           self.set_weather_file(wd)
           self.update_model_location(wd)
+          self.load_location(wd)
           
           # Workplanes callbacks
           require_relative './DesignAssistantCallbacks/Workplanes'

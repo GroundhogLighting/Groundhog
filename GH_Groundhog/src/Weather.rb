@@ -33,8 +33,8 @@ module GH
             month = data[1].to_i
             day = data[2].to_i
             hour = data[3].to_f
-            direct = data[14]
-            diffuse = data[15]
+            direct = data[14].to_i
+            diffuse = data[15].to_i
             weather["data"] << {"month" => month, "day" => day, "hour" => (hour-0.5), "direct_normal" => direct, "diffuse_horizontal" => diffuse}
           }
   

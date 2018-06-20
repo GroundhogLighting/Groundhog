@@ -15,28 +15,28 @@
 
       <tr>
         <td>Country</td>   
-        <td v-if="hasWEA">{{location.country}}</td>     
-        <a-editable-cell v-if="!hasWEA" @submit="updateLocation()" v-model="location.country"></a-editable-cell>        
+        <td v-if="hasWEA[0]">{{location.country}}</td>     
+        <a-editable-cell v-if="!hasWEA[0]" @submit="updateLocation()" v-model="location.country"></a-editable-cell>        
       </tr>
       <tr>
         <td>City</td>        
-        <td v-if="hasWEA">{{location.city}}</td>     
-        <a-editable-cell v-if="!hasWEA" @submit="updateLocation()" v-model="location.city"></a-editable-cell>        
+        <td v-if="hasWEA[0]">{{location.city}}</td>     
+        <a-editable-cell v-if="!hasWEA[0]" @submit="updateLocation()" v-model="location.city"></a-editable-cell>        
       </tr>
       <tr>
         <td>Latitude</td>        
-        <td v-if="hasWEA">{{location.latitude}}</td>     
-        <a-editable-cell v-if="!hasWEA" @submit="updateLocation()" v-model="location.latitude"></a-editable-cell>        
+        <td v-if="hasWEA[0]">{{location.latitude}}</td>     
+        <a-editable-cell v-if="!hasWEA[0]" @submit="updateLocation()" v-model="location.latitude"></a-editable-cell>        
       </tr>
       <tr>
         <td>Longitude</td>    
-        <td v-if="hasWEA">{{location.longitude}}</td>         
-        <a-editable-cell v-if="!hasWEA" @submit="updateLocation()" v-model="location.longitude"></a-editable-cell>
+        <td v-if="hasWEA[0]">{{location.longitude}}</td>         
+        <a-editable-cell v-if="!hasWEA[0]" @submit="updateLocation()" v-model="location.longitude"></a-editable-cell>
       </tr>
       <tr>
         <td>Time Zone (GMT)</td>
-        <td v-if="hasWEA">{{location.timezone}}</td>     
-        <a-editable-cell v-if="!hasWEA" @submit="updateLocation()" v-model="location.timezone"></a-editable-cell>
+        <td v-if="hasWEA[0]">{{location.timezone}}</td>     
+        <a-editable-cell v-if="!hasWEA[0]" @submit="updateLocation()" v-model="location.timezone"></a-editable-cell>
       </tr>
       <tr>
         <td>Albedo (%)</td>        
@@ -61,7 +61,7 @@ export default {
   },
   methods : {
     updateLocation(){      
-      this.skp.call_action('update_model_location','');
+      this.skp.call_action('update_model_location',this.location);
     },
     
   },
@@ -75,5 +75,7 @@ export default {
   }
 
 }
+
+SKPHelper.call_action('load_location','');
 </script>
 

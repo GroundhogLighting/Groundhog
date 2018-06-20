@@ -12,7 +12,6 @@ $font-family: 'Montserrat', 'sans-serif';
 
 
 @import "../node_modules/clean-ui/clean-ui";
-@import "../components/others/color-pick";
 
 @media only screen and (min-width: $small) {
   div.a-navbar{
@@ -29,24 +28,13 @@ span.no-data{
   
 }
 
+
+
 div.a-container{
   text-align: center;
 }
 
 
-//div.form{
-  //text-align: left;
-
-//}
-
-/*
-table.a-table{
-  i.material-icons{
-    color: $primary;    
-    vertical-align: middle;
-  }
-}
-*/
 i.action{
   font-size: 150%;
   cursor:pointer;

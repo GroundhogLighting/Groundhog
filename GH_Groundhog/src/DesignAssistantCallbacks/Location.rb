@@ -10,9 +10,9 @@ module GH
                 return false if not path
         
                 while path.split('.').pop!='epw' do
-                UI.messagebox("Invalid file extension. Please input a WEA or EPW file")
-                path = UI.openpanel("Choose a weather file", path, "*.epw; *.wea")
-                return false if not path
+                    UI.messagebox("Invalid file extension. Please input a WEA or EPW file")
+                    path = UI.openpanel("Choose a weather file", path, "*.epw; *.wea")
+                    return false if not path
                 end
         
                 return path
@@ -27,8 +27,8 @@ module GH
     
                 # Check if the model already is georeferenced, and warn
                 if Sketchup.active_model.georeferenced? then
-                result = UI.messagebox('This model is already georeferenced. Choosing a weather file will replace this location. Do you want to continue?', MB_YESNO)
-                return false if result == IDNO
+                    result = UI.messagebox('This model is already georeferenced. Choosing a weather file will replace this location. Do you want to continue?', MB_YESNO)
+                    return false if result == IDNO
                 end
     
                 # Read the weather
@@ -50,6 +50,14 @@ module GH
                 return weather
             end # end set_weather
 
+            def self.albedo
+                return Sketchup.active_model.get_attribute(GROUNDHOG_DICTIONARY,ALBEDO_KEY)
+            end
+
+            def self.set_albedo(value)
+                Sketchup.active_model.set_attribute(GROUNDHOG_DICTIONARY,ALBEDO_KEY,value)
+            end
+
             def self.set_weather_file(wd)
                 wd.add_action_callback("set_weather_file") do |action_context,msg|
 
@@ -64,25 +72,50 @@ module GH
                     
                     if weather_info then
                 
-                        w = weather_info 
-                        #script = "project_location = JSON.parse('#{w.to_json}')"
-                        
+                        w = weather_info                                                 
                         script = ""
                         w.each{|key,value|
                             script += "project_location['#{key}'] = '#{value}';"
                         }
 
-                        script+="has_weather_file = true;"
+                        script+="has_weather_file[0] = true;"
                         
                         GH::Groundhog.design_assistant.execute_script(script)
                     end
                 end
             end # end of set_weather_file function
 
-            
+            def self.load_location(wd)
+                wd.add_action_callback('load_location') do |action_context,msg|
+                    model = Sketchup.active_model
+                    # Modify model
+                    shadow_info = model.shadow_info
+                    script = ""
+                    script += "project_location['city']='#{shadow_info["City"]}';"
+                    script += "project_location['country']='#{shadow_info["Country"]}';"
+                    script += "project_location['latitude']=#{shadow_info["Latitude"]};"
+                    script += "project_location['longitude']=#{shadow_info["Longitude"]};"
+                    script += "project_location['timezone']=#{shadow_info["TZOffset"]};"
+                    script += "project_location['albedo']=#{(self.albedo or 0.89) };"
+
+                    if model.get_attribute(GROUNDHOG_DICTIONARY,WEATHER_KEY) != nil then
+                        script+="has_weather_file[0] = true;"
+                    end
+                    
+                    wd.execute_script(script)
+                end
+            end # end of update_model_location function
+
             def self.update_model_location(wd)
-                wd.add_action_callback('update_model_location') do |action_context,msg|
-                    UI::messagebox('Test!')
+                wd.add_action_callback('update_model_location') do |action_context,location|
+                    loc = JSON.parse(location)
+                    shadow_info = Sketchup.active_model.shadow_info
+                    shadow_info["City"]=loc["city"]
+                    shadow_info["Country"] = loc["country"]
+                    shadow_info["Latitude"] = loc["latitude"].to_f
+                    shadow_info["Longitude"] = loc["longitude"].to_f
+                    shadow_info["TZOffset"] = loc["timezone"].to_f
+                    self.set_albedo(loc["albedo"].to_f)
                 end
             end # end of update_model_location function
 

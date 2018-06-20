@@ -12,6 +12,7 @@ module GH
         NAME_KEY = "name"
         WEATHER_KEY="weather"
         VALUE_KEY="value"
+        ALBEDO_KEY="albedo"
         
         # Labels
         WORKPLANE = 0

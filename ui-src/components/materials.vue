@@ -1,17 +1,17 @@
 <template>
   <div v-container v-with-sidenav> 
     <a-navbar fixed variant="primary">   
-      <i slot="toggle-icon" class="material-icons">menu</i>     
+      <!--i slot="toggle-icon" class="material-icons">menu</i-->     
       
-      <a-input :label="'Filter'" :type="'text'"/>
+      <a-input :label="'Filter'" v-model="query" :type="'text'"/>
       <a-button :variant="'primary'" v-on:click.native="$refs.createDialog.show()">Create material</a-button>
     </a-navbar>
     
     
       <!-- NO MATERIALS MESSAGE -->
-      <span class='no-data' v-show="!materials || materials.length == 0">There are no materials in your model</span>  
+      <span class='no-data' v-show="shownList.length == 0">There are no materials to show</span>  
       
-      <a-table v-show="materials.length > 0" class="selectable-row">
+      <a-table v-show="shownList.length > 0" class="selectable-row">
         <thead>
           <tr>
             <th v-for="h in fields" :key=h.key>{{h.label}}</th>
@@ -20,10 +20,9 @@
           </tr>  
         </thead>
         <tbody>
-          <tr class="selectable" v-for="m in materials" :key=m.name >
+          <tr class="selectable" v-for="m in shownList" :key=m.name >
             <td v-on:click="use(m)" v-for="h in fields" :key=h.key>{{m[h.key]}}</td>
-            <color-cell v-on:click.native="use(m)" :color="m.color"></color-cell>
-            <!--td v-on:click="use(m)" v-color-cell=m.color></td-->
+            <color-cell v-on:click.native="use(m)" :color="m.color"></color-cell>            
             <td class="actions">
               <i v-on:click="edit(m.name)" class="material-icons">mode_edit</i>
               <i v-on:click="remove(m.name)" class="material-icons">delete</i>
@@ -34,12 +33,19 @@
 
     <a-dialog @close="onCloseDialog()" :actions="dialogActions" :title="'Material editor'" ref='createDialog'>        
         
-          <div class='form'>        
+          <form>        
+            
             <a-input v-model="selectedMaterial.name" :label="'Name'"></a-input>            
             <br>
             <a-select v-model="selectedMaterial.class" :options="Object.keys(materialProps)"></a-select>
-            
-            <color-pick  v-model="selectedMaterial.color"></color-pick>
+            <br>            
+            <div>
+              <a-input :min="0" :max="1" :type="'number'" v-model="selectedMaterial.color.r" :label="'Red'" :size="3"></a-input>
+              <a-input :min="0" :max="1" :type="'number'" v-model="selectedMaterial.color.g" :label="'Green'" :size="3"></a-input>
+              <a-input :min="0" :max="1" :type="'number'" v-model="selectedMaterial.color.b" :label="'Blue'" :size="3"></a-input>
+              <div style="width: 25px; height:25px;display:inline-block;border-radius:50%;" v-bind:style="selectedMaterialColor"></div>
+              
+            </div>
 
             <div v-for="(item, index) in materialProps[selectedMaterial.class]" :key="index"  >
               <a-input 
@@ -49,13 +55,10 @@
                 :min="item.min"                
                 v-model="selectedMaterial[index]"               
                 :label="index">
-              </a-input>
-              <br>
-            </div>
+              </a-input>              
+            </div>            
             
-
-            
-          </div>                  
+          </form>                  
     </a-dialog>
     <a-toast ref='materialUpdated'>Material list updated</a-toast>    
   </div>
@@ -69,7 +72,6 @@
 import "~/plugins/init-materials"
 import SKPHelper from "~/plugins/skp-helper";
 import ColorCell from './others/color-cell'
-import ColorPick from './others/color-pick'
 
 // Material properties (Color is there by default)
 const materialProperties = {
@@ -130,14 +132,33 @@ export default {
 
       this.$refs.createDialog.show();
       this.$refs.materialUpdated.show();      
-    }
+    }  
   },
   components : {
-    ColorCell : ColorCell,
-    ColorPick: ColorPick
+    ColorCell : ColorCell
+  },
+  computed: {
+    selectedMaterialColor: function(){
+      var ret = "background-color: rgb(";
+      ret = ret+ Math.round(255*this.selectedMaterial.color.r)+",";
+      ret = ret+Math.round(255*this.selectedMaterial.color.g)+",";
+      ret = ret+Math.round(255*this.selectedMaterial.color.b);
+      ret = ret+")";
+      return ret;
+    },
+    shownList: function(){      
+      const query = this.query;      
+      if(query && query !== ""){                
+        return this.materials.filter(function(m){
+          return (m.name.toLowerCase().includes(query) || m.class.toLowerCase().includes(query))
+        });
+      }      
+      return this.materials    
+    }
   },
   data () {
     return {
+      query: "",
       materials: materials,
       fields : [
           { key: "name", label: "Name"},        

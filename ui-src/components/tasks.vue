@@ -1,7 +1,6 @@
 <template>
   <div v-container v-with-sidenav>  
-    <a-navbar fixed variant="primary">        
-      <a-input :label="'Filter'" :type="'text'"/>
+    <a-navbar fixed variant="primary">              
       <a-button :variant="'primary'" v-on:click.native="createTask">Create task</a-button>
     </a-navbar>
     
@@ -51,24 +50,12 @@
       <!-- EDIT WORKPLANE DIALOG -->
       <a-dialog :actions="{'Accept' : submitEditWorkplane}" ref='workplaneEditor' :title="'Workplane editor'"  @close="selectedWorkplane = {}">        
         <div class='form'>
-          <a-table>
-            <thead>
-
-            </thead>
-            <tbody>
-              <tr>
-                <td>Name</td>
-                
-                <a-editable-cell v-model="selectedWorkplane.name"></a-editable-cell>  
-                
-              </tr>
-              <tr>
-                <td>Desired pixel size</td>
-                <a-editable-cell v-model="selectedWorkplane.pixel_size"></a-editable-cell>  
-              </tr>
-            </tbody>
-          </a-table>
-        
+          <div>
+            <a-input :label="'Name'" v-model="selectedWorkplane.name"></a-input>
+          </div>
+          <div>
+            <a-input v-model="selectedWorkplane.pixel_size" :label="'Pixel size'"></a-input>  
+          </div>                  
         </div>
       </a-dialog>
 

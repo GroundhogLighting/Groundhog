@@ -35,9 +35,10 @@ module GH
                         materials.remove(old_name) if materials[old_name] != nil
                     end
                     # Update color
-                    old_mat.color=[new_mat["color"]['r'],new_mat["color"]['g'],new_mat["color"]['b']].map{|x| (x*255).to_i}
+                    old_mat.color=[new_mat["color"]['r'],new_mat["color"]['g'],new_mat["color"]['b']].map{|x| (x.to_f*255).to_i}
 
                     # Update value
+                    new_mat['class'] = new_mat['class'].downcase
                     Labeler.set_value(old_mat,new_mat.to_json)
 
                 }

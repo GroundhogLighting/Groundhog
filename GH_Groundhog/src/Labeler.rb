@@ -162,10 +162,61 @@ module GH
 				entity.get_attribute(GROUNDHOG_DICTIONARY,LABEL_KEY) == ILLUM
 			end
 
+			# Label selected faces as illums
+			# @author German Molina
+			# @param entities [Array<entities>] An array with the entities to be labeled as Workplane			
+			# @return [Void]
+			def self.to_illum(entities)
+				# Check if there are faces
+				faces=Utilities.get_faces(entities)
+				if faces.length < 1 then
+					UI.messagebox "There are no faces in your selection. Please try again with another selection"
+					return
+				end
+				faces.each{|face|
+					self.label_as(face,ILLUM)
+				}
+			end
+
+			# Label selected faces as windows
+			# @author German Molina
+			# @param entities [Array<entities>] An array with the entities to be labeled as Workplane			
+			# @return [Void]
+			def self.to_illum(entities)
+				# Check if there are faces
+				faces=Utilities.get_faces(entities)
+				if faces.length < 1 then
+					UI.messagebox "There are no faces in your selection. Please try again with another selection"
+					return
+				end
+
+				faces.each{|face|
+					self.label_as(face,ILLUM)
+					Utilities.set_oriented_surface_materials(face,"illum","green",0.2)
+				}
+			end
+
+			# Label selected faces as windows
+			# @author German Molina
+			# @param entities [Array<entities>] An array with the entities to be labeled as Workplane			
+			# @return [Void]
+			def self.to_window(entities)
+				# Check if there are faces
+				faces=Utilities.get_faces(entities)
+				if faces.length < 1 then
+					UI.messagebox "There are no faces in your selection. Please try again with another selection"
+					return
+				end
+
+				faces.each{|face|
+					self.label_as(face,WINDOW)
+					Utilities.set_oriented_surface_materials(face,"window","blue",0.2)
+				}
+			end
+
 			# Label selected faces as workplanes
 			# @author German Molina
-			# @param entities [Array<entities>] An array with the entities to be labeled as Workplane
-			# @version 0.2
+			# @param entities [Array<entities>] An array with the entities to be labeled as Workplane			
 			# @return [Void]
 			def self.to_workplane(entities)
 

@@ -167,26 +167,7 @@ module GH
                 }
                 
 				wins=Utilities.get_windows(faces)
-                
-                if wins.length > 1 then
-					context_menu.add_item("Group windows (GH)") {
-						begin
-							op_name = "Group windows"
-							model.start_operation(op_name,true)
-
-							prompts=["Name of the window group"]
-							defaults=[]
-							sys=UI.inputbox prompts, defaults, "Name of the window group"
-							model.abort_operation if not sys
-							Utilities.group_windows(model.selection, sys[0])
-
-							model.commit_operation
-						rescue Exception => ex
-							model.abort_operation
-							Error.inform_exception(ex)
-						end
-					}
-				end
+                                
 
 			end
 		end

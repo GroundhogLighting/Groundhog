@@ -9,7 +9,7 @@ if(require("~/plugins/is-dev")){
         "timezone" : -4,
         "albedo" : 0.2
     }
-    has_weather_file = true;
+    has_weather_file = [true];
 }else{  
     project_location = {
         "country" : "",
@@ -19,6 +19,6 @@ if(require("~/plugins/is-dev")){
         "timezone" : "",
         "albedo" : 0.2
     };
-    has_weather_file = false;
+    has_weather_file = [false];// Needs to be an array, so it is used by reference
 }
   
