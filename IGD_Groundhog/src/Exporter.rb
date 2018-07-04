@@ -574,6 +574,9 @@ module IGD
 				path = "./Workplanes"
 				OS.mkdir(path)
 
+				gmsh_path = OS.gmsh_path
+				OS.mkdir(gmsh_path+"/groundhog")
+				OS.clear_path(gmsh_path+"/groundhog")
 				wp_names.each{|workplane|
 					name=Utilities.fix_name(workplane)
 
@@ -581,8 +584,6 @@ module IGD
 					points_file = File.open("#{path}/#{name}.pts",'w+')
 					wp_group = workplanes.select{|x| Labeler.get_name(x) == workplane}
 					wp_group.each{|face|      
-            gmsh_path = OS.gmsh_path
-            OS.mkdir(gmsh_path+"/groundhog")
             gmsh_file = File.open("#{gmsh_path}/groundhog/#{name}.geo",'w')
             gmsh_hash = {}
             mesh_element_size = Math.sqrt(Config.desired_pixel_area)
