@@ -584,86 +584,87 @@ module IGD
 					points_file = File.open("#{path}/#{name}.pts",'w+')
 					wp_group = workplanes.select{|x| Labeler.get_name(x) == workplane}
 					wp_group.each{|face|      
-            gmsh_file = File.open("#{gmsh_path}/groundhog/#{name}.geo",'w')
-            gmsh_hash = {}
-            mesh_element_size = Math.sqrt(Config.desired_pixel_area)
-            point_index = 1
-            gmsh_file.puts "// workplane outer loop vertices"
-            outer_loop = face.outer_loop
-            outer_loop.vertices.each do |vertex|
-              position = vertex.position
-              gmsh_file.puts "Point(#{point_index}) = {#{position.x.to_m}, #{position.y.to_m}, #{position.z.to_m}, #{mesh_element_size}};"
-              gmsh_hash[vertex] = point_index
-              point_index += 1
-            end
-            gmsh_file.puts ""
-            gmsh_file.puts "// workplane inner loops vertices"
-            inner_loops = face.loops-[outer_loop]
-            inner_loops.each do |inner_loop|
-              inner_loop.vertices.each do |vertex|
-                position = vertex.position
-                gmsh_file.puts "Point(#{point_index}) = {#{position.x.to_m}, #{position.y.to_m}, #{position.z.to_m}, #{mesh_element_size}};"
-                gmsh_hash[vertex] = point_index
-                point_index += 1
-              end
-              gmsh_file.puts ""
-            end
-            line_index = 1
-            gmsh_file.puts ""
-            gmsh_file.puts "// workplane outer loop edges"
-            outer_loop.edges.each do |edge|
-              gmsh_file.puts "Line(#{line_index}) = {#{gmsh_hash[edge.start]}, #{gmsh_hash[edge.end]}};"
-              gmsh_hash[edge] = line_index
-              line_index += 1
-            end
-            gmsh_file.puts ""
-            gmsh_file.puts "// workplane inner loops edges"
-            inner_loops.each do |inner_loop|
-              inner_loop.edges.each do |edge|
-                gmsh_file.puts "Line(#{line_index}) = {#{gmsh_hash[edge.end]}, #{gmsh_hash[edge.start]}};"
-                gmsh_hash[edge] = line_index
-                line_index += 1
-              end
-              gmsh_file.puts ""
-            end
-            gmsh_file.puts ""
-            gmsh_file.puts "// workplane loops"
-            gmsh_file.puts "Line Loop(#{line_index}) = {#{outer_loop.edges.map do |edge| gmsh_hash[edge].to_s end.join(",")}};"
-            line_index += 1
-            inner_loops.each do |inner_loop|
-              gmsh_file.puts "Line Loop(#{line_index}) = {#{inner_loop.edges.map do |edge| gmsh_hash[edge].to_s end.join(",")}};"
-              line_index += 1
-            end
-            gmsh_file.puts ""
-            gmsh_file.puts "Plane Surface(#{line_index}) = {#{(line_index-1-inner_loops.length..line_index-1).to_a.join(",")}};"
-            gmsh_file.close
-            
-            FileUtils.cd(gmsh_path) do 
-              OS.run_command("gmsh.exe groundhog/#{name}.geo -2")
-              gmsh_file = File.readlines("./groundhog/#{name}.msh")
-            end   
-            
-            # remove header
-            4.times do gmsh_file.shift end
-            num_nodes = gmsh_file.shift.to_i
-            nodes = []
-            num_nodes.times do 
-              node = gmsh_file.shift.split(" ")[1..-1].map do |x| x.to_f.m end
-              nodes << Geom::Point3d.new(node)
-            end
-            # write workplane files
-            normal = face.normal
-            gmsh_file.each do |gmsh_data|
-              gmsh_array = gmsh_data.split(" ").map do |x| x.to_i end
-              next unless gmsh_array[1] == 2
-              triangle = [nodes[gmsh_array[-3]-1],nodes[gmsh_array[-2]-1],nodes[gmsh_array[-1]-1]]
-              centroid = Triangle.get_center(triangle)
-              pixels_file.puts "#{triangle[0].x.to_m},#{triangle[0].y.to_m},#{triangle[0].z.to_m},#{triangle[1].x.to_m},#{triangle[1].y.to_m},#{triangle[1].z.to_m},#{triangle[2].x.to_m},#{triangle[2].y.to_m},#{triangle[2].z.to_m}"
-              points_file.puts "#{centroid.x.to_m}\t#{centroid.y.to_m}\t#{centroid.z.to_m}\t#{normal.x}\t#{normal.y}\t#{normal.z}"
-            end
-          } # ed of wp_group.each
-          pixels_file.close
-          points_file.close
+					    gmsh_file = File.open("#{gmsh_path}/groundhog/#{name}.geo",'w')
+					    vertex2point = {}
+					    mesh_element_size = Math.sqrt(Config.desired_pixel_area)
+					    point_index = 1
+					    gmsh_file.puts "// workplane outer loop vertices"
+					    outer_loop = face.outer_loop
+					    outer_loop.vertices.each do |vertex|
+					      position = vertex.position
+					      gmsh_file.puts "Point(#{point_index}) = {#{position.x.to_m}, #{position.y.to_m}, #{position.z.to_m}, #{mesh_element_size}};"
+					      vertex2point[vertex] = point_index
+					      point_index += 1
+					    end
+					    gmsh_file.puts ""
+					    gmsh_file.puts "// workplane inner loops vertices"
+					    inner_loops = face.loops-[outer_loop]
+					    inner_loops.each do |inner_loop|
+					      inner_loop.vertices.each do |vertex|
+						position = vertex.position
+						gmsh_file.puts "Point(#{point_index}) = {#{position.x.to_m}, #{position.y.to_m}, #{position.z.to_m}, #{mesh_element_size}};"
+						vertex2point[vertex] = point_index
+						point_index += 1
+					      end
+					      gmsh_file.puts ""
+					    end
+					    vertex2line = {}
+					    line_index = 1
+					    gmsh_file.puts ""
+					    gmsh_file.puts "// workplane outer loop edges"
+					    outer_loop.vertices.each_with_index do |vertex, index|
+					      gmsh_file.puts "Line(#{line_index}) = {#{vertex2point[outer_loop.vertices[index-1]]}, #{vertex2point[vertex]}};"
+					      vertex2line[edge] = line_index
+					      line_index += 1
+					    end
+					    gmsh_file.puts ""
+					    gmsh_file.puts "// workplane inner loops edges"
+					    inner_loops.each do |inner_loop|
+					      inner_loop.vertices.each_with_index do |vertex, index|
+						gmsh_file.puts "Line(#{line_index}) = {#{vertex2point[outer_loop.vertices[index-1]]}, #{vertex2point[vertex]}};"
+						vertex2line[edge] = line_index
+						line_index += 1
+					      end
+					      gmsh_file.puts ""
+					    end
+					    gmsh_file.puts ""
+					    gmsh_file.puts "// workplane loops"
+					    gmsh_file.puts "Line Loop(#{line_index}) = {#{outer_loop.vertices.map do |vertex| vertex2line[vertex].to_s end.join(",")}};"
+					    line_index += 1
+					    inner_loops.each do |inner_loop|
+					      gmsh_file.puts "Line Loop(#{line_index}) = {#{inner_loop.vertices.map do |vertex| vertex2line[vertex].to_s end.join(",")}};"
+					      line_index += 1
+					    end
+					    gmsh_file.puts ""
+					    gmsh_file.puts "Plane Surface(#{line_index}) = {#{(line_index-1-inner_loops.length..line_index-1).to_a.join(",")}};"
+					    gmsh_file.close
+
+					    FileUtils.cd(gmsh_path) do 
+					      OS.run_command("gmsh.exe groundhog/#{name}.geo -2")
+					      gmsh_file = File.readlines("./groundhog/#{name}.msh")
+					    end   
+
+					    # remove header
+					    4.times do gmsh_file.shift end
+					    num_nodes = gmsh_file.shift.to_i
+					    nodes = []
+					    num_nodes.times do 
+					      node = gmsh_file.shift.split(" ")[1..-1].map do |x| x.to_f.m end
+					      nodes << Geom::Point3d.new(node)
+					    end
+					    # write workplane files
+					    normal = face.normal
+					    gmsh_file.each do |gmsh_data|
+					      gmsh_array = gmsh_data.split(" ").map do |x| x.to_i end
+					      next unless gmsh_array[1] == 2
+					      triangle = [nodes[gmsh_array[-3]-1],nodes[gmsh_array[-2]-1],nodes[gmsh_array[-1]-1]]
+					      centroid = Triangle.get_center(triangle)
+					      pixels_file.puts "#{triangle[0].x.to_m},#{triangle[0].y.to_m},#{triangle[0].z.to_m},#{triangle[1].x.to_m},#{triangle[1].y.to_m},#{triangle[1].z.to_m},#{triangle[2].x.to_m},#{triangle[2].y.to_m},#{triangle[2].z.to_m}"
+					      points_file.puts "#{centroid.x.to_m}\t#{centroid.y.to_m}\t#{centroid.z.to_m}\t#{normal.x}\t#{normal.y}\t#{normal.z}"
+					    end
+					  } # ed of wp_group.each
+					  pixels_file.close
+					  points_file.close
 				} # end wp_names.each
 
 				return true
