@@ -40,6 +40,13 @@ module IGD
 			def self.raypath
 				"#{OS.main_groundhog_path}/src/Radiance/lib"
 			end
+      
+			# Gets the path where the gmsh is installed.
+			# @author Adrià González-Esteve
+			# @return [String] The gmsh path
+			def self.gmsh_path
+				"#{self.main_groundhog_path}/src/gmsh"
+			end
 
 			# Adds the Radiance Path and the Raypath to the environmental variables.
 			# @author German Molina
