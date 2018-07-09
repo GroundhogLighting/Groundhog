@@ -2,7 +2,7 @@
 // Coloque la configuración en el archivo de configuración para sobrescribirla.
 // See http://go.microsoft.com/fwlink/?LinkId=808995 for the most commonly used settings.
 {
-
+    
 // Configuración del editor
 
     // Controla la familia de fuentes.
@@ -619,7 +619,7 @@
     "terminal.integrated.fontLigatures": false,
 
     // Controla el tamaño de fuente del terminal, que está establecida de manera predeterminada en el valor de editor.fontSize.
-    "terminal.integrated.fontSize": 0,
+    "terminal.integrated.fontSize": 14,
 
     // Controla el alto de la línea del terminal, que está establecida de manera predeterminada en normal.
     "terminal.integrated.lineHeight": 1.2,

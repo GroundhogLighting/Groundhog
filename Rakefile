@@ -67,7 +67,7 @@ def compress(os)
 		w.puts "IGD_Groundhog.rb"
 		w.puts "IGD_Groundhog"
 	}
-	puts `./7za a -tzip Groundhog_#{os}.rbz @listfile.txt -x!.yardoc -x!*.DS_Store`
+	puts `7z a -tzip Groundhog_#{os}.rbz @listfile.txt -x!.yardoc -x!*.DS_Store`
 	FileUtils.rm "listfile.txt"
 	
 end
