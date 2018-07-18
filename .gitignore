@@ -7,7 +7,7 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-.vscode
+*.vscode
 .vscode/settings.json
 .sass-cache
 
@@ -17,8 +17,8 @@ Thumbs.db
 .yardoc
 
 # UI
-ui-src/node_modules*
-ui-src/dist*
+ui-src/node_modules
+ui-src/dist
 
 #      RADIANCE      #
 ######################

@@ -41,7 +41,7 @@ module GH
                                 tasks.push(new_name)
                                 
                                 script = "workplanes.forEach(function(e){if(e.tasks.includes('#{old_name}')){ var t = e.tasks; var i = t.indexOf('#{old_name}');t.splice(i,1);t.push('#{new_name}') }})"                                
-                                GH::Groundhog.design_assistant.execute_script(script)
+                                wd.execute_script(script)
                             end
                         }
                         Utilities.set_workplanes_registry(r)

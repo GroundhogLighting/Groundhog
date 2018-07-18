@@ -70,25 +70,54 @@ import SKPHelper from "~/plugins/skp-helper";
 import TaskTable from "./others/task-table";
 
 const taskProperties = {
-  UDI : {
+  "Useful Daylight Illuminance" : {
     min_lux : {default: 300, min: 0},
     max_lux : {default: 3000, min: 0},
     early : {default: 8, min: 0, max: 24},
     late : {default: 18, min: 0, max: 24},
-    min_month : {default: 0, min: 1, max: 12},
-    max_month : {default: 12, min: 1, max: 12},
-    min_time: {default: 50, min: 0, max: 100}
+    first_month : {default: 0, min: 1, max: 12},
+    last_month : {default: 12, min: 1, max: 12},
+    expected_time: {default: 50, min: 0, max: 100}
   },
-  DA : {
+  "Daylight Autonomy" : {
     min_lux : {default: 300, min: 0},
     early : {default: 8, min: 0, max: 24},
     late : {default: 18, min: 0, max: 24},
-    min_month : {default: 0, min: 1, max: 12},
-    max_month : {default: 12, min: 1, max: 12},
-    min_time: {default: 50, min: 0, max: 100}
+    first_month : {default: 0, min: 1, max: 12},
+    last_month : {default: 12, min: 1, max: 12},
+    expected_time: {default: 50, min: 0, max: 100}
   },
-  DF: {
-    min_percent: {default: 3, min: 0, max: 100}
+  "Daylight Factor": {
+    min_percent: {default: 3, min: 0, max: 100},
+    max_percent: {default: 3, min: 0, max: 100}
+  },
+  "Clear sky illuminance" : {
+    month: {default: 1, min: 1, max: 12},
+    day: {default: 1, min: 1, max: 31},
+    hour: {default: 14, min: 1, max: 24},
+  },
+  "Intermediate sky illuminance" : {
+    month: {default: 1, min: 1, max: 12},
+    day: {default: 1, min: 1, max: 31},
+    hour: {default: 14, min: 1, max: 24},
+  },
+  "Overcast sky illuminance" : {
+    month: {default: 1, min: 1, max: 12},
+    day: {default: 1, min: 1, max: 31},
+    hour: {default: 14, min: 1, max: 24},
+  },
+  "Weather sky illuminance" : {
+    month: {default: 1, min: 1, max: 12},
+    day: {default: 1, min: 1, max: 31},
+    hour: {default: 14, min: 1, max: 24},
+  },
+  "Annual Sunlight Exposure" : {
+    min_lux : {default: 300, min: 0},
+    early : {default: 8, min: 0, max: 24},
+    late : {default: 18, min: 0, max: 24},
+    first_month : {default: 0, min: 1, max: 12},
+    last_month : {default: 12, min: 1, max: 12},
+    expected_time: {default: 50, min: 0, max: 100}
   }
 }
 

@@ -70,7 +70,7 @@ module GH
         # @return [Hash] the report
         def self.get_actual_report
           report = Hash.new
-          wps = Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+          wps = Utilities.get_solved_workplanes()
           wps.map{|x| Labeler.get_value(x)}.each{|val|
             value = JSON.parse(val)
             workplane = value["workplane"]
@@ -86,7 +86,7 @@ module GH
         # @return [Hash] the report
         def self.get_elux_report
           report = Hash.new
-          wps = GH::Groundhog::Utilities.get_solved_workplanes(Sketchup.active_model.entities)
+          wps = GH::Groundhog::Utilities.get_solved_workplanes()
           wps.map{|x| Labeler.get_value(x)}.each{|val|
             value = JSON.parse(val)
             next if not "ELUX" == value["objective"]
@@ -219,7 +219,7 @@ module GH
             :width => 500,
             :height => 500,
             :min_width => 300,
-            :min_height => 600            
+            :min_height => 400            
           }
 
           if skp_version < 17 then
@@ -227,7 +227,7 @@ module GH
             wd = UI::WebDialog.new(options)
           else
             version = "html_dialog"
-            options[:style] = UI::HtmlDialog::STYLE_UTILITY
+            options[:style] = UI::HtmlDialog::STYLE_DIALOG
             wd = UI::HtmlDialog.new(options)
           end
           url = "#{OS.main_groundhog_path}/src/html/#{version}/design_assistant/index.html"                                        
@@ -271,6 +271,12 @@ module GH
           self.delete_material(wd)
           self.use_material(wd)
 
+          # reports callbacks
+          require_relative './DesignAssistantCallbacks/Results'
+          self.show_task_results(wd)
+          self.load_results(wd)
+          self.update_scale(wd)
+          
 =begin
           wd.add_action_callback("on_load") do |action_context,msg|          
             self.update

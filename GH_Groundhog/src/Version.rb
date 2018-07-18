@@ -36,17 +36,16 @@ module GH
                 model_groundhog_version = self.model_groundhog_version
                 current_groundhog_version = self.installed_groundhog_version   
                 
-                if model_groundhog_version == nil then
-                    self.update_model_groundhog_version                    
-                else
+                if not model_groundhog_version == nil then                    
                     # Do something about compatibility!
                     compare = self.compare_versions(model_groundhog_version,current_groundhog_version)                    
                     if compare < 0 then # model version is newer than current version
-                        UI.messagebox("Warning: We are sorry. This model was edited using a newer version (#{current_model_version}) than the one you have installed (#{current_groundhog_version}). You may have to redefine all Workplanes and Objectives.")
+                        UI.messagebox("Warning: We are sorry. This model was edited using a newer version (#{model_groundhog_version}) than the one you have installed (#{current_groundhog_version}). You may have to redefine all Workplanes and Objectives.")
                     elsif compare > 0 then # model version is older than current version.
-                        UI.messagebox("Warning: This model was developed using an older version of Groundhog (#{current_model_version}). It may be incompatible")
+                        UI.messagebox("Warning: This model was developed using an older version of Groundhog (#{model_groundhog_version}). It may be incompatible")
                     end
                 end
+                self.update_model_groundhog_version                    
                 
             end
         end

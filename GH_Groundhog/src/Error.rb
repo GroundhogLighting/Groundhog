@@ -16,6 +16,10 @@ module GH
             def self.warn(msg)
                 warn "Groundhog Warning: #{msg}"
             end
+
+            def self.error(msg)
+                UI.messagebox "Groundhog Error: #{msg}"
+            end
             
             def self.log(msg)
                 caller_locations(1, 1).first.tap{|loc| 

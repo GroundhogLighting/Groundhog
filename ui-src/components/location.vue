@@ -16,31 +16,31 @@
       <tr>
         <td>Country</td>   
         <td v-if="hasWEA[0]">{{location.country}}</td>     
-        <a-editable-cell v-if="!hasWEA[0]" @submit="updateLocation()" v-model="location.country"></a-editable-cell>        
+        <a-editable-cell v-if="!hasWEA[0]" @submitCell="updateLocation()" v-model="location.country"></a-editable-cell>        
       </tr>
       <tr>
         <td>City</td>        
         <td v-if="hasWEA[0]">{{location.city}}</td>     
-        <a-editable-cell v-if="!hasWEA[0]" @submit="updateLocation()" v-model="location.city"></a-editable-cell>        
+        <a-editable-cell v-if="!hasWEA[0]" @submitCell="updateLocation()" v-model="location.city"></a-editable-cell>        
       </tr>
       <tr>
         <td>Latitude</td>        
-        <td v-if="hasWEA[0]">{{location.latitude}}</td>     
-        <a-editable-cell v-if="!hasWEA[0]" @submit="updateLocation()" v-model="location.latitude"></a-editable-cell>        
+        <td v-if="hasWEA[0]">{{location.latitude | round(2)}}</td>     
+        <a-editable-cell v-if="!hasWEA[0]" @submitCell="updateLocation()" v-model="location.latitude"></a-editable-cell>        
       </tr>
       <tr>
         <td>Longitude</td>    
-        <td v-if="hasWEA[0]">{{location.longitude}}</td>         
-        <a-editable-cell v-if="!hasWEA[0]" @submit="updateLocation()" v-model="location.longitude"></a-editable-cell>
+        <td v-if="hasWEA[0]">{{location.longitude | round(2)}}</td>         
+        <a-editable-cell v-if="!hasWEA[0]" @submitCell="updateLocation()" v-model="location.longitude"></a-editable-cell>
       </tr>
       <tr>
         <td>Time Zone (GMT)</td>
         <td v-if="hasWEA[0]">{{location.timezone}}</td>     
-        <a-editable-cell v-if="!hasWEA[0]" @submit="updateLocation()" v-model="location.timezone"></a-editable-cell>
+        <a-editable-cell v-if="!hasWEA[0]" @submitCell="updateLocation()" v-model="location.timezone"></a-editable-cell>
       </tr>
       <tr>
         <td>Albedo (%)</td>        
-        <a-editable-cell @submit="updateLocation()" v-model="location.albedo"></a-editable-cell>                
+        <a-editable-cell @submitCell="updateLocation()" v-model="location.albedo"></a-editable-cell>                
       </tr>
       </tbody>
     </a-double-entry-table>
@@ -51,14 +51,9 @@
 
 <script>
 import "~/plugins/init-location";
-import EditableInput from "./editable-input";
 import SKPHelper from "~/plugins/skp-helper";
 
-export default {
-  
-  directives : {
-    editable : EditableInput
-  },
+export default {  
   methods : {
     updateLocation(){      
       this.skp.call_action('update_model_location',this.location);

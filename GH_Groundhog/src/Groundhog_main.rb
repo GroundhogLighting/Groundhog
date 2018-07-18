@@ -26,6 +26,8 @@ module GH
 		Sketchup::require 'GH_Groundhog/src/Weather'
 		Sketchup::require 'GH_Groundhog/src/DesignAssistant'
 		Sketchup::require 'GH_Groundhog/src/Observers/Workplanes'
+		Sketchup::require 'GH_Groundhog/src/Results'
+		Sketchup::require 'GH_Groundhog/src/Report'
 		
 
 		#########################################
@@ -219,37 +221,29 @@ module GH
 			end
 		}
 =end
-=begin
-		groundhog_menu.add_item("Import results"){
-			path=Exporter.getpath #it returns false if not successful
+
+		groundhog_menu.add_item("Import EMP results"){
+			path=Utilities.get_current_path #it returns false if not successful
 			path="c:/" if not path
-			path=UI.openpanel("Open results file",path)
-			Results.import_results(path,false) if path
+			path=UI.openpanel("Open results file",path)						
+			Results.import_results(path) if path
 		}
+		
 
-
-		### INSERT SUBMENU
-
-		gh_insert_menu=groundhog_menu.add_submenu("Insert")
-
-		gh_insert_menu.add_item("Illuminance Sensor"){
-			Loader.load_illuminance_sensor
-		}
-=end
-=begin
 		### Show/Hide
 		gh_view_menu=groundhog_menu.add_submenu("Show / Hide")
 
 		gh_view_menu.add_item("Illums"){
-			Utilities.hide_show_specific("illum")
+			Utilities.hide_show_specific(ILLUM)
 		}
 		gh_view_menu.add_item("Workplanes"){
-			Utilities.hide_show_specific("workplane")
+			Utilities.hide_show_specific(WORKPLANE)
 		}
 		gh_view_menu.add_item("Solved Workplanes"){
-			Utilities.hide_show_specific("solved_workplane")
+			Utilities.hide_show_specific(SOLVED_WORKPLANE)
 		}
 
+=begin
 
 		### EXPORT
 		groundhog_menu.add_item("Export Radiance model") {
@@ -284,7 +278,7 @@ module GH
 			}
 		}
 
-
+=end
 		### HELP MENU
 
 		groundhog_menu.add_item("Online documentation"){
@@ -320,10 +314,10 @@ Go to GNU's website for more information about this license."
 		#########################################
 		# LOAD CONFIG FILE
 		#########################################
-		if File.exists? Config.config_path then #if a configuration file was once created
-			Config.load_config
-		end
-=end
+	#	if File.exists? Config.config_path then #if a configuration file was once created
+	#		Config.load_config
+		#end
+
 
 	end #end module
 end

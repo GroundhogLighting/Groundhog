@@ -143,7 +143,7 @@ module GH
 			# @param entity [SketchUp::Entity] Entity to test.
 			# @return [Boolean]
 			def self.window?(entity)
-				entity.get_attribute(GROUNDHOG_DICTIONARY,LABEL_KEY)== WINDOW
+				self.get_label(entity) == WINDOW
 			end
 
 			# Checks if an entity is a workplane
@@ -151,7 +151,7 @@ module GH
 			# @param entity [SketchUp::Entity] Entity to test.
 			# @return [Boolean]
 			def self.workplane?(entity)
-				entity.get_attribute(GROUNDHOG_DICTIONARY,LABEL_KEY) == WORKPLANE
+				self.get_label(entity) == WORKPLANE
 			end
 
 			# Checks if an entity is a Illum
@@ -159,7 +159,7 @@ module GH
 			# @param entity [SketchUp::Entity] Entity to test.
 			# @return [Boolean]
 			def self.illum?(entity)
-				entity.get_attribute(GROUNDHOG_DICTIONARY,LABEL_KEY) == ILLUM
+				self.get_label(entity) == ILLUM
 			end
 
 			# Label selected faces as illums
@@ -286,6 +286,22 @@ module GH
 				else
 					UI.messagebox("No faces selected")
 				end
+			end
+
+			# Label selected face into as solved_workplane
+			# @author German Molina
+			# @param workplane [SkecthUp::ComponentDefinition] A SketchUp component definition
+			# @return [Void]
+			def self.to_solved_workplane(workplane)
+				self.label_as(workplane,SOLVED_WORKPLANE)				
+			end
+
+			# Checks if a component is a solved_workplane
+			# @author German Molina
+			# @param group [SketchUp::ComponentDefinition] component to test.
+			# @return [Boolean]
+			def self.solved_workplane?(group)
+				self.get_label(group) == SOLVED_WORKPLANE
 			end
 
 

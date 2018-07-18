@@ -145,6 +145,7 @@ module IGD
 
 					Labeler.to_solved_workplane(group)
 					Labeler.to_solved_workplane(group.definition)
+					
 					wp_value = self.get_workplane_statistics(group, objective)
 					wp_value["objective"] = objective["name"]
 					wp_value["workplane"] = workplane

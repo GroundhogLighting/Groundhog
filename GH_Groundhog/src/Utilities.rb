@@ -6,7 +6,23 @@ module GH
     module Groundhog
         module Utilities
 
-			
+			# Gets the path where the SketchUp model is saved. If it is not saved, it will return false.
+			# @author German Molina
+			# @version 1.0
+			# @return [String] Path where the model is saved.
+			# @example Get the path
+			#   path=Exporter.getpath
+			def self.get_current_path
+				model=Sketchup.active_model
+				path=model.path
+				return false if path=="" #model has not been saved
+
+				path=path.tr("\\","/") #normalize Windows paths into Ruby paths (with /)
+				path=path.split("/")
+				path.pop #drop the name of the file
+				return File.join(path)
+			end
+
 			# Some Radiance surface (thus, Groundhog surface) have an orientation that
 			# actually matters. Workplanes, Windows, etc.
 			#
@@ -96,7 +112,54 @@ module GH
 				entities.grep(Sketchup::Face).select {|x| Labeler.window?(x)}
 			end
 
+			# Gets all the solved workplanes in the model
+			# @author German Molina			
+			# @return [Array <SketchUp::Entities>] An array with the entities that are SketchUp::ComponentDefinition
+			def self.get_solved_workplanes()
+				Sketchup.active_model.definitions.select{|x| 
+					Labeler.solved_workplane?(x)
+				}.map{|x|
+					x.instances
+				}.flatten
+			end
 			
+			# Hides or show a specific label.
+			# Shows class if hidden, hides class if shown. All according to the
+			# first face that is part of the class
+			# @author German Molina
+			# @param label [String] the label to hide/show
+			# @return [Void]
+			def self.hide_show_specific(label)
+				entities=Sketchup.active_model.entities
+				entities = entities.select{|x| Labeler.get_label(x) == label }
+
+				Sketchup.active_model.definitions.each{|defi|
+					entities += defi.entities.select{|x| Labeler.get_label(x) == label }
+				}
+
+				return if entities.length == 0
+
+				hide = true
+				hide = false if entities[0].hidden?
+				op_name = "Hide/Show Specific"
+				begin
+					model=Sketchup.active_model
+					model.start_operation( op_name ,true)
+					entities.map{|x|
+						x.hidden = hide
+						edges = []
+						edges = x.edges if x.class.method_defined? :edges
+						edges.map{|y| y.hidden = hide}
+					}
+					model.commit_operation
+				rescue Exception => ex
+					UI.messagebox ex
+					model.abort_operation
+					raise ex
+				end
+			end
+
+
 
         end
     end

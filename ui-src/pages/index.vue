@@ -24,6 +24,11 @@
           <span >Luminaires</span>
         </a-sidenav-item>
 
+        <a-sidenav-item v-on:click.native="selectedTab = 'photosensors'">
+          <i class="material-icons" >adjust</i>
+          <span >Photosensors</span>
+        </a-sidenav-item>
+
         <a-sidenav-item v-on:click.native="selectedTab = 'calculate'">
           <i class="material-icons" >play_arrow</i>
           <span >Calculate</span>
@@ -42,6 +47,7 @@
       <luminaires v-show="selectedTab === 'luminaires'"></luminaires>
       <calculate v-show="selectedTab === 'calculate'"></calculate>
       <report v-show="selectedTab === 'report'"></report>                 
+      <photosensors v-show="selectedTab === 'photosensors'"></photosensors>                 
   </div>
 </template>
 
@@ -51,9 +57,9 @@ import Location from "~/components/location"
 import Materials from "~/components/materials"
 import Tasks from "~/components/tasks"
 import Luminaires from "~/components/luminaires"
+import Photosensors from "~/components/photosensors"
 import Calculate from "~/components/calculate"
 import Report from "~/components/report"
-
 
 export default {
 
@@ -62,6 +68,7 @@ export default {
     Materials : Materials,
     Tasks : Tasks,
     Luminaires : Luminaires,
+    Photosensors: Photosensors,
     Calculate : Calculate,
     Report : Report
   },

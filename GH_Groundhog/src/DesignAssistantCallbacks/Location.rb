@@ -80,7 +80,7 @@ module GH
 
                         script+="has_weather_file[0] = true;"
                         
-                        GH::Groundhog.design_assistant.execute_script(script)
+                        wd.execute_script(script)
                     end
                 end
             end # end of set_weather_file function
@@ -96,7 +96,7 @@ module GH
                     script += "project_location['latitude']=#{shadow_info["Latitude"]};"
                     script += "project_location['longitude']=#{shadow_info["Longitude"]};"
                     script += "project_location['timezone']=#{shadow_info["TZOffset"]};"
-                    script += "project_location['albedo']=#{(self.albedo or 0.89) };"
+                    script += "project_location['albedo']=#{(self.albedo or 0.2) };"
 
                     if model.get_attribute(GROUNDHOG_DICTIONARY,WEATHER_KEY) != nil then
                         script+="has_weather_file[0] = true;"

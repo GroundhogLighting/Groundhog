@@ -101,7 +101,7 @@ module GH
 			def self.register_workplane(wp)
 				
 				# First, in the model				
-				value = self.get_workplanes_registry												
+				value = self.get_workplanes_registry																
 				value.push wp
 				self.set_workplanes_registry(value)
 				
