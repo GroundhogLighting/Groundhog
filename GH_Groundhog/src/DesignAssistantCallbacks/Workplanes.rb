@@ -12,13 +12,8 @@ module GH
             end # end of load_workplanes
 
             def self.remove_workplane(wd)
-                wd.add_action_callback("remove_workplane"){ |action_context,wp_name|
-                    # Remove from the model                    
-                    entities = Sketchup.active_model.entities                    
-                    faces = Labeler.get_workplane_by_name(wp_name)
-                    
-                    # This calls the observer, thus unregisters if necessary
-                    entities.erase_entities(faces)
+                wd.add_action_callback("remove_workplane"){ |action_context,wp_name|                    
+                    Utilities.remove_workplane(wp_name)
                 }
             end # End of remove_workplane
 

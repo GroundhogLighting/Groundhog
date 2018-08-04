@@ -18,25 +18,25 @@
       <thead>
         <tr>
           <td></td><td             
-            v-for="(wp, wp_index) in workplanes" 
+            v-for="(wp, wp_index) in solved_workplanes" 
             :key="wp_index"            
-            >{{wp.name | limitString(7)}}</td>
+            >{{wp | limitString(7)}}</td>
         </tr>
       </thead>
 
       <tbody>
         <tr 
           class="selectable"
-          v-for="(task, task_index) in tasks" 
+          v-for="(task, task_index) in solved_tasks" 
           :key="task_index"
-          v-on:click="selectTask(task.name)"
-          v-bind:class="{selected : selectedTask == task.name}"
+          v-on:click="selectTask(task)"
+          v-bind:class="{selected : selectedTask == task}"
           >
-          <td>{{task.name | limitString(7) }}</td>
+          <td>{{task | limitString(7) }}</td>
           
-          <td v-for="(wp, wp_index) in workplanes" 
+          <td v-for="(wp, wp_index) in solved_workplanes" 
               :key="wp_index"   
-          >{{ results_object[task.name][wp.name] | round(0)}} </td>          
+          >{{ (results_object[task] ? results_object[task][wp] : 0) | round(0) }} </td>          
 
         </tr>
       </tbody>
@@ -62,13 +62,30 @@
     #scale-image{
       width: 200px;
       background: linear-gradient(to right, 
-      rgb(8,46,65) ,
-      rgb(43,117,204),
-      rgb(234,231,214),
-      rgb(238,195,82),
-      rgb(218,37,54));
+      rgb(68,13,84),
+      rgb(72,21,104),
+      rgb(72,38,119),
+      rgb(69,55,129),
+      rgb(63,71,136),
+      rgb(57,85,140),
+      rgb(50,100,142),
+      rgb(45,112,142),
+      rgb(39,125,142),
+      rgb(35,138,141),
+      rgb(31,150,139),
+      rgb(32,163,134),
+      rgb(41,175,127),
+      rgb(60,188,117),
+      rgb(86,198,103),
+      rgb(116,208,85),
+      rgb(148,216,64),
+      rgb(184,222,41),
+      rgb(220,227,23),
+      rgb(253,231,37)
+      )
     }
   }
+      
 
   tr.selected{          
     
@@ -80,6 +97,7 @@
 
 <script>
 import "~/plugins/init-results";
+import "~/plugins/utilities";
 import SKPHelper from "~/plugins/skp-helper";
 
 export default {
@@ -87,29 +105,26 @@ export default {
     results_object : function(){
 
       var results = this.results;
-
-      var matchTaskValue = function(taskName,wpName){
-
-        for(var i=0; i< results.length; i++){
-          var item = results[i];
-          if(taskName === item.metric && wpName === item.workplane){
-            return item.approved_percentage;
-          }
-        }
-
-        return null;
-      }
-
       var ret = {};
-      for(var i=0; i<tasks.length; i++){
-        var taskName = tasks[i].name;
-        ret[taskName] = {};
-        for(var j = 0; j < workplanes.length; j++){
-          var wpName = workplanes[j].name;
-          ret[taskName][wpName] = matchTaskValue(taskName,wpName);          
+
+      for(var i=0; i<results.length; i++){
+        const taskName = results[i].metric;
+        const wpName = results[i].workplane;
+        const value = results[i].approved_percentage;
+        if(!ret[taskName]){
+          ret[taskName] = {}
         }
-      }
+        ret[taskName][wpName] = value
+      }      
+
       return ret;
+
+    },
+    solved_workplanes : function(){
+      return unique(this.results.map(function(r){return r.workplane}));
+    },
+    solved_tasks : function(){
+      return unique(this.results.map(function(r){return r.metric}));
     }
   },
   methods : {

@@ -46,7 +46,7 @@ module GH
 			# @param pass_to_ui [Boolean] Unregister from the UI as well?
 			def self.unregister_task(name,pass_to_ui=true)
 
-				if not self.task_registered? wp_name then					
+				if not self.task_registered? name then					
 					return
 				end
 
@@ -76,6 +76,18 @@ module GH
 				value.push task
 				self.set_tasks_registry(value)				
 			end # End of register_workplane
+
+			# Checks if a task exists in the registry
+			#
+			# @author German Molina
+			# @return [Boolean] Is the task registered?
+			# @param name [String] The name of the task
+			def self.task_registered?(name)
+				self.get_tasks_registry.each{|task|					
+                    return true if name == task['name']
+                }
+                return false                        		
+			end
 
         end
     end

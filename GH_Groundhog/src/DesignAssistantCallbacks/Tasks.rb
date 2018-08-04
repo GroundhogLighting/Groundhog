@@ -19,7 +19,24 @@ module GH
 
             def self.remove_task(wd)
                 wd.add_action_callback("remove_task"){ |action_context,task_name|                    
-                    Utilities.unregister_task(r,false)
+                    # Unregister
+                    Utilities.unregister_task(task_name,false)
+
+                    # Remove from workplanes
+                    reg = Utilities.get_workplanes_registry
+                    reg.each{|wp|
+                        wp["tasks"].delete(task_name)
+                    }
+                    Utilities.set_workplanes_registry(reg)
+
+                    # Remove solved workplanes as well
+                    entities = Sketchup.active_model.entities
+                    Utilities.get_solved_workplanes.each{|x|
+                        v = JSON.parse(Labeler.get_value(x))
+                        entities.erase_entities(x) if v["metric"] == task_name
+                    }
+
+
                 }
             end # End of and_task
 

@@ -10,11 +10,16 @@ module GH
             workplanes = workplanes.map{|x| Labeler.get_name(x)}.uniq
   
             value = Utilities.get_workplanes_registry                    
+
             # Guess the name of the workplane.                                            
             value.each_with_index{|wp,i|                                                         
                 if not workplanes.include? wp['name'] then   
+                    p wp["name"]
                     # If it is not there, it means that the WP needs to be unregistered                        
                     Utilities.unregister_workplane(wp['name'])
+
+                    # And popped from UI
+                    Utilities.pop_workplane_from_ui(wp["name"])
                     return
                 end
             }

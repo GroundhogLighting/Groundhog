@@ -2,7 +2,7 @@
 module GH
     module Groundhog
         module Results
-            @N_BINS_PALLETE=30
+            @N_BINS_PALLETE=20
             @BIN_SIZE=1.0/@N_BINS_PALLETE
             @COLOR_PREFIX = "GroundhogScale_"
 
@@ -12,12 +12,17 @@ module GH
                 return if Sketchup.active_model.materials["#{@COLOR_PREFIX}0"] != nil
 
                 # Basic pallete
-                red =   [8,  43,  234, 238, 218]
-                green = [46, 177, 231, 195, 37 ]
-                blue =  [65, 204, 214, 82,  54 ]
+                #red =   [8,  43,  234, 238, 218]
+                #green = [46, 177, 231, 195, 37 ]
+                #blue =  [65, 204, 214, 82,  54 ]
 
-                
+                # Viridis                
+                red =  [68, 72, 72, 69, 63, 57, 50, 45, 39, 35, 31, 32, 41, 60, 86, 116, 148, 184, 220, 253]
+                green = [13, 21, 38, 55, 71, 85, 100, 112, 125, 138, 150, 163, 175, 188, 198, 208, 216, 222, 227, 231]
+                blue = [84, 104, 119, 129, 136, 140, 142, 142, 142, 141, 139, 134, 127, 117, 103, 85, 64, 41, 23, 37]
+
                 @N_BINS_PALLETE.times{|bin|
+=begin                
                     x = bin.to_f/@N_BINS_PALLETE.to_f
                     
                     i = 0
@@ -39,6 +44,12 @@ module GH
                     g = green[i] + x* (green[i+1] - green[i])
                     b = blue[i] + x* (blue[i+1] - blue[i])
                     
+                    m.color=Sketchup::Color.new(r.to_i,g.to_i,b.to_i)
+=end                 
+                    m = Sketchup.active_model.materials.add("#{@COLOR_PREFIX}#{bin}")   
+                    r = red[bin] 
+                    g = green[bin]
+                    b = blue[bin]                     
                     m.color=Sketchup::Color.new(r.to_i,g.to_i,b.to_i)
                 }                                    
             end
@@ -100,17 +111,19 @@ module GH
                     # Get all the currently existing solved_workplanes
                     solved_workplanes = Utilities.get_solved_workplanes()
 
+                    # Initialize the script that will update UI
+                    script = ""
+
                     # Iterate all the "details"
                     details.each{|metric_name,values|
                         # Absolute minimum and maximum for the metric
                         min = 9999999999999
-                        max = -min
+                        max = -min                        
                     
-                        values.each{|wp_name,wp_results|
-
+                        values.each{|wp_name,wp_results|                            
                             #delete previous workplane.
-                            solved_workplanes.select{|x|
-                                JSON.parse(Labeler.get_value(x))["metric"] == metric_name
+                            solved_workplanes.select{|x|                                                           
+                                (not x.deleted? and JSON.parse(Labeler.get_value(x))["metric"] == metric_name)
                             }.select {|x|
                                 JSON.parse(Labeler.get_value(x))["workplane"] == wp_name
                             }.each{|x|
@@ -152,14 +165,21 @@ module GH
                             wp_value["workplane"] = wp_name
                             wp_value["approved_percentage"] = summary[metric_name][wp_name]
                             wp_value["min"] = min
-                            wp_value["max"] = max
+                            wp_value["max"] = max                            
                             Labeler.set_value(group,wp_value.to_json)
+
+                            # add action to script
+                            script += "updateByFields(project_results,['metric','workplane'],['#{metric_name}','#{wp_name}'],{metric: '#{metric_name}', workplane: '#{wp_name}', approved_percentage: #{wp_value["approved_percentage"]}});"
                         }
 
                         # Update colors for the metric
                         min_max = get_min_max_from_model(metric_name)
                         update_pixel_colors(min,max,metric_name)
                     }             
+                    #Update UI
+                    puts script
+                    GH::Groundhog::design_assistant.execute_script(script)
+
                     model.commit_operation       
                 rescue Exception => ex
                     Error.inform_exception(ex)

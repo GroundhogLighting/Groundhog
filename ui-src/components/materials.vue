@@ -5,12 +5,14 @@
       
       <a-input :label="'Filter'" v-model="query" :type="'text'"/>
       <a-button :variant="'primary'" v-on:click.native="$refs.createDialog.show()">Create material</a-button>
+      <a-button :variant="'primary'" v-on:click.native="$refs.searchDialog.show()">Search in database</a-button>
     </a-navbar>
     
     
       <!-- NO MATERIALS MESSAGE -->
       <span class='no-data' v-show="shownList.length == 0">There are no materials to show</span>  
       
+      <!-- MATERIALS IN MODEL -->
       <a-table v-show="shownList.length > 0" class="selectable-row">
         <thead>
           <tr>
@@ -31,6 +33,7 @@
         </tbody>
       </a-table>
 
+    <!-- CREATE MATERIALS DIALOG -->
     <a-dialog @close="onCloseDialog()" :actions="dialogActions" :title="'Material editor'" ref='createDialog'>        
         
           <form>        
@@ -60,16 +63,64 @@
             
           </form>                  
     </a-dialog>
+
+    <!-- SEARCH MATERIALS DIALOG -->
+    <a-dialog :title="'Material database'" ref='searchDialog'>        
+      <div id="query-container">
+        <a-input id="dbquery" :label="'Filter'" v-model="dbquery"></a-input>        
+      </div>
+      
+      
+      <div id="table-container">
+        <span v-show="databaseQuery.length == 0" class='no-data' >There are no options matching your search</span>  
+
+        <a-table v-show="databaseQuery.length > 0" class="selectable-row">
+          <thead>
+            <tr>
+              <th v-for="h in fields" :key=h.key>{{h.label}}</th>
+              <th>Color</th>
+              <th></th>
+            </tr>  
+          </thead>
+          <tbody>
+            <tr v-for="m in databaseQuery" :key=m.name >
+              <td v-on:click="use(m)" v-for="h in fields" :key=h.key>{{m[h.key]}}</td>
+              <color-cell v-on:click.native="use(m)" :color="m.color"></color-cell>            
+              <td class="actions">
+                <i v-on:click="addMaterialToModel(m)" class="material-icons">get_app</i>
+                <i v-on:click="getMaterialInfo(m.url)" class="material-icons">help_outline</i>
+              </td>
+            </tr>
+          </tbody>
+        </a-table>
+
+      </div>
+    </a-dialog>
+
+
+    <!-- FEEDBACK -->
     <a-toast ref='materialUpdated'>Material list updated</a-toast>    
+    <a-toast ref='materialAdded'>Material added to model</a-toast>    
   </div>
 
   
 </template>
 
+<style lang="scss" scoped>
+  .actions{
+    i{
+      cursor:pointer;
+     
+    }
+  }
+</style>
+
+
 <script>
 
 
 import "~/plugins/init-materials"
+import "~/plugins/materials-lib"
 import SKPHelper from "~/plugins/skp-helper";
 import ColorCell from './others/color-cell'
 
@@ -92,6 +143,18 @@ const materialProperties = {
 
 export default {  
   methods : {    
+    getMaterialInfo(url){
+      this.skp.call_action('follow_link',url);
+    },
+    addMaterialToModel(material){
+      var newMat = JSON.parse(JSON.stringify(material))
+      if(this.materials.find(function(m){ return m.name === newMat.name }) == undefined){
+        this.materials.push(newMat);
+        this.skp.call_action('add_material',newMat);
+      }
+      this.$refs.searchDialog.show();      
+      this.$refs.materialAdded.show();      
+    },
     onCloseDialog(){
       this.selectedMaterial = {
         class: Object.keys(materialProperties)[0],
@@ -154,12 +217,23 @@ export default {
         });
       }      
       return this.materials    
+    },
+    databaseQuery: function(){
+      const dbquery = this.dbquery; 
+      if(dbquery && dbquery !== ""){                
+        return this.database.filter(function(m){
+          return (m.name.toLowerCase().includes(dbquery) || m.class.toLowerCase().includes(dbquery))
+        });
+      }                 
+      return this.database
     }
   },
   data () {
     return {
       query: "",
+      dbquery : "",
       materials: materials,
+      database : material_lib,
       fields : [
           { key: "name", label: "Name"},        
           { key: "class", label: "Class"}

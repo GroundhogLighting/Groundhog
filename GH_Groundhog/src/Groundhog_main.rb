@@ -28,6 +28,7 @@ module GH
 		Sketchup::require 'GH_Groundhog/src/Observers/Workplanes'
 		Sketchup::require 'GH_Groundhog/src/Results'
 		Sketchup::require 'GH_Groundhog/src/Report'
+		Sketchup::require 'GH_Groundhog/src/Photosensors'
 		
 
 		#########################################
@@ -222,10 +223,10 @@ module GH
 		}
 =end
 
-		groundhog_menu.add_item("Import EMP results"){
+		groundhog_menu.add_item("Import Emp results"){
 			path=Utilities.get_current_path #it returns false if not successful
 			path="c:/" if not path
-			path=UI.openpanel("Open results file",path)						
+			path=UI.openpanel("Open results file",path,"JSON files|*.json|||")						
 			Results.import_results(path) if path
 		}
 		

@@ -277,6 +277,12 @@ module GH
           self.load_results(wd)
           self.update_scale(wd)
           
+          # calculate callbacks
+          require_relative './DesignAssistantCallbacks/Calculate'
+          self.set_various_options(wd)
+          self.load_options(wd)
+          self.set_option(wd)
+          
 =begin
           wd.add_action_callback("on_load") do |action_context,msg|          
             self.update

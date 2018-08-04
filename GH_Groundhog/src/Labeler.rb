@@ -98,6 +98,9 @@ module GH
 						if Utilities.get_workplane_by_name(old_name).length == 1 then
 							Utilities.unregister_workplane(old_name)
 						end
+
+						# Set observer again.
+						ent.add_observer(WorkplaneObserver.new)
 						
                     end	
 					ent.set_attribute(GROUNDHOG_DICTIONARY,NAME_KEY,name)
@@ -255,8 +258,7 @@ module GH
 
 				# Register the workplane				
 				if not Utilities.workplane_registered?(name) then
-					wp = Utilities.register_default_workplane(name) 
-					Utilities.push_workplane_to_ui(wp)				
+					Utilities.register_default_workplane(name) 					
 				end				
 			
 			end

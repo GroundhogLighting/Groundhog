@@ -77,71 +77,77 @@ h3{
   text-align: left;
   padding-left: 40px;
 }
-#options-field{
-  //background-color: red;  
-}
+
 </style>
 
 
 <script>
 
+import "~/plugins/init-options";
 import SKPHelper from "~/plugins/skp-helper";
 
 const low_options = [
-  { name : "Ambient bounces", id : "ab", value: 2 },
-  { name : "Ambient divitions", id : "ad", value: 1024 },
-  { name : "Limit weight", id : "lw", value: 2e-3 },
-]
+    { name : "Ambient bounces", id : "ab", value: 2 },
+    { name : "Ambient divitions", id : "ad", value: 1024 },
+    { name : "Limit weight", id : "lw", value: 2e-3 },
+];
+  
+ const medium_options = [
+    { name : "Ambient bounces", id : "ab", value: 5 },
+    { name : "Ambient divitions", id : "ad", value: 2048 },
+    { name : "Limit weight", id : "lw", value: 1e-4 },
+  ];
 
-const medium_options = [
-  { name : "Ambient bounces", id : "ab", value: 4 },
-  { name : "Ambient divitions", id : "ad", value: 2048 },
-  { name : "Limit weight", id : "lw", value: 1e-4 },
-]
-const high_options = [
-  { name : "Ambient bounces", id : "ab", value: 7 },
-  { name : "Ambient divitions", id : "ad", value: 5000 },
-  { name : "Limit weight", id : "lw", value: 1e-5 },
-]
-
-const default_options = [
-  // AMBIENT
-  { name : "Ambient accuracy", id : "aa", value: 0.1 },
-  { name : "Ambient bounces", id : "ab", value: 0 },
-  { name : "Ambient divitions", id : "ad", value: 1024 },
-  { name : "Ambient resolution", id : "ar", value: 256 },
-  { name : "Ambient supersamples", id : "as", value: 512 },
-  { name : "Ambient value weight", id : "aw", value: 0 },  
-
-  // DIRECT
-  { name : "Direct certainty", id : "dc", value: 0.75 },
-  { name : "Direct jitter", id : "dj", value: 0.0 },
-  { name : "Direct threshold", id : "dt", value: 0.03 },
-  { name : "Direct pretest density", id : "dp", value: 512 },
-  { name : "Direct relays", id : "dr", value: 2 },
-  { name : "Direct sampling", id : "ds", value: 0.2 },
-
-  // LIMIT
-  { name : "Limit reflection", id : "lr", value: -10 },
-  { name : "Limit weight", id : "lw", value: 2e-3 },
-
-  { name : "Mist sampling distance", id : "ms", value: 0 },	
-  { name : "Mist scattering eccentricity", id : "mg", value: 0.0 },
-
-  // SPECULAR
-  { name : "Specular sampling", id : "ss", value: 1.0 },
-  { name : "Specular threshold", id : "st", value: 0.15 },  
-]
-
-// Default project_options will be the default
-var project_options = JSON.parse(JSON.stringify(default_options));
+ const high_options = [
+    { name : "Ambient bounces", id : "ab", value: 7 },
+    { name : "Ambient divitions", id : "ad", value: 5000 },
+    { name : "Limit weight", id : "lw", value: 1e-5 },
+  ];
+  
+ const default_options = [
+    // AMBIENT
+    { name : "Ambient accuracy", id : "aa", value: 0.1 },
+    { name : "Ambient bounces", id : "ab", value: 0 },
+    { name : "Ambient divitions", id : "ad", value: 1024 },
+    { name : "Ambient resolution", id : "ar", value: 256 },
+    { name : "Ambient supersamples", id : "as", value: 512 },
+    { name : "Ambient value weight", id : "aw", value: 0 },  
+  
+    // DIRECT
+    { name : "Direct certainty", id : "dc", value: 0.75 },
+    { name : "Direct jitter", id : "dj", value: 0.0 },
+    { name : "Direct threshold", id : "dt", value: 0.03 },
+    { name : "Direct pretest density", id : "dp", value: 512 },
+    { name : "Direct relays", id : "dr", value: 2 },
+    { name : "Direct sampling", id : "ds", value: 0.2 },
+  
+    // LIMIT
+    { name : "Limit reflection", id : "lr", value: -10 },
+    { name : "Limit weight", id : "lw", value: 2e-3 },
+  
+    { name : "Mist sampling distance", id : "ms", value: 0 },	
+    { name : "Mist scattering eccentricity", id : "mg", value: 0.0 },
+  
+    // SPECULAR
+    { name : "Specular sampling", id : "ss", value: 1.0 },
+    { name : "Specular threshold", id : "st", value: 0.15 },  
+  ];
+  
+  // Default project_options will be the default
+for( var i=0; i < default_options.length; i++){
+  project_options.push(
+    //Copy and paste, basically
+    JSON.parse(JSON.stringify(default_options[i]))
+  );
+}
+  
 
 export default {
   methods : {
     setOption : function(optName){
       
       const option = this.options.find(o => o.name === optName);
-      this.skp.call_action("set_option",{name: optName,value:option.value});
+      this.skp.call_action("set_option",option);
       this.modifiedOption = optName + ' set to '+option.value;
       this.$refs.theToast.show();
     },
@@ -197,5 +203,5 @@ export default {
   }
 }
 
-//SKPHelper.call_action("load_options",'');
+SKPHelper.call_action("load_options",project_options);
 </script>

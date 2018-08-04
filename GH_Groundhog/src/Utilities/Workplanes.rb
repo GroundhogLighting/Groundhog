@@ -55,12 +55,28 @@ module GH
                 return false                        		
 			end
 
+			def self.remove_workplane(wp_name)
+				# Remove the workplane itself from the model                    
+				faces = Labeler.get_workplane_by_name(wp_name)                    
+				entities = Sketchup.active_model.entities                    
+				entities.erase_entities(faces)
+
+				# Unregister
+				Utilities.unregister_workplane(wp_name)
+
+				# Remove solved workplanes as well
+				Utilities.get_solved_workplanes.each{|x|
+					v = JSON.parse(Labeler.get_value(x))
+					entities.erase_entities(x) if v["workplane"] == wp_name
+				}
+			end # end of remove_workplane
+
 			# Removes a Workplane from the Groundhog Dictionary list
 			#
 			# @author German Molina			
 			# @param wp_name [String] The name of the workplane
 			# @param pass_to_ui [Boolean] Unregister from the UI as well?
-			def self.unregister_workplane(wp_name,pass_to_ui=true)
+			def self.unregister_workplane(wp_name)
 
 				if not self.workplane_registered? wp_name then					
 					return
@@ -76,10 +92,9 @@ module GH
 				}				
 				self.set_workplanes_registry(value)
 
-				# Then in the UI
-				if pass_to_ui then
-					self.pop_workplane_from_ui(wp_name)					           				
-				end
+				# Then in the UI				
+				self.pop_workplane_from_ui(wp_name)					           				
+				
 			end # End of unregister_workplane
 
 			# Registers a new (default) workplane
@@ -104,6 +119,9 @@ module GH
 				value = self.get_workplanes_registry																
 				value.push wp
 				self.set_workplanes_registry(value)
+
+				# Then in the UI
+				push_workplane_to_ui(wp)
 				
 			end # End of register_workplane
 
