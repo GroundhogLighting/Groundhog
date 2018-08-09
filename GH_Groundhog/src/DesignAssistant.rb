@@ -243,6 +243,10 @@ module GH
             UI.openURL(msg)
           end
 
+          wd.add_action_callback("disable_active_tool") do |action_context,msg|
+            Sketchup.active_model.select_tool nil
+          end
+
           # Location callbacks
           require_relative './DesignAssistantCallbacks/Location'
           self.set_weather_file(wd)
@@ -282,6 +286,17 @@ module GH
           self.set_various_options(wd)
           self.load_options(wd)
           self.set_option(wd)
+
+          # Luminaires callbacks
+          require_relative './DesignAssistantCallbacks/Luminaires'
+          self.load_luminaires(wd)
+          
+          # Photosensors callbacks
+          require_relative './DesignAssistantCallbacks/Photosensors'
+          self.load_photosensors(wd)
+          self.enable_photosensor_tool(wd)
+          self.add_photosensor(wd)
+          self.remove_photosensor(wd)
           
 =begin
           wd.add_action_callback("on_load") do |action_context,msg|          

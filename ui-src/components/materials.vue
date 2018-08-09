@@ -119,10 +119,10 @@
 <script>
 
 
-import "~/plugins/init-materials"
-import "~/plugins/materials-lib"
+import "~/plugins/init-materials";
+import "~/plugins/materials-lib";
 import SKPHelper from "~/plugins/skp-helper";
-import ColorCell from './others/color-cell'
+import ColorCell from './others/color-cell';
 
 // Material properties (Color is there by default)
 const materialProperties = {

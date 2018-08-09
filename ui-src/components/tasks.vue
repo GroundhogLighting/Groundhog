@@ -28,35 +28,46 @@
       <!-- EDIT TASK DIALOG -->
       <a-dialog :actions="{'Accept' : submitEditTask}" ref='taskEditor' :title="'Task editor'"  @close="selectedTask = {}">        
         <form>
-          <a-input :label="'Name'" v-model="selectedTask.name"></a-input>
-          <br>
-          <a-select v-model="selectedTask.class" :options="Object.keys(taskProps)"></a-select>
-          <br>
-          <div v-for="(item, index) in taskProps[selectedTask.class]" :key="index">
-            <a-input  
-              :type="'number'" 
-              :required="true"                 
-              :max="item.max"
-              :min="item.min"              
-              v-model="selectedTask[index]"               
-              :label="index">
-          </a-input>
-            <br>  
-          </div>    
+          <div style="text-align:center">              
+            <a-input :label="'Name'" v-model="selectedTask.name"></a-input>
+            <br>
+            <a-select v-model="selectedTask.class" :options="Object.keys(taskProps)"></a-select>
+            <br>
+          </div>
+          <a-double-entry-table>
+            <thead>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in taskProps[selectedTask.class]" :key="index">
+                <td>{{index | fixString}}</td>
+                <a-editable-cell v-model="selectedTask[index]"></a-editable-cell>
+              </tr>
+            </tbody>
+          </a-double-entry-table>           
           
         </form>
       </a-dialog>
 
       <!-- EDIT WORKPLANE DIALOG -->
       <a-dialog :actions="{'Accept' : submitEditWorkplane}" ref='workplaneEditor' :title="'Workplane editor'"  @close="selectedWorkplane = {}">        
-        <div class='form'>
-          <div>
+        <form>
+          <div style="text-align:center">              
             <a-input :label="'Name'" v-model="selectedWorkplane.name"></a-input>
           </div>
-          <div>
-            <a-input v-model="selectedWorkplane.pixel_size" :label="'Pixel size'"></a-input>  
-          </div>                  
-        </div>
+          
+          <a-double-entry-table>
+            <thead>
+
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pixel Size</td>
+                <a-editable-cell v-model="selectedWorkplane.pixel_size"></a-editable-cell>
+              </tr>
+            </tbody>
+          </a-double-entry-table>
+          
+        </form>
       </a-dialog>
 
   </div>
@@ -65,7 +76,7 @@
 <script>
 
 
-import "~/plugins/init-tasks"
+import "~/plugins/init-tasks";
 import SKPHelper from "~/plugins/skp-helper";
 import TaskTable from "./others/task-table";
 

@@ -42,7 +42,7 @@ module GH
                             script += "updateByName(project_options,'#{optname}',#{new_opt});"
                         end
                     }
-                    puts script
+                    
                     wd.execute_script(script)
                 end
             end # end of load_options function

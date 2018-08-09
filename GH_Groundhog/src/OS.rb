@@ -74,7 +74,7 @@ module GH
 				array.push("GH_Groundhog")
 				return File.join(array)
 			end
-=begin
+			
 			# Gets the path where the groundhog's support files are stored
 			# @author German Molina
 			# @return [String] The tmp groundhog path
@@ -85,7 +85,8 @@ module GH
 				array.push("support_files")
 				return File.join(array)
 			end
-
+=begin
+			
 			# Gets the path where the Examples are stored
 			# @author German Molina
 			# @return [Void] The examples groundhog path

@@ -29,6 +29,7 @@ module GH
 		Sketchup::require 'GH_Groundhog/src/Results'
 		Sketchup::require 'GH_Groundhog/src/Report'
 		Sketchup::require 'GH_Groundhog/src/Photosensors'
+		Sketchup::require 'GH_Groundhog/src/LoadHandler'
 		
 
 		#########################################

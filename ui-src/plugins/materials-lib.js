@@ -1,4 +1,4 @@
-material_lib = [
+global.material_lib = [
     {"name":"White Painted Room Walls","url":"http://lighting-materials.com/materials/1321","object type":"wall","class":"Plastic","color":	{"r":0.8322,"g":0.8123,"b":0.7236},"specularity":0.0036,"roughness":0.0},
 	{"name":"Dark Grey Floor Tiles","url":"http://lighting-materials.com/materials/1322","object type":"floor","class":"Plastic","color":	{"r":0.2115,"g":0.1981,"b":0.182},"specularity":0.0125,"roughness":0.0},
 	{"name":"White Painted Room Ceiling","url":"http://lighting-materials.com/materials/1323","object type":"ceiling","class":"Plastic","color":	{"r":0.8469,"g":0.8214,"b":0.7275},"specularity":0.0044,"roughness":0.0},

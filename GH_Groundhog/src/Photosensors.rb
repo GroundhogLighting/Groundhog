@@ -8,8 +8,8 @@ module GH
         # @author Germán Molina
         class SetPhotosensorTool
             
-            @@inputpoint
-            @@normal
+            @@inputpoint = Geom::Point3d.new(0,0,0)
+            @@normal = Geom::Vector3d.new(0,0,1)
 
             # activate Method. This is called when the 
             # tool is activated.
@@ -76,17 +76,18 @@ module GH
                     s_n = @@normal.clone
                     s_n.length = 0.015.m                    
                     @@inputpoint = view.inputpoint(x,y).position + s_n
+                                        
                     script = ""
-                    script += "$('#photosensor_nx').val(#{@@normal.x});"
-                    script += "$('#photosensor_ny').val(#{@@normal.y});"
-                    script += "$('#photosensor_nz').val(#{@@normal.z});"
-                    
-                    script += "$('#photosensor_px').val(#{@@inputpoint.x.to_m});"
-                    script += "$('#photosensor_py').val(#{@@inputpoint.y.to_m});"
-                    script += "$('#photosensor_pz').val(#{@@inputpoint.z.to_m});"
-                    
-                    IGD::Groundhog.design_assistant.execute_script(script)  
-                    view.refresh                            
+                    script += "selected_photosensor.dx=#{@@normal.x};"
+                    script += "selected_photosensor.dy=#{@@normal.y};"
+                    script += "selected_photosensor.dz=#{@@normal.z};"
+                    script += "selected_photosensor.px=#{@@inputpoint.x.to_m};"
+                    script += "selected_photosensor.py=#{@@inputpoint.y.to_m};"
+                    script += "selected_photosensor.pz=#{@@inputpoint.z.to_m};"
+
+                    view.refresh    
+                    GH::Groundhog.design_assistant.execute_script(script)  
+                                            
                 end
             end            
 
@@ -101,14 +102,14 @@ module GH
             # @author Germán Molina
             # @param entity [Sketchup::Entity] the modified Phososensor entity
             def onEraseEntity(entity)
-                DesignAssistant.update
+                #DesignAssistant.update
             end
 
             # onChangeEntity function.
             # @author Germán Molina
             # @param entity [Sketchup::Entity] the modified Phososensor entity
             def onChangeEntity(entity)
-                DesignAssistant.update
+                #DesignAssistant.update
             end
 
         end
@@ -116,7 +117,7 @@ module GH
 		# This module has the methods that allow handling photosensors.
         module Photosensor
 
-            @@photosensor_name = "GH Illuminance sensor"#"Photosensor (GH)"
+            @@photosensor_name = "GH Photosensor"
             
 
             # Returns a hash with data corresponding to location and orientation of 
@@ -165,39 +166,42 @@ module GH
             def self.add(location_json)
 
                 location = JSON.parse(location_json)    
-               
+                
+                
                 origin = Geom::Point3d.new(location["px"].to_f.m,location["py"].to_f.m,location["pz"].to_f.m)
-                zaxis = Geom::Vector3d.new(location["nx"].to_f,location["ny"].to_f,location["nz"].to_f)                
+                zaxis = Geom::Vector3d.new(location["dx"].to_f,location["dy"].to_f,location["dz"].to_f)                
                 transformation = Geom::Transformation.new(origin,zaxis)
 
-                sensors = Sketchup.active_model.definitions.select {|x| Labeler.illuminance_sensor?(x) }
-
+                sensors = Sketchup.active_model.definitions.select {|x| Labeler.photosensor?(x) }
 
                 # Load it if it is not there                
                 if sensors.length < 1 then                   
-                    sensor = Loader.load_local_component("illuminance_sensor")
-                    return false if not sensor
-                    sensor.name=@@photosensor_name
-                    sensor.description="This represents an illumiance sensor."
-                    sensor.casts_shadows= false
-                    sensor.receives_shadows= false
-                    Labeler.to_illuminance_sensor(sensor)
+                    
+                    sensor = Loader.load_local_component("photosensor")                    
+                    return false if not sensor                    
+                    sensor.name=@@photosensor_name                    
+                    sensor.description="This represents an illumiance sensor."                    
+                    sensor.casts_shadows= false                    
+                    sensor.receives_shadows= false                    
+                    Labeler.to_photosensor(sensor)
+
                 else
-                    # if it exists, move.
+                    # if it exists, we may need to move.
                     named_equal = sensors[0].instances.select{|x| Labeler::get_name(x) == location["name"]}
-                    if named_equal.length != 0 then #move instead of add
+                    if named_equal.length > 0 then #move instead of add
+                        # We assume there is only one.
                         named_equal[0].transformation = (transformation)                        
                         return true
                     end
-                end
-                           
+                end                   
+
                 # add if not
                 sensor = Sketchup.active_model.definitions[@@photosensor_name]                          
                 instance = Sketchup.active_model.entities.add_instance(sensor, transformation)                
                 Labeler.set_name([instance],location["name"])
                 instance.add_observer(PhotosensorObserver.new)  
-                Labeler.to_illuminance_sensor(instance)
-                Sketchup.active_model.active_view.refresh
+                Labeler.to_photosensor(instance)
+                Sketchup.active_model.active_view.refresh                
                 return true
             end
 

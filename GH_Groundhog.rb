@@ -10,7 +10,7 @@ module GH
 		Groundhog.creator='Germán Molina (germolinal@gmail.com)'
 		Groundhog.description = "Open Source extension for performing Lighting simulation"
 		Groundhog.name = 'Groundhog'
-		Groundhog.version = '1.0.0.a'
+		Groundhog.version = '1.0.0'
 		Sketchup.register_extension Groundhog, true
 
 	end #end module

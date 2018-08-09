@@ -1,2 +1,2 @@
 
-project_options = [];
+global.project_options = [];

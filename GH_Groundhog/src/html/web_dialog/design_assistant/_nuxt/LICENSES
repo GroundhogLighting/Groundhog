@@ -1,5 +1,5 @@
 /*!
- * Vue.js v2.5.15
+ * Vue.js v2.5.17
  * (c) 2014-2018 Evan You
  * Released under the MIT License.
  */
@@ -13,7 +13,7 @@
  */
 
 /**
- * vue-meta v1.4.4
+ * vue-meta v1.5.2
  * (c) 2018 Declan de Wet & Atinux
  * @license MIT
  */

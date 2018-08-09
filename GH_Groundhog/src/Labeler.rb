@@ -165,6 +165,14 @@ module GH
 				self.get_label(entity) == ILLUM
 			end
 
+			# Checks if an entity is a Illum
+			# @author German Molina
+			# @param entity [SketchUp::Entity] Entity to test.
+			# @return [Boolean]
+			def self.photosensor?(entity)
+				self.get_label(entity) == PHOTOSENSOR
+			end
+
 			# Label selected faces as illums
 			# @author German Molina
 			# @param entities [Array<entities>] An array with the entities to be labeled as Workplane			
@@ -179,6 +187,14 @@ module GH
 				faces.each{|face|
 					self.label_as(face,ILLUM)
 				}
+			end
+
+			# Label selected definitions as photosensor
+			# @author German Molina
+			# @param definition [Sketchup::ComponentDefinition] the definition
+			# @return [Void]
+			def self.to_photosensor(definition)				
+				self.label_as(definition,PHOTOSENSOR)				
 			end
 
 			# Label selected faces as windows

@@ -1,8 +1,8 @@
 
 var isDev = require("~/plugins/is-dev");
 
-workplanes = [];    
-tasks = [];
+global.workplanes = [];    
+global.tasks = [];
 
 if(isDev){
     tasks.push({

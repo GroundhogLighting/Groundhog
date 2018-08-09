@@ -96,8 +96,8 @@
 
 
 <script>
+
 import "~/plugins/init-results";
-import "~/plugins/utilities";
 import SKPHelper from "~/plugins/skp-helper";
 
 export default {

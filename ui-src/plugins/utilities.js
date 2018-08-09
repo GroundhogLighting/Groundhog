@@ -1,4 +1,6 @@
-unique = function(arr){
+
+
+global.unique = function(arr){
     const onlyUnique = function(value, index, self) { 
         return self.indexOf(value) === index;
     }
@@ -6,7 +8,7 @@ unique = function(arr){
 }
 
 
-updateByField = function(arr,fieldName,fieldValue,value){
+global.updateByField = function(arr,fieldName,fieldValue,value){
     var index = arr.findIndex(function(e){
         return e[fieldName] == fieldValue;
     })
@@ -18,9 +20,9 @@ updateByField = function(arr,fieldName,fieldValue,value){
     }else{
         arr.push(value)
     }
-}
+};
 
-updateByFields = function(arr,fieldNames,fieldValues,value){
+global.updateByFields = function(arr,fieldNames,fieldValues,value){
     var index = arr.findIndex(function(e){
         for(var i = 0; i< fieldNames.length; i++){
             const fieldName = fieldNames[i]
@@ -34,11 +36,13 @@ updateByFields = function(arr,fieldNames,fieldValues,value){
 
     if(index > -1){
         // If item is there
-        arr.splice(index,1);
+        //arr.splice(index,1);
+        arr[index] = Object.assign({},value);
+    }else{
+        arr.push(value)
     }
-    arr.push(value)
-}
+};
 
-updateByName = function(arr,name,value){
+global.updateByName = function(arr,name,value){
     return updateByField(arr,"name",name,value);
-}
+};

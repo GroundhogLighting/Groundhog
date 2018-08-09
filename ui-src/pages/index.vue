@@ -52,7 +52,11 @@
 </template>
 
 <script>
+// Import utils
+import "~/plugins/utilities";
 
+
+// Import tabs
 import Location from "~/components/location"
 import Materials from "~/components/materials"
 import Tasks from "~/components/tasks"

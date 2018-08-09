@@ -176,8 +176,7 @@ module GH
                         min_max = get_min_max_from_model(metric_name)
                         update_pixel_colors(min,max,metric_name)
                     }             
-                    #Update UI
-                    puts script
+                    #Update UI                    
                     GH::Groundhog::design_assistant.execute_script(script)
 
                     model.commit_operation       

@@ -1,7 +1,7 @@
 
 if(require("~/plugins/is-dev")){
       
-    project_location = {
+    global.project_location = {
         "country" : "Chile",
         "city": "Santiago",
         "latitude" : -33,
@@ -9,9 +9,9 @@ if(require("~/plugins/is-dev")){
         "timezone" : -4,
         "albedo" : 0.2
     }
-    has_weather_file = [true];
+    global.has_weather_file = [true];
 }else{  
-    project_location = {
+    global.project_location = {
         "country" : "",
         "city": "",
         "latitude" : "",
@@ -19,6 +19,6 @@ if(require("~/plugins/is-dev")){
         "timezone" : "",
         "albedo" : 0.2
     };
-    has_weather_file = [false];// Needs to be an array, so it is used by reference
+    global.has_weather_file = [false];// Needs to be an array, so it is used by reference
 }
   
