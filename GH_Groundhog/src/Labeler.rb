@@ -149,6 +149,14 @@ module GH
 				self.get_label(entity) == WINDOW
 			end
 
+			# Checks if an entity is a luminaire
+			# @author German Molina
+			# @param entity [SketchUp::Entity] Entity to test.
+			# @return [Boolean]
+			def self.luminaire?(entity)
+				self.get_label(entity) == LUMINAIRE
+			end
+
 			# Checks if an entity is a workplane
 			# @author German Molina
 			# @param entity [SketchUp::Entity] Entity to test.
@@ -322,6 +330,43 @@ module GH
 				self.get_label(group) == SOLVED_WORKPLANE
 			end
 
+			# Label selected face into as local_luminaire
+			# @author German Molina
+			# @param comp [SkecthUp::ComponentDefinition] A SketchUp component definition
+			# @return [Void]
+			def self.to_luminaire(comp)
+				UI.messagebox("Only components can be labeled as Luminaires") if not comp.is_a? Sketchup::ComponentDefinition
+				return if not comp.is_a? Sketchup::ComponentDefinition
+
+
+				lumfile = UI.openpanel("Choose an IES file", "c:/", "IES|*.ies||")
+				return false if not lumfile
+				text = File.readlines(lumfile)
+
+				self.label_as(comp,LUMINAIRE)
+				data = Hash.new
+				data["ies"] = text
+
+
+				text.each {|line|
+					data["name"] = line.gsub("[LUMINAIRE]","").strip if line.start_with? "[LUMINAIRE]"
+					data["manufacturer"] = line.gsub("[MANUFAC]","").strip if line.start_with? "[MANUFAC]"
+					data["lamp"] = line.gsub("[LAMP]","").strip if line.start_with? "[LAMP]"
+					data["lumcat"] = line.gsub("[LUMCAT]","").strip if line.start_with? "[LUMCAT]"
+					data["lampcat"] = line.gsub("[LAMPCAT]","").strip if line.start_with? "[LAMPCAT]"
+					data["multiplier"] = 1 # By default... dimmed from UI.
+					break if line.start_with? "TILT="
+				}
+
+				self.set_value(comp,data.to_json)
+
+				#update UI
+				data.delete("ies")
+				Error.log data.inspect
+				script = "luminaires.push(#{data.to_json});"
+				GH::Groundhog.design_assistant.execute_script(script)
+				# DesignAssistant.update
+			end
 
         end
     end

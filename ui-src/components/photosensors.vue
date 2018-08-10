@@ -140,7 +140,7 @@ export default {
       var oldName = newP.oldName;
       if(oldName){ // editing        
 
-        // Find the sensor to be edited (by name)
+        // Find the sensor to be edited (by old name)
         var p = photosensors.find(function(e){return e.name == oldName});
 
         // Update the found photosensor

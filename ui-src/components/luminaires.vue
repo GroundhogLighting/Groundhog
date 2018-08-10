@@ -8,7 +8,7 @@
     
     <span class='no-data' v-show="shownList.length == 0">There are no luminaires to show...</span>  
       
-    <a-table>
+    <a-table v-show="shownList.length != 0">
       <thead>
         <tr>
           <td>Name</td>

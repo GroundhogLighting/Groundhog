@@ -26,7 +26,7 @@ module GH
             end
 
             def self.add_photosensor(wd)
-                wd.add_action_callback("add_photosensor") do |action_context,msg|                             
+                wd.add_action_callback("add_photosensor") do |action_context,msg|                                                 
                     Photosensor.add(msg)                    
                 end
             end
