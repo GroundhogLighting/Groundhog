@@ -13,8 +13,7 @@ module GH
 
             # Guess the name of the workplane.                                            
             value.each_with_index{|wp,i|                                                         
-                if not workplanes.include? wp['name'] then   
-                    p wp["name"]
+                if not workplanes.include? wp['name'] then                       
                     # If it is not there, it means that the WP needs to be unregistered                        
                     Utilities.unregister_workplane(wp['name'])
 
@@ -29,8 +28,9 @@ module GH
           end
   
           # This works... but I forgot what I needed it for?
-          # CHANGING NAME?
+          # CHANGING NAME is solved in the set_name method
           #def onChangeEntity(entity)
+          #  return if entity.deleted?
           #  warn Labeler.get_name(entity)
           #end
         end

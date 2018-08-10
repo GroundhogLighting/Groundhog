@@ -44,7 +44,7 @@ module GH
             # @version 0.1
             # @param url [String] The url where the component is
             # @return [Boolean] Sketchup::ComponentDefinition is success, false if not
-            def self.load_component(url)
+            def self.load_online_component(url)
                 loader=LoadHandler.new
                 Sketchup.active_model.definitions.load_from_url(url,loader)
                 if $last_error == nil
@@ -61,8 +61,9 @@ module GH
             # @param name [String] name of the SKP file
             # @return [Boolean] Sketchup::ComponentDefinition is success, false if not
             def self.load_local_component(name)
-                url = "file:#{OS.support_files_groundhog_path}/#{name}.skp"
-                return self.load_component(url)
+                url = "#{OS.support_files_groundhog_path}/#{name}.skp"
+                return Sketchup.active_model.definitions.load(url) #,loader)
+                
             end
 
             

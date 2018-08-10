@@ -140,10 +140,10 @@ module GH
 			# @author German Molina
 			# @param wp_name [String] The workplane's name
 			def self.pop_workplane_from_ui(wp_name)
-				script = ""					
-				script += "var i = workplanes.findIndex(function(wp){return wp.name === '#{wp_name}'});"					
-				script += "if(i >= 0){workplanes.splice(i,1)};"					
-				GH::Groundhog.design_assistant.execute_script(script) 
+				#script = ""					
+				#script += "var i = workplanes.findIndex(function(wp){return wp.name === '#{wp_name}'});"					
+				#script += "if(i >= 0){workplanes.splice(i,1)};"					
+				GH::Groundhog.design_assistant.execute_script("deleteByName(workplanes,'#{wp_name}');") 
 			end
 
         end

@@ -39,7 +39,7 @@ module GH
                             opt['value'] = v
                             optname = opt["name"]
                             new_opt = "{ name: '#{optname}', id: '#{opt["id"]}', value: #{v}}"
-                            script += "updateByName(project_options,'#{optname}',#{new_opt});"
+                            script += "updateByName(project_options,#{new_opt});"
                         end
                     }
                     

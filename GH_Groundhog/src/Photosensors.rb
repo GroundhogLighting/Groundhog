@@ -93,26 +93,6 @@ module GH
 
         end # end TOOL 
 
-        # This class is the Observer of the Photosensors, allowing
-        # the UI to update when changing the model. Bidirectional binding,
-        # basically
-        class PhotosensorObserver < Sketchup::EntityObserver
-            
-            # onErase function.
-            # @author Germán Molina
-            # @param entity [Sketchup::Entity] the modified Phososensor entity
-            def onEraseEntity(entity)
-                #DesignAssistant.update
-            end
-
-            # onChangeEntity function.
-            # @author Germán Molina
-            # @param entity [Sketchup::Entity] the modified Phososensor entity
-            def onChangeEntity(entity)
-                #DesignAssistant.update
-            end
-
-        end
 
 		# This module has the methods that allow handling photosensors.
         module Photosensor
@@ -125,30 +105,46 @@ module GH
             # @author Germán Molina
             # @return [Hash] The position
             # @param sensor [Sketchup::ComponentInstance] the sensor
-            def self.get_position(sensor)
+            def self.get_json(sensor)
                 ret = Hash.new
                 vdir = sensor.transformation.zaxis
-                ret["nx"] = vdir[0]
-                ret["ny"] = vdir[1]
-                ret["nz"] = vdir[2]
+                ret["dx"] = vdir[0]
+                ret["dy"] = vdir[1]
+                ret["dz"] = vdir[2]
                 pos = sensor.transformation.origin
                 ret["px"] = pos[0].to_m
                 ret["py"] = pos[1].to_m
                 ret["pz"] = pos[2].to_m
-                return ret
+
+                ret["name"] = Labeler.get_name(sensor)
+                return ret.to_json
             end
 
+            # Loads the Illuminance Sensor component definition to the model
+            # @author German Molina
+            # @version 0.1	
+            # @regurn The sensor		                        
+            def self.load_definition
+                sensor = Loader.load_local_component("photosensor")                    
+                return false if not sensor                    
+                sensor.name=@@photosensor_name                    
+                sensor.description="This represents an illumiance sensor."                    
+                sensor.casts_shadows= false                    
+                sensor.receives_shadows= false                    
+                Labeler.to_photosensor(sensor)
+                return [sensor]
+            end
 
             # Deletes a photosensor from the model.
             # @author Germán Molina
             # @param name [String] The name of the photosensor to delete            
             def self.delete(name)
-                sensors = Sketchup.active_model.definitions.select {|x| IGD::Groundhog::Labeler.illuminance_sensor?(x) }
+                sensors = Sketchup.active_model.definitions.select {|x| Labeler.photosensor?(x) }
                 if not sensors or sensors.length == 0 then
                     UI.messagebox("Error when trying to delete photosensor '#{name}'")
                     return false
                 end
-                named_equal = sensors[0].instances.select{|x| IGD::Groundhog::Labeler::get_name(x) == name }
+                named_equal = sensors[0].instances.select{|x| Labeler::get_name(x) == name }
                 if not named_equal or named_equal.length == 0 then
                     UI.messagebox("Error when trying to delete photosensor '#{name}'")
                     return false
@@ -158,7 +154,7 @@ module GH
                 return true
             end
 
-            # Loads the Illuminance Sensor component to the model
+            # Loads the Illuminance Sensor component instance to the model
             # @author German Molina
             # @version 0.1			
             # @param location_json [String] The JSON that comes from the UI
@@ -175,35 +171,28 @@ module GH
                 sensors = Sketchup.active_model.definitions.select {|x| Labeler.photosensor?(x) }
 
                 # Load it if it is not there                
-                if sensors.length < 1 then                   
-                    
-                    sensor = Loader.load_local_component("photosensor")                    
-                    return false if not sensor                    
-                    sensor.name=@@photosensor_name                    
-                    sensor.description="This represents an illumiance sensor."                    
-                    sensor.casts_shadows= false                    
-                    sensor.receives_shadows= false                    
-                    Labeler.to_photosensor(sensor)
+                if sensors.length < 1 then                                       
+                    sensors = self.load_definition
+                end
 
+                named_equal = sensors[0].instances.select{|x| Labeler::get_name(x) == location["oldName"]}
+            
+                if named_equal.length > 0 then #move instead of add                    
+                    # We assume there is only one.
+                    named_equal[0].transformation = transformation                    
+                    Labeler.set_name(named_equal,location["name"])
                 else
-                    # if it exists, we may need to move.
-                    named_equal = sensors[0].instances.select{|x| Labeler::get_name(x) == location["name"]}
-                    if named_equal.length > 0 then #move instead of add
-                        # We assume there is only one.
-                        named_equal[0].transformation = (transformation)                        
-                        return true
-                    end
+                    # add if not                    
+                    sensor = Sketchup.active_model.definitions[@@photosensor_name]                          
+                    instance = Sketchup.active_model.entities.add_instance(sensor, transformation)                
+                    Labeler.set_name([instance],location["name"])
+                    instance.add_observer(PhotosensorObserver.new)                  
                 end                   
-
-                # add if not
-                sensor = Sketchup.active_model.definitions[@@photosensor_name]                          
-                instance = Sketchup.active_model.entities.add_instance(sensor, transformation)                
-                Labeler.set_name([instance],location["name"])
-                instance.add_observer(PhotosensorObserver.new)  
-                Labeler.to_photosensor(instance)
-                Sketchup.active_model.active_view.refresh                
+                Sketchup.active_model.active_view.refresh                                    
                 return true
             end
+            
+
 
         end
     end

@@ -1,7 +1,7 @@
 var isDev = require("~/plugins/is-dev");
 
 global.photosensors = []
-global.selected_photosensor = {};
+global.selected_photosensor = {name:"", px: 0, py:0 , pz:0, dx:0, dy:0, dz:1};
 
 if(isDev){
     global.photosensors.push({ name: "Photosensor 1", px: 0, py: 0, pz: 0.8, dx: 0, dy: 0, dz: 1});

@@ -22,6 +22,18 @@ global.updateByField = function(arr,fieldName,fieldValue,value){
     }
 };
 
+
+global.deleteByField = function(arr,fieldName,fieldValue){
+    var index = arr.findIndex(function(e){
+        return e[fieldName] == fieldValue;
+    })
+
+    if(index > -1){
+        // If item is there
+        arr.splice(index,1);        
+    }
+};
+
 global.updateByFields = function(arr,fieldNames,fieldValues,value){
     var index = arr.findIndex(function(e){
         for(var i = 0; i< fieldNames.length; i++){
@@ -43,6 +55,21 @@ global.updateByFields = function(arr,fieldNames,fieldValues,value){
     }
 };
 
-global.updateByName = function(arr,name,value){
-    return updateByField(arr,"name",name,value);
+
+
+global.updateByName = function(arr,value){
+    return updateByField(arr,"name",value.name,value);
 };
+
+
+global.deleteByName = function(arr,name){
+    return deleteByField(arr,"name",name);
+};
+
+global.trimByName = function(template,arr){    
+    arr.forEach(function(e){                
+        if(!template.includes(e.name)){            
+            deleteByName(arr,e.name);
+        }
+    });
+}

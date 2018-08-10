@@ -99,13 +99,30 @@ export default {
       this.$refs.createDialog.show(); 
     },
     onCloseDialog(){
-      this.selectedPhotosensor = {};
+      this.selectedPhotosensor.px=0;
+      this.selectedPhotosensor.py=0;
+      this.selectedPhotosensor.pz=0;
+      this.selectedPhotosensor.dx=0;
+      this.selectedPhotosensor.dy=0;
+      this.selectedPhotosensor.dz=1;
+      this.selectedPhotosensor.name="";
+      delete this.selectedPhotosensor.oldName;
       this.skp.call_action("disable_active_tool","");
     },
     edit(pName){
       var p = photosensors.find(function(m){ return m.name === pName});
-      this.selectedPhotosensor = Object.assign({oldName : p.name},p);    
-      openDialog();      
+      this.selectedPhotosensor.px=p.px;
+      this.selectedPhotosensor.py=p.py;
+      this.selectedPhotosensor.pz=p.pz;
+      this.selectedPhotosensor.dx=p.dx;
+      this.selectedPhotosensor.dy=p.dy;
+      this.selectedPhotosensor.dz=p.dz;
+      this.selectedPhotosensor.name=p.name;
+      
+      // This shows that we are editing
+      this.selectedPhotosensor.oldName=p.name;
+
+      this.openDialog();      
     },
     remove(pName){
       var i = photosensors.findIndex(function(m){
@@ -118,14 +135,24 @@ export default {
     },
     submitEdit(){
 
-      var newP = this.selectedPhotosensor;
+      // Clone
+      var newP = Object.assign({},this.selectedPhotosensor);
       var oldName = newP.oldName;
-      if(oldName){ // editing
-        delete newP.oldName;
+      if(oldName){ // editing        
+
+        // Find the sensor to be edited (by name)
         var p = photosensors.find(function(e){return e.name == oldName});
-        p = Object.assign(p,newP);  
-        newP.oldName = oldName;    
-        this.skp.call_action('edit_photosensor',newP);
+
+        // Update the found photosensor
+        p.px=newP.px;
+        p.py=newP.py;
+        p.pz=newP.pz;
+        p.dx=newP.dx;
+        p.dy=newP.dy;
+        p.dz=newP.dz;
+        p.name=newP.name;
+        
+        this.skp.call_action('add_photosensor',newP);
         this.$refs.photosensorUpdated.show();      
       }else{ // Creating
         photosensors.push(newP);
