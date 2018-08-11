@@ -27,33 +27,10 @@ module GH
 				return os
 			end
 =begin
-			# Gets the path where the Radiance programs are installed.
-			# @author German Molina
-			# @return [String] The radiance bin path
-			def self.radiance_path
-				"#{self.main_groundhog_path}/src/Radiance/bin"
-			end
+			
 
-			# Gets the path where the Radiance library is installed
-			# @author German Molina
-			# @return [String] The radiance bin path
-			def self.raypath
-				"#{OS.main_groundhog_path}/src/Radiance/lib"
-			end
-
-			# Adds the Radiance Path and the Raypath to the environmental variables.
-			# @author German Molina
-			def self.setup_radiance
-				# ADD RADIANCE_PATH
-				if self.radiance_path then
-					divider = ":"
-					divider = ";" if self.getsystem == "WIN"
-					ENV["PATH"]=self.radiance_path+divider << ENV["PATH"]
-					ENV["RAYPATH"] = "#{self.raypath}"
-				else
-					UI.messagebox "There was a problem loading Radiance"
-				end
-			end
+		
+			
 
 
 			# Creates a directory in the selected path
@@ -64,6 +41,45 @@ module GH
 				Dir.mkdir(path) unless File.directory?(path)
 			end
 =end
+
+			# Gets the path where the Radiance library is installed
+			# @author German Molina
+			# @return [String] The radiance bin path
+			def self.raypath
+				"#{OS.main_groundhog_path}/emp/raypath"
+			end
+
+			# Gets the path where the Radiance library is installed
+			# @author German Molina
+			# @return [String] The radiance bin path
+			def self.empath
+				"#{OS.main_groundhog_path}/emp/empath"
+			end
+
+
+			# Gets the path where the Radiance programs are installed.
+			# @author German Molina
+			# @return [String] The radiance bin path
+			def self.executables_path
+				"#{self.main_groundhog_path}/emp/path"
+			end
+
+			# Adds the Radiance Path and the Raypath to the environmental variables.
+			# @author German Molina
+			def self.setup_executables
+				# ADD RADIANCE_PATH
+				if self.executables_path then
+					
+					divider = (self.get_os == "WIN" ? ";" : ":")
+					ENV["LD_LIBRARY_PATH"] = self.executables_path
+					ENV["PATH"]=self.executables_path+divider << ENV["PATH"]
+					ENV["RAYPATH"] = "#{self.raypath}"
+					ENV["EMPATH"] = "#{self.empath}"
+				else
+					UI.messagebox "There was a problem loading Emp and Radiance"
+				end
+			end
+
 			# Gets the path where the plugin is installed
 			# @author German Molina
 			# @return [String] The main groundhog path
@@ -84,6 +100,31 @@ module GH
 				array.push("Assets")
 				array.push("support_files")
 				return File.join(array)
+			end
+
+			# Runs a command, printing the Stoud and Stderr on the console. Returns True if everything went well, and false if it did not.
+			# @author German Molina
+			# @param cmd [String] The command to execute.
+			# @return [Boolean] success
+			def self.run_command(cmd)
+
+				exit_status=""
+				warn ">> #{cmd}"
+				Sketchup.set_status_text cmd ,SB_PROMPT
+				Open3.popen3(cmd){ |stdin, stdout, stderr, wait_thr|
+					pid = wait_thr.pid # pid of the started process.
+
+					while line = stderr.gets
+						warn line
+					end
+
+					while line = stdout.gets
+						warn line
+					end
+
+					exit_status = wait_thr.value.success?
+				}
+				return exit_status
 			end
 =begin
 			
@@ -118,30 +159,7 @@ module GH
 				return true
 			end
 
-			# Runs a command, printing the Stoud and Stderr on the console. Returns True if everything went well, and false if it did not.
-			# @author German Molina
-			# @param cmd [String] The command to execute.
-			# @return [Boolean] success
-			def self.run_command(cmd)
-
-				exit_status=""
-				warn ">> #{cmd}"
-				Sketchup.set_status_text cmd ,SB_PROMPT
-				Open3.popen3(cmd){ |stdin, stdout, stderr, wait_thr|
-					pid = wait_thr.pid # pid of the started process.
-
-					while line = stderr.gets
-						warn line
-					end
-
-					while line = stdout.gets
-						warn line
-					end
-
-					exit_status = wait_thr.value.success?
-				}
-				return exit_status
-			end
+			
 
 			# Executes a series of commands in an array. This allows easy scripting within SketchUp.
 			# The commands need to be strings.

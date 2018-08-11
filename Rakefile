@@ -6,7 +6,7 @@ require 'JSON'
 task :default => :all
 
 
-task :all => [:win32, :win64, :macos] do
+task :all => [:win64, :macos] do
 	FileUtils.rm_rf "./GH_Groundhog/src/Radiance"
 end
 
@@ -30,7 +30,7 @@ def sketchup_plugin_dir(os,v)
 	end
 end
 
-task :test,[:suv]  do |t, args| #=> [:design_assistant]
+task :test,[:suv]  do |t, args|
 	os = this_os
 	if args[:suv]== nil then		
 		version = '2017'
@@ -40,12 +40,11 @@ task :test,[:suv]  do |t, args| #=> [:design_assistant]
 
 	warn "Testing version #{version} in #{os}"
 	
-	radiance_version = "Radiance/#{os}/Radiance"
-	radiance_version = "Radiance/macos/usr/local/radiance" if os == "macos"
+	bin_version = "emp/#{os}"	
 
-	# Replace the Radiance version in Groundhog
-	FileUtils.rm_rf("./GH_Groundhog/src/Radiance")
-	FileUtils.cp_r radiance_version, "./GH_Groundhog/src/Radiance"
+	# Replace the executables version in Groundhog
+	FileUtils.rm_rf("./GH_Groundhog/emp/path")
+	FileUtils.cp_r bin_version, "./GH_Groundhog/emp/path"
 
 	# Remove the groundhog version in Sketchup Plugin directory
 	FileUtils.rm_rf "#{sketchup_plugin_dir(os,version)}/GH_Groundhog.rb"
@@ -56,7 +55,7 @@ task :test,[:suv]  do |t, args| #=> [:design_assistant]
 	FileUtils.cp_r "GH_Groundhog","#{sketchup_plugin_dir(os,version)}/GH_Groundhog"
 
 	# Final clean
-	FileUtils.rm_rf("./GH_Groundhog/src/Radiance")
+	FileUtils.rm_rf("./GH_Groundhog/emp/path")
 end
 
 def this_os
@@ -68,10 +67,11 @@ def this_os
 end
 
 def compress(os)
-	radiance_version = "Radiance/#{os}/Radiance"
-	radiance_version = "Radiance/macos/usr/local/radiance" if os == "macos"	
-	FileUtils.rm_rf("./GH_Groundhog/src/Radiance")
-	FileUtils.cp_r radiance_version, "./GH_Groundhog/src/Radiance"	
+	bin_version = "emp/#{os}"	
+
+	# Replace the executables version in Groundhog
+	FileUtils.rm_rf("./GH_Groundhog/emp/path")
+	FileUtils.cp_r bin_version, "./GH_Groundhog/emp/path"
 	
 	File.open("listfile.txt",'w'){|w|
 		w.puts "GH_Groundhog.rb"
@@ -86,9 +86,6 @@ task :win64 => [:clean, :add_build_date, :compile_ui] do
 	compress("win64")
 end
 
-task :win32 => [:clean, :add_build_date, :compile_ui] do
-	compress("win32")
-end
 
 task :macos => [:clean, :add_build_date, :compile_ui] do
 	compress("macos")

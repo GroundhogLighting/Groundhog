@@ -15,8 +15,10 @@ module GH
 		end
 
         #################################
-        require 'json'
-
+		require 'json'
+		require 'fileutils'
+		require 'Open3'
+		
         Sketchup::require 'GH_Groundhog/src/Error'
         Sketchup::require 'GH_Groundhog/src/OS'
 		Sketchup::require 'GH_Groundhog/src/Constants'
@@ -52,12 +54,12 @@ module GH
         #############################
         
 		##Add Radiance to Path as well as RAYPATH
-		#OS.setup_radiance
-		##CHMOD for avoiding permission issues
-		#Dir["#{IGD::Groundhog::OS.radiance_path}/*"].each{|bin|
-		#	next if bin.split("/").pop.include? "."
-		#	FileUtils.chmod(755,bin)
-		#}
+		OS.setup_executables
+		#CHMOD for avoiding permission issues
+		Dir["#{GH::Groundhog::OS.executables_path}/*"].each{|bin|
+			next if bin.split("/").pop.include? "."
+			FileUtils.chmod(755,bin)
+		}
 
 		#######################
 		# ADD CONTEXT MENUS

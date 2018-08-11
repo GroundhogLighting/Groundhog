@@ -106,21 +106,29 @@ const taskProperties = {
     month: {default: 1, min: 1, max: 12},
     day: {default: 1, min: 1, max: 31},
     hour: {default: 14, min: 1, max: 24},
+    min_percent: {default: 3, min: 0, max: 100},
+    max_percent: {default: 3, min: 0, max: 100}
   },
   "Intermediate sky illuminance" : {
     month: {default: 1, min: 1, max: 12},
     day: {default: 1, min: 1, max: 31},
     hour: {default: 14, min: 1, max: 24},
+    min_percent: {default: 3, min: 0, max: 100},
+    max_percent: {default: 3, min: 0, max: 100}
   },
   "Overcast sky illuminance" : {
     month: {default: 1, min: 1, max: 12},
     day: {default: 1, min: 1, max: 31},
     hour: {default: 14, min: 1, max: 24},
+    min_percent: {default: 3, min: 0, max: 100},
+    max_percent: {default: 3, min: 0, max: 100}
   },
   "Weather sky illuminance" : {
     month: {default: 1, min: 1, max: 12},
     day: {default: 1, min: 1, max: 31},
     hour: {default: 14, min: 1, max: 24},
+    min_percent: {default: 3, min: 0, max: 100},
+    max_percent: {default: 3, min: 0, max: 100}
   },
   "Annual Sunlight Exposure" : {
     min_lux : {default: 300, min: 0},
