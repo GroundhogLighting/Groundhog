@@ -40,7 +40,7 @@
             <tbody>
               <tr v-for="(item, index) in taskProps[selectedTask.class]" :key="index">
                 <td>{{index | fixString}}</td>
-                <a-editable-cell v-model="selectedTask[index]"></a-editable-cell>
+                <a-editable-cell :type="'number'" v-model="selectedTask[index]"></a-editable-cell>
               </tr>
             </tbody>
           </a-double-entry-table>           
@@ -62,7 +62,7 @@
             <tbody>
               <tr>
                 <td>Pixel Size</td>
-                <a-editable-cell v-model="selectedWorkplane.pixel_size"></a-editable-cell>
+                <a-editable-cell  :type="'number'" v-model="selectedWorkplane.pixel_size"></a-editable-cell>
               </tr>
             </tbody>
           </a-double-entry-table>
@@ -101,6 +101,14 @@ const taskProperties = {
   "Daylight Factor": {
     min_percent: {default: 3, min: 0, max: 100},
     max_percent: {default: 3, min: 0, max: 100}
+  },
+  "Annual solar irradiation": {
+    min: {},
+    max: {}
+  },
+  "Annual daylight exposure": {
+    min: {},
+    max: {}
   },
   "Clear sky illuminance" : {
     month: {default: 1, min: 1, max: 12},

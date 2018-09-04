@@ -19,6 +19,7 @@ module GH
 		require 'fileutils'
 		require 'Open3'
 		
+		Sketchup::require 'GH_Groundhog/src/Debug'
         Sketchup::require 'GH_Groundhog/src/Error'
         Sketchup::require 'GH_Groundhog/src/OS'
 		Sketchup::require 'GH_Groundhog/src/Constants'
@@ -42,6 +43,14 @@ module GH
         #############################
         Version.check_version_compatibility()
 
+		# SET AS DEBUG, IF NEEDED
+		#########################
+
+		if GH_DEBUG then
+			SKETCHUP_CONSOLE.show
+			warn " >>> Setting Debug mode on from Groundhog"
+			Sketchup.debug_mode = GH_DEBUG
+		end
 
         
 		#############################
@@ -53,11 +62,11 @@ module GH
         # ADD REQUIRED PROGRAMS TO PATH
         #############################
         
-		##Add Radiance to Path as well as RAYPATH
+		##Add Executabls to Path as well as RAYPATH and EMPATH
 		OS.setup_executables
 		#CHMOD for avoiding permission issues
 		Dir["#{GH::Groundhog::OS.executables_path}/*"].each{|bin|
-			next if bin.split("/").pop.include? "."
+			#next if bin.split("/").pop.include? "."
 			FileUtils.chmod(755,bin)
 		}
 

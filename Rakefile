@@ -30,6 +30,21 @@ def sketchup_plugin_dir(os,v)
 	end
 end
 
+def set_debug(debug)
+	fname = "GH_Groundhog/src/Debug.rb"
+	
+	raise fname+" does not exist" if not File.exist? fname
+
+	File.open(fname, 'w') {|file| 
+		file.puts("module GH")
+		file.puts("    module Groundhog")
+		file.puts("        GH_DEBUG=#{debug}") 
+		file.puts("    end") 
+		file.puts("end") 		
+	}	
+
+end
+
 task :test,[:suv]  do |t, args|
 	os = this_os
 	if args[:suv]== nil then		
@@ -40,11 +55,14 @@ task :test,[:suv]  do |t, args|
 
 	warn "Testing version #{version} in #{os}"
 	
-	bin_version = "emp/#{os}"	
+	# Set debug
+	set_debug(true)
 
+	bin_version = "emp/#{os}"	
+	
 	# Replace the executables version in Groundhog
-	FileUtils.rm_rf("./GH_Groundhog/emp/path")
-	FileUtils.cp_r bin_version, "./GH_Groundhog/emp/path"
+	FileUtils.rm_rf("./GH_Groundhog/emp")
+	FileUtils.cp_r(bin_version, "./GH_Groundhog/emp")
 
 	# Remove the groundhog version in Sketchup Plugin directory
 	FileUtils.rm_rf "#{sketchup_plugin_dir(os,version)}/GH_Groundhog.rb"
@@ -55,7 +73,10 @@ task :test,[:suv]  do |t, args|
 	FileUtils.cp_r "GH_Groundhog","#{sketchup_plugin_dir(os,version)}/GH_Groundhog"
 
 	# Final clean
-	FileUtils.rm_rf("./GH_Groundhog/emp/path")
+	FileUtils.rm_rf("./GH_Groundhog/emp")
+
+	# UnSet debug
+	set_debug(false)
 end
 
 def this_os
@@ -70,8 +91,8 @@ def compress(os)
 	bin_version = "emp/#{os}"	
 
 	# Replace the executables version in Groundhog
-	FileUtils.rm_rf("./GH_Groundhog/emp/path")
-	FileUtils.cp_r bin_version, "./GH_Groundhog/emp/path"
+	FileUtils.rm_rf("./GH_Groundhog/emp")
+	FileUtils.cp_r bin_version, "./GH_Groundhog/emp"
 	
 	File.open("listfile.txt",'w'){|w|
 		w.puts "GH_Groundhog.rb"
@@ -82,12 +103,12 @@ def compress(os)
 	
 end
 
-task :win64 => [:clean, :add_build_date, :compile_ui] do
+task :win64 => [:clean, :add_build_date, :design_assistant] do
 	compress("win64")
 end
 
 
-task :macos => [:clean, :add_build_date, :compile_ui] do
+task :macos => [:clean, :add_build_date, :design_assistant] do
 	compress("macos")
 end
 

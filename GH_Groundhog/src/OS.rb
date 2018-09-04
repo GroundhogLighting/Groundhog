@@ -107,7 +107,7 @@ module GH
 			# @param cmd [String] The command to execute.
 			# @return [Boolean] success
 			def self.run_command(cmd)
-
+				SKETCHUP_CONSOLE.show
 				exit_status=""
 				warn ">> #{cmd}"
 				Sketchup.set_status_text cmd ,SB_PROMPT

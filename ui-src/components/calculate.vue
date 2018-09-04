@@ -10,7 +10,7 @@
 
   <br><br>      
   
-    <a-raised-button :variant="'primary'" v-on:click.native="skp.call_action('run_emp','solve_model')">
+    <a-raised-button :variant="'primary'" v-on:click.native="skp.call_action('run_emp_script','solve_model')">
       <i class="material-icons">play_circle_outline</i>      
       <span>Calculate model</span>
     </a-raised-button>
@@ -36,7 +36,7 @@
             <tr v-for="(option, index) in toShow" :key="index"  >
               <td>{{option.name}}</td>
               <td>{{option.id}}</td>
-              <a-editable-cell v-model="option.value" @submitCell="setOption(option.name)"></a-editable-cell>
+              <a-editable-cell :type="'number'" v-model="option.value" @submitCell="setOption(option.name)"></a-editable-cell>
             </tr>
           </tbody>
         </a-table>

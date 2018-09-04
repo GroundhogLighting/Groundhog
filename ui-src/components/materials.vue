@@ -6,6 +6,7 @@
       <a-input :label="'Filter'" v-model="query" :type="'text'"/>
       <a-button :variant="'primary'" v-on:click.native="$refs.createDialog.show()">Create material</a-button>
       <a-button :variant="'primary'" v-on:click.native="$refs.searchDialog.show()">Search in database</a-button>
+      <a-button :variant="'primary'" v-on:click.native="preview()">Preview</a-button>      
     </a-navbar>
     
     
@@ -142,7 +143,10 @@ const materialProperties = {
 
 
 export default {  
-  methods : {    
+  methods : { 
+    preview(){
+      this.skp.call_action("run_emp_script","rvu");
+    },  
     getMaterialInfo(url){
       this.skp.call_action('follow_link',url);
     },
