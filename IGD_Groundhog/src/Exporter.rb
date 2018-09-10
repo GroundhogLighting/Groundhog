@@ -621,7 +621,7 @@ module IGD
 					    gmsh_file.puts "// workplane inner loops edges"
 					    inner_loops.each do |inner_loop|
 					      inner_loop.vertices.each_with_index do |vertex, index|
-						gmsh_file.puts "Line(#{line_index}) = {#{vertex2point[outer_loop.vertices[index-1]]}, #{vertex2point[vertex]}};"
+						gmsh_file.puts "Line(#{line_index}) = {#{vertex2point[inner_loop.vertices[index-1]]}, #{vertex2point[vertex]}};"
 						vertex2line[edge] = line_index
 						line_index += 1
 					      end
