@@ -145,7 +145,7 @@ const materialProperties = {
 export default {  
   methods : { 
     preview(){
-      this.skp.call_action("run_emp_script","rvu");
+      this.skp.call_action("rvu","rvu");
     },  
     getMaterialInfo(url){
       this.skp.call_action('follow_link',url);

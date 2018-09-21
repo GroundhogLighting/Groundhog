@@ -43,9 +43,9 @@ module GH
         #############################
         Version.check_version_compatibility()
 
+
 		# SET AS DEBUG, IF NEEDED
 		#########################
-
 		if GH_DEBUG then
 			SKETCHUP_CONSOLE.show
 			warn " >>> Setting Debug mode on from Groundhog"
@@ -58,18 +58,6 @@ module GH
         #############################
         model = Sketchup.active_model
         
-        #############################
-        # ADD REQUIRED PROGRAMS TO PATH
-        #############################
-        
-		##Add Executabls to Path as well as RAYPATH and EMPATH
-		OS.setup_executables
-		#CHMOD for avoiding permission issues
-		Dir["#{GH::Groundhog::OS.executables_path}/*"].each{|bin|
-			#next if bin.split("/").pop.include? "."
-			FileUtils.chmod(755,bin)
-		}
-
 		#######################
 		# ADD CONTEXT MENUS
 		#######################
@@ -216,6 +204,7 @@ module GH
 		groundhog_menu.add_item("Open Design Assistant"){
 			@design_assistant.show			
 		}
+
 =begin
 
 		@online_resources = OnlineResources.get

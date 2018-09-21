@@ -7,7 +7,7 @@ task :default => :all
 
 
 task :all => [:win64, :macos] do
-	FileUtils.rm_rf "./GH_Groundhog/src/Radiance"
+	puts "All done!"
 end
 
 task :doc => [:clean] do
@@ -26,7 +26,7 @@ def sketchup_plugin_dir(os,v)
 	if os == "macos" then
 		return "#{ENV["HOME"]}/Library/Application Support/SketchUp #{v}/SketchUp/Plugins"
 	else
-	 return "#{ENV["UserProfile"].gsub("\\","/")}/AppData/Roaming/SketchUp/SketchUp #{v}/SketchUp/Plugins"
+	 	return "#{ENV["UserProfile"].gsub("\\","/")}/AppData/Roaming/SketchUp/SketchUp #{v}/SketchUp/Plugins"
 	end
 end
 
@@ -63,11 +63,11 @@ task :test,[:suv]  do |t, args|
 	# Replace the executables version in Groundhog
 	FileUtils.rm_rf("./GH_Groundhog/emp")
 	FileUtils.cp_r(bin_version, "./GH_Groundhog/emp")
-
+	
 	# Remove the groundhog version in Sketchup Plugin directory
 	FileUtils.rm_rf "#{sketchup_plugin_dir(os,version)}/GH_Groundhog.rb"
-	FileUtils.rm_rf "#{sketchup_plugin_dir(os,version)}/GH_Groundhog"
-
+	FileUtils.rm_rf("#{sketchup_plugin_dir(os,version)}/GH_Groundhog")
+	
 	# Move the new one
 	FileUtils.cp_r "GH_Groundhog.rb","#{sketchup_plugin_dir(os,version)}/GH_Groundhog.rb"
 	FileUtils.cp_r "GH_Groundhog","#{sketchup_plugin_dir(os,version)}/GH_Groundhog"
@@ -90,6 +90,8 @@ end
 def compress(os)
 	bin_version = "emp/#{os}"	
 
+	set_debug(false)
+	
 	# Replace the executables version in Groundhog
 	FileUtils.rm_rf("./GH_Groundhog/emp")
 	FileUtils.cp_r bin_version, "./GH_Groundhog/emp"
@@ -98,7 +100,11 @@ def compress(os)
 		w.puts "GH_Groundhog.rb"
 		w.puts "GH_Groundhog"
 	}
-	puts `7z a -tzip Groundhog_#{os}.rbz @listfile.txt -x!.yardoc -x!*.DS_Store`
+	if this_os == "macos" then
+		puts `zip -r -X Groundhog_#{os}.rbz ./GH_Groundhog.rb ./GH_Groundhog` 
+	else
+		puts `7z a -tzip Groundhog_#{os}.rbz @listfile.txt -x!.yardoc -x!*.DS_Store`
+	end
 	FileUtils.rm "listfile.txt"
 	
 end

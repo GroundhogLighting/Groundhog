@@ -49,30 +49,13 @@ module GH
 
             def self.run_emp_script(wd)
                 wd.add_action_callback('run_emp_script') do |action_context,script_name|
-                    
-                    # Check if the model has been modified
-                    if Sketchup.active_model.modified? then
-                        UI.messagebox("You need to save the model before calculating anything!")
-                        next
-                    end
+                    OS.run_emp_script(script_name,true)
+                end
+            end
 
-                    # Save a copy of the model in the TMP directory
-                    path = Sketchup.temp_dir+"/Groundhog"
-                    Dir.mkdir(path) unless File.directory?(path)                    
-                    Sketchup.active_model.save_copy(path+"/thismodel")
-
-                    # Move to path directory
-                    Dir.chdir(path){
-                        # Run the script (it needs to be in the empath)
-                        results = "./results.json"
-                        OS.run_command("emp ./thismodel.skp #{script_name} > #{results}")
-
-                        # load the results back in the model.
-                        Results.import_results(results)
-                    }
-                    # remove directory
-                    FileUtils.rm_rf(path)
-
+            def self.rvu(wd)
+                wd.add_action_callback('rvu') do |action_context,script_name|
+                    OS.run_emp_script("rvu",false)
                 end
             end
 

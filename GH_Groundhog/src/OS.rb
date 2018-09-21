@@ -67,7 +67,7 @@ module GH
 			# Adds the Radiance Path and the Raypath to the environmental variables.
 			# @author German Molina
 			def self.setup_executables
-				# ADD RADIANCE_PATH
+				# ADD EMP PATH
 				if self.executables_path then
 					
 					divider = (self.get_os == "WIN" ? ";" : ":")
@@ -78,6 +78,12 @@ module GH
 				else
 					UI.messagebox "There was a problem loading Emp and Radiance"
 				end
+
+				#CHMOD for avoiding permission issues
+				Dir["#{self.executables_path}/*"].each{|bin|
+					next if bin.split("/").pop.include? "."
+					#FileUtils.chmod(755,bin)
+				}
 			end
 
 			# Gets the path where the plugin is installed
@@ -116,6 +122,7 @@ module GH
 
 					while line = stderr.gets
 						warn line
+						Sketchup.set_status_text line ,SB_PROMPT
 					end
 
 					while line = stdout.gets
@@ -125,6 +132,35 @@ module GH
 					exit_status = wait_thr.value.success?
 				}
 				return exit_status
+			end
+
+			def self.run_emp_script(script_name, import)
+															
+				# Check if the model has been modified
+				if Sketchup.active_model.modified? then
+					UI.messagebox("You need to save the model before calculating anything!")
+					return
+				end
+
+				# Save a copy of the model in the TMP directory
+				path = Sketchup.temp_dir+"/Groundhog"
+				Dir.mkdir(path) unless File.directory?(path)                    
+				Sketchup.active_model.save_copy(path+"/thismodel")
+				
+				# Move to path directory
+				
+				Dir.chdir(path){				
+					OS.setup_executables	
+										
+					# Run the script (it needs to be in the empath)
+					results = "./results.json"                                                
+					if OS.run_command("emp ./thismodel.skp #{script_name} #{results}") then
+						# load the results back in the model.
+						Results.import_results(results) if import
+					end				
+				}
+				# remove directory
+				FileUtils.rm_rf(path)
 			end
 =begin
 			

@@ -287,6 +287,7 @@ module GH
           self.load_options(wd)
           self.set_option(wd)
           self.run_emp_script(wd)
+          self.rvu(wd)
 
           # Luminaires callbacks
           require_relative './DesignAssistantCallbacks/Luminaires'
