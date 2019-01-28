@@ -8,13 +8,9 @@ by Germán Molina, Sergio Vera and Waldo Bustamante.
 
 ## Contributing
 
-**Hi, if you want to contribute to Groundhog, please do it into version 1.0 (it has its own branch). 
-This is a fully re-written, much better, and almost finished version (it actually works on my macOS machine)
-designed to be faster, more scalable and more maintainable. It uses Emp and Emp-core as the calculation engine
-(see GroundhogLighting's organization projects), which would potentially allow porting Groundhog
-to other 3D modelling tools.**
-
-Thanks for your interest!
+# Hi, if you want to contribute to Groundhog, please do it into version 1.0 (it has its own branch). This is a fully re-written, much better, and almost finished version (it actually works on my macOS machine) designed to be faster, more scalable and more maintainable. It uses Emp and Emp-core as the calculation engine (see GroundhogLighting's organization projects), which would potentially allow porting Groundhog to other 3D modelling tools.
+ 
+# Thanks for your interest!
 
 ## Downloads
 
