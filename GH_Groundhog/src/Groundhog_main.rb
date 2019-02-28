@@ -132,9 +132,7 @@ module GH
 					begin
 						op_name = "Label as Workplane"
 						model.start_operation( op_name,true )
-
 						Labeler.to_workplane(faces)
-
 						model.commit_operation
 					rescue Exception => ex
 						model.abort_operation

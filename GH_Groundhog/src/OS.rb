@@ -135,13 +135,7 @@ module GH
 			end
 
 			def self.run_emp_script(script_name, import)
-															
-				# Check if the model has been modified
-				if Sketchup.active_model.modified? then
-					UI.messagebox("You need to save the model before calculating anything!")
-					return
-				end
-
+																			
 				# Save a copy of the model in the TMP directory
 				path = Sketchup.temp_dir+"/Groundhog"
 				Dir.mkdir(path) unless File.directory?(path)                    

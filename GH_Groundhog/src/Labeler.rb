@@ -261,7 +261,7 @@ module GH
 				# Start operation
 				model = Sketchup.active_model
 				
-				model.start_operation('label as workplane')
+				
 				faces.each do |face|
 				
 					# Check if there is a workplane in the selection
@@ -275,10 +275,7 @@ module GH
 					self.label_as(face,WORKPLANE)
 					Utilities.set_oriented_surface_materials(face,"workplane","red",0.2)						
 					face.add_observer(WorkplaneObserver.new)
-				end
-
-				# Commit
-				model.commit_operation
+				end				
 
 				# Register the workplane				
 				if not Utilities.workplane_registered?(name) then

@@ -11,8 +11,9 @@
 ]]
 
 
+auto_solve = false
 workplanes = get_workplanes_data()
-
+results_file = argv[1]
 
 -- For all workplanes
 for i = 1,#workplanes do
@@ -25,15 +26,14 @@ for i = 1,#workplanes do
 
         -- Assign the workplane to the task
         task["workplane"] = wp.name
-                        
+        
+        
+        
         -- Push the task to the Task Manager        
         push_metric(task)
 
     end        
 end
 
--- solve to a file, if required. If not, solve and print to stdout
-if #argv > 0 then
-    auto_solve = false
-    solve(argv[1])
-end
+
+solve(results_file)

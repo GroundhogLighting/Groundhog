@@ -11,7 +11,7 @@ module GH
                 # Check if it already exist
                 return if Sketchup.active_model.materials["#{@COLOR_PREFIX}0"] != nil
 
-                # Basic pallete
+                # Basic pallete, by Lucas and Gonzalo
                 #red =   [8,  43,  234, 238, 218]
                 #green = [46, 177, 231, 195, 37 ]
                 #blue =  [65, 204, 214, 82,  54 ]
@@ -22,30 +22,6 @@ module GH
                 blue = [84, 104, 119, 129, 136, 140, 142, 142, 142, 141, 139, 134, 127, 117, 103, 85, 64, 41, 23, 37]
 
                 @N_BINS_PALLETE.times{|bin|
-=begin                
-                    x = bin.to_f/@N_BINS_PALLETE.to_f
-                    
-                    i = 0
-                    if x < 0.25 then
-                        i=0
-                    elsif x < 0.5 then
-                        i=1        
-                    elsif x < 0.75 then
-                        i=2    
-                    else
-                        i=3
-                    end
-
-                    m = Sketchup.active_model.materials.add("#{@COLOR_PREFIX}#{bin}")
-
-                    x=(x - 0.25*i)/0.25
-
-                    r = red[i] + x* (red[i+1] - red[i])
-                    g = green[i] + x* (green[i+1] - green[i])
-                    b = blue[i] + x* (blue[i+1] - blue[i])
-                    
-                    m.color=Sketchup::Color.new(r.to_i,g.to_i,b.to_i)
-=end                 
                     m = Sketchup.active_model.materials.add("#{@COLOR_PREFIX}#{bin}")   
                     r = red[bin] 
                     g = green[bin]
@@ -67,8 +43,8 @@ module GH
             # Update the pixel colors of all the solved_workplanes in the model.
 			#
 			# @author German Molina
-			# @param max [Float] the maximum value for the scale
 			# @param min [Float] the minimum value for the scale
+			# @param max [Float] the maximum value for the scale
 			# @param metric_name [String] The name of the metric to update
 			# @return void
 			# @version 0.2
@@ -115,7 +91,7 @@ module GH
                     script = ""
 
                     # Iterate all the "details"
-                    details.each{|metric_name,values|
+                    details.each{|metric_name,values|                        
                         # Absolute minimum and maximum for the metric
                         min = 9999999999999
                         max = -min                        
