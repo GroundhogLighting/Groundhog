@@ -1,21 +1,21 @@
 {
   "publicPath": "./_nuxt/",
   "all": [
-    "pages/index.a48aeae5239c0b8db7cd.js",
+    "pages/index.8a0f536fb54791d6e302.js",
     "layouts/default.a486d4ae4c3664dde50c.js",
     "vendor.62b12399e5238dd71a8e.js",
     "app.d5ed5eb142656958ba9f.js",
-    "manifest.d7dba3fca42953046d8e.js",
+    "manifest.795a780c43766dcb860c.js",
     "LICENSES",
     "index.spa.html"
   ],
   "initial": [
-    "manifest.d7dba3fca42953046d8e.js",
+    "manifest.795a780c43766dcb860c.js",
     "vendor.62b12399e5238dd71a8e.js",
     "app.d5ed5eb142656958ba9f.js"
   ],
   "async": [
-    "pages/index.a48aeae5239c0b8db7cd.js",
+    "pages/index.8a0f536fb54791d6e302.js",
     "layouts/default.a486d4ae4c3664dde50c.js"
   ],
   "modules": {

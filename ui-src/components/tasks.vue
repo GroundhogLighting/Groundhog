@@ -103,12 +103,12 @@ const taskProperties = {
     max_percent: {default: 3, min: 0, max: 100}
   },
   "Annual solar irradiation": {
-    min: {},
-    max: {}
+    min_energy: {},
+    max_energy: {}
   },
   "Annual daylight exposure": {
-    min: {},
-    max: {}
+    min_lux_hours: {},
+    max_lux_hours: {}
   },
   "Clear sky illuminance" : {
     month: {default: 1, min: 1, max: 12},
