@@ -73,7 +73,11 @@ module GH
             def self.import_results(path)
                 # Check if file exists
                 return if not File.exist?(path)
-                file = File.read(path)
+                file = File.read(path)    
+
+                # This is printed when Emp did not generate results
+                return if file == "null" 
+
                 results = JSON.parse(file)
                 
                 workplanes = results["workplanes"]

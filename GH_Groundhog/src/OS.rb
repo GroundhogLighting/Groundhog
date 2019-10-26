@@ -136,6 +136,12 @@ module GH
 
 			def self.run_emp_script(script_name, import)
 																			
+				# Check if the model has been saved
+				if Sketchup.active_model.path == "" then
+					UI.messagebox("Please save the model before running simulations")
+					return
+				end
+
 				# Save a copy of the model in the TMP directory
 				path = Sketchup.temp_dir+"/Groundhog"
 				Dir.mkdir(path) unless File.directory?(path)                    
